@@ -55,7 +55,7 @@ if (!$result->isValid()) {
 $p = strrpos($publication->schema, '/', 13);
 $type = substr($publication->schema, $p + 1, strlen($publication->schema) - $p - 13);  # remove the .schema.json suffix
 if ($type == 'card') {
-  $data = base64_decode(substr($data, 0, strlen('data:image/jpeg;base64,')));
+  $data = base64_decode(substr($publication->picture, strlen('data:image/jpeg;base64,')));
   try {
     $size = @getimagesizefromstring($data);
     if ($size['mime'] != 'image/jpeg')
