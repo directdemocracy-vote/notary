@@ -1,6 +1,7 @@
 <?php
 
 require_once '../vendor/autoload.php';
+require_once '../php/database.php';
 
 use Opis\JsonSchema\{
   IMediaType, MediaTypeContainer, Schema, Validator, ValidationResult, ValidationError
@@ -73,5 +74,9 @@ $data = json_encode($publication, JSON_UNESCAPED_SLASHES);
 $verify = openssl_verify($data, $signature, $key, OPENSSL_ALGO_SHA256);
 if ($verify != 1)
   error("Wrong signature");
+$mysqli = new mysqli($database_host, $database_name, $database_username, $database_password);
+if ($mysqli->connect_errno)
+  error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
+
 echo("{ \"published\": \"$type $p\" }");
 ?>
