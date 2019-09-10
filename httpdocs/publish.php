@@ -60,8 +60,8 @@ if (!$result->isValid()) {
   $keywordArgs = json_encode($error->keywordArgs(), JSON_UNESCAPED_SLASHES);
   error("{\"keyword\":\"$keyword\",\"keywordArgs\":$keywordArgs}");
 }
-$p = strrpos($publication->schema, '/', 12);
-$type = substr($publication->schema, $p + 1, strlen($publication->schema) - $p - 12);  # remove the .schema.json suffix
+$p = strrpos($publication->schema, '/', 13);
+$type = substr($publication->schema, $p + 1, strlen($publication->schema) - $p - 13);  # remove the .schema.json suffix
 $signature = base64_decode($publication->signature);
 $key = $publication->key;
 $publication->signature = '';
