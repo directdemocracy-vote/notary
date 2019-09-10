@@ -20,7 +20,7 @@
       <div class="jumbotron directdemocracy-title">
         <div class="container">
           <div class="row" style="margin-top:30px;margin-bottom:30px">
-            <div class="col-sd-1" style="margin-right:20px;margin-top:10px"><img class="directdemocracy-title-logo" src="images/directdemocracy-title.png"></div>
+            <div class="col-sd-1" style="margin-right:20px;margin-top:10px"><img class="directdemocracy-title-logo" src="//directdemocracy.vote/images/directdemocracy-title.png"></div>
             <div class="col-sd-11">
               <h1><b>direct</b>democracy</h1>
               <div style="font-size:150%">publisher</div>
@@ -31,7 +31,7 @@
             <h3>- Blah</h3>
             <h3>- Blah</h3>
           </div>
-          <div style="padding-bottom:40px"><button class="btn btn-success" role="button" data-toggle="modal" data-target="#myModal">Become a Citizen &raquo;</button></div>
+          <div style="padding-bottom:40px"><button class="btn btn-success" role="button" data-toggle="modal" data-target="#myModal">Search &raquo;</button></div>
         </div>
       </div>
       <div class="container">
