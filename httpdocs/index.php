@@ -27,9 +27,9 @@
             </div>
           </div>
           <div class="directdemocracy-subtitle" style="position:relative;top:0;margin-bottom:40px">
-            <h3>This webservice stores publications made by particpants of</h3>
-            <h3>directdemocracy: citizen cards, votes, endorsements, etc.</h3>
-            <h3>You can search these publications and display them here.</h3>
+            <h3>This webservice stores all the publications of</h3>
+            <h3>directdemocracy: citizen cards, votes, etc.</h3>
+            <h3>You can check these publications here.</h3>
           </div>
           <div style="padding-bottom:40px"><button class="btn btn-success" role="button" data-toggle="modal" data-target="#myModal">Search &raquo;</button></div>
         </div>
