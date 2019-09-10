@@ -56,6 +56,7 @@ if (!$result->isValid()) {
 $p = strrpos($publication->schema, '/', 13);
 $type = substr($publication->schema, $p + 1, strlen($publication->schema) - $p - 13);  # remove the .schema.json suffix
 if ($type == 'card') {
+  $card = &$publication;
   $data = base64_decode(substr($publication->picture, strlen('data:image/jpeg;base64,')));
   try {
     $size = @getimagesizefromstring($data);
@@ -77,6 +78,13 @@ if ($verify != 1)
 $mysqli = new mysqli($database_host, $database_username, $database_password, $database_name);
 if ($mysqli->connect_errno)
   error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
-
-echo("{ \"published\": \"$type $p\" }");
+$mysqli->set_charset('utf8mb4');
+if ($type == 'card') {
+  $query = "INSERT INTO card(schema, key, signature, published, expires, familyName, givenNames, picture, latitude, longitude) "
+          ."VALUES('$card->schema', '$card->key', '$card->signature', '$card->published', '$card->expires', "
+          ."'$card->familyName', '$card->givenNames', '$card->picture', $card->latitude, $card->longitude)";
+  $mysqli->query($query);
+}
+echo("{ \"published\": \"$mysqli->insert_id\" }");
+$mysqli->close();
 ?>
