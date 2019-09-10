@@ -80,7 +80,7 @@ if ($mysqli->connect_errno)
   error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
 $mysqli->set_charset('utf8mb4');
 if ($type == 'card') {
-  $query = "INSERT INTO card(schema, key, signature, published, expires, familyName, givenNames, picture, latitude, longitude) "
+  $query = "INSERT INTO card(`schema`, `key`, signature, published, expires, familyName, givenNames, picture, latitude, longitude) "
           ."VALUES('$card->schema', '$card->key', '$card->signature', '$card->published', '$card->expires', "
           ."'$card->familyName', '$card->givenNames', '$card->picture', $card->latitude, $card->longitude)";
   $mysqli->query($query) or error($mysqli->error);
