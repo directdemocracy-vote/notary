@@ -53,6 +53,13 @@ if (!$result->isValid()) {
   $keywordArgs = json_encode($error->keywordArgs(), JSON_UNESCAPED_SLASHES);
   error("{\"keyword\":\"$keyword\",\"keywordArgs\":$keywordArgs}");
 }
+$published = strtotime($publication->published);
+$expires = strtotime($publication->expires);
+$now = time();
+if ($published > $now + 60)  # allowing a 1 minute error
+  error("Publication date in the future: $publication->published");
+if ($expires < $now)
+  error("Expiration date in the past: $publication->expires");
 $p = strrpos($publication->schema, '/', 13);
 $type = substr($publication->schema, $p + 1, strlen($publication->schema) - $p - 13);  # remove the .schema.json suffix
 if ($type == 'card') {
@@ -70,11 +77,13 @@ if ($type == 'card') {
 }
 $signature = base64_decode($publication->signature);
 $key = $publication->key;
+$signature_copy = $publication->signature;
 $publication->signature = '';
 $data = json_encode($publication, JSON_UNESCAPED_SLASHES);
 $verify = openssl_verify($data, $signature, $key, OPENSSL_ALGO_SHA256);
 if ($verify != 1)
   error("Wrong signature");
+$publication->signature = $signature_copy;
 $mysqli = new mysqli($database_host, $database_username, $database_password, $database_name);
 if ($mysqli->connect_errno)
   error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
