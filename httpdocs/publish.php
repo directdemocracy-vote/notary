@@ -83,8 +83,8 @@ if ($type == 'card') {
   $query = "INSERT INTO card(schema, key, signature, published, expires, familyName, givenNames, picture, latitude, longitude) "
           ."VALUES('$card->schema', '$card->key', '$card->signature', '$card->published', '$card->expires', "
           ."'$card->familyName', '$card->givenNames', '$card->picture', $card->latitude, $card->longitude)";
-  $mysqli->query($query);
+  $mysqli->query($query) or error($mysqli->error);
 }
-echo("{ \"published\": \"$mysqli->insert_id\" }");
+echo("{ \"published\": \"$type $mysqli->insert_id\" }");
 $mysqli->close();
 ?>
