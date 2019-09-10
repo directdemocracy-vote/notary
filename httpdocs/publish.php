@@ -15,15 +15,7 @@ class MimeType implements IMediaType {
       $data = base64_decode(substr($data, strlen($header)));
       try {
         $image = @imagecreatefromstring($data);
-        if ($image !== false) {
-          $size = @getimagesizefromstring($data);
-          if ($type != $size['mime'])
-            return false;
-          if ($size[0] != 150 || $size[1] != 200)
-            return false;
-          return true;
-        } else
-          return false;
+        return $image !== false;
       } catch(Exception $e) {
         return false;
       }
@@ -62,6 +54,18 @@ if (!$result->isValid()) {
 }
 $p = strrpos($publication->schema, '/', 13);
 $type = substr($publication->schema, $p + 1, strlen($publication->schema) - $p - 13);  # remove the .schema.json suffix
+if ($type == 'card') {
+  $data = base64_decode(substr($data, strlen('data:image/jpeg;base64,')));
+  try {
+    $size = @getimagesizefromstring($data);
+    if ($size['mime'] != 'image/jpeg')
+      error("Wrong picture MIME type: '$size[mime]' (expecting 'image/jpeg')");
+    if ($size[0] != 150 || $size[1] != 200)
+      error("Wrong picture size: $size[0]x$size[1] (expecting 150x200)");
+  } catch(Exception $e) {
+    error("Cannot determine picture size");
+  }
+}
 $signature = base64_decode($publication->signature);
 $key = $publication->key;
 $publication->signature = '';
