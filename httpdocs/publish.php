@@ -9,11 +9,10 @@ use Opis\JsonSchema\{
 class MimeType implements IMediaType {
   public function validate(string $data, string $type): bool {
     if ($type == 'image/jpeg') {
-//      $header = 'data:image/jpeg;base64,';
-//      if (substr($data, 0, strlen($header)) != $header)
-//        return false;
-//      $data = base64_decode(substr($data, strlen($header)));
-      $data = base64_decode($data);
+      $header = 'data:image/jpeg;base64,';
+      if (substr($data, 0, strlen($header)) != $header)
+        return false;
+      $data = base64_decode(substr($data, strlen($header)));
       try {
         $image = @imagecreatefromstring($data);
         return $image !== false;
@@ -56,8 +55,7 @@ if (!$result->isValid()) {
 $p = strrpos($publication->schema, '/', 13);
 $type = substr($publication->schema, $p + 1, strlen($publication->schema) - $p - 13);  # remove the .schema.json suffix
 if ($type == 'card') {
-  // $data = base64_decode(substr($publication->picture, strlen('data:image/jpeg;base64,')));
-  $data = base64_decode($publication->picture);
+  $data = base64_decode(substr($publication->picture, strlen('data:image/jpeg;base64,')));
   try {
     $size = @getimagesizefromstring($data);
     if ($size['mime'] != 'image/jpeg')
