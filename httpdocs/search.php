@@ -40,7 +40,7 @@ $givenNames = $mysqli->escape_string(get_string_parameter('givenNames'));
 
 $query = "SELECT givenNames, familyName, latitude, longitude, picture, "
         ."(6371 * acos(cos(radians(78.3232)) * cos(radians($latitude)) * cos(radians($longitude) - radians(65.3234)) "
-        ."+ sin(radians(78.3232)) * sin(radians($latitude)))) as distance FROM card HAVING distance < $range "
+        ."+ sin(radians(78.3232)) * sin(radians($latitude)))) as distance FROM card HAVING distance < $range ";
 if ($familyName or $givenNames ) {
   $query .= "WHERE ";
   if ($familyName) {
