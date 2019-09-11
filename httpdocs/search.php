@@ -34,7 +34,7 @@ $mysqli->set_charset('utf8mb4');
 
 $latitude = get_float_parameter('latitude') / 100000;
 $longitude = get_float_parameter('longitude') / 100000;
-$range = get_float_parameter('range') / 1000;
+$range = get_float_parameter('range');
 $familyName = $mysqli->escape_string(get_string_parameter('familyName'));
 $givenNames = $mysqli->escape_string(get_string_parameter('givenNames'));
 
@@ -53,7 +53,7 @@ if ($familyName or $givenNames ) {
 }
 $query .= "ORDER BY distance LIMIT 0, 20;";
 $result = $mysqli->query($query) or error($mysqli->error);
-$card = $result->fetch_assoc();
+$card = $result->fetch_array();
 $mysqli->close();
 echo json_encode($card);
 ?>
