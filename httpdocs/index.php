@@ -27,7 +27,7 @@
             </div>
           </div>
           <div class="directdemocracy-subtitle" style="position:relative;top:0;margin-bottom:40px">
-            <h3>This webservice stores all the publications of</h3>
+            <h3>This webservice stores the publications of</h3>
             <h3>directdemocracy: citizen cards, votes, etc.</h3>
             <h3>You can check these publications here.</h3>
           </div>
