@@ -25,5 +25,6 @@ $query = "SELECT givenNames, familyName, latitude, longitude, picture, "
 $result = $mysqli->query($query) or error($mysqli->error);
 $card = $result->fetch_assoc();
 $mysqli->close();
+echo $query;
 echo json_encode($card);
 ?>
