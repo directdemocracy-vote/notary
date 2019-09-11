@@ -166,7 +166,7 @@
                     updateLabel();
                   }
                 };
-                url = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=json&featureTypes=&location=";
+                url = "//geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=json&featureTypes=&location=";
                 xhttp.open("GET", url + lon + "," + lat, true);
                 xhttp.send();
               }
@@ -177,14 +177,29 @@
                 document.getElementById("address").innerHTML = address;
                 document.getElementById("position").innerHTML = '(' + lat + ', ' + lon + ') &plusmn; ' + Math.round(range / 100) / 10 + ' km';
               }
-
+              function search() {
+                var familyName = document.getElementById("familyName").value;
+                var givenNames = document.getElementById("givenNames").value;
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                  console.log(this.responseText);
+                }
+                var parameters = "latitude=" + latitude + "&longitude=" + longitude + "&range=" + range;
+                if (familyName)
+                  parameters += "&familyName=" + encodeURI(familyName);
+                if (givenNames)
+                  parameters += "&givenNames=" + encodeURI(givenNames);
+                console.log(parameters);
+                xhttp.open("GET", "search.php?" + parameters, true);
+                xhttp.send();
+              }
             </script>
           </div>
         </div>
         <div class="form-group">
           <div class="container">
             <div style="text-align:center">
-              <button class="btn btn-success" role="button" data-toggle="modal" data-target="#myModal">Search</button>
+              <button class="btn btn-success" role="button" onclick="search()">Search</button>
             </div>
           </div>
         </div>
