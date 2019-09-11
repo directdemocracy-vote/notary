@@ -53,7 +53,9 @@ if ($familyName or $givenNames ) {
 }
 $query .= "ORDER BY distance LIMIT 0, 20;";
 $result = $mysqli->query($query) or error($mysqli->error);
-$card = $result->fetch_array();
+$cards = array();
+while ($card = $result->fetch_assoc())
+  $cards[] = $card;
 $mysqli->close();
-echo json_encode($card);
+echo json_encode($cards);
 ?>
