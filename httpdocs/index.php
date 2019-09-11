@@ -13,9 +13,6 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="//unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
     <title>publisher.directdemocracy.vote</title>
-    .slidecontainer {
-  width: 100%;
-}
 <style>
 .slider {
   -webkit-appearance: none;
@@ -72,99 +69,125 @@
             <h3>You can check these publications here.</h3>
           </div>
         </div>
+        <br>
       </div>
-      <div class="container">
-        Search:
-        <div id="latlongmap" style="width:100%;height:400px;margin-top:10px"></div>
-        <script type="text/javascript">
-          var geolocation = false;
-          var latitude = 0;
-          var longitude = 0;
-          var range = 500;
-          var address = '';
-          if (navigator.geolocation) navigator.geolocation.getCurrentPosition(getGeolocationPosition);
-          var xhttp = new XMLHttpRequest();
-          xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200 && geolocation == false) {
-              coords = this.responseText.split(',');
-              getGeolocationPosition({
-                coords: {
-                  latitude: coords[0],
-                  longitude: coords[1]
+      <div class="form-group">
+        <div class="container">
+          <h3>Search citizen database</h3>
+          <div class="row">
+            <div class="col-md-6">
+              <label for="family-name">Family name:</label>
+              <input type="text" class="form-control" id="family-name" placeholder="Leave empty to search all" oninput="validate()">
+            </div>
+            <div class="col-md-6">
+              <label for="given-names">Given name(s):</label>
+              <input type="text" class="form-control" id="given-names" placeholder="Leave empty to search all" oninput="validate()">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="container">
+          <div class="form-text">Area: <span class="text-muted">select the search area on the map</span></div>
+            <div id="latlongmap" style="width:100%;height:400px;margin-top:10px"></div>
+            <script type="text/javascript">
+              var geolocation = false;
+              var latitude = 0;
+              var longitude = 0;
+              var range = 500;
+              var address = '';
+              if (navigator.geolocation) navigator.geolocation.getCurrentPosition(getGeolocationPosition);
+              var xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200 && geolocation == false) {
+                  coords = this.responseText.split(',');
+                  getGeolocationPosition({
+                    coords: {
+                      latitude: coords[0],
+                      longitude: coords[1]
+                    }
+                  });
+                } else if (this.status == 429) { // quota exceeded
+                  console.log(this.responseText);
                 }
-              });
-            } else if (this.status == 429) { // quota exceeded
-              console.log(this.responseText);
-            }
-          };
-          xhttp.open("GET", "https://ipinfo.io/loc", true);
-          xhttp.send();
+              };
+              xhttp.open("GET", "https://ipinfo.io/loc", true);
+              xhttp.send();
 
-          function getGeolocationPosition(position) {
-            geolocation = true;
-            latitude = Math.round(1000000 * position.coords.latitude);
-            longitude = Math.round(1000000 * position.coords.longitude);
-            map.setView([position.coords.latitude, position.coords.longitude], 12);
-            setTimeout(updatePosition, 500);
-          }
+              function getGeolocationPosition(position) {
+                geolocation = true;
+                latitude = Math.round(1000000 * position.coords.latitude);
+                longitude = Math.round(1000000 * position.coords.longitude);
+                map.setView([position.coords.latitude, position.coords.longitude], 12);
+                setTimeout(updatePosition, 500);
+              }
 
-          var lat = latitude / 1000000;
-          var lon = longitude / 1000000;
-          var map = L.map('latlongmap').setView([lat, lon], 2);
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          }).addTo(map);
-          var marker = L.marker([lat, lon]).addTo(map).bindPopup(lat + ',' + lon);
-          var circle = L.circle([lat, lon], {color: 'red', opacity: 0.4, fillColor: '#f03', fillOpacity: 0.2, radius: range}).addTo(map);
-          marker.setPopupContent('<div style="text-align:center" id="address">' + address + '</div>'
-           + '<div><input type="range" min="5" max="100" value="10" class="slider" id="range" oninput="rangeChanged(this)"></div>'
-           + '<div style="text-align:center;color:#999" id="position">(' + lat + ', ' + lon + ') &plusmn; ' + Math.round(range / 100) / 10 + ' km</div></center>'
-          ).openPopup();
-          map.on('click', onMapClick);
-          updatePosition();
+              var lat = latitude / 1000000;
+              var lon = longitude / 1000000;
+              var map = L.map('latlongmap').setView([lat, lon], 2);
+              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+              }).addTo(map);
+              var marker = L.marker([lat, lon]).addTo(map).bindPopup(lat + ',' + lon);
+              var circle = L.circle([lat, lon], {color: 'red', opacity: 0.4, fillColor: '#f03', fillOpacity: 0.2, radius: range}).addTo(map);
+              marker.setPopupContent('<div style="text-align:center" id="address">' + address + '</div>'
+               + '<div><input type="range" min="5" max="100" value="10" class="slider" id="range" oninput="rangeChanged(this)"></div>'
+               + '<div style="text-align:center;color:#999" id="position">(' + lat + ', ' + lon + ') &plusmn; ' + Math.round(range / 100) / 10 + ' km</div></center>'
+              ).openPopup();
+              map.on('click', onMapClick);
+              updatePosition();
 
-          function onMapClick(e) {
-            marker.setLatLng(e.latlng).openPopup();
-            circle.setLatLng(e.latlng);
-            latitude = Math.round(1000000 * e.latlng.lat);
-            longitude = Math.round(1000000 * e.latlng.lng);
-            updateLabel();
-            updatePosition();
-          }
+              function onMapClick(e) {
+                marker.setLatLng(e.latlng).openPopup();
+                circle.setLatLng(e.latlng);
+                latitude = Math.round(1000000 * e.latlng.lat);
+                longitude = Math.round(1000000 * e.latlng.lng);
+                updateLabel();
+                updatePosition();
+              }
 
-          function rangeChanged(r) {
-            range = r.value * r.value * r.value;
-            circle.setRadius(range);
-            updateLabel();
-          }
-
-          function updatePosition() {
-            console.log("updatePosition");
-            var lat = latitude / 1000000;
-            var lon = longitude / 1000000;
-            marker.setLatLng([lat, lon]);
-            circle.setLatLng([lat, lon]);
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-              if (this.readyState == 4 && this.status == 200) {
-                a = JSON.parse(this.responseText);
-                address = a.address.Match_addr;
+              function rangeChanged(r) {
+                range = r.value * r.value * r.value;
+                circle.setRadius(range);
                 updateLabel();
               }
-            };
-            url = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=json&featureTypes=&location=";
-            xhttp.open("GET", url + lon + "," + lat, true);
-            xhttp.send();
-          }
 
-          function updateLabel() {
-            var lat = latitude / 1000000;
-            var lon = longitude / 1000000;
-            document.getElementById("address").innerHTML = address;
-            document.getElementById("position").innerHTML = '(' + lat + ', ' + lon + ') &plusmn; ' + Math.round(range / 100) / 10 + ' km';
-          }
+              function updatePosition() {
+                console.log("updatePosition");
+                var lat = latitude / 1000000;
+                var lon = longitude / 1000000;
+                marker.setLatLng([lat, lon]);
+                circle.setLatLng([lat, lon]);
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+                    a = JSON.parse(this.responseText);
+                    address = a.address.Match_addr;
+                    updateLabel();
+                  }
+                };
+                url = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=json&featureTypes=&location=";
+                xhttp.open("GET", url + lon + "," + lat, true);
+                xhttp.send();
+              }
 
-        </script>
+              function updateLabel() {
+                var lat = latitude / 1000000;
+                var lon = longitude / 1000000;
+                document.getElementById("address").innerHTML = address;
+                document.getElementById("position").innerHTML = '(' + lat + ', ' + lon + ') &plusmn; ' + Math.round(range / 100) / 10 + ' km';
+              }
+
+            </script>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="container">
+            <div style="text-align:center">
+              <button class="btn btn-success" role="button" data-toggle="modal" data-target="#myModal">Search</button>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
     <div>
