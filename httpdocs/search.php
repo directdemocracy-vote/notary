@@ -21,7 +21,7 @@ $mysqli->set_charset('utf8mb4');
 $query = "SELECT givenNames, familyName, latitude, longitude, picture, "
         ."(6371 * acos(cos(raidans(78.3232)) * cos(radians($latitude)) * cos(radians($longitude) - radians(65.3234)) "
         ."+ sin(radians(78.3232)) * sin(radians($latitude)))) as distance FROM card HAVING distance < $range ORDER BY distance "
-        "LIMIT 0, 20;";
+        ."LIMIT 0, 20;";
 $result = $mysqli->query($query) or error($mysqli->error);
 $card = $result->fetch_assoc();
 $mysqli->close();
