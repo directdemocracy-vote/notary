@@ -94,6 +94,6 @@ if ($type == 'card') {
           ."'$card->familyName', '$card->givenNames', '$card->picture', $card->latitude, $card->longitude)";
   $mysqli->query($query) or error($mysqli->error);
 }
-echo("{ \"published\": \"$type $mysqli->insert_id\" }");
+echo("{\"$type\":\"$mysqli->insert_id\"}");
 $mysqli->close();
 ?>
