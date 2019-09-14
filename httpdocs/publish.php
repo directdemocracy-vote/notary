@@ -93,6 +93,13 @@ if ($type == 'card') {
           ."VALUES('$card->schema', '$card->key', '$card->signature', '$card->published', '$card->expires', "
           ."'$card->familyName', '$card->givenNames', '$card->picture', $card->latitude, $card->longitude)";
   $mysqli->query($query) or error($mysqli->error);
+} elseif ($type == 'revocation') {
+  $revocation = &$publication;
+  $query = "INSERT INTO revocation(`schema`, `key`, signature, published, revokedKey, revokedSignature, message, comment) "
+          ."VALUES('$revocation->schema', '$revocation->key', '$revocation->signature', '$revocation->published', "
+          ."'$revocation->expires', '$revocation->revoked->key', '$revocation->revoked->signature', '$revocation->message', "
+          ."'$revocation->comment')";
+  $mysqli->query($query) or error($mysqli->error);
 }
 echo("{\"$type\":\"$mysqli->insert_id\"}");
 $mysqli->close();
