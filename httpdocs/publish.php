@@ -88,17 +88,26 @@ $mysqli = new mysqli($database_host, $database_username, $database_password, $da
 if ($mysqli->connect_errno)
   error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
 $mysqli->set_charset('utf8mb4');
+$query = "INSERT INTO publication(`schema`, `key`, signature, fingerprint, published, expires) "
+        ."VALUES('$publication->schema', '$publication->key', '$publication->signature', "
+        ."SHA1('$publication->signature'), '$publication->published', '$publication->expires')";
+$mysqli->query($query) or error($mysqli->error);
 if ($type == 'card') {
-  $query = "INSERT INTO card(`schema`, `key`, signature, published, expires, familyName, givenNames, picture, latitude, longitude) "
-          ."VALUES('$card->schema', '$card->key', '$card->signature', '$card->published', '$card->expires', "
-          ."'$card->familyName', '$card->givenNames', '$card->picture', $card->latitude, $card->longitude)";
+  $query = "INSERT INTO card(id, familyName, givenNames, picture, latitude, longitude) "
+          ."VALUES($mysqli->insert_id, '$card->familyName', '$card->givenNames', "
+          ."'$card->picture', $card->latitude, $card->longitude)";
   $mysqli->query($query) or error($mysqli->error);
-} elseif ($type == 'revocation') {
-  $revocation = &$publication;
-  $query = "INSERT INTO revocation(`schema`, `key`, signature, published, revokedKey, revokedSignature, message, comment) "
-          ."VALUES('$revocation->schema', '$revocation->key', '$revocation->signature', '$revocation->published', "
-          ."'$revocation->expires', '$revocation->revoked->key', '$revocation->revoked->signature', '$revocation->message', "
-          ."'$revocation->comment')";
+} elseif ($type == 'endorsement') {
+  $endorsement = &$publication;
+  if (!isset($endorsement->message))
+    $endorsement->message = '';
+  if (!isset($endorsement->comment))
+    $endorsement->comment = '';
+  $query = "INSERT INTO endorsement(id, publicationKey, publicationSignature, publicationFingerprint, "
+          ."`revoke`, message, comment) "
+          ."VALUES($mysqli->insert_id, '$endorsement->publication->key', "
+          ."'$endorsement->publication->signature', SHA1('$endorsement->publication->signature'), "
+          ."'$endorsement->revoke', '$endorsement->message', '$endorsement->comment')";
   $mysqli->query($query) or error($mysqli->error);
 }
 echo("{\"$type\":\"$mysqli->insert_id\"}");
