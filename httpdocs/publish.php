@@ -121,7 +121,7 @@ if ($type == 'citizen') {
     $endorsement_expires = strtotime($endorsement->expires);
     $endorsed_expires = strtotime($endorsed['expires']);
     if ($endorsement_expires > $endorsed_expires);
-      error("endorsement expires after publication");
+      error("endorsement expires after publication: $endorsement_expires > $endorsed_expires");
     if ($endorsement->revoke) {
       if ($endorsement_expires != $endorsed_expires)
         error("revoke endorsement don't expire at the same time as publication");
