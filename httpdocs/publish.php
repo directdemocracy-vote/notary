@@ -138,7 +138,7 @@ if ($type == 'citizen') {
   $query = "INSERT INTO endorsement(id, publicationKey, publicationSignature, publicationFingerprint, "
           ."`revoke`, message, comment) VALUES($id, '$key', '$signature', SHA1('$signature'), "
           ."'$endorsement->revoke', '$endorsement->message', '$endorsement->comment')";
-  $mysqli->query($query) or error($mysqli->error);
+  $mysqli->query($query) or error("$mysqli->error $query");
 }
 echo("{\"$type\":\"$id\"}");
 $mysqli->close();
