@@ -127,7 +127,7 @@ if ($type == 'citizen') {
     if ($endorsement->revoke) {
       if ($endorsement_expires != $endorsed_expires)
         error("revoke endorsement don't expire at the same time as publication");
-      $i = $endorsed->id;
+      $i = $endorsed['id'];
       $query = "DELETE FROM publication WHERE id=$i";
       $mysqli->query($query) or error("$mysqli->error $query");
       $t = get_type($endorsed->schema);
