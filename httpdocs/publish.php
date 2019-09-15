@@ -31,6 +31,11 @@ function error($message) {
   die("{\"error\":$message}");
 }
 
+function get_type($schema) {
+  $p = strrpos($schema, '/', 13);
+  return substr($schema, $p + 1, strlen($schema) - $p - 13);  # remove the .schema.json suffix
+}
+
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
@@ -60,8 +65,7 @@ if ($published > $now + 60)  # allowing a 1 minute error
   error("Publication date in the future: $publication->published");
 if ($expires < $now)
   error("Expiration date in the past: $publication->expires");
-$p = strrpos($publication->schema, '/', 13);
-$type = substr($publication->schema, $p + 1, strlen($publication->schema) - $p - 13);  # remove the .schema.json suffix
+$type = get_type($publication->schema);
 if ($type == 'citizen') {
   $citizen = &$publication;
   $data = base64_decode(substr($citizen->picture, strlen('data:image/jpeg;base64,')));
@@ -106,6 +110,29 @@ if ($type == 'citizen') {
     $endorsement->comment = '';
   $key = $endorsement->publication->key;
   $signature = $endorsement->publication->signature;
+  $query = "SELECT id, schema, key, signature, expires FROM publication WHERE fingerprint=SHA1('$signature')";
+  $result = $mysqli->query($query) or error($mysqli->error);
+  $endorsed = $result->fetch_assoc();
+  if ($endorsed) {
+    if ($endorsed['key'] != $key)
+      error("endorsement key mismatch");
+    if ($endorsed['signature'] != $signature)
+      error("endorsement signature mismatch");
+    $endorsement_expires = strtotime($endorsement->expires);
+    $endorsed_expires = strtotime($endorsed['expires']);
+    if ($endorsement_expires > $endorsed_expires);
+      error("endorsement expires after publication");
+    if ($endorsement->revoke) {
+      if ($endorsement_expires != $endorsed_expires)
+        error("revoke endorsement don't expire at the same time as publication");
+      $i = $endorsed->id;
+      $query = "DELETE FROM publication WHERE id=$i";
+      $mysqli->query($query) or error($mysqli->error);
+      $t = get_type($endorsed->schema);
+      $query = "DELETE FROM `$t` WHERE id=$i";
+      $mysqli->query($query) or error($mysqli->error);
+    }
+  }
   $query = "INSERT INTO endorsement(id, publicationKey, publicationSignature, publicationFingerprint, "
           ."`revoke`, message, comment) VALUES($id, '$key', '$signature', SHA1('$signature'), "
           ."'$endorsement->revoke', '$endorsement->message', '$endorsement->comment')";
