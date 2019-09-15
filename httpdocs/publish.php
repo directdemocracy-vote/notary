@@ -96,7 +96,7 @@ $expires = strtotime($publication->expires);
 $published = strtotime($publication->published);
 $query = "INSERT INTO publication(`schema`, `key`, signature, fingerprint, published, expires) "
         ."VALUES('$publication->schema', '$publication->key', '$publication->signature', "
-        ."SHA1('$publication->signature'), FROM_UNIXTIME($published), FROM_UNIXTIME($expires)')";
+        ."SHA1('$publication->signature'), FROM_UNIXTIME($published), FROM_UNIXTIME($expires))";
 $mysqli->query($query) or error($mysqli->error);
 $id = $mysqli->insert_id;
 if ($type == 'citizen') {
