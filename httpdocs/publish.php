@@ -130,7 +130,7 @@ if ($type == 'citizen') {
       $i = $endorsed['id'];
       $query = "DELETE FROM publication WHERE id=$i";
       $mysqli->query($query) or error("$mysqli->error $query");
-      $t = get_type($endorsed->schema);
+      $t = get_type($endorsed['schema']);
       $query = "DELETE FROM `$t` WHERE id=$i";
       $mysqli->query($query) or error("$mysqli->error $query");
     }
