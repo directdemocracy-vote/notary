@@ -92,9 +92,10 @@ $query = "INSERT INTO publication(`schema`, `key`, signature, fingerprint, publi
         ."VALUES('$publication->schema', '$publication->key', '$publication->signature', "
         ."SHA1('$publication->signature'), '$publication->published', '$publication->expires')";
 $mysqli->query($query) or error($mysqli->error);
+$id = $mysqli->insert_id;
 if ($type == 'citizen') {
   $query = "INSERT INTO citizen(id, familyName, givenNames, picture, latitude, longitude) "
-          ."VALUES($mysqli->insert_id, '$citizen->familyName', '$citizen->givenNames', "
+          ."VALUES($id, '$citizen->familyName', '$citizen->givenNames', "
           ."'$citizen->picture', $citizen->latitude, $citizen->longitude)";
   $mysqli->query($query) or error($mysqli->error);
 } elseif ($type == 'endorsement') {
@@ -106,12 +107,10 @@ if ($type == 'citizen') {
   $key = $endorsement->publication->key;
   $signature = $endorsement->publication->signature;
   $query = "INSERT INTO endorsement(id, publicationKey, publicationSignature, publicationFingerprint, "
-          ."`revoke`, message, comment) "
-          ."VALUES($mysqli->insert_id, '$key', "
-          ."'$signature', SHA1('$signature'), "
+          ."`revoke`, message, comment) VALUES($id, '$key', '$signature', SHA1('$signature'), "
           ."'$endorsement->revoke', '$endorsement->message', '$endorsement->comment')";
   $mysqli->query($query) or error($mysqli->error);
 }
-echo("{\"$type\":\"$mysqli->insert_id\"}");
+echo("{\"$type\":\"$id\"}");
 $mysqli->close();
 ?>
