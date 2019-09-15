@@ -81,11 +81,11 @@
           <div class="row">
             <div class="col-md-6">
               <label for="family-name">Family name:</label>
-              <input type="text" class="form-control" id="family-name" placeholder="Leave empty to search all" oninput="validate()">
+              <input id="familyName" type="text" class="form-control" id="family-name" placeholder="Leave empty to search all" oninput="validate()">
             </div>
             <div class="col-md-6">
               <label for="given-names">Given name(s):</label>
-              <input type="text" class="form-control" id="given-names" placeholder="Leave empty to search all" oninput="validate()">
+              <input id="givenNames" type="text" class="form-control" id="given-names" placeholder="Leave empty to search all" oninput="validate()">
             </div>
           </div>
         </div>
