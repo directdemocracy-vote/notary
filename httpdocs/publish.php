@@ -62,9 +62,9 @@ if ($expires < $now)
   error("Expiration date in the past: $publication->expires");
 $p = strrpos($publication->schema, '/', 13);
 $type = substr($publication->schema, $p + 1, strlen($publication->schema) - $p - 13);  # remove the .schema.json suffix
-if ($type == 'card') {
-  $card = &$publication;
-  $data = base64_decode(substr($publication->picture, strlen('data:image/jpeg;base64,')));
+if ($type == 'citizen') {
+  $citizen = &$publication;
+  $data = base64_decode(substr($citizen->picture, strlen('data:image/jpeg;base64,')));
   try {
     $size = @getimagesizefromstring($data);
     if ($size['mime'] != 'image/jpeg')
@@ -92,10 +92,10 @@ $query = "INSERT INTO publication(`schema`, `key`, signature, fingerprint, publi
         ."VALUES('$publication->schema', '$publication->key', '$publication->signature', "
         ."SHA1('$publication->signature'), '$publication->published', '$publication->expires')";
 $mysqli->query($query) or error($mysqli->error);
-if ($type == 'card') {
-  $query = "INSERT INTO card(id, familyName, givenNames, picture, latitude, longitude) "
-          ."VALUES($mysqli->insert_id, '$card->familyName', '$card->givenNames', "
-          ."'$card->picture', $card->latitude, $card->longitude)";
+if ($type == 'citizen') {
+  $query = "INSERT INTO citizen(id, familyName, givenNames, picture, latitude, longitude) "
+          ."VALUES($mysqli->insert_id, '$citizen->familyName', '$citizen->givenNames', "
+          ."'$citizen->picture', $citizen->latitude, $citizen->longitude)";
   $mysqli->query($query) or error($mysqli->error);
 } elseif ($type == 'endorsement') {
   $endorsement = &$publication;
