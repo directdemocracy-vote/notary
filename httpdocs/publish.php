@@ -103,10 +103,12 @@ if ($type == 'citizen') {
     $endorsement->message = '';
   if (!isset($endorsement->comment))
     $endorsement->comment = '';
+  $key = $endorsement->publication->key;
+  $signature = $endorsement->publication->signature;
   $query = "INSERT INTO endorsement(id, publicationKey, publicationSignature, publicationFingerprint, "
           ."`revoke`, message, comment) "
-          ."VALUES($mysqli->insert_id, '$endorsement->publication->key', "
-          ."'$endorsement->publication->signature', SHA1('$endorsement->publication->signature'), "
+          ."VALUES($mysqli->insert_id, '$key', "
+          ."'$signature', SHA1('$signature'), "
           ."'$endorsement->revoke', '$endorsement->message', '$endorsement->comment')";
   $mysqli->query($query) or error($mysqli->error);
 }
