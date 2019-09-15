@@ -92,9 +92,11 @@ $mysqli = new mysqli($database_host, $database_username, $database_password, $da
 if ($mysqli->connect_errno)
   error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
 $mysqli->set_charset('utf8mb4');
+$expires = strtotime($publication->expires);
+$published = strtotime($publication->published);
 $query = "INSERT INTO publication(`schema`, `key`, signature, fingerprint, published, expires) "
         ."VALUES('$publication->schema', '$publication->key', '$publication->signature', "
-        ."SHA1('$publication->signature'), '$publication->published', '$publication->expires')";
+        ."SHA1('$publication->signature'), '$published', '$expires')";
 $mysqli->query($query) or error($mysqli->error);
 $id = $mysqli->insert_id;
 if ($type == 'citizen') {
