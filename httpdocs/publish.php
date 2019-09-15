@@ -120,8 +120,8 @@ if ($type == 'citizen') {
       error("endorsement key mismatch");
     if ($endorsed['signature'] != $signature)
       error("endorsement signature mismatch");
-    $endorsement_expires = strtotime($endorsement->expires);
-    $endorsed_expires = strtotime($endorsed['expires']);
+    $endorsement_expires = intval(strtotime($endorsement->expires));
+    $endorsed_expires = intval(strtotime($endorsed['expires']));
     $diff = $endorsement_expires - $endorsed_expires;
     if ($endorsement_expires > $endorsed_expires);
       error("endorsement expires after publication: $endorsement_expires > $endorsed_expires <=> $endorsement->expires > $endorsed[expires] <-> $diff");
