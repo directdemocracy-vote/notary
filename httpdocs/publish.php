@@ -123,7 +123,7 @@ if ($type == 'citizen') {
     $endorsement_expires = intval(strtotime($endorsement->expires));
     $endorsed_expires = intval(strtotime($endorsed['expires']));
     $diff = $endorsement_expires - $endorsed_expires;
-    if ($endorsement_expires > $endorsed_expires);
+    if ($diff > 0);
       error("endorsement expires after publication: $endorsement_expires > $endorsed_expires <=> $endorsement->expires > $endorsed[expires] <-> $diff");
     if ($endorsement->revoke) {
       if ($endorsement_expires != $endorsed_expires)
