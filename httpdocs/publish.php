@@ -110,7 +110,7 @@ if ($type == 'citizen') {
     $endorsement->comment = '';
   $key = $endorsement->publication->key;
   $signature = $endorsement->publication->signature;
-  $query = "SELECT id, schema, key, signature, expires FROM publication WHERE fingerprint=SHA1('$signature')";
+  $query = "SELECT id, `schema`, `key`, signature, expires FROM publication WHERE fingerprint=SHA1('$signature')";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsed = $result->fetch_assoc();
   if ($endorsed) {
