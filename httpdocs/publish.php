@@ -120,12 +120,10 @@ if ($type == 'citizen') {
     error("Cannot determine picture size");
   }
 }
-$signature = base64_decode($publication->signature);
-$key = $publication->key;
 $signature_copy = $publication->signature;
 $publication->signature = '';
 $data = json_encode($publication, JSON_UNESCAPED_SLASHES);
-$verify = openssl_verify($data, $signature, $key, OPENSSL_ALGO_SHA256);
+$verify = openssl_verify($data, base64_decode($publication->signature), $publication->key, OPENSSL_ALGO_SHA256);
 if ($verify != 1)
   error("Wrong signature");
 $publication->signature = $signature_copy;
@@ -139,17 +137,19 @@ if ($type == 'citizen')  # delete any previous citizen card with same key to rep
   delete_citizen($mysqli, $citizen->key);
 elseif ($type == 'endorsement') {
   $endorsement = &$publication;
-  if ($endorsement->revoke && $endorsement->key == $endorsement->publicationKey) {  # revoking my own stuff
-    $query = "SELECT id, `schema` FROM publication WHERE `key`='$endorsement->publicationKey' "
-            ."AND signature='$endorsement->publicationSignature'";
+  $key = $endorsement->publication->key;
+  $signature = $endorsement->publication->signature;
+  if ($endorsement->revoke && $endorsement->key == $key) {  # revoking my own stuff
+    $query = "SELECT id, `schema` FROM publication WHERE `key`='$key' "
+            ."AND signature='$signature'";
     $result = $mysqli->query($query) or error($mysqli->error);
     $p = $result->fetch_assoc();
     if ($p) {
       $t = get_type($p['schema']);
       if ($t === 'citizen')  # revoking my private key
-        delete_all_publications($mysqli, $endorsement->publicationKey);
+        delete_all_publications($mysqli, $key);
       else  # revoking only one publication
-        delete_publication($mysqli, $endorsement->publicationKey, $endorsement->publicationSignature);
+        delete_publication($mysqli, $key, $signature);
     }
     $result->free();
   }
@@ -169,8 +169,6 @@ if ($type == 'citizen') {
     $endorsement->message = '';
   if (!isset($endorsement->comment))
     $endorsement->comment = '';
-  $key = $endorsement->publication->key;
-  $signature = $endorsement->publication->signature;
   $query = "SELECT id, `schema`, `key`, signature, expires FROM publication WHERE fingerprint=SHA1('$signature')";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsed = $result->fetch_assoc();
