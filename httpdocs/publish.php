@@ -39,7 +39,7 @@ function get_type($schema) {
 function delete_citizen($mysqli, $key) {
   $query = "SELECT id FROM publication WHERE `key`='$key' AND `schema` LIKE '%citizen.schema.json'";
   $result = $mysqli->query($query) or error($mysqli->error);
-  while ($p = $result->fetch_assoc()) {
+  while ($p = $result->fetch_assoc()) {  # there should be only one
     $mysqli->query("DELETE FROM publication WHERE id=$p[id]") or error($mysqli->error);
     $mysqli->query("DELETE FROM citizen WHERE id=$p[id]") or error($mysqli->error);
   }
