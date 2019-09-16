@@ -36,6 +36,47 @@ function get_type($schema) {
   return substr($schema, $p + 1, strlen($schema) - $p - 13);  # remove the .schema.json suffix
 }
 
+function delete_citizen($mysqli, $key) {
+  $query = "SELECT id FROM publication WHERE `key`='$key' AND `schema` LIKE '%citizen.schema.json'";
+  $result = $mysqli->query($query) or error($mysqli->error);
+  while ($p = $result->fetch_assoc()) {
+    $mysqli->query("DELETE FROM publication WHERE id=$p[id]") or error($mysqli->error);
+    $mysqli->query("DELETE FROM citizen WHERE id=$p[id]") or error($mysqli->error);
+  }
+  $result->free();
+  # delete any endorsement of the deleted citizen card
+  $query = "SELECT id FROM endorsement WHERE publicationKey='$key'";
+  $result = $mysqli->query($query) or error($mysqli->error);
+  while ($p = $result->fetch_assoc()) {
+    $mysqli->query("DELETE FROM publication WHERE id=$p[id]") or error($mysqli->error);
+    $mysqli->query("DELETE FROM endorsement WHERE id=$p[id]") or error($mysqli->error);
+  }
+  $result->free();
+}
+
+function delete_publication($mysqli, $key, $signature) {
+  $query = "SELECT id, `schema` FROM publication WHERE `key`='$key' AND signature='$signature'";
+  $result = $mysqli->query($query) or error($mysqli->error);
+  $p = $result->fetch_assoc();
+  if ($p) {
+    $mysqli->query("DELETE FROM publication WHERE id=$p[id]") or error($mysqli->error);
+    $type = get_type($p['schema']);
+    $mysqli->query("DELETE FROM $type WHERE id=$p[id]") or error($mysqli->error);
+  }
+  $result->free();
+}
+
+function delete_all_publications($mysqli, $key) {
+  $query = "SELECT id, `schema` FROM publication WHERE `key`='$key'";
+  $result = $mysqli->query($query) or error($mysqli->error);
+  while($p = $result->fetch_assoc()) {
+    $mysqli->query("DELETE FROM publication WHERE id=$p[id]") or error($mysqli->error);
+    $type = get_type($p['schema']);
+    $mysqli->query("DELETE FROM $type WHERE id=$p[id]") or error($mysqli->error);
+  }
+  $result->free();
+}
+
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
@@ -94,6 +135,25 @@ if ($mysqli->connect_errno)
 $mysqli->set_charset('utf8mb4');
 $expires = strtotime($publication->expires);
 $published = strtotime($publication->published);
+if ($type == 'citizen')  # delete any previous citizen card with same key to replace it
+  delete_citizen($mysqli, $citizen->key);
+elseif ($type == 'endorsement') {
+  $endorsement = &$publication;
+  if ($endorsement->revoke && $endorsement->key == $endorsement->publicationKey) {  # revoking my own stuff
+    $query = "SELECT id, `schema` FROM publication WHERE `key`='$endorsement->publicationKey' "
+            ."AND signature='$endorsement->publicationSignature'";
+    $result = $mysqli->query($query) or error($mysqli->error);
+    $p = $result->fetch_assoc();
+    if ($p) {
+      $t = get_type($p['schema']);
+      if ($t === 'citizen')  # revoking my private key
+        delete_all_publications($mysqli, $endorsement->publicationKey);
+      else  # revoking only one publication
+        delete_publication($mysqli, $endorsement->publicationKey, $endorsement->publicationSignature);
+    }
+    $result->free();
+  }
+}
 $query = "INSERT INTO publication(`schema`, `key`, signature, fingerprint, published, expires) "
         ."VALUES('$publication->schema', '$publication->key', '$publication->signature', "
         ."SHA1('$publication->signature'), FROM_UNIXTIME($published), FROM_UNIXTIME($expires))";
@@ -105,7 +165,6 @@ if ($type == 'citizen') {
           ."'$citizen->picture', $citizen->latitude, $citizen->longitude)";
   $mysqli->query($query) or error($mysqli->error);
 } elseif ($type == 'endorsement') {
-  $endorsement = &$publication;
   if (!isset($endorsement->message))
     $endorsement->message = '';
   if (!isset($endorsement->comment))
@@ -129,16 +188,16 @@ if ($type == 'citizen') {
         error("revoke endorsement don't expire at the same time as publication");
       $i = $endorsed['id'];
       $query = "DELETE FROM publication WHERE id=$i";
-      $mysqli->query($query) or error("$mysqli->error $query");
+      $mysqli->query($query) or error($mysqli->error);
       $t = get_type($endorsed['schema']);
       $query = "DELETE FROM `$t` WHERE id=$i";
-      $mysqli->query($query) or error("$mysqli->error $query");
+      $mysqli->query($query) or error($mysqli->error);
     }
   }
   $query = "INSERT INTO endorsement(id, publicationKey, publicationSignature, publicationFingerprint, "
           ."`revoke`, message, comment) VALUES($id, '$key', '$signature', SHA1('$signature'), "
           ."'$endorsement->revoke', '$endorsement->message', '$endorsement->comment')";
-  $mysqli->query($query) or error("$mysqli->error $query");
+  $mysqli->query($query) or error($mysqli->error);
 }
 echo("{\"$type\":\"$id\"}");
 $mysqli->close();
