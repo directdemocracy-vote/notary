@@ -123,7 +123,7 @@ if ($type == 'citizen') {
 $signature_copy = $publication->signature;
 $publication->signature = '';
 $data = json_encode($publication, JSON_UNESCAPED_SLASHES);
-$verify = openssl_verify($data, base64_decode($publication->signature), $publication->key, OPENSSL_ALGO_SHA256);
+$verify = openssl_verify($data, base64_decode($signature_copy), $publication->key, OPENSSL_ALGO_SHA256);
 if ($verify != 1)
   error("Wrong signature");
 $publication->signature = $signature_copy;
