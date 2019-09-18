@@ -41,38 +41,61 @@ $familyName = $mysqli->escape_string(get_string_parameter('familyName'));
 $givenNames = $mysqli->escape_string(get_string_parameter('givenNames'));
 $fingerprint = $mysqli->escape_string(get_string_parameter('fingerprint'));
 
-#$query = "SELECT `schema`, `key`, signature, published, expires, picture, familyName, givenNames, latitude, longitude ";
-$query = "SELECT id, picture, familyName, givenNames, latitude, longitude";
-if ($range)
-  $query .= ", (6371 * acos(cos(radians(78.3232)) * cos(radians($latitude)) * cos(radians($longitude) - radians(65.3234)) "
-           ."+ sin(radians(78.3232)) * sin(radians($latitude)))) as distance ";
-$query .= " FROM citizen";
-if ($range)
-  $query .= " HAVING distance < $range";
-if ($familyName or $givenNames or $fingerprint) {
-  $query .= " WHERE";
-  if ($familyName) {
-    $query .= " familyName LIKE '%$familyName%'";
-    if ($givenNames or $fingerprint)
-      $query .= " AND";
+if ($fingerprint) {
+  $query = "SELECT * FROM publication WHERE fingerprint='$fingerprint';";
+  $result = $mysqli->query($query) or error($mysqli->error);
+  $publication = $result->fetch_assoc();
+  $result->free();
+  if ($publication) {
+    $query = "SELECT picture, familyName, givenNames, latitude, longitude FROM citizen WHERE id=$publication[id]";
+    $result = $mysqli->query($query) or error($mysqli->error);
+    $citizen = $result->fetch_assoc();
+    $result->free();
+    $citizen->schema = $publication['schema'];
+    $citizen->key = $publication['key'];
+    $citizen->signature = $publication['signature'];
+    $citizen->published = $publication['published'];
+    $citizen->expires = $publication['expires'];
+    echo json_encode($citizen);
+  } else
+    error("Citizen not found");
+} else {
+  $query = "SELECT id, picture, familyName, givenNames, latitude, longitude";
+  if ($range)
+    $query .= ", (6371 * acos(cos(radians(78.3232)) * cos(radians($latitude)) * cos(radians($longitude) - radians(65.3234)) "
+             ."+ sin(radians(78.3232)) * sin(radians($latitude)))) as distance ";
+  $query .= " FROM citizen";
+  if ($range)
+    $query .= " HAVING distance < $range";
+  if ($familyName or $givenNames) {
+    $query .= " WHERE";
+    if ($familyName) {
+      $query .= " familyName LIKE '%$familyName%'";
+      if ($givenNames or $fingerprint)
+        $query .= " AND";
+    }
+    if ($givenNames)
+      $query .= " givenNames LIKE '%$givenNames%'";
   }
-  if ($givenNames) {
-    $query .= " givenNames LIKE '%$givenNames%'";
-    if ($fingerprint)
-      $query .= " AND";
+  if ($range)
+    $query .= " ORDER BY distance";
+  $query .= " LIMIT 0, 20;";
+  $result = $mysqli->query($query) or error($mysqli->error);
+  $citizens = array();
+  while ($citizen = $result->fetch_assoc()) {
+    $query = "SELECT `schema`, `key`, signature, published, expires FROM publication WHERE id=$citizen[id]";
+    $r = $mysqli->query($query) or error($mysqli->error);
+    $publication = $r->fetch_assoc();
+    $r->free();
+    $citizen->schema = $publication['schema'];
+    $citizen->key = $publication['key'];
+    $citizen->signature = $publication['signature'];
+    $citizen->published = $publication['published'];
+    $citizen->expires = $publication['expires'];
+    $citizens[] = $citizen;
   }
-  if ($fingerprint)
-    $query .= " fingerprint='$fingerprint'";
-}
-if ($range)
-  $query .= " ORDER BY distance";
-$query .= " LIMIT 0, 20;";
-$result = $mysqli->query($query) or error($mysqli->error);
-$citizens = array();
-while ($citizen = $result->fetch_assoc()) {
-  $query = "SELECT `schema`, `key`, signature, published, expires FROM publication WHERE id=$citizen[id];"
-  $citizens[] = $citizen;
+  $result->free();
+  echo json_encode($citizens);
 }
 $mysqli->close();
-echo json_encode($citizens);
 ?>
