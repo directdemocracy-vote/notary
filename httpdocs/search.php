@@ -52,10 +52,10 @@ if ($fingerprint) {
     $citizen = $result->fetch_assoc();
     $result->free();
     $citizen = array('schema' => $publication['schema'],
-                     'expires' => $publication['expires'],
-                     'published' => $publication['published'],
+                     'key' => $publication['key'],
                      'signature' => $publication['signature'],
-                     'key' => $publication['key']) + $citizen;
+                     'published' => $publication['published'],
+                     'expires' => $publication['expires']) + $citizen;
     echo json_encode($citizen);
   } else
     error("Citizen not found: $query");
@@ -87,11 +87,11 @@ if ($fingerprint) {
     $r = $mysqli->query($query) or error($mysqli->error);
     $publication = $r->fetch_assoc();
     $r->free();
-    $citizen = array('expires', $publication['expires']) + $citizen;  # insert first
-    $citizen = array('published', $publication['published']) + $citizen;
-    $citizen = array('signature', $publication['signature']) + $citizen;
-    $citizen = array('key', $publication['key']) + $citizen;
-    $citizen = array('schema', $publication['schema']) + $citizen;
+    $citizen = array('schema' => $publication['schema'],
+                     'key' => $publication['key'],
+                     'signature' => $publication['signature'],
+                     'published' => $publication['published'],
+                     'expires' => $publication['expires']) + $citizen;
     $citizens[] = $citizen;
   }
   $result->free();
