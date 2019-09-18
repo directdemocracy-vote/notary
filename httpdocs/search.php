@@ -58,7 +58,7 @@ if ($fingerprint) {
     $citizen->expires = $publication['expires'];
     echo json_encode($citizen);
   } else
-    error("Citizen not found: $fingerprint");
+    error("Citizen not found: $query");
 } else {
   $query = "SELECT id, picture, familyName, givenNames, latitude, longitude";
   if ($range)
