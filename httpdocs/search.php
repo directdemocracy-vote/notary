@@ -87,11 +87,11 @@ if ($fingerprint) {
     $r = $mysqli->query($query) or error($mysqli->error);
     $publication = $r->fetch_assoc();
     $r->free();
-    $citizen['schema'] = $publication['schema'];
-    $citizen['key'] = $publication['key'];
-    $citizen['signature'] = $publication['signature'];
-    $citizen['published'] = $publication['published'];
-    $citizen['expires'] = $publication['expires'];
+    $citizen = array('expires', $publication['expires']) + $citizen;  # insert first
+    $citizen = array('published', $publication['published']) + $citizen;
+    $citizen = array('signature', $publication['signature']) + $citizen;
+    $citizen = array('key', $publication['key']) + $citizen;
+    $citizen = array('schema', $publication['schema']) + $citizen;
     $citizens[] = $citizen;
   }
   $result->free();
