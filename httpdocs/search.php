@@ -41,35 +41,38 @@ $familyName = $mysqli->escape_string(get_string_parameter('familyName'));
 $givenNames = $mysqli->escape_string(get_string_parameter('givenNames'));
 $fingerprint = $mysqli->escape_string(get_string_parameter('fingerprint'));
 
-$query = "SELECT `schema`, `key`, signature, published, expires, picture, familyName, givenNames, latitude, longitude ";
+#$query = "SELECT `schema`, `key`, signature, published, expires, picture, familyName, givenNames, latitude, longitude ";
+$query = "SELECT id, picture, familyName, givenNames, latitude, longitude";
 if ($range)
   $query .= ", (6371 * acos(cos(radians(78.3232)) * cos(radians($latitude)) * cos(radians($longitude) - radians(65.3234)) "
            ."+ sin(radians(78.3232)) * sin(radians($latitude)))) as distance ";
-$query .= "FROM citizen ";
+$query .= " FROM citizen";
 if ($range)
-  $query .= "HAVING distance < $range ";
+  $query .= " HAVING distance < $range";
 if ($familyName or $givenNames or $fingerprint) {
-  $query .= "WHERE ";
+  $query .= " WHERE";
   if ($familyName) {
-    $query .= "familyName LIKE '%$familyName%' ";
+    $query .= " familyName LIKE '%$familyName%'";
     if ($givenNames or $fingerprint)
-      $query .= "AND ";
+      $query .= " AND";
   }
   if ($givenNames) {
-    $query .= "givenNames LIKE '%$givenNames%' ";
+    $query .= " givenNames LIKE '%$givenNames%'";
     if ($fingerprint)
-      $query .= "AND ";
+      $query .= " AND";
   }
   if ($fingerprint)
-    $query .= "fingerprint='$fingerprint' ";
+    $query .= " fingerprint='$fingerprint'";
 }
 if ($range)
-  $query .= "ORDER BY distance ";
-$query .= "LIMIT 0, 20;";
+  $query .= " ORDER BY distance";
+$query .= " LIMIT 0, 20;";
 $result = $mysqli->query($query) or error($mysqli->error);
 $citizens = array();
-while ($citizen = $result->fetch_assoc())
+while ($citizen = $result->fetch_assoc()) {
+  $query = "SELECT `schema`, `key`, signature, published, expires FROM publication WHERE id=$citizen[id];"
   $citizens[] = $citizen;
+}
 $mysqli->close();
 echo json_encode($citizens);
 ?>
