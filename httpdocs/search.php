@@ -32,26 +32,40 @@ if ($mysqli->connect_errno)
   error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
 $mysqli->set_charset('utf8mb4');
 
-$latitude = get_float_parameter('latitude') / 100000;
-$longitude = get_float_parameter('longitude') / 100000;
 $range = get_float_parameter('range');
+if ($range) {
+  $latitude = get_float_parameter('latitude') / 100000;
+  $longitude = get_float_parameter('longitude') / 100000;
+}
 $familyName = $mysqli->escape_string(get_string_parameter('familyName'));
 $givenNames = $mysqli->escape_string(get_string_parameter('givenNames'));
+$fingerprint = $mysqli->escape_string(get_string_parameter('fingerprint'));
 
-$query = "SELECT givenNames, familyName, latitude, longitude, picture, "
-        ."(6371 * acos(cos(radians(78.3232)) * cos(radians($latitude)) * cos(radians($longitude) - radians(65.3234)) "
-        ."+ sin(radians(78.3232)) * sin(radians($latitude)))) as distance FROM card HAVING distance < $range ";
-if ($familyName or $givenNames ) {
+$query = "SELECT `schema`, `key`, signature, published, expires, picture, familyName, givenNames, latitude, longitude ";
+if ($range)
+  $query .= ", (6371 * acos(cos(radians(78.3232)) * cos(radians($latitude)) * cos(radians($longitude) - radians(65.3234)) "
+           ."+ sin(radians(78.3232)) * sin(radians($latitude)))) as distance ";
+$query .= "FROM card ";
+if ($range)
+  $query .= "HAVING distance < $range ";
+if ($familyName or $givenNames or $fingerprint)
   $query .= "WHERE ";
   if ($familyName) {
     $query .= "familyName LIKE '%$familyName%' ";
-    if ($givenNames)
+    if ($givenNames or $fingerprint)
       $query .= "AND ";
   }
-  if ($givenNames)
+  if ($givenNames) {
     $query .= "givenNames LIKE '%$givenNames%' ";
+    if ($fingerprint)
+      $query .= "AND ";
+  }
+  if ($fingerprint)
+    $query .= "fingerprint='$fingerprint' ";
 }
-$query .= "ORDER BY distance LIMIT 0, 20;";
+if ($range)
+  $query .= "ORDER BY distance "
+$query .= "LIMIT 0, 20;";
 $result = $mysqli->query($query) or error($mysqli->error);
 $cards = array();
 while ($card = $result->fetch_assoc())
