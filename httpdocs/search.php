@@ -51,11 +51,11 @@ if ($fingerprint) {
     $result = $mysqli->query($query) or error($mysqli->error);
     $citizen = $result->fetch_assoc();
     $result->free();
-    $citizen = array('expires', $publication['expires']) + $citizen;  # insert first
-    $citizen = array('published', $publication['published']) + $citizen;
-    $citizen = array('signature', $publication['signature']) + $citizen;
-    $citizen = array('key', $publication['key']) + $citizen;
-    $citizen = array('schema', $publication['schema']) + $citizen;
+    $citizen = array('schema' => $publication['schema'],
+                     'expires' => $publication['expires'],
+                     'published' => $publication['published'],
+                     'signature' => $publication['signature'],
+                     'key' => $publication['key']) + $citizen;
     echo json_encode($citizen);
   } else
     error("Citizen not found: $query");
