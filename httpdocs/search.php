@@ -64,7 +64,7 @@ if ($familyName or $givenNames or $fingerprint) {
     $query .= "fingerprint='$fingerprint' ";
 }
 if ($range)
-  $query .= "ORDER BY distance "
+  $query .= "ORDER BY distance ";
 $query .= "LIMIT 0, 20;";
 $result = $mysqli->query($query) or error($mysqli->error);
 $cards = array();
