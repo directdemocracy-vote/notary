@@ -48,7 +48,7 @@ if ($range)
 $query .= "FROM card ";
 if ($range)
   $query .= "HAVING distance < $range ";
-if ($familyName or $givenNames or $fingerprint)
+if ($familyName or $givenNames or $fingerprint) {
   $query .= "WHERE ";
   if ($familyName) {
     $query .= "familyName LIKE '%$familyName%' ";
