@@ -40,7 +40,7 @@ if ($range) {
 $familyName = $mysqli->escape_string(get_string_parameter('familyName'));
 $givenNames = $mysqli->escape_string(get_string_parameter('givenNames'));
 $fingerprint = $mysqli->escape_string(get_string_parameter('fingerprint'));
-echo "$fingerprint<br>";
+
 if ($fingerprint) {
   $query = "SELECT * FROM publication WHERE fingerprint='$fingerprint';";
   $result = $mysqli->query($query) or error($mysqli->error);
