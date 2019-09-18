@@ -45,7 +45,7 @@ $query = "SELECT `schema`, `key`, signature, published, expires, picture, family
 if ($range)
   $query .= ", (6371 * acos(cos(radians(78.3232)) * cos(radians($latitude)) * cos(radians($longitude) - radians(65.3234)) "
            ."+ sin(radians(78.3232)) * sin(radians($latitude)))) as distance ";
-$query .= "FROM card ";
+$query .= "FROM citizen ";
 if ($range)
   $query .= "HAVING distance < $range ";
 if ($familyName or $givenNames or $fingerprint) {
@@ -67,9 +67,9 @@ if ($range)
   $query .= "ORDER BY distance ";
 $query .= "LIMIT 0, 20;";
 $result = $mysqli->query($query) or error($mysqli->error);
-$cards = array();
-while ($card = $result->fetch_assoc())
-  $cards[] = $card;
+$citizens = array();
+while ($citizen = $result->fetch_assoc())
+  $citizens[] = $citizen;
 $mysqli->close();
-echo json_encode($cards);
+echo json_encode($citizens);
 ?>
