@@ -99,7 +99,7 @@ if (!$result->isValid()) {
   $keywordArgs = json_encode($error->keywordArgs(), JSON_UNESCAPED_SLASHES);
   error("{\"keyword\":\"$keyword\",\"keywordArgs\":$keywordArgs}");
 }
-$now = intval(microtime(true) / 1000);  # milliseconds
+$now = intval(microtime(true) * 1000);  # milliseconds
 if ($publication->published > $now + 60000)  # allowing a 1 minute error
   error("Publication date in the future: $publication->published > $now");
 if ($publication->expires < $now - 60000)  # allowing a 1 minute error
