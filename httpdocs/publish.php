@@ -99,7 +99,7 @@ if (!$result->isValid()) {
   $keywordArgs = json_encode($error->keywordArgs(), JSON_UNESCAPED_SLASHES);
   error("{\"keyword\":\"$keyword\",\"keywordArgs\":$keywordArgs}");
 }
-$now = intval(microtime(true) * 1000);  # milliseconds
+$now = floatval(microtime(true) * 1000);  # milliseconds
 if ($publication->published > $now + 60000)  # allowing a 1 minute error
   error("Publication date in the future: $publication->published > $now");
 if ($publication->expires < $now - 60000)  # allowing a 1 minute error
@@ -173,14 +173,13 @@ if ($type == 'citizen') {
       error("endorsement key mismatch");
     if ($endorsed['signature'] != $signature)
       error("endorsement signature mismatch");
-    $endorsement_expires = strtotime($endorsement->expires);
-    $endorsed_expires = strtotime($endorsed['expires']);
-    if ($endorsement_expires > $endorsed_expires)
+    $endorsed_expires = floatval($endorsed['expires']);
+    if ($endorsement->expires > $endorsed_expires)
       error("endorsement expires after publication: $endorsement_expires > $endorsed_expires");
     if ($endorsement->revoke) {
-      if ($endorsement_expires != $endorsed_expires)
+      if ($endorsement->expires != $endorsed_expires)
         error("revoke endorsement don't expire at the same time as publication");
-      $i = $endorsed['id'];
+      $i = intval($endorsed['id']);
       $query = "DELETE FROM publication WHERE id=$i";
       $mysqli->query($query) or error($mysqli->error);
       $t = get_type($endorsed['schema']);

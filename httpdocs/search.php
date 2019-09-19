@@ -58,8 +58,8 @@ if ($fingerprint) {
     $citizen = array('schema' => $publication['schema'],
                      'key' => $publication['key'],
                      'signature' => $publication['signature'],
-                     'published' => $publication['published'],
-                     'expires' => $publication['expires']) + $citizen;
+                     'published' => floatval($publication['published']),
+                     'expires' => floatval($publication['expires'])) + $citizen;
     echo json_encode($citizen, JSON_UNESCAPED_SLASHES);
   } else
     error("Citizen not found: $query");
@@ -95,8 +95,8 @@ if ($fingerprint) {
     $citizen = array('schema' => $publication['schema'],
                      'key' => $publication['key'],
                      'signature' => $publication['signature'],
-                     'published' => $publication['published'],
-                     'expires' => $publication['expires']) + $citizen;
+                     'published' => floatval($publication['published']),
+                     'expires' => floatval($publication['expires'])) + $citizen;
     $citizens[] = $citizen;
   }
   $result->free();
