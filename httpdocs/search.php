@@ -55,6 +55,8 @@ if ($fingerprint) {
     $result = $mysqli->query($query) or error($mysqli->error);
     $citizen = $result->fetch_assoc();
     $result->free();
+    $citizen['latitude'] = intval($citizen['latitude']);
+    $citizen['longitude'] = intval($citizen['longitude']);
     $citizen = array('schema' => $publication['schema'],
                      'key' => $publication['key'],
                      'signature' => $publication['signature'],
@@ -92,6 +94,8 @@ if ($fingerprint) {
     $publication = $r->fetch_assoc();
     $r->free();
     unset($citizen['id']);
+    $citizen['latitude'] = intval($citizen['latitude']);
+    $citizen['longitude'] = intval($citizen['longitude']);
     $citizen = array('schema' => $publication['schema'],
                      'key' => $publication['key'],
                      'signature' => $publication['signature'],
