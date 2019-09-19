@@ -100,7 +100,7 @@ if (!$result->isValid()) {
   error("{\"keyword\":\"$keyword\",\"keywordArgs\":$keywordArgs}");
 }
 $now = intval(microtime(true) * 1000);  # milliseconds
-if ($publication->published > $now + 60000)  # allowing a 1 minute error
+//if ($publication->published > $now + 60000)  # allowing a 1 minute error
   error("Publication date in the future: $publication->published > $now");
 if ($publication->expires < $now - 60000)  # allowing a 1 minute error
   error("Expiration date in the past: $publication->expires < $now");
