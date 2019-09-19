@@ -101,9 +101,9 @@ if (!$result->isValid()) {
 }
 $now = intval(microtime(true) / 1000);  # milliseconds
 if ($publication->published > $now + 60000)  # allowing a 1 minute error
-  error("Publication date in the future: $publication->published");
+  error("Publication date in the future: $publication->published > $now");
 if ($publication->expires < $now - 60000)  # allowing a 1 minute error
-  error("Expiration date in the past: $publication->expires");
+  error("Expiration date in the past: $publication->expires < $now");
 $type = get_type($publication->schema);
 if ($type == 'citizen') {
   $citizen = &$publication;
