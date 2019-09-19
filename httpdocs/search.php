@@ -24,6 +24,10 @@ function get_string_parameter($name) {
   return FALSE;
 }
 
+function iso_time($sql_time) {
+
+}
+
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
@@ -47,7 +51,7 @@ if ($fingerprint) {
   $publication = $result->fetch_assoc();
   $result->free();
   if ($publication) {
-    $query = "SELECT picture, familyName, givenNames, latitude, longitude FROM citizen WHERE id=$publication[id]";
+    $query = "SELECT familyName, givenNames, picture, latitude, longitude FROM citizen WHERE id=$publication[id]";
     $result = $mysqli->query($query) or error($mysqli->error);
     $citizen = $result->fetch_assoc();
     $result->free();
@@ -56,11 +60,11 @@ if ($fingerprint) {
                      'signature' => $publication['signature'],
                      'published' => $publication['published'],
                      'expires' => $publication['expires']) + $citizen;
-    echo json_encode($citizen);
+    echo json_encode($citizen, JSON_UNESCAPED_SLASHES);
   } else
     error("Citizen not found: $query");
 } else {
-  $query = "SELECT id, picture, familyName, givenNames, latitude, longitude";
+  $query = "SELECT id, familyName, givenNames, picture, latitude, longitude";
   if ($range)
     $query .= ", (6371 * acos(cos(radians(78.3232)) * cos(radians($latitude)) * cos(radians($longitude) - radians(65.3234)) "
              ."+ sin(radians(78.3232)) * sin(radians($latitude)))) as distance ";
@@ -87,6 +91,7 @@ if ($fingerprint) {
     $r = $mysqli->query($query) or error($mysqli->error);
     $publication = $r->fetch_assoc();
     $r->free();
+    unset($citizen['id']);
     $citizen = array('schema' => $publication['schema'],
                      'key' => $publication['key'],
                      'signature' => $publication['signature'],
@@ -95,7 +100,7 @@ if ($fingerprint) {
     $citizens[] = $citizen;
   }
   $result->free();
-  echo json_encode($citizens);
+  echo json_encode($citizens, JSON_UNESCAPED_SLASHES);
 }
 $mysqli->close();
 ?>

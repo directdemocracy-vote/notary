@@ -99,12 +99,10 @@ if (!$result->isValid()) {
   $keywordArgs = json_encode($error->keywordArgs(), JSON_UNESCAPED_SLASHES);
   error("{\"keyword\":\"$keyword\",\"keywordArgs\":$keywordArgs}");
 }
-$published = strtotime($publication->published);
-$expires = strtotime($publication->expires);
-$now = time();
-if ($published > $now + 60)  # allowing a 1 minute error
+$now = intval(microtime(true) / 1000);  # milliseconds
+if ($publication->published > $now + 60000)  # allowing a 1 minute error
   error("Publication date in the future: $publication->published");
-if ($expires < $now)
+if ($publication->expires < $now - 60000)  # allowing a 1 minute error
   error("Expiration date in the past: $publication->expires");
 $type = get_type($publication->schema);
 if ($type == 'citizen') {
@@ -131,8 +129,6 @@ $mysqli = new mysqli($database_host, $database_username, $database_password, $da
 if ($mysqli->connect_errno)
   error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
 $mysqli->set_charset('utf8mb4');
-$expires = strtotime($publication->expires);
-$published = strtotime($publication->published);
 if ($type == 'citizen')  # delete any previous citizen card with same key to replace it
   delete_citizen($mysqli, $citizen->key);
 elseif ($type == 'endorsement') {
@@ -156,7 +152,7 @@ elseif ($type == 'endorsement') {
 }
 $query = "INSERT INTO publication(`schema`, `key`, signature, fingerprint, published, expires) "
         ."VALUES('$publication->schema', '$publication->key', '$publication->signature', "
-        ."SHA1('$publication->signature'), FROM_UNIXTIME($published), FROM_UNIXTIME($expires))";
+        ."SHA1('$publication->signature'), $publication->published, $publication->expires)";
 $mysqli->query($query) or error($mysqli->error);
 $id = $mysqli->insert_id;
 if ($type == 'citizen') {
