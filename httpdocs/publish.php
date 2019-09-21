@@ -149,7 +149,7 @@ elseif ($type == 'endorsement') {
     error("Empty key");
   if ($signature == '')
     error("Empty signature");
-  delete_older_endorsements($mysqli, $endorsement->key, $endorsement->signature, $endorsement->published, $key, $signature);
+  delete_older_endorsements($mysqli, $endorsement->key, $endorsement->published, $key, $signature);
   if ($endorsement->revoke && $endorsement->key == $key) {  # revoking my own stuff
     $query = "SELECT id, `schema` FROM publication WHERE `key`='$key' "
             ."AND signature='$signature'";
