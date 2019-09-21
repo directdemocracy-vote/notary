@@ -133,6 +133,8 @@ if ($type == 'citizen')  # delete any previous citizen card with same key to rep
   delete_citizen($mysqli, $citizen->key);
 elseif ($type == 'endorsement') {
   $endorsement = &$publication;
+  if (!property_exists($endorsement, 'revoke'))
+    $endorsement->revoke = false;
   $key = $endorsement->publication->key;
   $signature = $endorsement->publication->signature;
   if ($endorsement->revoke && $endorsement->key == $key) {  # revoking my own stuff
