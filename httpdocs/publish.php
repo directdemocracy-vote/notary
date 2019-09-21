@@ -58,7 +58,6 @@ function delete_older_endorsements($mysqli, $key, $published, $endorsedKey, $end
   $query = "DELETE p, e FROM publication p JOIN endorsement e ON e.id = p.id WHERE p.`key` = '$key' "
           ."AND p.published < $published AND e.publicationKey = '$endorsedKey' "
           ."AND e.publicationSignature = '$endorsedSignature'";
-  error($query);
   $mysqli->query($query) or error($mysqli->error);
 }
 
