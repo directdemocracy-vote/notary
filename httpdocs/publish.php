@@ -54,11 +54,10 @@ function delete_citizen($mysqli, $key) {
   $result->free();
 }
 
-function delete_older_endorsements($mysqli, $key, $signature, $published, $endorsedKey, $endorsedSignature) {
+function delete_older_endorsements($mysqli, $key, $published, $endorsedKey, $endorsedSignature) {
   $query = "DELETE p, e FROM publication p JOIN endorsement e ON e.id = p.id WHERE p.`key` = '$key' "
-          ."AND p.signature = '$signature' AND p.published < $published AND e.publicationKey = '$endorsedKey' "
+          ."AND p.published < $published AND e.publicationKey = '$endorsedKey' "
           ."AND e.publicationSignature = '$endorsedSignature'";
-  error($query);
   $mysqli->query($query) or error($mysqli->error);
 }
 
