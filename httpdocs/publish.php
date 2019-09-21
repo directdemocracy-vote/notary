@@ -54,6 +54,13 @@ function delete_citizen($mysqli, $key) {
   $result->free();
 }
 
+function delete_older_endorsements($mysqli, $key, $signature, $published, $endorsedKey, $endorsedSignature) {
+  $query = "DELETE p, e FROM publication p JOIN endorsement e ON e.id=p.id WHERE p.`key` = '$key' "
+          ."AND p.signature = '$signature' AND p.published < $published AND e.publicationKey = '$endorsedKey' "
+          ."AND e.publicationSignature = '$endorsedSignature'";
+  $mysqli->query($query) or error($mysqli->error);
+}
+
 function delete_publication($mysqli, $key, $signature) {
   $query = "SELECT id, `schema` FROM publication WHERE `key`='$key' AND signature='$signature'";
   $result = $mysqli->query($query) or error($mysqli->error);
@@ -141,6 +148,7 @@ elseif ($type == 'endorsement') {
     error("Empty key");
   if ($signature == '')
     error("Empty signature");
+  delete_older_endorsements($mysqli, $endorsement->key, $endorsement->signature, $endorsement->published, $key, $signature);
   if ($endorsement->revoke && $endorsement->key == $key) {  # revoking my own stuff
     $query = "SELECT id, `schema` FROM publication WHERE `key`='$key' "
             ."AND signature='$signature'";
