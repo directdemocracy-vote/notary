@@ -137,6 +137,10 @@ elseif ($type == 'endorsement') {
     $endorsement->revoke = false;
   $key = $endorsement->publication->key;
   $signature = $endorsement->publication->signature;
+  if ($key == '')
+    error("Empty key");
+  if ($signature == '')
+    error("Empty signature");
   if ($endorsement->revoke && $endorsement->key == $key) {  # revoking my own stuff
     $query = "SELECT id, `schema` FROM publication WHERE `key`='$key' "
             ."AND signature='$signature'";
