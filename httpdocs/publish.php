@@ -150,7 +150,6 @@ elseif ($type == 'endorsement') {
     error("Empty signature");
   delete_older_endorsements($mysqli, $endorsement->key, $endorsement->published, $key, $signature);
   if ($endorsement->revoke && $endorsement->key == $key) {  # revoking my own stuff
-    error("shit");
     $query = "SELECT id, `schema` FROM publication WHERE `key`='$key' AND signature='$signature'";
     $result = $mysqli->query($query) or error($mysqli->error);
     $p = $result->fetch_assoc();
@@ -193,12 +192,13 @@ if ($type == 'citizen') {
     if ($endorsement->revoke) {
       if ($endorsement->expires != $endorsed_expires)
         error("revoke endorsement don't expire at the same time as publication");
+/*
       $i = intval($endorsed['id']);
-      $query = "DELETE FROM publication WHERE id=$i";
+      $query = "DELETE FROM publication WHERE id=$i AND `key`='$key'";
       $mysqli->query($query) or error($mysqli->error);
-      $t = get_type($endorsed['schema']);
       $query = "DELETE FROM `$t` WHERE id=$i";
       $mysqli->query($query) or error($mysqli->error);
+*/
     }
   }
   $query = "INSERT INTO endorsement(id, publicationKey, publicationSignature, publicationFingerprint, "
