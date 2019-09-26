@@ -189,17 +189,8 @@ if ($type == 'citizen') {
     $endorsed_expires = floatval($endorsed['expires']);
     if ($endorsement->expires > $endorsed_expires)
       error("endorsement expires after publication: $endorsement_expires > $endorsed_expires");
-    if ($endorsement->revoke) {
-      if ($endorsement->expires != $endorsed_expires)
-        error("revoke endorsement don't expire at the same time as publication");
-/*
-      $i = intval($endorsed['id']);
-      $query = "DELETE FROM publication WHERE id=$i AND `key`='$key'";
-      $mysqli->query($query) or error($mysqli->error);
-      $query = "DELETE FROM `$t` WHERE id=$i";
-      $mysqli->query($query) or error($mysqli->error);
-*/
-    }
+    if ($endorsement->revoke && $endorsement->expires != $endorsed_expires)
+      error("revoke endorsement don't expire at the same time as publication");
   }
   $query = "INSERT INTO endorsement(id, publicationKey, publicationSignature, publicationFingerprint, "
           ."`revoke`, message, comment) VALUES($id, '$key', '$signature', SHA1('$signature'), "
