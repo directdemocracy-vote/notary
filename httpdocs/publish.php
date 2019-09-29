@@ -90,7 +90,7 @@ function endorsements($mysqli, $key) {
           ."publication pe INNER JOIN endorsement e ON pe.id = e.id, "
           ."publication pc INNER JOIN citizen c ON pc.id = c.id "
           ."WHERE pe.`key` = '$key' AND pc.`key` = e.publicationKey "
-          ."AND pc.`signature` = e.publicationSignature";
+          ."AND pc.`signature` = e.publicationSignature ORDER BY e.revoke ASC";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsements = array();
   while($e = $result->fetch_assoc()) {
