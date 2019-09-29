@@ -93,8 +93,14 @@ function endorsements($mysqli, $key) {
           ."AND pc.`signature` = e.publicationSignature";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsements = array();
-  while($e = $result->fetch_assoc())
+  while($e = $result->fetch_assoc()) {
+    settype($e['published'], 'int');
+    settype($e['expires'], 'int');
+    settype($e['latitude'], 'int');
+    settype($e['longitude'], 'int');
+    settype($e['revoke'], 'bool');
     $endorsements[] = $e;
+  }
   $result->free();
   return $endorsements;
 }
