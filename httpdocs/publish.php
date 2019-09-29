@@ -84,6 +84,20 @@ function delete_all_publications($mysqli, $key) {
   $result->free();
 }
 
+function endorsements($mysqli, $key) {
+  $query = "SELECT pc.fingerprint, pe.published, pe.expires, e.revoke, "
+          ."c.familyName, c.givenNames, c.picture, c.latitude, c.longitude FROM "
+          ."publication pe INNER JOIN endorsement e ON pe.id = e.id, "
+          ."publication pc INNER JOIN citizen c ON pc.id = c.id "
+          ."WHERE `pe.key` = '$key'";
+  $result = $mysqli->query($query) or error($mysqli->error);
+  $endorsements = array();
+  while($e = $result->fetch_assoc())
+    $endorsements[] = $e;
+  $result->free();
+  return $endorsements;
+}
+
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
@@ -197,6 +211,9 @@ if ($type == 'citizen') {
           ."'$endorsement->revoke', '$endorsement->message', '$endorsement->comment')";
   $mysqli->query($query) or error($mysqli->error);
 }
-echo("{\"$type\":\"$id\"}");
+if ($type == 'endorsement')
+  echo json_encode(endorsements($mysqli, $publication->key), JSON_UNESCAPED_SLASHES);
+else
+  echo("{\"$type\":\"$id\"}");
 $mysqli->close();
 ?>
