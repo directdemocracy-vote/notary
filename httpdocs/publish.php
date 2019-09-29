@@ -89,7 +89,8 @@ function endorsements($mysqli, $key) {
           ."c.familyName, c.givenNames, c.picture, c.latitude, c.longitude FROM "
           ."publication pe INNER JOIN endorsement e ON pe.id = e.id, "
           ."publication pc INNER JOIN citizen c ON pc.id = c.id "
-          ."WHERE pe.`key` = '$key'";
+          ."WHERE pe.`key` = '$key' AND pc.`key` = e.publicationKey "
+          ."AND pc.`signature` = e.publicationSignature";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsements = array();
   while($e = $result->fetch_assoc())
