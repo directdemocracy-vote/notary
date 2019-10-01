@@ -14,7 +14,7 @@ $query = "SELECT publication.published, publication.expires, citizen.familyName,
         ."FROM publication INNER JOIN citizen ON publication.id = citizen.id "
         ."WHERE publication.`key` = '$key'";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
-$citizen = $result->fetch_assoc() or die("{\"error\":\"citizen not found\"}");
+$citizen = $result->fetch_assoc() or die("{\"error\":\"citizen not found: $key\"}");
 $result->free();
 settype($citizen['published'], 'int');
 settype($citizen['expires'], 'int');
