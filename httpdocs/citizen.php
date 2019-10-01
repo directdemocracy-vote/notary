@@ -8,11 +8,11 @@ $mysqli = new mysqli($database_host, $database_username, $database_password, $da
 if ($mysqli->connect_errno)
   die("{\"error\":\"Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)\"}");
 $mysqli->set_charset('utf8mb4');
-$fingerprint = $mysqli->escape_string($_POST['fingerprint']);
+$key = $mysqli->escape_string($_POST['key']);
 $query = "SELECT publication.published, publication.expires, citizen.familyName, "
         ."citizen.givenNames, citizen.picture, citizen.latitude, citizen.longitude "
         ."FROM publication INNER JOIN citizen ON publication.id = citizen.id "
-        ."WHERE publication.fingerprint = '$fingerprint'";
+        ."WHERE publication.`key` = '$key'";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $citizen = $result->fetch_assoc() or die("{\"error\":\"citizen not found\"}");
 $result->free();
@@ -20,6 +20,6 @@ settype($citizen['published'], 'int');
 settype($citizen['expires'], 'int');
 settype($citizen['latitude'], 'int');
 settype($citizen['longitude'], 'int');
-die(json_encode($citizen, JSON_UNESCAPED_SLASHES);
+die(json_encode($citizen, JSON_UNESCAPED_SLASHES));
 }
 ?>
