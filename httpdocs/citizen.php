@@ -21,5 +21,4 @@ settype($citizen['expires'], 'int');
 settype($citizen['latitude'], 'int');
 settype($citizen['longitude'], 'int');
 die(json_encode($citizen, JSON_UNESCAPED_SLASHES));
-}
 ?>
