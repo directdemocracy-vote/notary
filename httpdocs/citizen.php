@@ -9,6 +9,7 @@ if ($mysqli->connect_errno)
   die("{\"error\":\"Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)\"}");
 $mysqli->set_charset('utf8mb4');
 $key = $mysqli->escape_string($_POST['key']);
+$key = str_replace('\n', "\n", $key);
 $query = "SELECT publication.published, publication.expires, citizen.familyName, "
         ."citizen.givenNames, citizen.picture, citizen.latitude, citizen.longitude "
         ."FROM publication INNER JOIN citizen ON publication.id = citizen.id "
