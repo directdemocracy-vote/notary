@@ -7,7 +7,9 @@ function endorsements($mysqli, $key) {
           ."WHERE pe.`key` = '$key' AND pc.`key` = e.publicationKey "
           ."AND pc.`signature` = e.publicationSignature "
           ."ORDER BY e.revoke ASC, c.familyName, c.givenNames";
-  $result = $mysqli->query($query) or return "{\"error\":\"$mysqli->error\"}";
+  $result = $mysqli->query($query);
+  if (!$result)
+    return "{\"error\":\"$mysqli->error\"}";
   $endorsements = array();
   while($e = $result->fetch_assoc()) {
     settype($e['published'], 'int');
