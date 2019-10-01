@@ -2,6 +2,7 @@
 
 require_once '../vendor/autoload.php';
 require_once '../php/database.php';
+require_once '../php/endorsements.php';
 
 use Opis\JsonSchema\{
   IMediaType, MediaTypeContainer, Schema, Validator, ValidationResult, ValidationError
@@ -82,28 +83,6 @@ function delete_all_publications($mysqli, $key) {
     $mysqli->query("DELETE FROM $type WHERE id=$p[id]") or error($mysqli->error);
   }
   $result->free();
-}
-
-function endorsements($mysqli, $key) {
-  $query = "SELECT pc.fingerprint, pe.published, pe.expires, e.revoke, pc.`key`, pc.`signature`, "
-          ."c.familyName, c.givenNames, c.picture, c.latitude, c.longitude FROM "
-          ."publication pe INNER JOIN endorsement e ON pe.id = e.id, "
-          ."publication pc INNER JOIN citizen c ON pc.id = c.id "
-          ."WHERE pe.`key` = '$key' AND pc.`key` = e.publicationKey "
-          ."AND pc.`signature` = e.publicationSignature "
-          ."ORDER BY e.revoke ASC, c.familyName, c.givenNames";
-  $result = $mysqli->query($query) or error($mysqli->error);
-  $endorsements = array();
-  while($e = $result->fetch_assoc()) {
-    settype($e['published'], 'int');
-    settype($e['expires'], 'int');
-    settype($e['latitude'], 'int');
-    settype($e['longitude'], 'int');
-    settype($e['revoke'], 'bool');
-    $endorsements[] = $e;
-  }
-  $result->free();
-  return $endorsements;
 }
 
 header("Content-Type: application/json");
@@ -220,7 +199,7 @@ if ($type == 'citizen') {
   $mysqli->query($query) or error($mysqli->error);
 }
 if ($type == 'endorsement')
-  echo json_encode(endorsements($mysqli, $publication->key), JSON_UNESCAPED_SLASHES);
+  echo endorsements($mysqli, $publication->key);
 else
   echo("{\"$type\":\"$id\"}");
 $mysqli->close();
