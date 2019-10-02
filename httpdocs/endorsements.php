@@ -12,6 +12,6 @@ $mysqli->set_charset('utf8mb4');
 $fingerprint = $mysqli->escape_string($_POST['fingerprint']);
 $query = "SELECT `key` FROM publication WHERE fingerprint='$fingerprint' AND `schema` LIKE '%/citizen.schema.json'";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
-$citizen = $result->fetch_assoc() or die("{\"error\":\"citizen not found\"}");
+$citizen = $result->fetch_assoc() or die("{\"error\":\"citizen not found: $query\"}");
 die(endorsements($mysqli, $citizen['key']));
 ?>
