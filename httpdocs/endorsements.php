@@ -9,9 +9,11 @@ $mysqli = new mysqli($database_host, $database_username, $database_password, $da
 if ($mysqli->connect_errno)
   die("{\"error\":\"Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)\"}");
 $mysqli->set_charset('utf8mb4');
-$fingerprint = $mysqli->escape_string($_POST['fingerprint']);
+$key = $mysqli->escape_string($_POST['key']);
+/*
 $query = "SELECT `key` FROM publication WHERE fingerprint='$fingerprint' AND `schema` LIKE '%/citizen.schema.json'";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $citizen = $result->fetch_assoc() or die("{\"error\":\"citizen not found: $query\"}");
-die(endorsements($mysqli, $citizen['key']));
+*/
+die(endorsements($mysqli, $key));
 ?>
