@@ -20,6 +20,6 @@ function endorsements($mysqli, $key) {
     $endorsements[] = $e;
   }
   $result->free();
-  return json_encode($endorsements, JSON_UNESCAPED_SLASHES);
+  return $endorsements;
 }
 ?>

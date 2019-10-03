@@ -199,7 +199,7 @@ if ($type == 'citizen') {
   $mysqli->query($query) or error($mysqli->error);
 }
 if ($type == 'endorsement')
-  echo endorsements($mysqli, $publication->key);
+  echo json_encode(endorsements($mysqli, $publication->key), JSON_UNESCAPED_SLASHES);
 else
   echo("{\"$type\":\"$id\"}");
 $mysqli->close();
