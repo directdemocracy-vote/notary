@@ -27,8 +27,8 @@ $query = "SELECT pc.fingerprint, pe.published, e.revoke, "
         ."c.familyName, c.givenNames, c.picture FROM "
         ."publication pe INNER JOIN endorsement e ON pe.id = e.id, "
         ."publication pc INNER JOIN citizen c ON pc.id = c.id "
-        ."WHERE e.publicationKey = '$key' AND pc.`key` = e.publicationKey "
-        ."AND pc.`signature` = e.publicationSignature "
+        ."WHERE e.publicationKey = '$key' AND pc.`key` = pe.`key` "
+        ."AND pc.signature = pe.signature "
         ."ORDER BY e.revoke ASC, pe.published, c.familyName, c.givenNames";
 $result = $mysqli->query($query);
 if (!$result)
