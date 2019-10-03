@@ -1,5 +1,6 @@
 <?php
 require_once '../php/database.php';
+require_once '../php/endorsements.php';
 
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
@@ -21,5 +22,9 @@ settype($citizen['published'], 'int');
 settype($citizen['expires'], 'int');
 settype($citizen['latitude'], 'int');
 settype($citizen['longitude'], 'int');
-die(json_encode($citizen, JSON_UNESCAPED_SLASHES));
+$endorsements = endorsements($mysqli, $key);
+$answer = array();
+$answer['citizen'] = $citizen;
+$answer['endorsements'] = $endorsements;
+die(json_encode($answer, JSON_UNESCAPED_SLASHES));
 ?>
