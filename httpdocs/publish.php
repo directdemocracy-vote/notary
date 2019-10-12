@@ -87,7 +87,7 @@ function delete_all_publications($mysqli, $key) {
 
 function public_key($key) {
   $public_key = "-----BEGIN PUBLIC KEY-----\n";
-  $l = len($key);
+  $l = strlen($key);
   for($i = 0; $i < $l; $i += 64)
     $public_key .= substr($key, $i, 64) + "\n";
   $public_key.= "-----END PUBLIC KEY-----";
