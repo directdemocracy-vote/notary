@@ -89,8 +89,9 @@ function public_key($key) {
   $public_key = "-----BEGIN PUBLIC KEY-----\n";
   $l = len($key);
   for($i = 0; $i < $l; $i += 64)
-    $public_key .= substr($key, $i, 64);
+    $public_key .= substr($key, $i, 64) + "\n";
   $public_key.= "-----END PUBLIC KEY-----";
+  return $public_key;
 }
 
 header("Content-Type: application/json");
