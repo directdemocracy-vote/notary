@@ -85,6 +85,14 @@ function delete_all_publications($mysqli, $key) {
   $result->free();
 }
 
+function public_key($key) {
+  $public_key = "-----BEGIN PUBLIC KEY-----\n";
+  $l = len($key);
+  for($i = 0; $i < $l; $i += 64)
+    $public_key .= substr($key, $i, 64);
+  $public_key.= "-----END PUBLIC KEY-----";
+}
+
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
@@ -129,7 +137,7 @@ if ($type == 'citizen') {
 $signature_copy = $publication->signature;
 $publication->signature = '';
 $data = json_encode($publication, JSON_UNESCAPED_SLASHES);
-$verify = openssl_verify($data, base64_decode($signature_copy), $publication->key, OPENSSL_ALGO_SHA256);
+$verify = openssl_verify($data, base64_decode($signature_copy), public_key($publication->key), OPENSSL_ALGO_SHA256);
 if ($verify != 1)
   error("Wrong signature");
 $publication->signature = $signature_copy;
