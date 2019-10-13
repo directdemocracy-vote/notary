@@ -212,6 +212,8 @@ if ($type == 'citizen') {
   foreach($referendum->answers as &$answer)
     $answers .= $answer . ", ";
   $answers = substr($answers, 0, -2);
+  if (!isset($referendum->website))  # optional
+    $referendum->website = '';
   $query = "INSERT INTO referendum(id, trustee, title, description, question, answers, deadline, website) "
           ."VALUES($id, \"$referendum->trustee\", \"$referendum->title\", \"$referendum->description\", "
           ."\"$referendum->question\", \"$answers\", $referendum->deadline, \"$referendum->website\")";
