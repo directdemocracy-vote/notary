@@ -24,10 +24,6 @@ function get_string_parameter($name) {
   return FALSE;
 }
 
-function iso_time($sql_time) {
-
-}
-
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
