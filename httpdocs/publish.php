@@ -206,10 +206,27 @@ if ($type == 'citizen') {
           ."`revoke`, message, comment) VALUES($id, '$key', '$signature', SHA1('$signature'), "
           ."'$endorsement->revoke', '$endorsement->message', '$endorsement->comment')";
   $mysqli->query($query) or error($mysqli->error);
+} elseif ($type == 'referendum') {
+  $referendum =&$publication;
+  $answers = '';
+  foreach($referendum->answers as &$answer)
+    $answers .= $answer . ", ";
+  $answers = substr($answers, 0, -2);
+  $query = "INSERT INTO referendum(id, trustee, title, description, question, answers, deadline, website) "
+          ."VALUES($id, \"$referendum->trustee\", \"$referendum->title\", \"$referendum->description\", "
+          ."\"$referendum->question\", \"$answers\", $referendum->deadline, \"$referendum->website\")";
+  $mysqli->query($query) or error($mysqli->error);
+  foreach($referendum->areas as &$area) {
+    $query = "INSERT INTO area(parent, reference, type, name, latitude, longitude) VALUES"
+            ."($id, \"$area->reference\", \"$area->type\", \"$area->name\", $area->latitude, $area->longitude)";
+    $mysqli->query($query) or error($mysqli->error);
+  }
 }
 if ($type == 'endorsement')
   echo json_encode(endorsements($mysqli, $publication->key), JSON_UNESCAPED_SLASHES);
-else
-  echo("{\"$type\":\"$id\"}");
+else {
+  $fingerprint = sha1($publication->signature);
+  echo("{\"fingerprint\":\"$fingerprint\"}");
+}
 $mysqli->close();
 ?>
