@@ -55,7 +55,7 @@ if ($type == 'citizen') {
                    'expires' => floatval($publication['expires'])) + $citizen;
   echo json_encode($citizen, JSON_UNESCAPED_SLASHES);
 } elseif ($type == 'endorsement') {
-  $query = "SELECT publicationKey, publicationSignature, revoke, message, comment FROM endorsement WHERE id=$publication[id]";
+  $query = "SELECT publicationKey, publicationSignature, `revoke`, message, comment FROM endorsement WHERE id=$publication[id]";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsement = $result->fetch_assoc();
   $result->free();
