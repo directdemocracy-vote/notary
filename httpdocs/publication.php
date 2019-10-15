@@ -75,7 +75,7 @@ if ($type == 'citizen') {
   if ($referendum['website'] == '')
     unset($referendum['website']);
   $referendum['deadline'] = floatval($referendum['deadline']);
-  $answers = split(',', $referendum['answers']);
+  $answers = explode(',', $referendum['answers']);
   $referendum['answers'] = array();
   foreach($answers as &$answer)
     array_push($referendum['answers'], trim($answer));
