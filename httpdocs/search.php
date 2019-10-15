@@ -39,68 +39,45 @@ if ($range) {
 }
 $familyName = $mysqli->escape_string(get_string_parameter('familyName'));
 $givenNames = $mysqli->escape_string(get_string_parameter('givenNames'));
-$fingerprint = $mysqli->escape_string(get_string_parameter('fingerprint'));
 
-if ($fingerprint) {
-  $query = "SELECT * FROM publication WHERE fingerprint='$fingerprint';";
-  $result = $mysqli->query($query) or error($mysqli->error);
-  $publication = $result->fetch_assoc();
-  $result->free();
-  if ($publication) {
-    $query = "SELECT familyName, givenNames, picture, latitude, longitude FROM citizen WHERE id=$publication[id]";
-    $result = $mysqli->query($query) or error($mysqli->error);
-    $citizen = $result->fetch_assoc();
-    $result->free();
-    $citizen['latitude'] = intval($citizen['latitude']);
-    $citizen['longitude'] = intval($citizen['longitude']);
-    $citizen = array('schema' => $publication['schema'],
-                     'key' => $publication['key'],
-                     'signature' => $publication['signature'],
-                     'published' => floatval($publication['published']),
-                     'expires' => floatval($publication['expires'])) + $citizen;
-    echo json_encode($citizen, JSON_UNESCAPED_SLASHES);
-  } else
-    error("Citizen not found: $query");
-} else {
-  $query = "SELECT id, familyName, givenNames, picture, latitude, longitude";
-  if ($range)
-    $query .= ", (6371 * acos(cos(radians(78.3232)) * cos(radians($latitude)) * cos(radians($longitude) - radians(65.3234)) "
-             ."+ sin(radians(78.3232)) * sin(radians($latitude)))) as distance ";
-  $query .= " FROM citizen";
-  if ($range)
-    $query .= " HAVING distance < $range";
-  if ($familyName or $givenNames) {
-    $query .= " WHERE";
-    if ($familyName) {
-      $query .= " familyName LIKE '%$familyName%'";
-      if ($givenNames or $fingerprint)
-        $query .= " AND";
-    }
-    if ($givenNames)
-      $query .= " givenNames LIKE '%$givenNames%'";
+$query = "SELECT id, familyName, givenNames, picture, latitude, longitude";
+if ($range)
+  $query .= ", (6371 * acos(cos(radians(78.3232)) * cos(radians($latitude)) * cos(radians($longitude) - radians(65.3234)) "
+           ."+ sin(radians(78.3232)) * sin(radians($latitude)))) as distance ";
+$query .= " FROM citizen";
+if ($range)
+  $query .= " HAVING distance < $range";
+if ($familyName or $givenNames) {
+  $query .= " WHERE";
+  if ($familyName) {
+    $query .= " familyName LIKE '%$familyName%'";
+    if ($givenNames or $fingerprint)
+      $query .= " AND";
   }
-  if ($range)
-    $query .= " ORDER BY distance";
-  $query .= " LIMIT 0, 20;";
-  $result = $mysqli->query($query) or error($mysqli->error);
-  $citizens = array();
-  while ($citizen = $result->fetch_assoc()) {
-    $query = "SELECT `schema`, `key`, signature, published, expires FROM publication WHERE id=$citizen[id]";
-    $r = $mysqli->query($query) or error($mysqli->error);
-    $publication = $r->fetch_assoc();
-    $r->free();
-    unset($citizen['id']);
-    $citizen['latitude'] = intval($citizen['latitude']);
-    $citizen['longitude'] = intval($citizen['longitude']);
-    $citizen = array('schema' => $publication['schema'],
-                     'key' => $publication['key'],
-                     'signature' => $publication['signature'],
-                     'published' => floatval($publication['published']),
-                     'expires' => floatval($publication['expires'])) + $citizen;
-    $citizens[] = $citizen;
-  }
-  $result->free();
-  echo json_encode($citizens, JSON_UNESCAPED_SLASHES);
+  if ($givenNames)
+    $query .= " givenNames LIKE '%$givenNames%'";
 }
+if ($range)
+  $query .= " ORDER BY distance";
+$query .= " LIMIT 0, 20;";
+$result = $mysqli->query($query) or error($mysqli->error);
+$citizens = array();
+while ($citizen = $result->fetch_assoc()) {
+  $query = "SELECT `schema`, `key`, signature, published, expires FROM publication WHERE id=$citizen[id]";
+  $r = $mysqli->query($query) or error($mysqli->error);
+  $publication = $r->fetch_assoc();
+  $r->free();
+  unset($citizen['id']);
+  $citizen['latitude'] = intval($citizen['latitude']);
+  $citizen['longitude'] = intval($citizen['longitude']);
+  $citizen = array('schema' => $publication['schema'],
+                   'key' => $publication['key'],
+                   'signature' => $publication['signature'],
+                   'published' => floatval($publication['published']),
+                   'expires' => floatval($publication['expires'])) + $citizen;
+  $citizens[] = $citizen;
+}
+$result->free();
+echo json_encode($citizens, JSON_UNESCAPED_SLASHES);
 $mysqli->close();
 ?>
