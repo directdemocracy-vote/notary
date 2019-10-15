@@ -40,7 +40,7 @@ $publication = $result->fetch_assoc();
 $result->free();
 if (!$publication)
   error("No publication with fingerprint=$fingerprint was found.");
-$type = get_type($publication->schema)
+$type = get_type($publication->schema);
 if ($type == 'citizen') {
   $query = "SELECT familyName, givenNames, picture, latitude, longitude FROM citizen WHERE id=$publication[id]";
   $result = $mysqli->query($query) or error($mysqli->error);
