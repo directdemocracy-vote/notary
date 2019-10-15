@@ -55,9 +55,45 @@ if ($type == 'citizen') {
                    'expires' => floatval($publication['expires'])) + $citizen;
   echo json_encode($citizen, JSON_UNESCAPED_SLASHES);
 } elseif ($type == 'endorsement') {
-
+  $query = "SELECT publicationKey, publicationSignature, revoke, message, comment FROM endorsement WHERE id=$publication[id]";
+  $result = $mysqli->query($query) or error($mysqli->error);
+  $endorsement = $result->fetch_assoc();
+  $result->free();
+  $endorsement['revoke'] = ($endorsement['revoke'] == 1);
+  $endorsement = array('schema' => $publication['schema'],
+                       'key' => $publication['key'],
+                       'signature' => $publication['signature'],
+                       'published' => floatval($publication['published']),
+                       'expires' => floatval($publication['expires'])) + $endorsement;
+  echo json_encode($endorsement, JSON_UNESCAPED_SLASHES);
 } elseif ($type == 'referendum') {
-
+  $query = "SELECT trustee, id AS areas, title, description, question, answers, deadline, website FROM referendum WHERE id=$publication[id]";
+  # id AS areas is just a placeholder for having areas in the right order of fields
+  $result = $mysqli->query($query) or error($mysqli->error);
+  $referendum = $result->fetch_assoc();
+  $result->free();
+  if ($referendum['website'] == '')
+    unset($referendum['website']);
+  $referendum['deadline'] = floatval($referendum['deadline']);
+  $answers = split(',', $referendum['answers']);
+  $referendum['answers'] = array();
+  foreach($answers as &$answer)
+    array_push($referendum['answers'], trim($answer));
+  $referendum['areas'] = array();
+  $query = "SELECT reference, type, name, latitude, longitude FROM area WHERE parent=$publication[id]";
+  $result = $mysqli->query($query) or error($mysqli->error);
+  while($area = $result->fetch_assoc()) {
+    $area['latitude'] = intval($area['latitude']);
+    $area['longitude'] = intval($area['longitude']);
+    array_push($referendum['areas'], $area);
+  }
+  $result->free();
+  $referendum = array('schema' => $publication['schema'],
+                      'key' => $publication['key'],
+                      'signature' => $publication['signature'],
+                      'published' => floatval($publication['published']),
+                      'expires' => floatval($publication['expires'])) + $referendum;
+  echo json_encode($referendum, JSON_UNESCAPED_SLASHES);
 }
 $mysqli->close();
 ?>
