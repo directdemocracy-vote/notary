@@ -51,7 +51,7 @@ if ($familyName or $givenNames) {
   $query .= " WHERE";
   if ($familyName) {
     $query .= " familyName LIKE '%$familyName%'";
-    if ($givenNames or $fingerprint)
+    if ($givenNames)
       $query .= " AND";
   }
   if ($givenNames)
