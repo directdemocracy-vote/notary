@@ -193,7 +193,7 @@
                       const name = c.givenNames + ' ' + c.familyName;
                       console.log(name);
                       const lat = c.latitude / 1000000;
-                      const lon = c.latitude / 1000000;
+                      const lon = c.longitude / 1000000;
                       var marker = L.marker([lat, lon]).addTo(map).bindPopup(name);
                       marker.setPopupContent(name).openPopup();
                     });
