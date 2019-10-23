@@ -185,7 +185,11 @@
                 var givenNames = document.getElementById("givenNames").value;
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
-                  console.log(this.responseText);
+                  if (this.readyState == 4 && this.status == 200) {
+                    //console.log(this.responseText);
+                    const a = JSON.parse(this.responseText);
+                    console.log(a);
+                  }
                 }
                 var parameters = "latitude=" + latitude + "&longitude=" + longitude + "&range=" + range;
                 if (familyName)
