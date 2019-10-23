@@ -12,6 +12,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="//unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
+    <script src="//directdemocracy.vote/js/crypto-js.js"></script>
     <title>publisher.directdemocracy.vote</title>
 <style>
 .slider {
@@ -191,8 +192,9 @@
                     // console.log(a);
                     a.forEach(function(c) {
                       const name = c.givenNames + ' ' + c.familyName;
+                      const fingerprint = CryptoJS.SHA1(endorsement.signature).toString();
                       console.log(name);
-                      const label = '<div style="text-align:center"><img src="' + c.picture + '" width="60" height="80"><br>' + name + '</div>';
+                      const label = '<div style="text-align:center"><img src="' + c.picture + '" width="60" height="80"><br><a target="_blank" href="/publication.php?fingerprint=' + fingerprint + '">' + name + '</a></div>';
                       const lat = c.latitude / 1000000;
                       const lon = c.longitude / 1000000;
                       var marker = L.marker([lat, lon]).addTo(map).bindPopup(label).openPopup();
