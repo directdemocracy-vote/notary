@@ -166,12 +166,11 @@
                 xhttp.onreadystatechange = function() {
                   if (this.readyState == 4 && this.status == 200) {
                     a = JSON.parse(this.responseText);
-                    address = a.address.Match_addr;
+                    address = a.display_name;
                     updateLabel();
                   }
                 };
-                url = "//geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=json&featureTypes=&location=";
-                xhttp.open("GET", url + lon + "," + lat, true);
+                xhttp.open('GET', 'https://nominatim.openstreetmap.org/reverse.php?format=json&lat=' + lat + '&lon=' + lon, true);
                 xhttp.send();
               }
 
