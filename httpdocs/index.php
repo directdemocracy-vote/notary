@@ -190,7 +190,7 @@
                     const a = JSON.parse(this.responseText);
                     // console.log(a);
                     a.forEach(function(c) {
-                      console.log(a.givenName + ' ' + a.familyName)
+                      console.log(c.givenNames + ' ' + c.familyName)
                     });
                   }
                 }
