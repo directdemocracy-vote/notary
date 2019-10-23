@@ -50,17 +50,17 @@ if ($range)
 if ($familyName or $givenNames) {
   $query .= " WHERE";
   if ($familyName) {
-    $query .= " familyName LIKE '%$familyName%'";
+    $query .= " familyName LIKE \"%$familyName%\"";
     if ($givenNames)
       $query .= " AND";
   }
   if ($givenNames)
-    $query .= " givenNames LIKE '%$givenNames%'";
+    $query .= " givenNames LIKE \"%$givenNames%\"";
 }
 if ($range)
   $query .= " ORDER BY distance";
 $query .= " LIMIT 0, 20;";
-$result = $mysqli->query($query) or error($mysqli->error);
+$result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
 $citizens = array();
 while ($citizen = $result->fetch_assoc()) {
   $query = "SELECT `schema`, `key`, signature, published, expires FROM publication WHERE id=$citizen[id]";
