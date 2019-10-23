@@ -45,8 +45,6 @@ if ($range)
   $query .= ", (6371 * acos(cos(radians(78.3232)) * cos(radians($latitude)) * cos(radians($longitude) - radians(65.3234)) "
            ."+ sin(radians(78.3232)) * sin(radians($latitude)))) as distance ";
 $query .= " FROM citizen";
-if ($range)
-  $query .= " HAVING distance < $range";
 if ($familyName or $givenNames) {
   $query .= " WHERE";
   if ($familyName) {
@@ -58,7 +56,7 @@ if ($familyName or $givenNames) {
     $query .= " givenNames LIKE \"%$givenNames%\"";
 }
 if ($range)
-  $query .= " ORDER BY distance";
+  $query .= " HAVING distance < $range ORDER BY distance";
 $query .= " LIMIT 0, 20;";
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
 $citizens = array();
