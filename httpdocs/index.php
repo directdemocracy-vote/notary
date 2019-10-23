@@ -192,10 +192,10 @@
                     a.forEach(function(c) {
                       const name = c.givenNames + ' ' + c.familyName;
                       console.log(name);
+                      const label = '<img src="' + c.picture + '" width=60 height=80><div>' + name + '</div>';
                       const lat = c.latitude / 1000000;
                       const lon = c.longitude / 1000000;
-                      var marker = L.marker([lat, lon]).addTo(map).bindPopup(name).openPopup();
-                      //marker.setPopupContent(name).openPopup();
+                      var marker = L.marker([lat, lon]).addTo(map).bindPopup(label).openPopup();
                     });
                   }
                 }
