@@ -192,7 +192,7 @@
                     // console.log(a);
                     a.forEach(function(c) {
                       const name = c.givenNames + ' ' + c.familyName;
-                      const fingerprint = CryptoJS.SHA1(endorsement.signature).toString();
+                      const fingerprint = CryptoJS.SHA1(c.signature).toString();
                       console.log(name);
                       const label = '<div style="text-align:center"><img src="' + c.picture + '" width="60" height="80"><br><a target="_blank" href="/publication.php?fingerprint=' + fingerprint + '">' + name + '</a></div>';
                       const lat = c.latitude / 1000000;
