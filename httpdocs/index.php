@@ -181,25 +181,28 @@
                 document.getElementById("position").innerHTML = '(' + lat + ', ' + lon + ') &plusmn; ' + Math.round(range / 100) / 10 + ' km';
               }
               function search() {
-                var familyName = document.getElementById("familyName").value;
-                var givenNames = document.getElementById("givenNames").value;
-                var xhttp = new XMLHttpRequest();
+                const familyName = document.getElementById("familyName").value;
+                const givenNames = document.getElementById("givenNames").value;
+                let xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                   if (this.readyState == 4 && this.status == 200) {
                     // console.log(this.responseText);
                     const a = JSON.parse(this.responseText);
                     // console.log(a);
                     a.forEach(function(c) {
-                      console.log(c.givenNames + ' ' + c.familyName)
+                      const name = c.givenNames + ' ' + c.familyName;
+                      console.log(name);
+                      lat = c.latitude / 1000000;
+                      lon = c.latitude / 1000000;
+                      var marker = L.marker([lat, lon]).addTo(map).bindPopup(name);
                     });
                   }
                 }
-                var parameters = "latitude=" + latitude + "&longitude=" + longitude + "&range=" + range;
+                let parameters = "latitude=" + latitude + "&longitude=" + longitude + "&range=" + range;
                 if (familyName)
                   parameters += "&familyName=" + encodeURI(familyName);
                 if (givenNames)
                   parameters += "&givenNames=" + encodeURI(givenNames);
-                console.log(parameters);
                 xhttp.open("GET", "search.php?" + parameters, true);
                 xhttp.send();
               }
