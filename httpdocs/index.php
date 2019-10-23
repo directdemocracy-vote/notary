@@ -194,7 +194,7 @@
                       const name = c.givenNames + ' ' + c.familyName;
                       const fingerprint = CryptoJS.SHA1(c.signature).toString();
                       console.log(name);
-                      const label = '<div style="text-align:center"><img src="' + c.picture + '" width="60" height="80"><br><a target="_blank" href="/publication.php?fingerprint=' + fingerprint + '">' + name + '</a></div>';
+                      const label = '<div style="text-align:center"><a target="_blank" href="/publication.php?fingerprint=' + fingerprint + '"><img src="' + c.picture + '" width="60" height="80"><br>' + name + '</a></div>';
                       const lat = c.latitude / 1000000;
                       const lon = c.longitude / 1000000;
                       var marker = L.marker([lat, lon]).addTo(map).bindPopup(label).openPopup();
