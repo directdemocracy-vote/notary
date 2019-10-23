@@ -189,7 +189,7 @@
                     // console.log(this.responseText);
                     const a = JSON.parse(this.responseText);
                     // console.log(a);
-                    a.foreach(function(c) {
+                    a.forEach(function(c) {
                       console.log(a.givenName + ' ' + a.familyName)
                     });
                   }
