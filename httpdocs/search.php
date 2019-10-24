@@ -67,6 +67,7 @@ while ($citizen = $result->fetch_assoc()) {
   $publication = $r->fetch_assoc();
   $r->free();
   unset($citizen['id']);
+  unset($citizen['distance']);
   $citizen['latitude'] = intval($citizen['latitude']);
   $citizen['longitude'] = intval($citizen['longitude']);
   $citizen = array('schema' => $publication['schema'],
@@ -74,7 +75,6 @@ while ($citizen = $result->fetch_assoc()) {
                    'signature' => $publication['signature'],
                    'published' => floatval($publication['published']),
                    'expires' => floatval($publication['expires'])) + $citizen;
-  $citizen['query'] = $query;
   $citizens[] = $citizen;
 }
 $result->free();

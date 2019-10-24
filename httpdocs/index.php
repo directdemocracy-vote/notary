@@ -204,14 +204,13 @@
                       map.removeLayer(m);
                     });
                     markers = [];
-                    console.log(a[0].query);
                     a.forEach(function(c) {
-                      const name = c.givenNames + ' ' + c.familyName + ' ' + c.distance;
+                      const name = c.givenNames + ' ' + c.familyName;
                       const fingerprint = CryptoJS.SHA1(c.signature).toString();
                       const label = '<div style="text-align:center"><a target="_blank" href="/publication.php?fingerprint=' + fingerprint + '"><img src="' + c.picture + '" width="60" height="80"><br>' + name + '</a></div>';
                       const lat = c.latitude / 1000000;
                       const lon = c.longitude / 1000000;
-                      markers.push(L.marker([lat, lon], {icon: greenIcon}).addTo(map).bindPopup(label).openPopup());
+                      markers.push(L.marker([lat, lon], {icon: greenIcon}).addTo(map).bindPopup(label));
                     });
                   }
                 }
