@@ -4,15 +4,15 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" type="image/x-icon" href="//directdemocracy.vote/favicon.ico">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
-    <link rel="stylesheet" href="//directdemocracy.vote/css/directdemocracy.css">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script src="//unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
-    <script src="//directdemocracy.vote/js/crypto-js.js"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="https://directdemocracy.vote/favicon.ico">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
+    <link rel="stylesheet" href="https://directdemocracy.vote/css/directdemocracy.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
+    <script src="https://directdemocracy.vote/js/crypto-js.js"></script>
     <title>publisher.directdemocracy.vote</title>
 <style>
 .slider {
@@ -101,6 +101,7 @@
               var longitude = 0;
               var range = 500;
               var address = '';
+              var markers = [];
               if (navigator.geolocation) navigator.geolocation.getCurrentPosition(getGeolocationPosition);
               var xhttp = new XMLHttpRequest();
               xhttp.onreadystatechange = function() {
@@ -133,7 +134,15 @@
               L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
               }).addTo(map);
-              var marker = L.marker([lat, lon]).addTo(map).bindPopup(lat + ',' + lon);
+              const greenIcon = new L.Icon({
+                iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+              });
+              var marker = L.marker([lat, lon]).addTo(map).bindPopup(lat + ',' + lon).on('click', onMarkerClick);
               var circle = L.circle([lat, lon], {color: 'red', opacity: 0.4, fillColor: '#f03', fillOpacity: 0.2, radius: range}).addTo(map);
               marker.setPopupContent('<div style="text-align:center" id="address">' + address + '</div>'
                + '<div><input type="range" min="5" max="100" value="10" class="slider" id="range" oninput="rangeChanged(this)"></div>'
@@ -142,6 +151,10 @@
               map.on('click', onMapClick);
               updatePosition();
 
+              function onMarkerClick(e) {
+                console.log("clicked on marker");
+                updateLabel();
+              }
               function onMapClick(e) {
                 marker.setLatLng(e.latlng).openPopup();
                 circle.setLatLng(e.latlng);
@@ -187,17 +200,18 @@
                 let xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                   if (this.readyState == 4 && this.status == 200) {
-                    // console.log(this.responseText);
                     const a = JSON.parse(this.responseText);
-                    // console.log(a);
+                    markers.forEach(function (m) { // delete previous markers
+                      map.removeLayer(m);
+                    });
+                    markers = [];
                     a.forEach(function(c) {
-                      const name = c.givenNames + ' ' + c.familyName;
+                      const name = c.givenNames + ' ' + c.familyName + ' ' + c.distance;
                       const fingerprint = CryptoJS.SHA1(c.signature).toString();
-                      console.log(name);
                       const label = '<div style="text-align:center"><a target="_blank" href="/publication.php?fingerprint=' + fingerprint + '"><img src="' + c.picture + '" width="60" height="80"><br>' + name + '</a></div>';
                       const lat = c.latitude / 1000000;
                       const lon = c.longitude / 1000000;
-                      var marker = L.marker([lat, lon]).addTo(map).bindPopup(label).openPopup();
+                      markers.push(L.marker([lat, lon], {icon: greenIcon}).addTo(map).bindPopup(label).openPopup());
                     });
                   }
                 }
@@ -206,7 +220,8 @@
                   parameters += "&familyName=" + encodeURI(familyName);
                 if (givenNames)
                   parameters += "&givenNames=" + encodeURI(givenNames);
-                xhttp.open("GET", "search.php?" + parameters, true);
+                console.log("request parameters = " + parameters);
+                xhttp.open("GET", "https://publisher.directdemocracy.vote/search.php?" + parameters, true);
                 xhttp.send();
               }
             </script>
