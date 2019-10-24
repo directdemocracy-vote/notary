@@ -204,6 +204,7 @@
                       map.removeLayer(m);
                     });
                     markers = [];
+                    console.log(a[0].query);
                     a.forEach(function(c) {
                       const name = c.givenNames + ' ' + c.familyName + ' ' + c.distance;
                       const fingerprint = CryptoJS.SHA1(c.signature).toString();

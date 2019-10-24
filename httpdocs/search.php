@@ -35,8 +35,8 @@ $mysqli->set_charset('utf8mb4');
 $range = get_float_parameter('range');
 if ($range) {
   // $range = $range / 1000;
-  $latitude = get_float_parameter('latitude') / 100000;
-  $longitude = get_float_parameter('longitude') / 100000;
+  $latitude = get_float_parameter('latitude') / 1000000;
+  $longitude = get_float_parameter('longitude') / 1000000;
 }
 $familyName = $mysqli->escape_string(get_string_parameter('familyName'));
 $givenNames = $mysqli->escape_string(get_string_parameter('givenNames'));
