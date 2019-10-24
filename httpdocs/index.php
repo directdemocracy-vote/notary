@@ -96,12 +96,12 @@
           <div class="form-text">Area: <span class="text-muted">select the search area on the map</span></div>
             <div id="latlongmap" style="width:100%;height:400px;margin-top:10px"></div>
             <script type="text/javascript">
-              var geolocation = false;
-              var latitude = 0;
-              var longitude = 0;
-              var range = 500;
-              var address = '';
-              var markers = [];
+              let geolocation = false;
+              let latitude = 0;
+              let longitude = 0;
+              let range = 500;
+              let address = '';
+              let markers = [];
               if (navigator.geolocation) navigator.geolocation.getCurrentPosition(getGeolocationPosition);
               var xhttp = new XMLHttpRequest();
               xhttp.onreadystatechange = function() {
@@ -128,9 +128,9 @@
                 setTimeout(updatePosition, 500);
               }
 
-              var lat = latitude / 1000000;
-              var lon = longitude / 1000000;
-              var map = L.map('latlongmap').setView([lat, lon], 2);
+              const lat = latitude / 1000000;
+              const lon = longitude / 1000000;
+              let map = L.map('latlongmap').setView([lat, lon], 2);
               L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
               }).addTo(map);
@@ -142,8 +142,8 @@
                 popupAnchor: [1, -34],
                 shadowSize: [41, 41]
               });
-              var marker = L.marker([lat, lon]).addTo(map).bindPopup(lat + ',' + lon).on('click', onMarkerClick);
-              var circle = L.circle([lat, lon], {color: 'red', opacity: 0.4, fillColor: '#f03', fillOpacity: 0.2, radius: range}).addTo(map);
+              let marker = L.marker([lat, lon]).addTo(map).bindPopup(lat + ',' + lon).on('click', onMarkerClick);
+              let circle = L.circle([lat, lon], {color: 'red', opacity: 0.4, fillColor: '#f03', fillOpacity: 0.2, radius: range}).addTo(map);
               marker.setPopupContent('<div style="text-align:center" id="address">' + address + '</div>'
                + '<div><input type="range" min="5" max="100" value="10" class="slider" id="range" oninput="rangeChanged(this)"></div>'
                + '<div style="text-align:center;color:#999" id="position">(' + lat + ', ' + lon + ') &plusmn; ' + Math.round(range / 100) / 10 + ' km</div></center>'
@@ -152,9 +152,9 @@
               updatePosition();
 
               function onMarkerClick(e) {
-                console.log("clicked on marker");
                 updateLabel();
               }
+
               function onMapClick(e) {
                 marker.setLatLng(e.latlng).openPopup();
                 circle.setLatLng(e.latlng);
@@ -171,12 +171,11 @@
               }
 
               function updatePosition() {
-                console.log("updatePosition");
-                var lat = latitude / 1000000;
-                var lon = longitude / 1000000;
+                const lat = latitude / 1000000;
+                const lon = longitude / 1000000;
                 marker.setLatLng([lat, lon]);
                 circle.setLatLng([lat, lon]);
-                var xhttp = new XMLHttpRequest();
+                let xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                   if (this.readyState == 4 && this.status == 200) {
                     a = JSON.parse(this.responseText);
@@ -189,8 +188,8 @@
               }
 
               function updateLabel() {
-                var lat = latitude / 1000000;
-                var lon = longitude / 1000000;
+                const lat = latitude / 1000000;
+                const lon = longitude / 1000000;
                 document.getElementById("address").innerHTML = address;
                 document.getElementById("position").innerHTML = '(' + lat + ', ' + lon + ') &plusmn; ' + Math.round(range / 100) / 10 + ' km';
               }

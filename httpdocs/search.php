@@ -34,6 +34,7 @@ $mysqli->set_charset('utf8mb4');
 
 $range = get_float_parameter('range');
 if ($range) {
+  $range = $range / 1000;
   $latitude = get_float_parameter('latitude') / 100000;
   $longitude = get_float_parameter('longitude') / 100000;
 }
