@@ -34,7 +34,7 @@ $mysqli->set_charset('utf8mb4');
 
 $range = get_float_parameter('range');
 if ($range) {
-  $range = $range / 1000;
+  // $range = $range / 1000;
   $latitude = get_float_parameter('latitude') / 100000;
   $longitude = get_float_parameter('longitude') / 100000;
 }
@@ -62,8 +62,8 @@ $query .= " LIMIT 0, 20;";
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
 $citizens = array();
 while ($citizen = $result->fetch_assoc()) {
-  $query = "SELECT `schema`, `key`, signature, published, expires FROM publication WHERE id=$citizen[id]";
-  $r = $mysqli->query($query) or error($mysqli->error);
+  $q = "SELECT `schema`, `key`, signature, published, expires FROM publication WHERE id=$citizen[id]";
+  $r = $mysqli->query($q) or error($mysqli->error);
   $publication = $r->fetch_assoc();
   $r->free();
   unset($citizen['id']);
@@ -74,6 +74,7 @@ while ($citizen = $result->fetch_assoc()) {
                    'signature' => $publication['signature'],
                    'published' => floatval($publication['published']),
                    'expires' => floatval($publication['expires'])) + $citizen;
+  $citizen['query'] = $query;
   $citizens[] = $citizen;
 }
 $result->free();
