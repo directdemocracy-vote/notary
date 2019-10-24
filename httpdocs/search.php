@@ -43,7 +43,7 @@ $givenNames = $mysqli->escape_string(get_string_parameter('givenNames'));
 $query = "SELECT id, familyName, givenNames, picture, latitude, longitude";
 if ($range)
   $query .= ", (6371 * acos(cos(radians($latitude)) * cos(radians(latitude)) * cos(radians(longitude) - radians($longitude)) "
-           ."+ sin(radians($latitude)) * sin(radians(latitude)))) as distance ";
+           ."+ sin(radians($latitude)) * sin(radians(latitude)))) AS distance ";
 $query .= " FROM citizen";
 if ($familyName or $givenNames) {
   $query .= " WHERE";
