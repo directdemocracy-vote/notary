@@ -149,6 +149,7 @@
                + '<div style="text-align:center;color:#999" id="position">(' + lat + ', ' + lon + ') &plusmn; ' + Math.round(range / 100) / 10 + ' km</div></center>'
               ).openPopup();
               map.on('click', onMapClick);
+              map.on('contextmenu', function(event) { return false; });
               updatePosition();
 
               function onMarkerClick(e) {
