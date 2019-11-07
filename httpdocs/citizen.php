@@ -44,5 +44,5 @@ $answer = array();
 $answer['citizen'] = $citizen;
 $answer['endorsements'] = $endorsements;
 $answer['citizen_endorsements'] = $citizen_endorsements;
-die(json_encode($answer, JSON_UNESCAPED_SLASHES));
+die(json_encode($answer, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>

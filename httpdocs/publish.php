@@ -113,7 +113,7 @@ $result = $validator->schemaValidation($publication, $schema);
 if (!$result->isValid()) {
   $error = $result->getFirstError();
   $keyword = $error->keyword();
-  $keywordArgs = json_encode($error->keywordArgs(), JSON_UNESCAPED_SLASHES);
+  $keywordArgs = json_encode($error->keywordArgs(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
   error("{\"keyword\":\"$keyword\",\"keywordArgs\":$keywordArgs}");
 }
 $now = floatval(microtime(true) * 1000);  # milliseconds
@@ -225,7 +225,7 @@ if ($type == 'citizen') {
   }
 }
 if ($type == 'endorsement')
-  echo json_encode(endorsements($mysqli, $publication->key), JSON_UNESCAPED_SLASHES);
+  echo json_encode(endorsements($mysqli, $publication->key), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 else {
   $fingerprint = sha1($publication->signature);
   echo("{\"fingerprint\":\"$fingerprint\"}");

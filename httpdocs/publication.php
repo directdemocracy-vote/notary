@@ -53,7 +53,7 @@ if ($type == 'citizen') {
                    'signature' => $publication['signature'],
                    'published' => floatval($publication['published']),
                    'expires' => floatval($publication['expires'])) + $citizen;
-  echo json_encode($citizen, JSON_UNESCAPED_SLASHES);
+  echo json_encode($citizen, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'endorsement') {
   $query = "SELECT publicationKey, publicationSignature, `revoke`, message, comment FROM endorsement WHERE id=$publication[id]";
   $result = $mysqli->query($query) or error($mysqli->error);
@@ -65,7 +65,7 @@ if ($type == 'citizen') {
                        'signature' => $publication['signature'],
                        'published' => floatval($publication['published']),
                        'expires' => floatval($publication['expires'])) + $endorsement;
-  echo json_encode($endorsement, JSON_UNESCAPED_SLASHES);
+  echo json_encode($endorsement, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'referendum') {
   $query = "SELECT trustee, id AS areas, title, description, question, answers, deadline, website FROM referendum WHERE id=$publication[id]";
   # id AS areas is just a placeholder for having areas in the right order of fields
@@ -93,7 +93,7 @@ if ($type == 'citizen') {
                       'signature' => $publication['signature'],
                       'published' => floatval($publication['published']),
                       'expires' => floatval($publication['expires'])) + $referendum;
-  echo json_encode($referendum, JSON_UNESCAPED_SLASHES);
+  echo json_encode($referendum, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 }
 $mysqli->close();
 ?>

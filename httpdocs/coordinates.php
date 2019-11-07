@@ -17,5 +17,5 @@ $result->free();
 settype($citizen['latitude'], 'int');
 settype($citizen['longitude'], 'int');
 $mysqli->close();
-die(json_encode($citizen, JSON_UNESCAPED_SLASHES));
+die(json_encode($citizen, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
