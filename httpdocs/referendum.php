@@ -20,7 +20,9 @@ if (!$areas)
 if (!$areas->reference)
   error("Missing areas.reference field");
 $reference = $areas->reference;
-$query = "SELECT referendum.title FROM referendum LEFT JOIN area ON area.parent = referendum.id WHERE area.reference=\"$reference\" AND (";
+$query = "SELECT referendum.trustee, referendum.title, referendum.description, referendum.question, referendum.answers, "
+        ."referendum.deadline, referendum.website "
+        ."FROM referendum LEFT JOIN area ON area.parent = referendum.id WHERE area.reference=\"$reference\" AND (";
 foreach($areas->areas as $area) {
   $type = $area->type;
   $name = $area->name;
@@ -28,37 +30,13 @@ foreach($areas->areas as $area) {
 }
 $query = substr($query, 0, -4); // remove last " OR "
 $query .= ")";
-die($query);
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
+$referendums = array();
 while ($referendum = $result->fetch_assoc()) {
-
-}
-$result->free();
-settype($citizen['published'], 'int');
-settype($citizen['expires'], 'int');
-settype($citizen['latitude'], 'int');
-settype($citizen['longitude'], 'int');
-$endorsements = endorsements($mysqli, $key);
-$query = "SELECT pc.fingerprint, pe.published, e.revoke, "
-        ."c.familyName, c.givenNames, c.picture FROM "
-        ."publication pe INNER JOIN endorsement e ON pe.id = e.id, "
-        ."publication pc INNER JOIN citizen c ON pc.id = c.id "
-        ."WHERE e.publicationKey = '$key' AND pc.`key` = pe.`key` "
-        ."ORDER BY e.revoke ASC, pe.published, c.familyName, c.givenNames";
-$result = $mysqli->query($query);
-if (!$result)
-  return "{\"error\":\"$mysqli->error\"}";
-$citizen_endorsements = array();
-while($e = $result->fetch_assoc()) {
-  settype($e['published'], 'int');
-  settype($e['revoke'], 'bool');
-  $citizen_endorsements[] = $e;
+  settype($referedum['deadline'], 'int');
+  $referendums[] = $referendum;
 }
 $result->free();
 $mysqli->close();
-$answer = array();
-$answer['citizen'] = $citizen;
-$answer['endorsements'] = $endorsements;
-$answer['citizen_endorsements'] = $citizen_endorsements;
-die(json_encode($answer, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+die(json_encode($referendums, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
