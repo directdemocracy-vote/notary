@@ -43,7 +43,7 @@ while ($referendum = $result->fetch_assoc()) {
   settype($referendum['areas'], 'int');
   settype($referendum['deadline'], 'int');
   $q = "SELECT reference, type, name FROM area WHERE parent=$referendum[areas]";
-  $r = mysqli->query($q) or die("{\"error\":\"$mysqli->error\"}");
+  $r = $mysqli->query($q) or die("{\"error\":\"$mysqli->error\"}");
   $referendum['areas'] = array();
   while ($area = $r->fetch_assoc())
     $referendum['areas'][] = $area;
