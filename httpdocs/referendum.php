@@ -20,9 +20,14 @@ if (!$areas)
 if (!$areas->reference)
   error("Missing areas.reference field");
 $reference = $areas->reference;
-$query = "SELECT referendum.trustee, referendum.title, referendum.description, referendum.question, referendum.answers, "
-        ."referendum.deadline, referendum.website "
-        ."FROM referendum LEFT JOIN area ON area.parent = referendum.id WHERE area.reference=\"$reference\" AND (";
+$query = "SELECT "
+        ."publication.schema, publication.key, publication.signature, publication.published, publication.expires, "
+        ."referendum.trustee, referendum.id AS areas, referendum.title, referendum.description, "
+        ."referendum.question, referendum.answers, referendum.deadline, referendum.website "
+        ."FROM referendum "
+        ."LEFT JOIN publication ON publication.id = referendum.id "
+        ."LEFT JOIN area ON area.parent = referendum.id "
+        ."WHERE area.reference=\"$reference\" AND (";
 foreach($areas->areas as $area) {
   $type = $area->type;
   $name = $area->name;
@@ -33,7 +38,16 @@ $query .= ")";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $referendums = array();
 while ($referendum = $result->fetch_assoc()) {
-  settype($referedum['deadline'], 'int');
+  settype($referendum['published'], 'int');
+  settype($referendum['expires'], 'int');
+  settype($referendum['areas'], 'int');
+  settype($referendum['deadline'], 'int');
+  $q = "SELECT reference, type, name FROM area WHERE parent=$referendum[areas]";
+  $r = mysqli->query($q) or die("{\"error\":\"$mysqli->error\"}");
+  $referendum['areas'] = array();
+  while ($area = $r->fetch_assoc())
+    $referendum['areas'][] = $area;
+  $r->free();
   $referendums[] = $referendum;
 }
 $result->free();
