@@ -14,7 +14,7 @@ $mysqli = new mysqli($database_host, $database_username, $database_password, $da
 if ($mysqli->connect_errno)
   die("{\"error\":\"Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)\"}");
 $mysqli->set_charset('utf8mb4');
-$area = json_decode(file_get_contents("php://input"));
+$area = $mysqli->escape_string($_POST['area']);
 if (!$area)
   error("Unable to parse JSON post");
 $query = "SELECT "
