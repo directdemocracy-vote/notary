@@ -23,8 +23,7 @@ $query = "SELECT "
         ."referendum.question, referendum.answers, referendum.deadline, referendum.website "
         ."FROM referendum "
         ."LEFT JOIN publication ON publication.id = referendum.id "
-        ."WHERE \"$area\" LIKE CONCAT(referendum.area, '%')";
-die($query);
+        ."WHERE SUBSTRING(\"$area\", 0, LENGTH(referendum.area) LIKE referendum.area";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $referendums = array();
 while ($referendum = $result->fetch_assoc()) {
