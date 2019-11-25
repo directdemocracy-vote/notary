@@ -67,7 +67,7 @@ if ($type == 'citizen') {
                        'expires' => floatval($publication['expires'])) + $endorsement;
   echo json_encode($endorsement, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'referendum') {
-  $query = "SELECT trustee, id AS areas, title, description, question, answers, deadline, website FROM referendum WHERE id=$publication[id]";
+  $query = "SELECT trustee, area, title, description, question, answers, deadline, website FROM referendum WHERE id=$publication[id]";
   # id AS areas is just a placeholder for having areas in the right order of fields
   $result = $mysqli->query($query) or error($mysqli->error);
   $referendum = $result->fetch_assoc();
@@ -75,19 +75,6 @@ if ($type == 'citizen') {
   if ($referendum['website'] == '')
     unset($referendum['website']);
   $referendum['deadline'] = floatval($referendum['deadline']);
-  $answers = explode(',', $referendum['answers']);
-  $referendum['answers'] = array();
-  foreach($answers as &$answer)
-    array_push($referendum['answers'], trim($answer));
-  $referendum['areas'] = array();
-  $query = "SELECT reference, type, name, latitude, longitude FROM area WHERE parent=$publication[id]";
-  $result = $mysqli->query($query) or error($mysqli->error);
-  while($area = $result->fetch_assoc()) {
-    $area['latitude'] = intval($area['latitude']);
-    $area['longitude'] = intval($area['longitude']);
-    array_push($referendum['areas'], $area);
-  }
-  $result->free();
   $referendum = array('schema' => $publication['schema'],
                       'key' => $publication['key'],
                       'signature' => $publication['signature'],
