@@ -23,8 +23,7 @@ $query = "SELECT "
         ."referendum.question, referendum.answers, referendum.deadline, referendum.website "
         ."FROM referendum "
         ."LEFT JOIN publication ON publication.id = referendum.id "
-        ."WHERE LEFT(\"$area\", CHAR_LENGTH(referendum.area)) = referendum.area";
-die($query);
+        ."WHERE RIGHT(\"$area\", CHAR_LENGTH(referendum.area)) = referendum.area";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $referendums = array();
 while ($referendum = $result->fetch_assoc()) {
