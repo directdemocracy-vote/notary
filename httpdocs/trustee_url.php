@@ -7,9 +7,12 @@ if ($mysqli->connect_errno)
 $mysqli->set_charset('utf8mb4');
 if (isset($_GET['referendum'])) {
   $referendum = $mysqli->escape_string($_GET['referendum']);
-  $query = "SELECT trustee.url FROM trustee LEFT JOIN referendum WHERE trustee.`key` = referendum.trustee AND referendum.`key` = \"$referendum\"";
+  $referendum = replace(' ', '+', $referendum);
+  $query = "SELECT trustee.url FROM trustee LEFT JOIN referendum ON referendum.trustee = trustee.`key` LEFT JOIN publication " .
+           "ON publication.id = referendum.id WHERE publication.`key` = \"$referendum\"";
 } else if (isset($_GET['key'])) {
   $key = $mysqli->escape_string($_GET['key']);
+  $key = replace(' ', '+', $key);
   $query = "SELECT url FROM trustee WHERE `key` = \"$key\"";
 } else
   die("Missing key or referendum argument.");
