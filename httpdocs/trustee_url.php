@@ -21,5 +21,6 @@ if (!$result)
   die("Trustee not found. $query");
 $trustee = $result->fetch_assoc();
 $result->free();
+die("OK");
 die($trustee['url']);
 ?>
