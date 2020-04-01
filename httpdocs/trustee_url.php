@@ -1,6 +1,8 @@
 <?php
 require_once '../php/database.php';
 
+die("Hello");
+/*
 $mysqli = new mysqli($database_host, $database_username, $database_password, $database_name);
 if ($mysqli->connect_errno)
   die("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
@@ -15,7 +17,9 @@ if (isset($_POST['referendum'])) {
   die("Missing key or referendum argument.");
 $result = $mysqli->query($query);
 $trustee = $result->fetch_assoc();
+$result->free();
 if (!$trustee)
   die("Trustee not found.");
 die($trustee['url']);
+*/
 ?>
