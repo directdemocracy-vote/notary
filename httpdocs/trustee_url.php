@@ -20,7 +20,8 @@ $result = $mysqli->query($query);
 if (!$result)
   die("Trustee not found. $query");
 $trustee = $result->fetch_assoc();
+if (!$trustee)
+  die("Trustee not found. $query");
 $result->free();
-die("OK");
 die($trustee['url']);
 ?>
