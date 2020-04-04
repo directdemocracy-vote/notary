@@ -30,16 +30,21 @@ if ($mysqli->connect_errno)
 $mysqli->set_charset('utf8mb4');
 
 $fingerprint = $mysqli->escape_string(get_string_parameter('fingerprint'));
+$key = $mysqli->escape_string(get_string_parameter('key'));
 
-if (!$fingerprint)
-  error("No fingerprint argument provided.");
+$query = "SELECT * FROM publication WHERE ";
+if ($key)
+  $query .= "key=\"$key\"";
+elseif ($fingerprint)
+  $query .= "fingerprint=\"$fingerprint\";";
+else
+  error("No fingerprint or key argument provided.");
 
-$query = "SELECT * FROM publication WHERE fingerprint=\"$fingerprint\";";
 $result = $mysqli->query($query) or error($mysqli->error);
 $publication = $result->fetch_assoc();
 $result->free();
 if (!$publication)
-  error("No publication with fingerprint=\"$fingerprint\" was found.");
+  error("Publication not found.");
 $type = get_type($publication['schema']);
 if ($type == 'citizen') {
   $query = "SELECT familyName, givenNames, picture, latitude, longitude FROM citizen WHERE id=$publication[id]";
