@@ -34,7 +34,7 @@ $key = $mysqli->escape_string(get_string_parameter('key'));
 
 $query = "SELECT * FROM publication WHERE ";
 if ($key)
-  $query .= "key=\"$key\"";
+  $query .= "`key`=\"$key\"";
 elseif ($fingerprint)
   $query .= "fingerprint=\"$fingerprint\";";
 else
