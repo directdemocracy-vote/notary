@@ -117,7 +117,7 @@ if (!$result->isValid()) {
   error("{\"keyword\":\"$keyword\",\"keywordArgs\":$keywordArgs}");
 }
 $now = floatval(microtime(true) * 1000);  # milliseconds
-if ($publication->published > $now + 60000)  # allowing a 1 minute error
+if ($publication->type != 'vote' && $publication->published > $now + 60000)  # allowing a 1 minute error
   error("Publication date in the future: $publication->published > $now");
 if ($publication->expires < $now - 60000)  # allowing a 1 minute error
   error("Expiration date in the past: $publication->expires < $now");
@@ -227,6 +227,8 @@ elseif ($type == 'endorsement') {
   $query = "INSERT INTO ballot(id, referendum, stationKey, stationSignature, citizenKey, citizenSignature) "
           ."VALUES($id, \"$ballot->referendum\", \"" . $ballot->station->key ."\", \"" . $ballot->station->signature . "\", "
           ."\"" . $ballot->citizen->key . "\", \"" . $ballot->citizen->signature . "\")";
+elseif ($type == 'vote')
+  $query = "INSERT INTO vote(id, answer) VALUES($id, \"$publication->answer\")";
 else
   error("unknown publication type");
 $mysqli->query($query) or error($mysqli->error);
