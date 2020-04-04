@@ -225,8 +225,8 @@ elseif ($type == 'endorsement') {
           ."\"$referendum->question\", \"$referendum->answers\", $referendum->deadline, \"$referendum->website\")";
 } elseif ($type == 'ballot')
   $query = "INSERT INTO ballot(id, referendum, stationKey, stationSignature, citizenKey, citizenSignature) "
-          ."VALUES($id, \"$ballot->referendum\", \"$ballot->station->key\", \"$ballot->station->signature\", "
-          ."\"$ballot->citizen->key\", \"$ballot->citizen->signature\")";
+          ."VALUES($id, \"$ballot->referendum\", \"" . $ballot->station->key ."\", \"" . $ballot->station->signature . "\", "
+          ."\"" . $ballot->citizen->key . "\", \"" . $ballot->citizen->signature . "\")";
 else
   error("unknown publication type");
 $mysqli->query($query) or error($mysqli->error);
