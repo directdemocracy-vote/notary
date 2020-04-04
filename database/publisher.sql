@@ -3,6 +3,15 @@ SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
+CREATE TABLE `ballot` (
+  `id` int(11) NOT NULL,
+  `referendum` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `stationKey` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `stationSignature` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `citizenKey` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `citizenSignature` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE `citizen` (
   `id` int(11) NOT NULL,
   `familyName` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -50,6 +59,8 @@ CREATE TABLE `trustee` (
   `key` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+ALTER TABLE `ballot`
+  ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `citizen`
   ADD PRIMARY KEY (`id`);
@@ -68,7 +79,6 @@ ALTER TABLE `referendum`
 ALTER TABLE `trustee`
   ADD PRIMARY KEY (`id`),
   ADD KEY `key` (`key`(250));
-
 
 ALTER TABLE `publication`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
