@@ -117,11 +117,11 @@ if (!$result->isValid()) {
   error("{\"keyword\":\"$keyword\",\"keywordArgs\":$keywordArgs}");
 }
 $now = floatval(microtime(true) * 1000);  # milliseconds
-if ($publication->type != 'vote' && $publication->published > $now + 60000)  # allowing a 1 minute error
+$type = get_type($publication->schema);
+if ($type != 'vote' && $publication->published > $now + 60000)  # allowing a 1 minute error
   error("Publication date in the future: $publication->published > $now");
 if ($publication->expires < $now - 60000)  # allowing a 1 minute error
   error("Expiration date in the past: $publication->expires < $now");
-$type = get_type($publication->schema);
 if ($type == 'citizen') {
   $citizen = &$publication;
   $data = base64_decode(substr($citizen->picture, strlen('data:image/jpeg;base64,')));
