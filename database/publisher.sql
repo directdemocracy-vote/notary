@@ -59,6 +59,11 @@ CREATE TABLE `trustee` (
   `key` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE `vote` (
+  `id` int(11) NOT NULL,
+  `answer` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 ALTER TABLE `ballot`
   ADD PRIMARY KEY (`id`);
 
@@ -78,11 +83,17 @@ ALTER TABLE `referendum`
 
 ALTER TABLE `trustee`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `key` (`key`(250));
+
+ALTER TABLE `vote`
+  ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `publication`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `trustee`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+ALTER TABLE `vote`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
