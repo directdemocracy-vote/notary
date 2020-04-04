@@ -136,12 +136,11 @@ if ($type == 'citizen') {
   }
 } elseif ($type == 'ballot') {
   $ballot = &$publication;
-  if (property_exists($publication->station->signature)) {
-    $station_signature = $publication->station->signature;
-    $publication->station->signature = '';
-    $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-    $k = public_key($publication->station->key);
-    if (openssl_verify($data, base64_decode($station_signature), $k, OPENSSL_ALGO_SHA256) == -1)
+  if (property_exists($ballot, $ballot->station->signature)) {
+    $station_signature = $ballot->station->signature;
+    $ballot->station->signature = '';
+    $data = json_encode($ballot, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    if (openssl_verify($data, base64_decode($station_signature), public_key($ballot->station->key), OPENSSL_ALGO_SHA256) == -1)
       error("Wrong station signature");
   }
 }
