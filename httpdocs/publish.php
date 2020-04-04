@@ -136,7 +136,7 @@ if ($type == 'citizen') {
   }
 } elseif ($type == 'ballot') {
   $ballot = &$publication;
-  if ($ballot, $ballot->station->signature !== '') {
+  if ($ballot->station->signature !== '') {
     $station_signature = $ballot->station->signature;
     $ballot->station->signature = '';
     $data = json_encode($ballot, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
