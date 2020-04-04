@@ -96,7 +96,7 @@ if ($type == 'citizen') {
                 'signature' => $publication['signature'],
                 'published' => floatval($publication['published']),
                 'expires' => floatval($publication['expires'])) + $vote;
-  echo json_encode($referendum, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+  echo json_encode($vote, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 }
 $mysqli->close();
 ?>
