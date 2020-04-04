@@ -134,14 +134,27 @@ if ($type == 'citizen') {
   } catch(Exception $e) {
     error("Cannot determine picture size");
   }
+} elseif ($type == 'ballot') {
+  $ballot = &$publication;
+  if (property_exists($publication->station->signature)) {
+    $station_signature = $publication->station->signature;
+    $publication->station->signature = '';
+    $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    $k = public_key($publication->station->key);
+    if (openssl_verify($data, base64_decode($station_signature), $k, OPENSSL_ALGO_SHA256) == -1)
+      error("Wrong station signature");
+  }
 }
-$signature_copy = $publication->signature;
+$signature = $publication->signature;
 $publication->signature = '';
 $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-$verify = openssl_verify($data, base64_decode($signature_copy), public_key($publication->key), OPENSSL_ALGO_SHA256);
+$verify = openssl_verify($data, base64_decode($signature), public_key($publication->key), OPENSSL_ALGO_SHA256);
 if ($verify != 1)
   error("Wrong signature");
-$publication->signature = $signature_copy;
+$publication->signature = $signature;
+if (isset($station_signature))
+  $ballot->station->signature = $station_signature;
+
 $mysqli = new mysqli($database_host, $database_username, $database_password, $database_name);
 if ($mysqli->connect_errno)
   error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
