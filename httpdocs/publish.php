@@ -190,12 +190,11 @@ $query = "INSERT INTO publication(`schema`, `key`, signature, fingerprint, publi
         ."SHA1('$publication->signature'), $publication->published, $publication->expires)";
 $mysqli->query($query) or error($mysqli->error);
 $id = $mysqli->insert_id;
-if ($type == 'citizen') {
+if ($type == 'citizen')
   $query = "INSERT INTO citizen(id, familyName, givenNames, picture, latitude, longitude) "
           ."VALUES($id, '$citizen->familyName', '$citizen->givenNames', "
           ."'$citizen->picture', $citizen->latitude, $citizen->longitude)";
-  $mysqli->query($query) or error($mysqli->error);
-} elseif ($type == 'endorsement') {
+elseif ($type == 'endorsement') {
   if (!isset($endorsement->message))
     $endorsement->message = '';
   if (!isset($endorsement->comment))
@@ -217,7 +216,6 @@ if ($type == 'citizen') {
   $query = "INSERT INTO endorsement(id, publicationKey, publicationSignature, publicationFingerprint, "
           ."`revoke`, message, comment) VALUES($id, '$key', '$signature', SHA1('$signature'), "
           ."'$endorsement->revoke', '$endorsement->message', '$endorsement->comment')";
-  $mysqli->query($query) or error($mysqli->error);
 } elseif ($type == 'referendum') {
   $referendum =&$publication;
   if (!isset($referendum->website))  # optional
@@ -225,8 +223,13 @@ if ($type == 'citizen') {
   $query = "INSERT INTO referendum(id, trustee, area, title, description, question, answers, deadline, website) "
           ."VALUES($id, \"$referendum->trustee\", \"$referendum->area\", \"$referendum->title\", \"$referendum->description\", "
           ."\"$referendum->question\", \"$referendum->answers\", $referendum->deadline, \"$referendum->website\")";
-  $mysqli->query($query) or error($mysqli->error);
-}
+} elseif ($type == 'ballot')
+  $query = "INSERT INTO ballot(id, referendum, stationKey, stationSignature, citizenKey, citizenSignature) "
+          ."VALUES($id, \"$ballot->referendum\", \"$ballot->station->key\", \"$ballot->station->signature\", "
+          ."\"$ballot->citizen->key\", \"$ballot->citizen->signature\")";
+else
+  error("unknown publication type");
+$mysqli->query($query) or error($mysqli->error);
 if ($type == 'endorsement')
   echo json_encode(endorsements($mysqli, $publication->key), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 else {
