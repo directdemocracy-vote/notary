@@ -41,9 +41,9 @@ else
   error("No fingerprint or key argument provided.");
 
 $result = $mysqli->query($query) or error($mysqli->error);
-if (!$result)
-  error("Publication not found.");
 $publication = $result->fetch_assoc();
+if (!$publication)
+  error("Publication not found.");
 $result->free();
 $type = get_type($publication['schema']);
 if ($type == 'citizen') {
