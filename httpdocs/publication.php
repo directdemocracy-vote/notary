@@ -41,10 +41,10 @@ else
   error("No fingerprint or key argument provided.");
 
 $result = $mysqli->query($query) or error($mysqli->error);
+if (!$result)
+  error("Publication not found.");
 $publication = $result->fetch_assoc();
 $result->free();
-if (!$publication)
-  error("Publication not found.");
 $type = get_type($publication['schema']);
 if ($type == 'citizen') {
   $query = "SELECT familyName, givenNames, picture, latitude, longitude FROM citizen WHERE id=$publication[id]";
