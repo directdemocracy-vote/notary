@@ -119,7 +119,7 @@ if (!$result->isValid()) {
 $now = floatval(microtime(true) * 1000);  # milliseconds
 $type = get_type($publication->schema);
 if ($type != 'vote' && $type != 'ballot' && $publication->published > $now + 60000)  # allowing a 1 minute error
-  error("Publication date in the future: $publication->published > $now");
+  error("Publication date in the future for $type: $publication->published > $now");
 if ($publication->expires < $now - 60000)  # allowing a 1 minute error
   error("Expiration date in the past: $publication->expires < $now");
 if ($type == 'citizen') {
