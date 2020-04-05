@@ -134,14 +134,14 @@ if ($type == 'citizen') {
   } catch(Exception $e) {
     error("Cannot determine picture size");
   }
-} elseif ($type == 'ballot') {
-  $ballot = &$publication;
-  if ($ballot->station->signature !== '') {
-    $station_signature = $ballot->station->signature;
-    $ballot->station->signature = '';
-    $data = json_encode($ballot, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-    if (openssl_verify($data, base64_decode($station_signature), public_key($ballot->station->key), OPENSSL_ALGO_SHA256) == -1)
-      error("Wrong station signature");
+} elseif ($type == 'registration' || $type == 'ballot') {
+  if ($publication->station->signature !== '') {
+    $station_signature = $publication->station->signature;
+    $publication->station->signature = '';
+    $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    if (openssl_verify($data, base64_decode($station_signature), public_key($publication->station->key), OPENSSL_ALGO_SHA256)
+        == -1)
+      error("Wrong station signature for $type");
   }
 }
 $signature = $publication->signature;
@@ -152,7 +152,7 @@ if ($verify != 1)
   error("Wrong signature");
 $publication->signature = $signature;
 if (isset($station_signature))
-  $ballot->station->signature = $station_signature;
+  $publication->station->signature = $station_signature;
 
 $mysqli = new mysqli($database_host, $database_username, $database_password, $database_name);
 if ($mysqli->connect_errno)
@@ -223,10 +223,15 @@ elseif ($type == 'endorsement') {
   $query = "INSERT INTO referendum(id, trustee, area, title, description, question, answers, deadline, website) "
           ."VALUES($id, \"$referendum->trustee\", \"$referendum->area\", \"$referendum->title\", \"$referendum->description\", "
           ."\"$referendum->question\", \"$referendum->answers\", $referendum->deadline, \"$referendum->website\")";
-} elseif ($type == 'ballot')
+} elseif ($type == 'registration')
+  $query = "INSERT INTO registration(id, referendum, stationKey, stationSignature) "
+          ."VALUES($id, \"$publication->referendum\", \"" . $publication->station->key
+          ."\", \"" . $publication->station->signature . "\")";
+elseif ($type == 'ballot')
   $query = "INSERT INTO ballot(id, referendum, stationKey, stationSignature, citizenKey, citizenSignature) "
-          ."VALUES($id, \"$ballot->referendum\", \"" . $ballot->station->key ."\", \"" . $ballot->station->signature . "\", "
-          ."\"" . $ballot->citizen->key . "\", \"" . $ballot->citizen->signature . "\")";
+          ."VALUES($id, \"$publication->referendum\", \"" . $publication->station->key ."\", \""
+          .$publication->station->signature . "\", " . "\"" . $publication->citizen->key . "\", \""
+          .$publication->citizen->signature . "\")";
 elseif ($type == 'vote')
   $query = "INSERT INTO vote(id, answer) VALUES($id, \"$publication->answer\")";
 else
