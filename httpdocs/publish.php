@@ -135,7 +135,16 @@ if ($type == 'citizen') {
     error("Cannot determine picture size");
   }
 } elseif ($type == 'registration' || $type == 'ballot') {
-  if ($publication->station->signature !== '') {
+  if ($type == 'ballot' && isset($publication->citizen->signature)) {
+    # check citizen signature in rejected or cancelled ballot
+    $citizen_signature = $publication->citizen->signature;
+    $publication->citizen->$signature = '';
+    $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    if (openssl_verify($data, base64_decode($citizen_signature), public_key($publication->citizen->key), OPENSSL_ALGO_SHA256)
+        == -1)
+      error("Wrong citizen signature for $type");
+  }
+  if (isset($publication->station->signature)) {
     $station_signature = $publication->station->signature;
     $publication->station->signature = '';
     $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
@@ -150,9 +159,13 @@ $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICOD
 $verify = openssl_verify($data, base64_decode($signature), public_key($publication->key), OPENSSL_ALGO_SHA256);
 if ($verify != 1)
   error("Wrong signature");
+
+# restore original signatures
 $publication->signature = $signature;
 if (isset($station_signature))
   $publication->station->signature = $station_signature;
+if (isset($citizen_signature))
+  $publication->citizen->signature = $citizen_signature;
 
 $mysqli = new mysqli($database_host, $database_username, $database_password, $database_name);
 if ($mysqli->connect_errno)
