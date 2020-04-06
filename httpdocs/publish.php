@@ -135,7 +135,7 @@ if ($type == 'citizen') {
     error("Cannot determine picture size");
   }
 } elseif ($type == 'registration' || $type == 'ballot') {
-  if ($type == 'ballot' && isset($publication->citizen->signature)) {
+  if ($type == 'ballot' && isset($publication->citizen)) {
     # check citizen signature in rejected or cancelled ballot
     $citizen_signature = $publication->citizen->signature;
     $publication->citizen->$signature = '';
@@ -151,6 +151,7 @@ if ($type == 'citizen') {
     if (openssl_verify($data, base64_decode($station_signature), public_key($publication->station->key), OPENSSL_ALGO_SHA256)
         == -1)
       error("Wrong station signature for $type");
+    unset($publication->station->signature);
   }
 }
 $signature = $publication->signature;
