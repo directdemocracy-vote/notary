@@ -82,11 +82,11 @@
           <div class="row">
             <div class="col-md-6">
               <label for="family-name">Family name:</label>
-              <input id="familyName" type="text" class="form-control" id="family-name" placeholder="Leave empty to search all" oninput="validate()">
+              <input id="family-name" type="text" class="form-control" placeholder="Leave empty to search all" oninput="validate()">
             </div>
             <div class="col-md-6">
               <label for="given-names">Given name(s):</label>
-              <input id="givenNames" type="text" class="form-control" id="given-names" placeholder="Leave empty to search all" oninput="validate()">
+              <input id="given-names" type="text" class="form-control" placeholder="Leave empty to search all" oninput="validate()">
             </div>
           </div>
         </div>
@@ -195,8 +195,8 @@
                 document.getElementById("position").innerHTML = '(' + lat + ', ' + lon + ') &plusmn; ' + Math.round(range / 100) / 10 + ' km';
               }
               function search() {
-                const familyName = document.getElementById("familyName").value;
-                const givenNames = document.getElementById("givenNames").value;
+                const familyName = document.getElementById("family-name").value;
+                const givenNames = document.getElementById("given-names").value;
                 let xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                   if (this.readyState == 4 && this.status == 200) {
