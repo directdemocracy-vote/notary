@@ -76,6 +76,7 @@
         </div>
         <br>
       </div>
+      <!--
       <div class="form-group">
         <div class="container">
           <h3>Search referendum</h3>
@@ -94,6 +95,7 @@
           </div>
         </div>
       </div>
+      -->
       <div class="form-group">
         <div class="container">
           <h3>Search citizen</h3>
