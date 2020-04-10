@@ -78,7 +78,7 @@
       </div>
       <div class="form-group">
         <div class="container">
-          <h3>Search citizen database</h3>
+          <h3>Search citizen</h3>
           <div class="row">
             <div class="col-md-6">
               <label for="family-name">Family name:</label>
