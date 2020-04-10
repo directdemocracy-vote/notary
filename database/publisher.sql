@@ -7,9 +7,7 @@ CREATE TABLE `ballot` (
   `id` int(11) NOT NULL,
   `referendum` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
   `stationKey` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `stationSignature` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `citizenKey` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `citizenSignature` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL
+  `stationSignature` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `citizen` (
@@ -39,6 +37,13 @@ CREATE TABLE `publication` (
   `fingerprint` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'sha1 of signature',
   `published` bigint(15) NOT NULL,
   `expires` bigint(15) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `registration` (
+  `id` int(11) NOT NULL,
+  `referendum` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `stationKey` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `stationSignature` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `referendum` (
@@ -78,6 +83,9 @@ ALTER TABLE `publication`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `fingerprint` (`fingerprint`);
 
+ALTER TABLE `registration`
+  ADD PRIMARY KEY (`id`);
+
 ALTER TABLE `referendum`
   ADD PRIMARY KEY (`id`);
 
@@ -91,9 +99,5 @@ ALTER TABLE `publication`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `trustee`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-COMMIT;
-
-ALTER TABLE `vote`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
