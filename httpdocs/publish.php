@@ -135,15 +135,6 @@ if ($type == 'citizen') {
     error("Cannot determine picture size");
   }
 } elseif ($type == 'registration' || $type == 'ballot') {
-  if ($type == 'ballot' && isset($publication->citizen)) {
-    # check citizen signature in rejected or cancelled ballot
-    $citizen_signature = $publication->citizen->signature;
-    $publication->citizen->$signature = '';
-    $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-    if (openssl_verify($data, base64_decode($citizen_signature), public_key($publication->citizen->key), OPENSSL_ALGO_SHA256)
-        == -1)
-      error("Wrong citizen signature for $type");
-  }
   if (isset($publication->station->signature)) {
     $station_signature = $publication->station->signature;
     $publication->station->signature = '';
@@ -237,15 +228,10 @@ elseif ($type == 'endorsement') {
   $query = "INSERT INTO referendum(id, trustee, area, title, description, question, answers, deadline, website) "
           ."VALUES($id, \"$referendum->trustee\", \"$referendum->area\", \"$referendum->title\", \"$referendum->description\", "
           ."\"$referendum->question\", \"$referendum->answers\", $referendum->deadline, \"$referendum->website\")";
-} elseif ($type == 'registration')
-  $query = "INSERT INTO registration(id, referendum, stationKey, stationSignature) "
+} elseif ($type == 'registration' || $type == 'ballot')
+  $query = "INSERT INTO $type(id, referendum, stationKey, stationSignature) "
           ."VALUES($id, \"$publication->referendum\", \"" . $publication->station->key
           ."\", \"" . $publication->station->signature . "\")";
-elseif ($type == 'ballot')
-  $query = "INSERT INTO ballot(id, referendum, stationKey, stationSignature, citizenKey, citizenSignature) "
-          ."VALUES($id, \"$publication->referendum\", \"" . $publication->station->key ."\", \""
-          .$publication->station->signature . "\", " . "\"" . $publication->citizen->key . "\", \""
-          .$publication->citizen->signature . "\")";
 elseif ($type == 'vote')
   $query = "INSERT INTO vote(id, answer) VALUES($id, \"$publication->answer\")";
 else
