@@ -78,6 +78,24 @@
       </div>
       <div class="form-group">
         <div class="container">
+          <h3>Search referendum</h3>
+          <div class="row align-items-end">
+            <div class="col-md-4">
+              <label for="referumdum-title">Referendum title:</label>
+              <input type="text" class="form-control" id="referendum-title" placeholder="Leave empty to search all">
+            </div>
+            <div class="col-md-4">
+              <label for="referendum-area">Referendum Area:</label>
+              <input type="text" class="form-control" id="referendum-area" placeholder="Leave empty to search all">
+            </div>
+            <div class="col-md-2">
+              <button style="margin-top:20px" class="btn btn-success" role="button" onclick="search()">Search</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="container">
           <h3>Search citizen</h3>
           <div class="row">
             <div class="col-md-6">
