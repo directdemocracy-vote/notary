@@ -27,7 +27,8 @@ $referendum = $mysqli->escape_string(get_string_parameter('referendum'));
 if (!$referendum)
   die("Missing referendum argument");
 
-$query = "SELECT area, trustee FROM referendum WHERE `key`='$referendum'";
+$query = "SELECT area, trustee FROM referendum LEFT JOIN publication ON publication.id=referendum.id "
+        ."WHERE publication.`key`='$referendum'";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
   die("Referendum not found");
