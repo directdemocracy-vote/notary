@@ -37,8 +37,11 @@ $result->free();
 
 # get area polygon from openstreemap
 
-$area = str_replace("\n", "&", $referendum['area']);
-$url = "https://nominatim.openstreetmap.org/search?$area&polygon_geojson=1&format=jsonv2";
+$areas = explode("\n", $referendum['area']);
+$area = '?';
+foreach($areas as $a)
+  $area .= urlencode($a) . '&';
+$url = "https://nominatim.openstreetmap.org/search?" . $area . "polygon_geojson=1&format=jsonv2";
 die($url."<br>".urlencode($url));
 $area = file_get_contents($url);
 die($area);
