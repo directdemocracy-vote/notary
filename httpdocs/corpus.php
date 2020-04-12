@@ -45,7 +45,9 @@ foreach($areas as $a)
     $area .= $n[0] . '=' . urlencode($n[1]) . '&';
   }
 $url = "https://nominatim.openstreetmap.org/search" . $area . "polygon_geojson=1&format=json";
-$area = file_get_contents($url);
+$options = [ "http" => [ "method" => "GET", "header" => "User-agent: directdemocracy\r\n" ] ];
+$context = stream_context_create($options);
+$area = file_get_contents($url, false, $context);
 die($area);
 
 $now = floatval(microtime(true) * 1000);  # milliseconds
