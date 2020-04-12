@@ -34,7 +34,7 @@ $query = "SELECT publication.`schema`, publication.`key`, publication.signature,
         ."WHERE registration.referendum='$referendum' AND published <= $now AND expires >= $now";
 $result = $mysqli->query($query) or error($mysqli->error);
 $registrations = [];
-if ($results) {
+if ($result) {
   while ($registration = $result->fetch_assoc()) {
     $registration['published'] = floatval($registration['published']);
     $registration['expires'] = floatval($registration['expires']);
@@ -53,7 +53,7 @@ $query = "SELECT publication.`schema`, publication.`key`, publication.signature,
         ."WHERE ballot.referendum='$referendum' AND published <= $now AND expires >= $now";
 $result = $mysqli->query($query) or error($mysqli->error);
 $ballots = [];
-if ($results) {
+if ($result) {
   while ($ballot = $result->fetch_assoc()) {
     $ballot['published'] = floatval($ballot['published']);
     $ballot['expires'] = floatval($ballot['expires']);
