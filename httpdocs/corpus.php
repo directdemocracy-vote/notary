@@ -46,7 +46,7 @@ foreach($areas as $a) {
   }
 }
 $url = "https://nominatim.openstreetmap.org/search" . $area . "polygon_geojson=1&format=jsonv2";
-die($url."<br>".urlencode($url));
+die($url);
 $area = file_get_contents($url);
 die($area);
 
