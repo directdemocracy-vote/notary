@@ -39,14 +39,12 @@ $result->free();
 
 $areas = explode("\n", $referendum['area']);
 $area = '?';
-foreach($areas as $a) {
+foreach($areas as $a)
   if ($a) {
     $n = explode("=", $a, 2);
     $area .= $n[0] . '=' . urlencode($n[1]) . '&';
   }
-}
-$url = "https://nominatim.openstreetmap.org/search" . $area . "polygon_geojson=1&format=jsonv2";
-die($url);
+$url = "https://nominatim.openstreetmap.org/search" . $area . "polygon_geojson=1&format=json";
 $area = file_get_contents($url);
 die($area);
 
