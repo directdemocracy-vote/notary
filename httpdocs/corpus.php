@@ -27,16 +27,27 @@ $referendum = $mysqli->escape_string(get_string_parameter('referendum'));
 if (!$referendum)
   die("Missing referendum argument");
 
+$now = floatval(microtime(true) * 1000);  # milliseconds
+$date_condition = "publication.published <= $now AND publication.expires >= $now";
+
 $query = "SELECT area, trustee FROM referendum LEFT JOIN publication ON publication.id=referendum.id "
-        ."WHERE publication.`key`='$referendum'";
+        ."WHERE publication.`key`='$referendum' AND $date_condition";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
   die("Referendum not found");
 $referendum = $result->fetch_assoc();
 $result->free();
 
-# get area polygon from openstreemap
+$trustee = $referendum['trustee'];
+$area = $referendum['area'];
 
+$query = "SELECT polygons FROM area LEFT JOIN publication on publication.id=area.id "
+        ."WHERE area='$area' AND trustee='$trustee' AND $date_condition";
+$result = $mysqli->query($query) or error($mysqli->error);
+if (!$result)
+  die("Area was not published by trustee, please try again later");
+
+# get area polygon from openstreemap
 $areas = explode("\n", $referendum['area']);
 $area = '?';
 foreach($areas as $a)

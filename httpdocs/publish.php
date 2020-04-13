@@ -238,7 +238,22 @@ elseif ($type == 'endorsement') {
           ."\", \"" . $publication->station->signature . "\")";
 elseif ($type == 'vote')
   $query = "INSERT INTO vote(id, answer) VALUES($id, \"$publication->answer\")";
-else
+elseif ($type == 'area') {
+  $polygons = 'ST_GeomFromText(MULTIPOLYGON(';
+  foreach($publications->polygons as $polygon1) {
+    $polygons .= '(';
+    foreach($polygon1 as $polygon2) {
+      $polygons .= '(';
+      foreach($polygon2 as $coordinates)
+        $polygons .= $coordinates[0] . ' ' . $coordinates[1] . ', ';
+      $polygons = substr($polygons, 0, -2);
+      $polygons .= ')';
+    }
+    $polygons .= ')';
+  }
+  $polygons .= ')';
+  $query = "INSERT INTO area(id, name, polygons) VALUES($id, \"$publication->name\", $polygons)";
+}
   error("unknown publication type");
 $mysqli->query($query) or error($mysqli->error);
 if ($type == 'endorsement')
