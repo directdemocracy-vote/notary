@@ -23,15 +23,15 @@ if ($mysqli->connect_errno)
   error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
 $mysqli->set_charset('utf8mb4');
 
-$referendum = $mysqli->escape_string(get_string_parameter('referendum'));
-if (!$referendum)
+$referendum_key = $mysqli->escape_string(get_string_parameter('referendum'));
+if (!$referendum_key)
   die("Missing referendum argument");
 
 $now = floatval(microtime(true) * 1000);  # milliseconds
 $date_condition = "publication.published <= $now AND publication.expires >= $now";
 
 $query = "SELECT area, trustee FROM referendum LEFT JOIN publication ON publication.id=referendum.id "
-        ."WHERE publication.`key`='$referendum' AND $date_condition";
+        ."WHERE publication.`key`='$referendum_key' AND $date_condition";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
   die("Referendum not found");
@@ -41,43 +41,35 @@ $result->free();
 $trustee = $referendum['trustee'];
 $area = $referendum['area'];
 
-$query = "SELECT polygons FROM area LEFT JOIN publication on publication.id=area.id "
-        ."WHERE area='$area' AND trustee='$trustee' AND $date_condition";
+$query = "SELECT id FROM area LEFT JOIN publication on publication.id=area.id "
+        ."WHERE name='$area' AND publication.key='$trustee' AND $date_condition";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
-  die("Area was not published by trustee, please try again later");
+  die("Area was not published by trustee");
+$area = $results->fetch_assoc();
+$area_id = intval($area['id']);
 
-# get area polygon from openstreemap
-$areas = explode("\n", $referendum['area']);
-$area = '?';
-foreach($areas as $a)
-  if ($a) {
-    $n = explode("=", $a, 2);
-    $area .= $n[0] . '=' . urlencode($n[1]) . '&';
-  }
-$url = "https://nominatim.openstreetmap.org/search" . $area . "polygon_geojson=1&format=json";
-$options = [ "http" => [ "method" => "GET", "header" => "User-agent: directdemocracy\r\n" ] ];
-$context = stream_context_create($options);
-$area = file_get_contents($url, false, $context);
-die($area);
-
-$now = floatval(microtime(true) * 1000);  # milliseconds
-$query = "SELECT publication.`key`, "
-        ."citizen.latitude, citizen.longitude "
-        ."FROM citizen LEFT JOIN publication ON publication.id=citizen.id "
-        ."WHERE published <= $now AND expires >= $now"; // FIXME optimization: restrain latitude/logitude to area bounding rectangle
+$query = "SELECT publication.key FROM citizen LEFT JOIN publication ON publication.id=citizen.id "
+        ."LEFT JOIN area ON area.id=$area_id WHERE ST_Contains(area.polygons, citizen.home)";
 $result = $mysqli->query($query) or error($mysqli->error);
-$citizens = [];
+$count = 0;
+$citizens = array();
 if ($result) {
-  while ($citizen = $result->fetch_assoc()) {
-    $lat = $citizen['latitude'];
-    $lon = $citizen['longitude'];
-    $url = "https://nominatim.openstreetmap.org/reverse.php?format=json&lat=$lat&lon=$lon";
-    $response = file_get_contents($url);
-    array_push($citizens, $citizen['key']);
-  }
+  $count = $result->num_rows;
+  $citizen = $result->fetch_assoc();
+  $list = "'$citizen[key]'";
+  while($citizen = $result->fetch_assoc())
+    $list .= ",'$citizen[key]";  # maybe use SHA1 to speed-up things and lower query length
   $result->free();
+  $query = "SELECT DISTINCT registration.stationKey LEFT JOIN publication ON publication.id=registration.id "
+          ."WHERE publication.key IN ($list)";
 }
+
+$response = array('count' => $count, 'corpus' => $citizens);
+
+
+
+
 $query = "SELECT publication.`schema`, publication.`key`, publication.signature, publication.published, publication.expires, "
         ."ballot.referendum, ballot.stationKey, ballot.stationSignature "
         ."FROM ballot LEFT JOIN publication ON publication.id=ballot.id "
