@@ -32,5 +32,5 @@ if (!$result)
 $area = $result->fetch_assoc();
 $result->free();
 $mysqli->close();
-die("\"expires\":\"$area[expires]\"");
+die("{\"expires\":\"$area[expires]\"}");
 ?>
