@@ -35,16 +35,16 @@ $mysqli->set_charset('utf8mb4');
 $range = get_float_parameter('range');
 if ($range) {
   $range = $range / 1000;
-  $latitude = get_float_parameter('latitude') / 1000000;
-  $longitude = get_float_parameter('longitude') / 1000000;
+  $latitude = get_float_parameter('latitude');
+  $longitude = get_float_parameter('longitude');
 }
 $familyName = $mysqli->escape_string(get_string_parameter('familyName'));
 $givenNames = $mysqli->escape_string(get_string_parameter('givenNames'));
 
 $query = "SELECT id, familyName, givenNames, picture, latitude, longitude";
 if ($range)
-  $query .= ", (6371 * acos(cos(radians($latitude)) * cos(radians(latitude/1000000)) * cos(radians(longitude/1000000) - radians($longitude)) "
-           ."+ sin(radians($latitude)) * sin(radians(latitude/1000000)))) AS distance ";
+  $query .= ", (6371 * acos(cos(radians($latitude)) * cos(radians(latitude)) * cos(radians(longitude) - radians($longitude)) "
+           ."+ sin(radians($latitude)) * sin(radians(latitude)))) AS distance ";
 $query .= " FROM citizen";
 if ($familyName or $givenNames) {
   $query .= " WHERE";

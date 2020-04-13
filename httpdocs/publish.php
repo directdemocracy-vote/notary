@@ -195,10 +195,14 @@ $query = "INSERT INTO publication(`schema`, `key`, signature, fingerprint, publi
         ."SHA1('$publication->signature'), $publication->published, $publication->expires)";
 $mysqli->query($query) or error($mysqli->error);
 $id = $mysqli->insert_id;
+
+
+# UPDATE `citizen` SET `home` = ST_PointFromText(CONCAT('POINT(', longitude, ' ', latitude, ')')) WHERE `citizen`.`id` = 95;
+
 if ($type == 'citizen')
-  $query = "INSERT INTO citizen(id, familyName, givenNames, picture, latitude, longitude) "
+  $query = "INSERT INTO citizen(id, familyName, givenNames, picture, home) "
           ."VALUES($id, '$citizen->familyName', '$citizen->givenNames', "
-          ."'$citizen->picture', $citizen->latitude, $citizen->longitude)";
+          ."'$citizen->picture', ST_PointFromText('POINT($citizen->latitude, $citizen->longitude)')";
 elseif ($type == 'endorsement') {
   if (!isset($endorsement->message))
     $endorsement->message = '';

@@ -59,8 +59,8 @@ $result = $mysqli->query($query) or error($mysqli->error);
 $citizens = [];
 if ($result) {
   while ($citizen = $result->fetch_assoc()) {
-    $lat = intval($citizen['latitude']) / 1000000;
-    $lon = intval($citizen['longitude']) / 1000000;
+    $lat = $citizen['latitude'];
+    $lon = $citizen['longitude'];
     $url = "https://nominatim.openstreetmap.org/reverse.php?format=json&lat=$lat&lon=$lon";
     $response = file_get_contents($url);
     array_push($citizens, $citizen['key']);

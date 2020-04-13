@@ -50,7 +50,7 @@ if ($result) {
 $query = "SELECT publication.`schema`, publication.`key`, publication.signature, publication.published, publication.expires, "
         ."ballot.referendum, ballot.stationKey, ballot.stationSignature "
         ."FROM ballot LEFT JOIN publication ON publication.id=ballot.id "
-        ."WHERE ballot.referendum='$referendum'"; // AND published <= $now AND expires >= $now";
+        ."WHERE ballot.referendum='$referendum'"; // AND published <= $now AND expires >= $now"; FIXME
 $result = $mysqli->query($query) or error($mysqli->error);
 $ballots = [];
 if ($result) {
