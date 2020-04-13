@@ -240,13 +240,25 @@ elseif ($type == 'vote')
   $query = "INSERT INTO vote(id, answer) VALUES($id, \"$publication->answer\")";
 elseif ($type == 'area') {
   $polygons = 'ST_GeomFromText("MULTIPOLYGON(';
+  $t1 = false;
   foreach($publication->polygons as $polygon1) {
+    if ($t1)
+      $polygons .= ', ';
     $polygons .= '(';
+    $t1 = true;
+    $t2 = false;
     foreach($polygon1 as $polygon2) {
+      if ($t2)
+        $polygons .= ', ';
       $polygons .= '(';
-      foreach($polygon2 as $coordinates)
-        $polygons .= $coordinates[0] . ' ' . $coordinates[1] . ', ';
-      $polygons = substr($polygons, 0, -2);
+      $t2 = true;
+      $t3 = false;
+      foreach($polygon2 as $coordinates) {
+        if ($t3)
+          $polygons += ', ';
+        $t3 = true;
+        $polygons .= $coordinates[0] . ' ' . $coordinates[1];
+      }
       $polygons .= ')';
     }
     $polygons .= ')';
