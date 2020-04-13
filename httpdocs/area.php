@@ -25,7 +25,7 @@ if (!$area)
 $now = floatval(microtime(true) * 1000);  # milliseconds
 $date_condition = "publication.published <= $now AND publication.expires >= $now";
 $query = "SELECT publication.expires FROM area LEFT JOIN publication ON publication.id=area.id "
-        ."WHERE area.trustee='$trustee' area.name='$area' AND $date_condition";
+        ."WHERE area.trustee='$trustee' AND area.name='$area' AND $date_condition";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
   die("{\"status\":\"area not found\"}");
