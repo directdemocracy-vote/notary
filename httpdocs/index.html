@@ -238,7 +238,6 @@
               let parameters = "latitude=" + latitude + "&longitude=" + longitude + "&range=" + range;
               if (familyName) parameters += "&familyName=" + encodeURI(familyName);
               if (givenNames) parameters += "&givenNames=" + encodeURI(givenNames);
-              console.log("request parameters = " + parameters);
               xhttp.open("GET", "https://publisher.directdemocracy.vote/search.php?" + parameters, true);
               xhttp.send();
             }
