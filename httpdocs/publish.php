@@ -253,6 +253,7 @@ elseif ($type == 'area') {
   }
   $polygons .= ')';
   $query = "INSERT INTO area(id, name, polygons) VALUES($id, \"$publication->name\", $polygons)";
+  die($query);
 } else
   error("unknown publication type");
 $mysqli->query($query) or error($mysqli->error);
