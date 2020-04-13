@@ -255,7 +255,7 @@ elseif ($type == 'area') {
   $query = "INSERT INTO area(id, name, polygons) VALUES($id, \"$publication->name\", $polygons)";
 } else
   error("unknown publication type");
-$mysqli->query($query) or error($mysqli->error);
+$mysqli->query($query) or error($mysqli->error . "<br>\n\n" . $query);
 if ($type == 'endorsement')
   echo json_encode(endorsements($mysqli, $publication->key), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 else {
