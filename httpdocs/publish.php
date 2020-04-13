@@ -255,7 +255,7 @@ elseif ($type == 'area') {
       $t3 = false;
       foreach($polygon2 as $coordinates) {
         if ($t3)
-          $polygons += ', ';
+          $polygons .= ', ';
         $t3 = true;
         $polygons .= $coordinates[0] . ' ' . $coordinates[1];
       }
