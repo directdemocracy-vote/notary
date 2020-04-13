@@ -41,10 +41,10 @@ if ($range) {
 $familyName = $mysqli->escape_string(get_string_parameter('familyName'));
 $givenNames = $mysqli->escape_string(get_string_parameter('givenNames'));
 
-$query = "SELECT id, familyName, givenNames, picture, latitude, longitude";
-if ($range)
-  $query .= ", (6371 * acos(cos(radians($latitude)) * cos(radians(latitude)) * cos(radians(longitude) - radians($longitude)) "
-           ."+ sin(radians($latitude)) * sin(radians(latitude)))) AS distance ";
+$query = "SELECT id, familyName, givenNames, picture, X(home) AS latitude, Y(home) AS longitude";
+if ($range) # FIXME use ST_Distance_Sphere
+  $query .= ", (6371 * acos(cos(radians($latitude)) * cos(radians(X(home))) * cos(radians(Y(home)) - radians($longitude)) "
+           ."+ sin(radians($latitude)) * sin(radians(X(home))))) AS distance ";
 $query .= " FROM citizen";
 if ($familyName or $givenNames) {
   $query .= " WHERE";
@@ -68,8 +68,8 @@ while ($citizen = $result->fetch_assoc()) {
   $r->free();
   unset($citizen['id']);
   unset($citizen['distance']);
-  $citizen['latitude'] = intval($citizen['latitude']);
-  $citizen['longitude'] = intval($citizen['longitude']);
+  $citizen['latitude'] = floatval($citizen['latitude']);
+  $citizen['longitude'] = floatval($citizen['longitude']);
   $citizen = array('schema' => $publication['schema'],
                    'key' => $publication['key'],
                    'signature' => $publication['signature'],

@@ -12,7 +12,7 @@ $mysqli->set_charset('utf8mb4');
 $key = $mysqli->escape_string($_POST['key']);
 $query = "SELECT publication.published, publication.expires, publication.signature, "
         ."citizen.familyName, citizen.givenNames, citizen.picture, "
-        ."citizen.latitude, citizen.longitude "
+        ."X(citizen.home) AS latitude, Y(citizen.home) AS longitude "
         ."FROM publication INNER JOIN citizen ON publication.id = citizen.id "
         ."WHERE publication.`key` = '$key'";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
@@ -20,8 +20,8 @@ $citizen = $result->fetch_assoc() or die("{\"error\":\"citizen not found: $key\"
 $result->free();
 settype($citizen['published'], 'int');
 settype($citizen['expires'], 'int');
-settype($citizen['latitude'], 'int');
-settype($citizen['longitude'], 'int');
+settype($citizen['latitude'], 'float');
+settype($citizen['longitude'], 'float');
 $endorsements = endorsements($mysqli, $key);
 $query = "SELECT pc.fingerprint, pe.published, e.revoke, "
         ."c.familyName, c.givenNames, c.picture FROM "

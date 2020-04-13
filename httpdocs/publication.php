@@ -47,12 +47,12 @@ if (!$publication)
 $result->free();
 $type = get_type($publication['schema']);
 if ($type == 'citizen') {
-  $query = "SELECT familyName, givenNames, picture, latitude, longitude FROM citizen WHERE id=$publication[id]";
+  $query = "SELECT familyName, givenNames, picture, X(home) AS latitude, Y(home) AS longitude FROM citizen WHERE id=$publication[id]";
   $result = $mysqli->query($query) or error($mysqli->error);
   $citizen = $result->fetch_assoc();
   $result->free();
-  $citizen['latitude'] = intval($citizen['latitude']);
-  $citizen['longitude'] = intval($citizen['longitude']);
+  $citizen['latitude'] = floatval($citizen['latitude']);
+  $citizen['longitude'] = floatval($citizen['longitude']);
   $citizen = array('schema' => $publication['schema'],
                    'key' => $publication['key'],
                    'signature' => $publication['signature'],
