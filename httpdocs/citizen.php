@@ -12,7 +12,7 @@ $mysqli->set_charset('utf8mb4');
 $key = $mysqli->escape_string($_POST['key']);
 $query = "SELECT publication.published, publication.expires, publication.signature, "
         ."citizen.familyName, citizen.givenNames, citizen.picture, "
-        ."ST_Latitude(citizen.home) AS latitude, ST_Longitude(citizen.home) AS longitude "
+        ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude "
         ."FROM publication INNER JOIN citizen ON publication.id = citizen.id "
         ."WHERE publication.`key` = '$key'";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");

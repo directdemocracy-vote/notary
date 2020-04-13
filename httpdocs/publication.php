@@ -47,7 +47,7 @@ if (!$publication)
 $result->free();
 $type = get_type($publication['schema']);
 if ($type == 'citizen') {
-  $query = "SELECT familyName, givenNames, picture, ST_Latitude(home) AS latitude, ST_Longitude(home) AS longitude FROM citizen WHERE id=$publication[id]";
+  $query = "SELECT familyName, givenNames, picture, ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen WHERE id=$publication[id]";
   $result = $mysqli->query($query) or error($mysqli->error);
   $citizen = $result->fetch_assoc();
   $result->free();
