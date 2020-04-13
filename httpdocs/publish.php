@@ -240,7 +240,7 @@ elseif ($type == 'vote')
   $query = "INSERT INTO vote(id, answer) VALUES($id, \"$publication->answer\")";
 elseif ($type == 'area') {
   $polygons = 'ST_GeomFromText(MULTIPOLYGON(';
-  foreach($publications->polygons as $polygon1) {
+  foreach($publication->polygons as $polygon1) {
     $polygons .= '(';
     foreach($polygon1 as $polygon2) {
       $polygons .= '(';
@@ -253,7 +253,7 @@ elseif ($type == 'area') {
   }
   $polygons .= ')';
   $query = "INSERT INTO area(id, name, polygons) VALUES($id, \"$publication->name\", $polygons)";
-}
+} else
   error("unknown publication type");
 $mysqli->query($query) or error($mysqli->error);
 if ($type == 'endorsement')
