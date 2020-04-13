@@ -41,10 +41,10 @@ if ($range) {
 $familyName = $mysqli->escape_string(get_string_parameter('familyName'));
 $givenNames = $mysqli->escape_string(get_string_parameter('givenNames'));
 
-$query = "SELECT id, familyName, givenNames, picture, X(home) AS latitude, Y(home) AS longitude";
+$query = "SELECT id, familyName, givenNames, picture, ST_Latitude(home) AS latitude, ST_Longitude(home) AS longitude";
 if ($range) # FIXME use ST_Distance_Sphere
-  $query .= ", (6371 * acos(cos(radians($latitude)) * cos(radians(X(home))) * cos(radians(Y(home)) - radians($longitude)) "
-           ."+ sin(radians($latitude)) * sin(radians(X(home))))) AS distance ";
+  $query .= ", (6371 * acos(cos(radians($latitude)) * cos(radians(ST_Latitude(home))) * cos(radians(ST_Longitude(home)) - radians($longitude)) "
+           ."+ sin(radians($latitude)) * sin(radians(ST_Latitude(home))))) AS distance ";
 $query .= " FROM citizen";
 if ($familyName or $givenNames) {
   $query .= " WHERE";
