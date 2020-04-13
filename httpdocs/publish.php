@@ -239,7 +239,7 @@ elseif ($type == 'endorsement') {
 elseif ($type == 'vote')
   $query = "INSERT INTO vote(id, answer) VALUES($id, \"$publication->answer\")";
 elseif ($type == 'area') {
-  $polygons = 'ST_GeomFromText(\"MULTIPOLYGON(';
+  $polygons = 'ST_GeomFromText("MULTIPOLYGON(';
   foreach($publication->polygons as $polygon1) {
     $polygons .= '(';
     foreach($polygon1 as $polygon2) {
@@ -251,7 +251,7 @@ elseif ($type == 'area') {
     }
     $polygons .= ')';
   }
-  $polygons .= ')\")';
+  $polygons .= ')")';
   $query = "INSERT INTO area(id, name, polygons) VALUES($id, \"$publication->name\", $polygons)";
   die($query);
 } else
