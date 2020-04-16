@@ -115,7 +115,7 @@ $query = "INSERT INTO results(referendum, answer, `count`) "
 
 # save corpus size in results
 $query = "INSERT INTO results(referendum, answer, `count`) "
-        ."VALUES($referendum, '', COUNT(*) FROM corpus WHERE referendum=$referendum)";
+        ."VALUES($referendum_id, '', COUNT(*) FROM corpus WHERE referendum=$referendum_id)";
 
 # delete the content of intermediary table for referendum
 # TODO: this should done once tested
