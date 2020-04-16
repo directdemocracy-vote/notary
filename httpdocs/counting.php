@@ -64,9 +64,10 @@ $mysqli->query($query) or error($mysqli->error);
 $count = $mysqli->affected_rows;
 
 # list all the stations involved in the referendum
-$query = "INSERT INTO stations(id, referendum, station, registrations_count, ballots_count) "
+$query = "INSERT INTO stations(id, referendum, registrations_count, ballots_count) "
         ."SELECT station, $referendum_id, 0, 0 "
-        ."FROM corpus GROUP BY station HAVING referendum=$referendum_id";
+        ."FROM corpus GROUP BY id HAVING referendum=$referendum_id";
+$mysqli->query($query) or error($mysqli->error);
 
 # list all the registrations for each station
 $query = "INSERT INTO registrations(referendum, station, citizen, published) "
@@ -75,31 +76,38 @@ $query = "INSERT INTO registrations(referendum, station, citizen, published) "
         ."LEFT JOIN publication AS registration_p ON registration_p.id=registration.id "
         ."LEFT JOIN publication AS citizen_p ON citizen_p.`key`=registration_p.`key` "
         ."LEFT JOIN corpus ON corpus.citizen=citizen_p.id";
+$mysqli->query($query) or error($mysqli->error);
 
 # if a citizen registered several times (possibly at several stations) keep only the most recent registration
 $query = "DELETE r1 FROM registrations r1 INNER JOIN registrations r2 "
         ."WHERE r1.citizen=r2.citizen AND r1.published < r2.published";
+$mysqli->query($query) or error($mysqli->error);
 
 # list all the ballots for each station
 $query = "INSERT INTO ballots(referendum, station, `key`, `revoke`) "
         ."SELECT $referendum_id, station.id, ballot_p.`key`, ballot.`revoke` FROM station "
         ."LEFT JOIN ballot ON ballot.stationKey=station.`key` AND ballot.referendum='$referendum_key' "
         ."LEFT JOIN publication AS ballot_p ON ballot_p.id=ballot.id";
+$mysqli->query($query) or error($mysqli->error);
 
 # count registrations for each station
 $query = "UPDATE stations "
         ."LEFT JOIN registrations ON registrations.station=stations.id "
         ."SET registrations_count=COUNT(registrations.*) ";
+$mysqli->query($query) or error($mysqli->error);
 
 # count ballots for each station
 $query = "UPDATE stations "
         ."LEFT JOIN ballots ON ballots.station=stations.id "
         ."SET ballots_count=COUNT(ballots.*) "
         ."WHERE ballots.`revoke`=0";
+$mysqli->query($query) or error($mysqli->error);
 
 # delete bad stations and their ballots
 $query = "DELETE FROM stations WHERE registration_count!=ballot_count";
+$mysqli->query($query) or error($mysqli->error);
 $query = "DELETE FROM ballots WHERE station NOT IN (SELECT id FROM stations)";
+$mysqli->query($query) or error($mysqli->error);
 
 # list valid votes
 $query = "INSERT INTO votes(referendum, answer) "
@@ -107,15 +115,18 @@ $query = "INSERT INTO votes(referendum, answer) "
         ."LEFT JOINT vote_p ON vote.id=vote_p.id "
         ."LEFT JOIN ballots ON ballots.`key`=vote_p.`key` "
         ."WHERE ballots.referendum=$referendum_id";
+$mysqli->query($query) or error($mysqli->error);
 
 # count votes
 $query = "INSERT INTO results(referendum, answer, `count`) "
         ."SELECT $referendum_id, answer, COUNT(*) FROM votes "
         ."GROUP BY answer";
+$mysqli->query($query) or error($mysqli->error);
 
 # save corpus size in results
 $query = "INSERT INTO results(referendum, answer, `count`) "
-        ."VALUES($referendum_id, '', COUNT(*) FROM corpus WHERE referendum=$referendum_id)";
+        ."VALUES($referendum_id, '', $count)";
+$mysqli->query($query) or error($mysqli->error);
 
 # delete the content of intermediary table for referendum
 # TODO: this should done once tested
