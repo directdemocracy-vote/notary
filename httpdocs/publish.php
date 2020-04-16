@@ -146,18 +146,24 @@ if ($type == 'citizen') {
   }
 }
 $signature = $publication->signature;
+if ($type == 'ballot' && isset($publication->revoke)) {
+  $revoke = $publication->revoke;
+  unset($publication->revoke);
+}
 $publication->signature = '';
 $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 $verify = openssl_verify($data, base64_decode($signature), public_key($publication->key), OPENSSL_ALGO_SHA256);
 if ($verify != 1)
   error("Wrong signature");
 
-# restore original signatures
+# restore original signatures and revoke field if any
 $publication->signature = $signature;
 if (isset($station_signature))
   $publication->station->signature = $station_signature;
 if (isset($citizen_signature))
   $publication->citizen->signature = $citizen_signature;
+if (isset($revoke))
+  $publication->revoke = $revoke;
 
 $mysqli = new mysqli($database_host, $database_username, $database_password, $database_name);
 if ($mysqli->connect_errno)
@@ -232,11 +238,17 @@ elseif ($type == 'endorsement') {
   $query = "INSERT INTO referendum(id, trustee, area, title, description, question, answers, deadline, website) "
           ."VALUES($id, \"$referendum->trustee\", \"$referendum->area\", \"$referendum->title\", \"$referendum->description\", "
           ."\"$referendum->question\", \"$referendum->answers\", $referendum->deadline, \"$referendum->website\")";
-} elseif ($type == 'registration' || $type == 'ballot')
-  $query = "INSERT INTO $type(id, referendum, stationKey, stationSignature) "
+} elseif ($type == 'registration')
+  $query = "INSERT INTO registration(id, referendum, stationKey, stationSignature) "
           ."VALUES($id, \"$publication->referendum\", \"" . $publication->station->key
           ."\", \"" . $publication->station->signature . "\")";
-elseif ($type == 'vote')
+elseif ($type == 'ballot') {
+  if (!isset($publication->revoke)) # optional
+    $publication->revoke = 0;
+  $query = "INSERT INTO registration(id, referendum, stationKey, stationSignature, `revoke`) "
+          ."VALUES($id, \"$publication->referendum\", \"" . $publication->station->key
+          ."\", \"" . $publication->station->signature . "\", $publication->revoke)";
+} elseif ($type == 'vote')
   $query = "INSERT INTO vote(id, answer) VALUES($id, \"$publication->answer\")";
 elseif ($type == 'area') {
   $polygons = 'ST_GeomFromText("MULTIPOLYGON(';
