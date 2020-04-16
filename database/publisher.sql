@@ -3,11 +3,25 @@ SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
+CREATE TABLE `area` (
+  `id` int(11) NOT NULL,
+  `name` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `polygons` multipolygon NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE `ballot` (
   `id` int(11) NOT NULL,
   `referendum` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
   `stationKey` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `stationSignature` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL
+  `stationSignature` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `revoke` tinyint(1) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `ballots` (
+  `referendum` int(11) NOT NULL,
+  `station` int(11) NOT NULL,
+  `key` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `revoke` tinyint(1) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `citizen` (
@@ -15,8 +29,13 @@ CREATE TABLE `citizen` (
   `familyName` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `givenNames` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `picture` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `latitude` int(11) NOT NULL,
-  `longitude` int(11) NOT NULL
+  `home` point NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `corpus` (
+  `referendum` int(11) NOT NULL,
+  `station` int(11) NOT NULL,
+  `citizen` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `endorsement` (
@@ -39,13 +58,6 @@ CREATE TABLE `publication` (
   `expires` bigint(15) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `registration` (
-  `id` int(11) NOT NULL,
-  `referendum` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `stationKey` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `stationSignature` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 CREATE TABLE `referendum` (
   `id` int(11) NOT NULL,
   `trustee` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -58,10 +70,44 @@ CREATE TABLE `referendum` (
   `website` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE `registration` (
+  `id` int(11) NOT NULL,
+  `referendum` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `stationKey` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `stationSignature` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `revoke` tinyint(1) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `registrations` (
+  `referendum` int(11) NOT NULL,
+  `station` int(11) NOT NULL,
+  `citizen` int(11) NOT NULL,
+  `published` bigint(15) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `results` (
+  `referendum` int(11) NOT NULL,
+  `answer` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `count` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `station` (
+  `id` int(11) NOT NULL,
+  `key` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `url` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `stations` (
+  `id` int(11) NOT NULL,
+  `referendum` int(11) NOT NULL,
+  `registrations_count` int(11) NOT NULL,
+  `ballots_count` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE `trustee` (
   `id` int(11) NOT NULL,
-  `url` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `key` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL
+  `key` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `url` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `vote` (
@@ -69,11 +115,29 @@ CREATE TABLE `vote` (
   `answer` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE `votes` (
+  `referendum` int(11) NOT NULL,
+  `answer` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+ALTER TABLE `area`
+  ADD PRIMARY KEY (`id`);
+
 ALTER TABLE `ballot`
   ADD PRIMARY KEY (`id`);
 
+ALTER TABLE `ballots`
+  ADD KEY `referendum` (`referendum`),
+  ADD KEY `station` (`station`);
+
 ALTER TABLE `citizen`
   ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `corpus`
+  ADD KEY `referendum` (`referendum`),
+  ADD KEY `citizen` (`citizen`),
+  ADD KEY `station` (`station`);
 
 ALTER TABLE `endorsement`
   ADD PRIMARY KEY (`id`),
@@ -83,19 +147,44 @@ ALTER TABLE `publication`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `fingerprint` (`fingerprint`);
 
-ALTER TABLE `registration`
-  ADD PRIMARY KEY (`id`);
-
 ALTER TABLE `referendum`
   ADD PRIMARY KEY (`id`);
 
+ALTER TABLE `registration`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `registrations`
+  ADD KEY `referendum` (`referendum`),
+  ADD KEY `station` (`station`),
+  ADD KEY `citizen` (`citizen`);
+
+ALTER TABLE `results`
+  ADD KEY `referendum` (`referendum`);
+
+ALTER TABLE `station`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `stations`
+  ADD KEY `id` (`id`),
+  ADD KEY `referendum` (`referendum`);
+
 ALTER TABLE `trustee`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `vote`
   ADD PRIMARY KEY (`id`);
 
+ALTER TABLE `votes`
+  ADD KEY `referendum` (`referendum`);
+
+
+ALTER TABLE `area`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 ALTER TABLE `publication`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `station`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `trustee`
