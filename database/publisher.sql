@@ -11,16 +11,16 @@ CREATE TABLE `area` (
 
 CREATE TABLE `ballot` (
   `id` int(11) NOT NULL,
-  `referendum` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `stationKey` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `stationSignature` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `referendum` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `stationKey` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `stationSignature` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `revoke` tinyint(1) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `ballots` (
   `referendum` int(11) NOT NULL,
   `station` int(11) NOT NULL,
-  `key` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `key` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `revoke` tinyint(1) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -28,7 +28,7 @@ CREATE TABLE `citizen` (
   `id` int(11) NOT NULL,
   `familyName` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `givenNames` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `picture` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `picture` text CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `home` point NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -40,9 +40,9 @@ CREATE TABLE `corpus` (
 
 CREATE TABLE `endorsement` (
   `id` int(11) NOT NULL,
-  `publicationKey` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `publicationSignature` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `publicationFingerprint` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `publicationKey` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `publicationSignature` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `publicationFingerprint` varchar(40) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `revoke` tinyint(1) NOT NULL,
   `message` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
   `comment` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL
@@ -50,31 +50,31 @@ CREATE TABLE `endorsement` (
 
 CREATE TABLE `publication` (
   `id` int(11) NOT NULL,
-  `schema` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `key` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `signature` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `fingerprint` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'sha1 of signature',
+  `schema` varchar(256) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `key` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `signature` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `fingerprint` varchar(40) CHARACTER SET ascii COLLATE ascii_bin NOT NULL COMMENT 'sha1 of signature',
   `published` bigint(15) NOT NULL,
   `expires` bigint(15) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `referendum` (
   `id` int(11) NOT NULL,
-  `trustee` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `trustee` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `area` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
   `title` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `question` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `answers` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `deadline` bigint(15) NOT NULL,
-  `website` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL
+  `website` varchar(2048) CHARACTER SET ascii COLLATE ascii_bin NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `registration` (
   `id` int(11) NOT NULL,
-  `referendum` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `stationKey` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `stationSignature` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `referendum` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `stationKey` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `stationSignature` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `revoke` tinyint(1) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -106,8 +106,8 @@ CREATE TABLE `stations` (
 
 CREATE TABLE `trustee` (
   `id` int(11) NOT NULL,
-  `key` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL
+  `key` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `url` varchar(2048) CHARACTER SET ascii COLLATE ascii_bin NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `vote` (
