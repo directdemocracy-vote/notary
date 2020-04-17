@@ -64,7 +64,7 @@ if ($result) {
       $publication->longitude = floatval($publication->longitude);
     } elseif ($type == 'endorsement') {
       if ($publication->revoke == "0")
-        unset($publication->revoke)
+        unset($publication->revoke);
       else
         $publication->revoke = true;
       if ($publication->message == '')
