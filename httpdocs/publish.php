@@ -205,7 +205,7 @@ $id = $mysqli->insert_id;
 if ($type == 'citizen')
   $query = "INSERT INTO citizen(id, familyName, givenNames, picture, home) "
           ."VALUES($id, '$citizen->familyName', '$citizen->givenNames', "
-          ."'$citizen->picture', POINT($citizen->latitude, $citizen->longitude))";
+          ."'$citizen->picture', POINT($citizen->longitude, $citizen->latitude))";
 elseif ($type == 'endorsement') {
   if (!isset($endorsement->message))
     $endorsement->message = '';
