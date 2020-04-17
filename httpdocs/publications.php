@@ -59,6 +59,23 @@ if ($result) {
   while($publication = $result->fetch_object()) {
     $publication->published = floatval($publication->published);
     $publication->expires = floatval($publication->expires);
+    if ($type == 'citizen') {
+      $publication->latitude = floatval($publication->latitude);
+      $publication->longitude = floatval($publication->longitude);
+    } elseif ($type == 'endorsement') {
+      if ($publication->revoke == "0")
+        unset($publication->revoke)
+      else
+        $publication->revoke = true;
+      if ($publication->message == '')
+        unset($publication->message);
+      if ($publication->comment == '')
+        unset($publication->comment);
+    } elseif ($type == 'referendum') {
+      $publication->deadline = floatval($publication->deadline);
+      if ($publication->website == '')
+        unset($publication->website);
+    }
     array_push($publications, $publication);
   }
   $result->free();
