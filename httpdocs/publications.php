@@ -56,11 +56,13 @@ $query = "SELECT p.`schema`, p.`key`, p.signature, p.published, p.expires, $fiel
 $result = $mysqli->query($query) or error($mysqli->error);
 $publications = array();
 if ($result) {
-  while($object = $result->fetch_object()) {
-    array_push($publications, $object);
+  while($publication = $result->fetch_object()) {
+    $publication->published = floatval($publication->published);
+    $publication->expires = floatval($publication->expires);
+    array_push($publications, $publication);
   }
   $result->free();
 }
 $mysqli->close();
-echo json_encode($publications, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+echo json_encode($publications, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 ?>
