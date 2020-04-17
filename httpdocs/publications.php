@@ -50,13 +50,13 @@ if ($published_from)
 if ($published_to)
   $condition .="p.published <= $published_to AND ";
 $condition .= "p.schema='https://directdemocracy.vote/json-schema/$version/$type.schema.json'";
-/*
+
 $query = "SELECT p.`schema`, p.`key`, p.signature, p.published, p.expires, $fields FROM $type "
-        ."LEFT JOIN publication AS p ON p.id=$type.id AND $condition";
-*/
+        ."LEFT JOIN publication AS p ON p.id=$type.id AND $condition WHERE p IS NOT NULL";
+/*
 $query = "SELECT p.`schema`, p.`key`, p.signature, p.published, p.expires, $fields FROM publication AS p "
         ."LEFT JOIN $type ON $type.id=p.id AND $condition";
-
+*/
 $result = $mysqli->query($query) or error($mysqli->error);
 $publications = array();
 if ($result) {
