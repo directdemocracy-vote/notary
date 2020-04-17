@@ -53,10 +53,7 @@ $condition .= "p.schema='https://directdemocracy.vote/json-schema/$version/$type
 
 $query = "SELECT p.`schema`, p.`key`, p.signature, p.published, p.expires, $fields FROM $type "
         ."LEFT JOIN publication AS p ON p.id=$type.id AND $condition WHERE p.id IS NOT NULL";
-/*
-$query = "SELECT p.`schema`, p.`key`, p.signature, p.published, p.expires, $fields FROM publication AS p "
-        ."LEFT JOIN $type ON $type.id=p.id AND $condition";
-*/
+
 $result = $mysqli->query($query) or error($mysqli->error);
 $publications = array();
 if ($result) {
