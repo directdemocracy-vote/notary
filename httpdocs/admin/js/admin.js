@@ -24,7 +24,7 @@ function wipeout() {
   var url = '/admin/admin.php';
   var data = {
     password: document.querySelector('input[type="password"]').value,
-    citizen: document.querySelector('input[name="citizens"]').checked,
+    citizens: document.querySelector('input[name="citizens"]').checked,
     endorsements: document.querySelector('input[name="endorsements"]').checked,
     referendums: document.querySelector('input[name="referendums"]').checked,
     areas: document.querySelector('input[name="areas"]').checked,
