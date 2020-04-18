@@ -31,8 +31,6 @@ $votes = $mysqli->escape_string($input->votes);
 
 $results = $mysqli->escape_string($input->results);
 
-die(json_encode($input, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-
 $query = "";
 
 function delete_publication($mysqli, $type) {
