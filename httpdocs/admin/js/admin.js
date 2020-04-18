@@ -41,7 +41,7 @@ function wipeout() {
       }
     }).then(res => res.json())
     .then(function(response) {
-      if (reponse.hasOwnProperty('error'))
+      if (response.hasOwnProperty('error'))
         document.querySelector('#result').innerHTML = `<font style="color:red">${response.status}</font>`;
       else
         document.querySelector('#result').innerHTML = response.status;
