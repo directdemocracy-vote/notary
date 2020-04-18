@@ -44,7 +44,7 @@ if ($citizens)
   $n += delete_publication($mysqli, 'citizen');
 if ($endorsements)
   $n += delete_publication($mysqli, 'endorsement');
-if ($referedums)
+if ($referendums)
   $n += delete_publication($mysqli, 'referendum');
 if ($areas)
   $n += delete_publication($mysqli, 'area');
@@ -55,7 +55,7 @@ if ($ballots)
 if ($votes)
   $n += delete_publication($mysqli, 'vote');
 if ($results) {
-  $query = "DELETE FROM results; DELETE FROM votes; DELETE FROM ballots; DELETE FROM registrations; DELETE FROM stations;";
+  $query = "DELETE FROM results;"; # "DELETE FROM votes; DELETE FROM ballots; DELETE FROM registrations; DELETE FROM stations;";
   $mysqli->query($query) or error($mysqli->error);
 }
 $query = "SELECT MAX(id) AS `max` FROM publication";
