@@ -40,7 +40,10 @@ function wipeout() {
         'Content-Type': 'application/json'
       }
     }).then(res => res.json())
-    .then(response => console.log('Success:', JSON.stringify(response)))
+    .then(function(response) {
+      document.querySelector('#result').innerHTML = response.status;
+      console.log('Success:', JSON.stringify(response));
+    })
     .catch(error => console.error('Error:', error));
   return false;
 }
