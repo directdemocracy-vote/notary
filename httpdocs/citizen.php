@@ -29,7 +29,7 @@ $query = "SELECT pc.fingerprint, pe.published, e.revoke, "
         ."publication pc INNER JOIN citizen c ON pc.id = c.id "
         ."WHERE e.publicationKey = '$key' AND pc.`key` = pe.`key` "
         ."ORDER BY e.revoke ASC, pe.published, c.familyName, c.givenNames";
-$result = $mysqli->query($query);
+$result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 if (!$result)
   return "{\"error\":\"$mysqli->error\"}";
 $citizen_endorsements = array();

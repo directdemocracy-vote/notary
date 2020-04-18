@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta name="description" content="directdemocracy publisher administration page" />
+    <meta charset="utf-8">
+    <title>directdemocracy publisher administration page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+
+  <body>
+    <div>
+      <h1>Wipe out database</h1>
+      <form>
+        <div><input type="checkbox" name="citizens" onclick="update()">citizens</input></div>
+        <div><input type="checkbox" name="endorsements">endorsements</input></div>
+        <div><input type="checkbox" name="referendums" onclick="update()">referendums</input></div>
+        <div><input type="checkbox" name="areas">areas</input></div>
+        <div><input type="checkbox" name="registrations">registrations</input></div>
+        <div><input type="checkbox" name="ballots">ballots</input></div>
+        <div><input type="checkbox" name="votes">votes</input></div>
+        <div><input type="checkbox" name="results">results</input></div>
+        <div>
+          <span>Password: </span>
+          <input type="password"></input>
+          <button type="button" onclick="return wipeout()">Wipe out</button>
+        </div>
+      </form>
+    </div>
+    <script src="js/admin.js"></script>
+  </body>
+
+</html>
