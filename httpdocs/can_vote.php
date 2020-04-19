@@ -38,7 +38,7 @@ $result = $mysqli->query($query) or die($mysqli->error);
 $endorsement = $result->fetch_assoc();
 $result->free();
 if (!$endorsement)
-  die('Citizen not endorsed by trustee');
+  die('Citizen not endorsed by trustee' + ": " + $query);
 if ($endorsement['revoke'] == 1)
   die('Citizen revokey by trustee');
 
