@@ -72,6 +72,10 @@ if ($result) {
         unset($publication->message);
       if ($publication->comment == '')
         unset($publication->comment);
+      $publication->publication = array('key' => $publication->publicationKey,
+                                        'signature' => $publication->publicationSignature);
+      unset($publication->publicationKey);
+      unset($publication->publicationSignature);
     } elseif ($type == 'referendum') {
       $publication->deadline = floatval($publication->deadline);
       if ($publication->website == '')
