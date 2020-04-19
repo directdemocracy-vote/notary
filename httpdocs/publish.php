@@ -163,25 +163,20 @@ if ($type == 'citizen') {
   $publication->station->signature = $publication_signature;
   $publication->signature = $signature;
 }
-$signature = $publication->signature;
-if ($type == 'ballot' && isset($publication->revoke)) {
-  $revoke = $publication->revoke;
-  unset($publication->revoke);
+if ($type != 'ballot') {
+  $signature = $publication->signature;
+  $publication->signature = '';
+  $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+  $verify = openssl_verify($data, base64_decode($signature), public_key($publication->key), OPENSSL_ALGO_SHA256);
+  if ($verify != 1)
+    error("Wrong signature for $type");
+  # restore original signatures if needed
+  $publication->signature = $signature;
+  if (isset($station_signature))
+    $publication->station->signature = $station_signature;
+  if (isset($citizen_signature))
+    $publication->citizen->signature = $citizen_signature;
 }
-$publication->signature = '';
-$data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-$verify = openssl_verify($data, base64_decode($signature), public_key($publication->key), OPENSSL_ALGO_SHA256);
-if ($verify != 1)
-  error("Wrong signature");
-
-# restore original signatures and revoke field if any
-$publication->signature = $signature;
-if (isset($station_signature))
-  $publication->station->signature = $station_signature;
-if (isset($citizen_signature))
-  $publication->citizen->signature = $citizen_signature;
-if (isset($revoke))
-  $publication->revoke = $revoke;
 
 $mysqli = new mysqli($database_host, $database_username, $database_password, $database_name);
 if ($mysqli->connect_errno)
@@ -258,11 +253,11 @@ elseif ($type == 'endorsement') {
           ."VALUES($id, \"$publication->referendum\", \"" . $publication->station->key
           ."\", \"" . $publication->station->signature . "\")";
 elseif ($type == 'ballot') {
-  if (!isset($publication->revoke)) # optional
-    $publication->revoke = 0;
+  if (!isset($publication->answer)) # optional
+    $publication->answer = '';
   $query = "INSERT INTO registration(id, referendum, stationKey, stationSignature, `revoke`) "
           ."VALUES($id, \"$publication->referendum\", \"" . $publication->station->key
-          ."\", \"" . $publication->station->signature . "\", $publication->revoke)";
+          ."\", \"" . $publication->station->signature . "\", $publication->answer)";
 } elseif ($type == 'vote')
   $query = "INSERT INTO vote(id, answer) VALUES($id, \"$publication->answer\")";
 elseif ($type == 'area') {
