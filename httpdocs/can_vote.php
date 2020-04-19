@@ -44,7 +44,7 @@ if ($endorsement['revoke'] == 1)
 
 # check if citizen's home is inside the referendum area
 $query = "SELECT ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen "
-        ."LEFT JOIN publication ON publication.id=citizem.id WHERE publication.`key`='$citizen'";
+        ."LEFT JOIN publication ON publication.id=citizen.id WHERE publication.`key`='$citizen'";
 $result = $mysqli->query($query) or die($mysqli->error);
 $citizen = $result->fetch_assoc();
 $result->free();
