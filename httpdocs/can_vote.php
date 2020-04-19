@@ -32,7 +32,7 @@ $area = $r['area'];
 
 # check if citizen is endorsed by trustee
 $query = "SELECT `revoke` FROM endorsement LEFT JOIN publication ON publication.id=endorsement.id "
-        ."WHERE publication.`key`='$referendum' AND endorsement.publicationKey='$citizen' "
+        ."WHERE publication.`key`='$trustee' AND endorsement.publicationKey='$citizen' "
         ."ORDER BY publication.published DESC LIMIT 1";
 $result = $mysqli->query($query) or die($mysqli->error);
 $endorsement = $result->fetch_assoc();
