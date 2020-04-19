@@ -53,7 +53,7 @@ if (!$citizen)
 $latitude = $citizen['latitude'];
 $longitude = $citizen['longitude'];
 
-$query = "SELECT id FROM area LEFT JOIN publication ON publication.id=area.id "
+$query = "SELECT area.id FROM area LEFT JOIN publication ON publication.id=area.id "
         ." WHERE publication.`key`='$trustee' AND area.name='$area'";
 $result = $mysqli->query($query) or die($mysqli->error);
 $a = $result->fetch_assoc();
@@ -62,7 +62,7 @@ if (!$a)
   die('Area not found');
 $area = $a['id'];
 
-$query = "SELECT id FROM area WHERE area.id=$area AND ST_Contains(polygons, POINT($longitude, $latitude))";
+$query = "SELECT area.id FROM area WHERE area.id=$area AND ST_Contains(polygons, POINT($longitude, $latitude))";
 $result = $mysqli->query($query) or die($mysqli->error);
 $a = $result->fetch_assoc();
 $result->free();
