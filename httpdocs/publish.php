@@ -255,9 +255,9 @@ elseif ($type == 'endorsement') {
 elseif ($type == 'ballot') {
   if (!isset($publication->answer)) # optional
     $publication->answer = '';
-  $query = "INSERT INTO registration(id, referendum, stationKey, stationSignature, `revoke`) "
+  $query = "INSERT INTO ballot(id, referendum, stationKey, stationSignature, answer) "
           ."VALUES($id, \"$publication->referendum\", \"" . $publication->station->key
-          ."\", \"" . $publication->station->signature . "\", $publication->answer)";
+          ."\", \"" . $publication->station->signature . "\", \"$publication->answer\")";
 } elseif ($type == 'area') {
   $polygons = 'ST_GeomFromText("MULTIPOLYGON(';
   $t1 = false;
