@@ -118,7 +118,7 @@ if (!$result->isValid()) {
 }
 $now = floatval(microtime(true) * 1000);  # milliseconds
 $type = get_type($publication->schema);
-if ($type != 'vote' && $type != 'ballot' && $publication->published > $now + 60000)  # allowing a 1 minute error
+if ($type != 'ballot' && $publication->published > $now + 60000)  # allowing a 1 minute error
   error("Publication date in the future for $type: $publication->published > $now");
 if ($publication->expires < $now - 60000)  # allowing a 1 minute error
   error("Expiration date in the past: $publication->expires < $now");
@@ -258,9 +258,7 @@ elseif ($type == 'ballot') {
   $query = "INSERT INTO registration(id, referendum, stationKey, stationSignature, `revoke`) "
           ."VALUES($id, \"$publication->referendum\", \"" . $publication->station->key
           ."\", \"" . $publication->station->signature . "\", $publication->answer)";
-} elseif ($type == 'vote')
-  $query = "INSERT INTO vote(id, answer) VALUES($id, \"$publication->answer\")";
-elseif ($type == 'area') {
+} elseif ($type == 'area') {
   $polygons = 'ST_GeomFromText("MULTIPOLYGON(';
   $t1 = false;
   foreach($publication->polygons as $polygon1) {
