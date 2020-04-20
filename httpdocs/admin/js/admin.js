@@ -3,19 +3,15 @@ function update() {
     document.querySelector('input[name="endorsements"]').checked = true;
     document.querySelector('input[name="registrations"]').checked = true;
     document.querySelector('input[name="ballots"]').checked = true;
-    document.querySelector('input[name="votes"]').checked = true;
     document.querySelector('input[name="results"]').checked = true;
   } else if (document.querySelector('input[name="referendums"]').checked) {
     document.querySelector('input[name="registrations"]').checked = true;
     document.querySelector('input[name="ballots"]').checked = true;
-    document.querySelector('input[name="votes"]').checked = true;
     document.querySelector('input[name="results"]').checked = true;
   } else if (document.querySelector('input[name="registrations"]').checked) {
     document.querySelector('input[name="ballots"]').checked = true;
-    document.querySelector('input[name="votes"]').checked = true;
     document.querySelector('input[name="results"]').checked = true;
   } else if (document.querySelector('input[name="ballots"]').checked) {
-    document.querySelector('input[name="votes"]').checked = true;
     document.querySelector('input[name="results"]').checked = true;
   }
 }
@@ -30,7 +26,6 @@ function wipeout() {
     areas: document.querySelector('input[name="areas"]').checked,
     registrations: document.querySelector('input[name="registrations"]').checked,
     ballots: document.querySelector('input[name="ballots"]').checked,
-    votes: document.querySelector('input[name="votes"]').checked,
     results: document.querySelector('input[name="results"]').checked
   };
   fetch(url, {

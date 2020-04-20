@@ -27,7 +27,6 @@ $referendums = $mysqli->escape_string($input->referendums);
 $areas = $mysqli->escape_string($input->areas);
 $registrations = $mysqli->escape_string($input->registrations);
 $ballots = $mysqli->escape_string($input->ballots);
-$votes = $mysqli->escape_string($input->votes);
 
 $results = $mysqli->escape_string($input->results);
 
@@ -52,10 +51,8 @@ if ($registrations)
   $n += delete_publication($mysqli, 'registration');
 if ($ballots)
   $n += delete_publication($mysqli, 'ballot');
-if ($votes)
-  $n += delete_publication($mysqli, 'vote');
 if ($results) {
-  $query = "DELETE FROM results;"; # "DELETE FROM votes; DELETE FROM ballots; DELETE FROM registrations; DELETE FROM stations;";
+  $query = "DELETE FROM results;"; # FIXME: also "DELETE FROM ballots; DELETE FROM registrations; DELETE FROM stations;";
   $mysqli->query($query) or error($mysqli->error);
 }
 $query = "SELECT MAX(id) AS `max` FROM publication";
