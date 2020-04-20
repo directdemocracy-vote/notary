@@ -160,7 +160,7 @@ if ($type == 'citizen') {
   if (openssl_verify($data, base64_decode($station_signature), public_key($publication->station->key), OPENSSL_ALGO_SHA256)
       == -1)
     error("Wrong station signature for ballot");
-  $publication->station->signature = $publication_signature;
+  $publication->station->signature = $station_signature;
   $publication->signature = $signature;
 }
 if ($type != 'ballot') {
