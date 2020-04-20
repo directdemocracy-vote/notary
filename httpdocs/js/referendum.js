@@ -22,12 +22,12 @@ function unix_time_to_text(unix_timestamp) {
 }
 
 window.onload = function() {
+  const publisher = 'https://publisher.directdemocracy.vote';
   const fingerprint = findGetParameter('fingerprint');
   if (!fingerprint) {
     console.log('Missing fingerprint GET argument');
     return;
   }
-  const publisher = 'https://publisher.directdemocracy.vote';
   let xhttp = new XMLHttpRequest();
   xhttp.onload = function() {
     if (this.status == 200) {
