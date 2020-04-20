@@ -24,11 +24,17 @@ if ($mysqli->connect_errno)
 $mysqli->set_charset('utf8mb4');
 
 $referendum_key = $mysqli->escape_string(get_string_parameter('referendum'));
-if (!$referendum_key)
-  error("Missing referendum argument");
+$fingerprint = $mysqli->escape_string(get_string_parameter('fingerprint'));
+if (!$referendum_key && !$fingerprint)
+  error("Missing referendum or fingerprint argument");
+
+if ($fingerprint)
+  $condition = "publication.fingerprint='$fingerprint'";
+else
+  $condition = "publication.`key`='$referendum_key'";
 
 $query = "SELECT id, area, trustee FROM referendum LEFT JOIN publication ON publication.id=referendum.id "
-        ."WHERE publication.`key`='$referendum_key'";
+        ."WHERE $condition";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
   error("Referendum not found");
