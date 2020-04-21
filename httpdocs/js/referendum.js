@@ -116,6 +116,6 @@ window.onload = function() {
     }
   };
   xhttp2.open('POST', publisher + 'counting.php', true);
-  xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  xhttp.send('fingerprint=' + fingerprint);
+  xhttp2.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhttp2.send('fingerprint=' + fingerprint);
 };
