@@ -103,19 +103,4 @@ window.onload = function() {
   xhttp.open('POST', publisher + '/counting.php', true);
   xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   xhttp.send('fingerprint=' + fingerprint);
-
-  let xhttp2 = new XMLHttpRequest();
-  xhttp2.onload = function() {
-    if (this.status == 200) {
-      let referendum = JSON.parse(this.responseText);
-      if (referendum.error)
-        console.log('publisher error', JSON.stringify(referendum.error));
-      else {
-        console.log(this.responseText);
-      }
-    }
-  };
-  xhttp2.open('POST', publisher + '/counting.php', true);
-  xhttp2.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  xhttp2.send('fingerprint=' + fingerprint);
 };
