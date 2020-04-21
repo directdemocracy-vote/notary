@@ -105,7 +105,7 @@ window.onload = function() {
   xhttp.send('fingerprint=' + fingerprint);
 
   let xhttp2 = new XMLHttpRequest();
-  xhttp.onload = function() {
+  xhttp2.onload = function() {
     if (this.status == 200) {
       let referendum = JSON.parse(this.responseText);
       if (referendum.error)
