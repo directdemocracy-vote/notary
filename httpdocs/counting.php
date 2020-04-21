@@ -57,6 +57,10 @@ $area_id = intval($area['id']);
 
 $debug = $area_id;
 
+
+
+$mysqli->query("DELETE FROM corpus");
+
 # The following intermediary tables are created:
 # corpus, stations, registrations and ballots
 $query = "SELECT COUNT(*) AS c FROM corpus WHERE referendum=$referendum_id";
@@ -73,9 +77,9 @@ if ($count == 0) {
   # they must be endorsed by the trustee of the referendum and their home must be inside the area of the referendum
   $query = "INSERT INTO corpus(referendum, station, citizen) SELECT $referendum_id, 0, citizen.id FROM "
           ."citizen "
-          ."LEFT JOIN publication AS citizen_p ON citizen_p.id=citizen.id "
-          ."LEFT JOIN endorsement ON endorsement.publicationKey=citizen_p.`key` AND endorsement.`revoke`=0 "
-          ."LEFT JOIN publication AS endorsement_p ON endorsement_p.id=endorsement.id AND endorsement_p.`key`='$trustee' "
+          ."INNER JOIN publication AS citizen_p ON citizen_p.id=citizen.id "
+          ."INNER JOIN endorsement ON endorsement.publicationKey=citizen_p.`key` AND endorsement.`revoke`=0 "
+          ."INNER JOIN publication AS endorsement_p ON endorsement_p.id=endorsement.id AND endorsement_p.`key`='$trustee' "
 ;
 //          ."LEFT JOIN area ON area.id=$area_id "
 //          ."WHERE ST_Contains(area.polygons, citizen.home)";
