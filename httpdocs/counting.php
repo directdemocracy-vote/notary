@@ -94,6 +94,7 @@ $results->published = intval($referendum['published']);
 $results->expires = intval($referendum['expires']);
 $results->corpus = $count;
 $results->debug = $debug;
+$results->query = $query;
 
 if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
   die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
