@@ -227,6 +227,7 @@ elseif ($type == 'endorsement') {
   $query = "SELECT id, `schema`, `key`, signature, expires FROM publication WHERE fingerprint=SHA1('$signature')";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsed = $result->fetch_assoc();
+  $result->free();
   if ($endorsed) {
     if ($endorsed['key'] != $key)
       error("endorsement key mismatch");
@@ -288,9 +289,10 @@ elseif ($type == 'ballot') {
 } else
   error("unknown publication type");
 $mysqli->query($query) or error($mysqli->error . " " . $query);
-if ($type == 'endorsement')
+if ($type == 'endorsement') {
+  error($query);
   echo json_encode(endorsements($mysqli, $publication->key), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-else {
+} else {
   $fingerprint = sha1($publication->signature);
   echo("{\"fingerprint\":\"$fingerprint\"}");
 }
