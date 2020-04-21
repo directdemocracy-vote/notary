@@ -46,7 +46,7 @@ $trustee = $referendum['trustee'];
 $area = $referendum['area'];
 $referendum_id = $referendum['id'];
 
-$query = "SELECT id FROM area LEFT JOIN publication on publication.id=area.id "
+$query = "SELECT area.id FROM area LEFT JOIN publication on publication.id=area.id "
         ."WHERE name='$area' AND publication.key='$trustee'";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
