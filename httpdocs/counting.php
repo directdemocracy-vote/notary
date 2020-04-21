@@ -33,7 +33,7 @@ if ($fingerprint)
 else
   $condition = "publication.`key`='$referendum_key'";
 
-$query = "SELECT id, published, expires, trustee, area, title, description, question, answers, deadline, website "
+$query = "SELECT referendum.id, published, expires, trustee, area, title, description, question, answers, deadline, website "
         ."FROM referendum LEFT JOIN publication ON publication.id=referendum.id "
         ."WHERE $condition";
 $result = $mysqli->query($query) or error($mysqli->error);
