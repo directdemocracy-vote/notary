@@ -100,7 +100,7 @@ window.onload = function() {
       }
     }
   };
-  xhttp.open('POST', publisher + '/publication.php', true);
+  xhttp.open('POST', publisher + '/counting.php', true);
   xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   xhttp.send('fingerprint=' + fingerprint);
 
