@@ -71,8 +71,9 @@ else {
           ."LEFT JOIN publication AS citizen_p ON citizen_p.id=citizen.id "
           ."LEFT JOIN endorsement ON endorsement.publicationKey=citizen_p.`key` AND endorsement.`revoke`=0 "
           ."LEFT JOIN publication AS endorsement_p ON endorsement_p.id=endorsement.id AND endorsement_p.`key`='$trustee' "
-          ."LEFT JOIN area ON area.id=$area_id "
-          ."WHERE ST_Contains(area.polygons, citizen.home)";
+;
+//          ."LEFT JOIN area ON area.id=$area_id "
+//          ."WHERE ST_Contains(area.polygons, citizen.home)";
   $mysqli->query($query) or error($mysqli->error);
   $count = $mysqli->affected_rows;
 }
@@ -90,6 +91,7 @@ $results->deadline = intval($referendum['deadline']);
 $results->published = intval($referendum['published']);
 $results->expires = intval($referendum['expires']);
 $results->corpus = $count;
+$results->debug = $debug;
 
 if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
   die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
