@@ -33,7 +33,8 @@ if ($fingerprint)
 else
   $condition = "publication.`key`='$referendum_key'";
 
-$query = "SELECT referendum.id, published, expires, trustee, area, title, description, question, answers, deadline, website "
+$query = "SELECT referendum.id, `key`, published, expires, "
+        ."trustee, area, title, description, question, answers, deadline, website "
         ."FROM referendum LEFT JOIN publication ON publication.id=referendum.id "
         ."WHERE $condition";
 $result = $mysqli->query($query) or error($mysqli->error);
@@ -78,6 +79,7 @@ else {
 $now = intval(microtime(true) * 1000);
 
 $results = new stdClass();
+$results->key = $referendum['key'];
 $results->trustee = $referendum['trustee'];
 $results->area = $referendum['area'];
 $results->title = $referendum['title'];
