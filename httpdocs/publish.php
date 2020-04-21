@@ -235,7 +235,7 @@ elseif ($type == 'endorsement') {
       error("endorsement signature mismatch");
     $endorsed_expires = intval($endorsed['expires']);
     if ($endorsement->expires > $endorsed_expires)
-      error("endorsement expires after publication: $endorsement_expires > $endorsed_expires");
+      error("endorsement expires after publication: $endorsement->expires > $endorsed_expires");
     if ($endorsement->revoke && $endorsement->expires != $endorsed_expires)
       error("revoke endorsement don't expire at the same time as publication");
   }
