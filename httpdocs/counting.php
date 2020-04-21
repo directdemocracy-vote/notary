@@ -55,6 +55,8 @@ if (!$result)
 $area = $result->fetch_assoc();
 $area_id = intval($area['id']);
 
+$debug = $area_id;
+
 # The following intermediary tables are created:
 # corpus, stations, registrations and ballots
 $query = "SELECT COUNT(*) AS c FROM corpus WHERE referendum=$referendum_id";
