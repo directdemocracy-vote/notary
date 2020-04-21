@@ -60,7 +60,9 @@ window.onload = function() {
           area_url = 'https://nominatim.openstreetmap.org/search.php?' + area_query + '&polygon_geojson=1';
         const answers = referendum.answers.split('\n');
         const answer_count = answers.length;
-        const results = [223, 336, 28];
+        let results = [];
+        for (i = 0; i < answers.length; i++)
+          results.push(Math.floor(Math.random() * 100));
         const total = results.reduce((a, b) => a + b, 0);
         answers_table = '<table class="table table-bordered"><thead class="thead-light"><tr>';
         const colors = ['primary', 'danger', 'success', 'warning', 'info', 'secondary', 'light', 'dark'];
@@ -71,19 +73,22 @@ window.onload = function() {
         let color_count = 0;
         let count = 0;
         answers.forEach(function(answer) {
-          const percent = Math.round(10000 * results[count++] / total) / 100;
+          const percent = Math.round(10000 * results[count] / total) / 100;
           answers_table +=
-            '<td><div class="progress"><div class="progress-bar progress-bar-striped bg-' +
-            colors[color_count++] + '" role="progressbar" ' +
+            '<td><div class="progress"><div id="answer-percent-' + count + '" ' +
+            'class="progress-bar progress-bar-striped bg-' + colors[color_count++] +
+            '" role="progressbar" ' +
             'style="width:' + percent + '%" aria-valuemin="0" aria_valuemax="100">' + percent + ' %' +
             '</div></div></td>';
           if (color_count == colors.length)
             color_count = 0;
+          count++;
         });
         count = 0;
         answers_table += '</tr><tr>';
         answers.forEach(function(answer) {
-          answers_table += '<td class="text-center">' + results[count++] + '</td>';
+          answers_table += '<td id="answer-count-' + count + '" class="text-center">' + results[count] + '</td>';
+          count++;
         });
         answers_table += '</tr></tbody></table>';
         document.getElementById('content').innerHTML = '<h2>' + referendum.title + '</h2>' +
@@ -96,6 +101,21 @@ window.onload = function() {
     }
   };
   xhttp.open('POST', publisher + '/publication.php', true);
+  xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhttp.send('fingerprint=' + fingerprint);
+
+  let xhttp2 = new XMLHttpRequest();
+  xhttp.onload = function() {
+    if (this.status == 200) {
+      let referendum = JSON.parse(this.responseText);
+      if (referendum.error)
+        console.log('publisher error', JSON.stringify(referendum.error));
+      else {
+        console.log(this.responseText);
+      }
+    }
+  };
+  xhttp2.open('POST', publisher + 'counting.php', true);
   xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   xhttp.send('fingerprint=' + fingerprint);
 };

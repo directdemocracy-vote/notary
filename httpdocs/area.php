@@ -22,7 +22,7 @@ if (!$trustee)
 if (!$area)
   error("Missing area argument");
 
-$now = floatval(microtime(true) * 1000);  # milliseconds
+$now = intval(microtime(true) * 1000);  # milliseconds
 $date_condition = "publication.published <= $now AND publication.expires >= $now";
 $query = "SELECT publication.expires FROM area LEFT JOIN publication ON publication.id=area.id "
         ."WHERE publication.key='$trustee' AND area.name='$area' AND $date_condition";

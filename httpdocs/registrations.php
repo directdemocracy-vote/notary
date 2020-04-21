@@ -27,7 +27,7 @@ $referendum = $mysqli->escape_string(get_string_parameter('referendum'));
 if (!$referendum)
   die("Missing referendum argument");
 
-$now = floatval(microtime(true) * 1000);  # milliseconds
+$now = intval(microtime(true) * 1000);  # milliseconds
 $query = "SELECT publication.`schema`, publication.`key`, publication.signature, publication.published, publication.expires, "
         ."registration.referendum, registration.stationKey, registration.stationSignature "
         ."FROM registration LEFT JOIN publication ON publication.id=registration.id "

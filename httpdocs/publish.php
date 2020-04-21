@@ -116,7 +116,7 @@ if (!$result->isValid()) {
   $keywordArgs = json_encode($error->keywordArgs(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
   error("{\"keyword\":\"$keyword\",\"keywordArgs\":$keywordArgs}");
 }
-$now = floatval(microtime(true) * 1000);  # milliseconds
+$now = intval(microtime(true) * 1000);  # milliseconds
 $type = get_type($publication->schema);
 if ($type != 'ballot' && $publication->published > $now + 60000)  # allowing a 1 minute error
   error("Publication date in the future for $type: $publication->published > $now");

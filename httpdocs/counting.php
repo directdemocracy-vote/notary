@@ -33,7 +33,8 @@ if ($fingerprint)
 else
   $condition = "publication.`key`='$referendum_key'";
 
-$query = "SELECT id, area, trustee FROM referendum LEFT JOIN publication ON publication.id=referendum.id "
+$query = "SELECT id, published, expires, trustee, area, title, description, question, answers, deadline, website "
+        ."FROM referendum LEFT JOIN publication ON publication.id=referendum.id "
         ."WHERE $condition";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
@@ -50,24 +51,47 @@ $query = "SELECT id FROM area LEFT JOIN publication on publication.id=area.id "
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
   error("Area was not published by trustee");
-$area = $results->fetch_assoc();
+$area = $result->fetch_assoc();
 $area_id = intval($area['id']);
 
 # The following intermediary tables are created:
-# corpus, stations, registrations, ballots and votes
+# corpus, stations, registrations and ballots
+$query = "SELECT COUNT(*) AS c FROM corpus WHERE referendum=$referendum_id";
+$result = $mysqli->query($query) or error($mysqli->error);
+$c = $result->fetch_assoc();
+if ($c)
+  $count = $c['c'];
+else {
+  # create corpus, see https://github.com/directdemocracy-vote/doc/blob/master/voting.md#31-list-eligible-citizens
+  # the corpus table should contain all citizen entitled to vote to referendum:
+  # they must be endorsed by the trustee of the referendum and their home must be inside the area of the referendum
+  $query = "INSERT INTO corpus(referendum, station, citizen) SELECT $referendum_id, 0, citizen.id FROM "
+          ."citizen "
+          ."LEFT JOIN publication AS citizen_p ON citizen_p.id=citizen.id "
+          ."LEFT JOIN endorsement ON endorsement.publicationKey=citizen_p.`key` AND endorsement.`revoke`=0 "
+          ."LEFT JOIN publication AS endorsement_p ON endorsement_p.id=endorsement.id AND endorsement_p.`key`='$trustee' "
+          ."LEFT JOIN area ON area.id=$area_id "
+          ."WHERE ST_Contains(area.polygons, citizen.home)";
+  $mysqli->query($query) or error($mysqli->error);
+  $count = $mysqli->affected_rows;
+}
+$now = intval(microtime(true) * 1000);
 
-# create corpus, see https://github.com/directdemocracy-vote/doc/blob/master/voting.md#31-list-eligible-citizens
-# the corpus table should contain all citizen entitled to vote to referendum:
-# they must be endorsed by the trustee of the referendum and their home must be inside the area of the referendum
-$query = "INSERT INTO corpus(referendum, station, citizen) SELECT $referendum_id, 0, citizen.id FROM "
-        ."citizen "
-        ."LEFT JOIN publication AS citizen_p ON citizen_p.id=citizen.id "
-        ."LEFT JOIN endorsement ON endorsement.publicationKey=citizen_p.`key` AND endorsement.`revoke`=0 "
-        ."LEFT JOIN publication AS endorsement_p ON endorsement_p.id=endorsement.id AND endorsement_p.`key`='$trustee' "
-        ."LEFT JOIN area ON area.id=$area_id "
-        ."WHERE ST_Contains(area.polygons, citizen.home)";
-$mysqli->query($query) or error($mysqli->error);
-$count = $mysqli->affected_rows;
+$results = new stdClass();
+$results->trustee = $referendum['trustee'];
+$results->area = $referendum['area'];
+$results->title = $referendum['title'];
+$results->description = $referendum['description'];
+$results->question = $referendum['question'];
+$results->answers = $referendum['answers'];
+$results->deadline = intval($referendum['deadline']);
+$results->published = intval($referendum['published']);
+$results->expires = intval($referendum['expires']);
+$results->corpus = $count;
+
+if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
+  die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+}
 
 # list all the stations involved in the referendum
 $query = "INSERT INTO stations(id, referendum, registrations_count, ballots_count) "

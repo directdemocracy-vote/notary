@@ -31,7 +31,7 @@ $mysqli->set_charset('utf8mb4');
 $fingerprint = $mysqli->escape_string(get_string_parameter('fingerprint'));
 $key = $mysqli->escape_string(get_string_parameter('key'));
 
-$now = floatval(microtime(true) * 1000);  # milliseconds
+$now = intval(microtime(true) * 1000);  # milliseconds
 $query = "SELECT * FROM publication WHERE published <= $now AND expires >= $now AND ";
 if ($key)
   $query .= "`key`=\"$key\"";
