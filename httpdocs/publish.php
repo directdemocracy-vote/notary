@@ -232,7 +232,7 @@ elseif ($type == 'endorsement') {
       error("endorsement key mismatch");
     if ($endorsed['signature'] != $signature)
       error("endorsement signature mismatch");
-    $endorsed_expires = floatval($endorsed['expires']);
+    $endorsed_expires = intval($endorsed['expires']);
     if ($endorsement->expires > $endorsed_expires)
       error("endorsement expires after publication: $endorsement_expires > $endorsed_expires");
     if ($endorsement->revoke && $endorsement->expires != $endorsed_expires)
@@ -287,7 +287,7 @@ elseif ($type == 'ballot') {
   $query = "INSERT INTO area(id, name, polygons) VALUES($id, \"$publication->name\", $polygons)";
 } else
   error("unknown publication type");
-$mysqli->query($query) or error($mysqli->error . "\n\n" . $query);
+$mysqli->query($query) or error($mysqli->error . " " . $query);
 if ($type == 'endorsement')
   echo json_encode(endorsements($mysqli, $publication->key), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 else {
