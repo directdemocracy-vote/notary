@@ -96,7 +96,7 @@ window.onload = function() {
           ' &mdash; <b>Area:</b> <a target="_blank" href="' + area_url + '">' + area_name +
           '</a> (' + area_type + ')' + '</small></div><br><div><p>' + referendum.description + '</p></div><div><p><b>' +
           referendum.question + '</b><p></div>' + answers_table + '<div>referendum=' +
-          encodeURIComponent(referendum.key) + '</div>';
+          encodeURIComponent(referendum.referendum) + '</div>';
       }
     }
   };
