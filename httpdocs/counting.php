@@ -64,7 +64,10 @@ $result = $mysqli->query($query) or error($mysqli->error);
 $c = $result->fetch_assoc();
 if ($c)
   $count = $c['c'];
-else {
+else
+  $count = 0;
+
+if ($count == 0) {
   # create corpus, see https://github.com/directdemocracy-vote/doc/blob/master/voting.md#31-list-eligible-citizens
   # the corpus table should contain all citizen entitled to vote to referendum:
   # they must be endorsed by the trustee of the referendum and their home must be inside the area of the referendum
