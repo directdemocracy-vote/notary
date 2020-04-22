@@ -108,7 +108,7 @@ $results->participation = 0;
 # list all the stations involved in the referendum
 $query = "INSERT INTO stations(id, referendum, registrations_count, ballots_count) "
         ."SELECT DISTINCT station.id, $referendum_id, 0, 0 "
-        ."FROM registration INNER JOIN station ON station.`key`=registration.stationKey "
+        ."FROM station INNER JOIN registration ON registration.stationKey=station.`key` "
         ."WHERE registration.referendum='$referendum_key'";
 $mysqli->query($query) or error($mysqli->error);
 
