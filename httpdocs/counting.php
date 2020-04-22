@@ -46,6 +46,7 @@ $result->free();
 $trustee = $referendum['trustee'];
 $area = $referendum['area'];
 $referendum_id = $referendum['id'];
+$referendum_key = $referendum['key'];
 
 $query = "SELECT area.id FROM area LEFT JOIN publication on publication.id=area.id "
         ."WHERE name='$area' AND publication.key='$trustee'";
@@ -108,7 +109,7 @@ $results->participation = 0;
 $query = "INSERT INTO stations(id, referendum, registrations_count, ballots_count) "
         ."SELECT DISTINCT station.id, $referendum_id, 0, 0 "
         ."FROM registration INNER JOIN station ON station.key=registration.stationKey "
-        ."WHERE registration.referendum=$referendum_id";
+        ."WHERE registration.referendum=$referendum_key";
 $mysqli->query($query) or error($mysqli->error);
 
 if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
