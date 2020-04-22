@@ -54,6 +54,7 @@ $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
   error("Area was not published by trustee");
 $area = $result->fetch_assoc();
+$result->free();
 $area_id = intval($area['id']);
 
 
@@ -74,6 +75,7 @@ if ($c)
   $count = $c['c'];
 else
   $count = 0;
+$result->free();
 
 if ($count == 0) {
   # create corpus, see https://github.com/directdemocracy-vote/doc/blob/master/voting.md#31-list-eligible-citizens
@@ -112,11 +114,6 @@ $query = "INSERT INTO stations(id, referendum, registrations_count, ballots_coun
         ."WHERE registration.referendum='$referendum_key'";
 $mysqli->query($query) or error($mysqli->error);
 
-if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
-  $results->query = $query;
-  die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
-}
-
 # list all the registrations for each station
 $query = "INSERT INTO registrations(referendum, station, citizen, published) "
         ."SELECT $referendum_id, station.id, corpus.citizen, registration_p.published FROM station "
@@ -132,8 +129,14 @@ $query = "DELETE r1 FROM registrations r1 INNER JOIN registrations r2 "
 $mysqli->query($query) or error($mysqli->error);
 
 if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
+  $query = "SELECT COUNT(citizen) AS participation FROM registration WHERE referendum=$referendum_id";
+  $result = $mysqli->query($query) or error($mysqli->error);
+  $c = $result->fetch_assoc();
+  $result->free();
+  $results->participation = intval($c['participation']);
   die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 }
+
 
 
 
