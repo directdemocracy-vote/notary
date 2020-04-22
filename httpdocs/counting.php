@@ -137,32 +137,30 @@ $results->participation = intval($c['participation']);
 $n_answers = substr_count($results->answers, "\n") + 1;
 $results->count = array_fill(0, $n_answers, 0);
 
-if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
-  die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-}
-
-
-
-
 # list all the ballots for each station
-$query = "INSERT INTO ballots(referendum, station, `key`, `revoke`) "
-        ."SELECT $referendum_id, station.id, ballot_p.`key`, ballot.`revoke` FROM station "
-        ."LEFT JOIN ballot ON ballot.stationKey=station.`key` AND ballot.referendum='$referendum_key' "
-        ."LEFT JOIN publication AS ballot_p ON ballot_p.id=ballot.id";
+$query = "INSERT INTO ballots(referendum, station, `key`, answer) "
+        ."SELECT $referendum_id, station.id, ballot_p.`key`, ballot.answer FROM station "
+        ."INNER JOIN ballot ON ballot.stationKey=station.`key` AND ballot.referendum='$referendum_key' "
+        ."INNER JOIN publication AS ballot_p ON ballot_p.id=ballot.id";
 $mysqli->query($query) or error($mysqli->error);
 
 # count registrations for each station
 $query = "UPDATE stations "
-        ."LEFT JOIN registrations ON registrations.station=stations.id "
+        ."INNER JOIN registrations ON registrations.station=stations.id "
         ."SET registrations_count=COUNT(registrations.*) ";
 $mysqli->query($query) or error($mysqli->error);
 
 # count ballots for each station
 $query = "UPDATE stations "
-        ."LEFT JOIN ballots ON ballots.station=stations.id "
+        ."INNER JOIN ballots ON ballots.station=stations.id "
         ."SET ballots_count=COUNT(ballots.*) "
         ."WHERE ballots.`revoke`=0";
 $mysqli->query($query) or error($mysqli->error);
+
+if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
+  die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+}
+
 
 # delete bad stations and their ballots
 $query = "DELETE FROM stations WHERE registration_count!=ballot_count";
