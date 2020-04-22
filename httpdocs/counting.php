@@ -113,7 +113,7 @@ $query = "INSERT INTO stations(id, referendum, registrations_count, ballots_coun
 $mysqli->query($query) or error($mysqli->error);
 
 if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
-  $result->query = $query;
+  $results->query = $query;
   die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 }
 
