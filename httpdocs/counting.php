@@ -129,7 +129,7 @@ $query = "DELETE r1 FROM registrations r1 INNER JOIN registrations r2 "
 $mysqli->query($query) or error($mysqli->error);
 
 if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
-  $query = "SELECT COUNT(citizen) AS participation FROM registration WHERE referendum=$referendum_id";
+  $query = "SELECT COUNT(citizen) AS participation FROM registrations WHERE referendum=$referendum_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $c = $result->fetch_assoc();
   $result->free();
