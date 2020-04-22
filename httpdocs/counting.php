@@ -55,11 +55,14 @@ if (!$result)
 $area = $result->fetch_assoc();
 $area_id = intval($area['id']);
 
-$debug = $area_id;
 
-
-
+# FIXME: remove that
 $mysqli->query("DELETE FROM corpus");
+$mysqli->query("DELETE FROM stations");
+$mysqli->query("DELETE FROM registrations");
+$mysqli->query("DELETE FROM ballots");
+
+
 
 # The following intermediary tables are created:
 # corpus, stations, registrations and ballots
@@ -99,18 +102,18 @@ $results->deadline = intval($referendum['deadline']);
 $results->published = intval($referendum['published']);
 $results->expires = intval($referendum['expires']);
 $results->corpus = $count;
-$results->debug = $debug;
-$results->query = $query;
+$results->participation = 0;
+
+# list all the stations involved in the referendum
+$query = "INSERT INTO stations(id, referendum, registrations_count, ballots_count) "
+        ."SELECT DISTINCT station.id, $referendum_id, 0, 0 "
+        ."FROM registration INNER JOIN station ON station.key=registration.stationKey "
+        ."WHERE registration.referendum=$referendum_id";
+$mysqli->query($query) or error($mysqli->error);
 
 if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
   die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 }
-
-# list all the stations involved in the referendum
-$query = "INSERT INTO stations(id, referendum, registrations_count, ballots_count) "
-        ."SELECT station, $referendum_id, 0, 0 "
-        ."FROM corpus GROUP BY id HAVING referendum=$referendum_id";
-$mysqli->query($query) or error($mysqli->error);
 
 # list all the registrations for each station
 $query = "INSERT INTO registrations(referendum, station, citizen, published) "
@@ -120,6 +123,12 @@ $query = "INSERT INTO registrations(referendum, station, citizen, published) "
         ."LEFT JOIN publication AS citizen_p ON citizen_p.`key`=registration_p.`key` "
         ."LEFT JOIN corpus ON corpus.citizen=citizen_p.id";
 $mysqli->query($query) or error($mysqli->error);
+
+
+if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
+  die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+}
+
 
 # if a citizen registered several times (possibly at several stations) keep only the most recent registration
 $query = "DELETE r1 FROM registrations r1 INNER JOIN registrations r2 "
