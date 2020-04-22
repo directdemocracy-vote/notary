@@ -80,9 +80,8 @@ if ($count == 0) {
           ."INNER JOIN publication AS citizen_p ON citizen_p.id=citizen.id "
           ."INNER JOIN endorsement ON endorsement.publicationKey=citizen_p.`key` AND endorsement.`revoke`=0 "
           ."INNER JOIN publication AS endorsement_p ON endorsement_p.id=endorsement.id AND endorsement_p.`key`='$trustee' "
-;
-//          ."LEFT JOIN area ON area.id=$area_id "
-//          ."WHERE ST_Contains(area.polygons, citizen.home)";
+          ."INNER JOIN area ON area.id=$area_id "
+          ."WHERE ST_Contains(area.polygons, citizen.home)";
   $mysqli->query($query) or error($mysqli->error);
   $count = $mysqli->affected_rows;
 }
