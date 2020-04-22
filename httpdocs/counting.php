@@ -105,7 +105,6 @@ $results->deadline = intval($referendum['deadline']);
 $results->published = intval($referendum['published']);
 $results->expires = intval($referendum['expires']);
 $results->corpus = $count;
-$results->participation = 0;
 
 # list all the stations involved in the referendum
 $query = "INSERT INTO stations(id, referendum, registrations_count, ballots_count) "
@@ -128,12 +127,14 @@ $query = "DELETE r1 FROM registrations r1 INNER JOIN registrations r2 "
         ."WHERE r1.citizen=r2.citizen AND r1.published < r2.published";
 $mysqli->query($query) or error($mysqli->error);
 
+# count participation
+$query = "SELECT COUNT(citizen) AS participation FROM registrations WHERE referendum=$referendum_id";
+$result = $mysqli->query($query) or error($mysqli->error);
+$c = $result->fetch_assoc();
+$result->free();
+$results->participation = intval($c['participation']);
+
 if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
-  $query = "SELECT COUNT(citizen) AS participation FROM registrations WHERE referendum=$referendum_id";
-  $result = $mysqli->query($query) or error($mysqli->error);
-  $c = $result->fetch_assoc();
-  $result->free();
-  $results->participation = intval($c['participation']);
   die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 }
 
