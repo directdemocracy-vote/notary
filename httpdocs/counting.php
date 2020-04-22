@@ -144,28 +144,21 @@ $query = "INSERT INTO ballots(referendum, station, `key`, answer) "
         ."INNER JOIN publication AS ballot_p ON ballot_p.id=ballot.id";
 $mysqli->query($query) or error($mysqli->error);
 
-# count registrations for each station
-$query = "UPDATE stations "
-        # ."INNER JOIN registrations ON registrations.station=stations.id "
-        ."SET registrations_count=(SELECT COUNT(*) FROM registrations WHERE registrations.station = stations.id)";
+# count registrations and ballots for each station
+$answers_list = '("' . joint('","', explode("\n", $referendum['answers'])). '")';
+$query = "UPDATE stations SET "
+        ."registrations_count=(SELECT COUNT(*) FROM registrations WHERE registrations.station = stations.id), "
+        ."ballots_count=(SELECT COUNT(*) FROM ballots WHERE ballots.station=station.id "
+        ."AND ballots.answer NOT IN $answers_list)";
 $mysqli->query($query) or error($mysqli->error);
 
 if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
+  $results->query = $query;
   die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 }
 
-
-# count ballots for each station
-$query = "UPDATE stations "
-        ."INNER JOIN ballots ON ballots.station=stations.id "
-        ."SET ballots_count=COUNT(ballots.*) "
-        ."WHERE ballots.answer!=''";
-$mysqli->query($query) or error($mysqli->error);
-
-
-
 # delete bad stations and their ballots
-$query = "DELETE FROM stations WHERE registration_count!=ballot_count";
+$query = "DELETE FROM stations WHERE ballots_count > registrations_count";
 $mysqli->query($query) or error($mysqli->error);
 $query = "DELETE FROM ballots WHERE station NOT IN (SELECT id FROM stations)";
 $mysqli->query($query) or error($mysqli->error);
