@@ -75,7 +75,7 @@ if ($count == 0) {
   # create corpus, see https://github.com/directdemocracy-vote/doc/blob/master/voting.md#31-list-eligible-citizens
   # the corpus table should contain all citizen entitled to vote to referendum:
   # they must be endorsed by the trustee of the referendum and their home must be inside the area of the referendum
-  $query = "INSERT INTO corpus(referendum, station, citizen) SELECT $referendum_id, 0, citizen.id FROM "
+  $query = "INSERT INTO corpus(citizen, referendum, station) SELECT DISTINCT citizen.id, $referendum_id, 0 FROM "
           ."citizen "
           ."INNER JOIN publication AS citizen_p ON citizen_p.id=citizen.id "
           ."INNER JOIN endorsement ON endorsement.publicationKey=citizen_p.`key` AND endorsement.`revoke`=0 "
