@@ -289,10 +289,9 @@ elseif ($type == 'ballot') {
 } else
   error("unknown publication type");
 $mysqli->query($query) or error($mysqli->error . " " . $query);
-if ($type == 'endorsement') {
-  error($query);
+if ($type == 'endorsement')
   echo json_encode(endorsements($mysqli, $publication->key), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-} else {
+else {
   $fingerprint = sha1($publication->signature);
   echo("{\"fingerprint\":\"$fingerprint\"}");
 }
