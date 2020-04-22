@@ -146,9 +146,14 @@ $mysqli->query($query) or error($mysqli->error);
 
 # count registrations for each station
 $query = "UPDATE stations "
-        ."INNER JOIN registrations ON registrations.station=stations.id "
-        ."SET registrations_count=COUNT(registrations.*) ";
+        # ."INNER JOIN registrations ON registrations.station=stations.id "
+        ."SET registrations_count=(SELECT COUNT(*) FROM registrations WHERE registrations.station = stations.id)";
 $mysqli->query($query) or error($mysqli->error);
+
+if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
+  die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+}
+
 
 # count ballots for each station
 $query = "UPDATE stations "
@@ -157,9 +162,6 @@ $query = "UPDATE stations "
         ."WHERE ballots.answer!=''";
 $mysqli->query($query) or error($mysqli->error);
 
-if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
-  die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-}
 
 
 # delete bad stations and their ballots
