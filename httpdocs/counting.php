@@ -145,7 +145,7 @@ $query = "INSERT INTO ballots(referendum, station, `key`, answer) "
 $mysqli->query($query) or error($mysqli->error);
 
 # count registrations and ballots for each station
-$answers_list = '("' . joint('","', explode("\n", $referendum['answers'])). '")';
+$answers_list = '("' . join('","', explode("\n", $referendum['answers'])). '")';
 $query = "UPDATE stations SET "
         ."registrations_count=(SELECT COUNT(*) FROM registrations WHERE registrations.station = stations.id), "
         ."ballots_count=(SELECT COUNT(*) FROM ballots WHERE ballots.station=station.id "
