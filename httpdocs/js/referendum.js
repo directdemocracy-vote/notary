@@ -62,7 +62,7 @@ window.onload = function() {
         const answer_count = answers.length;
         let results = [];
         for (i = 0; i < answers.length; i++)
-          results.push(Math.floor(Math.random() * 100));
+          results.push(referendum.count[i]);
         const total = results.reduce((a, b) => a + b, 0);
         answers_table = '<table class="table table-bordered"><thead class="thead-light"><tr>';
         const colors = ['primary', 'danger', 'success', 'warning', 'info', 'secondary', 'light', 'dark'];

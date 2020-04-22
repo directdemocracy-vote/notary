@@ -134,6 +134,9 @@ $c = $result->fetch_assoc();
 $result->free();
 $results->participation = intval($c['participation']);
 
+$n_answers = substr_count($results->answers, "\n") + 1;
+$results->count = array_fill(0, $n_answers, 0);
+
 if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
   die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 }
