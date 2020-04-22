@@ -120,22 +120,22 @@ if (intval($referendum['deadline']) > $now) {  # we should not count ballots, bu
 # list all the registrations for each station
 $query = "INSERT INTO registrations(referendum, station, citizen, published) "
         ."SELECT $referendum_id, station.id, corpus.citizen, registration_p.published FROM station "
-        ."LEFT JOIN registration ON registration.stationKey=station.`key` AND registration.referendum='$referendum_key' "
-        ."LEFT JOIN publication AS registration_p ON registration_p.id=registration.id "
-        ."LEFT JOIN publication AS citizen_p ON citizen_p.`key`=registration_p.`key` "
-        ."LEFT JOIN corpus ON corpus.citizen=citizen_p.id";
+        ."INNER JOIN registration ON registration.stationKey=station.`key` AND registration.referendum='$referendum_key' "
+        ."INNER JOIN publication AS registration_p ON registration_p.id=registration.id "
+        ."INNER JOIN publication AS citizen_p ON citizen_p.`key`=registration_p.`key` "
+        ."INNER JOIN corpus ON corpus.citizen=citizen_p.id";
 $mysqli->query($query) or error($mysqli->error);
 
+# if a citizen registered several times (possibly at several stations) keep only the most recent registration
+$query = "DELETE r1 FROM registrations r1 INNER JOIN registrations r2 "
+        ."WHERE r1.citizen=r2.citizen AND r1.published < r2.published";
+$mysqli->query($query) or error($mysqli->error);
 
 if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
   die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 }
 
 
-# if a citizen registered several times (possibly at several stations) keep only the most recent registration
-$query = "DELETE r1 FROM registrations r1 INNER JOIN registrations r2 "
-        ."WHERE r1.citizen=r2.citizen AND r1.published < r2.published";
-$mysqli->query($query) or error($mysqli->error);
 
 # list all the ballots for each station
 $query = "INSERT INTO ballots(referendum, station, `key`, `revoke`) "
