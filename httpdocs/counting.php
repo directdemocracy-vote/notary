@@ -109,7 +109,7 @@ $results->participation = 0;
 $query = "INSERT INTO stations(id, referendum, registrations_count, ballots_count) "
         ."SELECT DISTINCT station.id, $referendum_id, 0, 0 "
         ."FROM registration INNER JOIN station ON station.key=registration.stationKey "
-        ."WHERE registration.referendum=$referendum_key";
+        ."WHERE registration.referendum='$referendum_key'";
 $mysqli->query($query) or error($mysqli->error);
 
 if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
