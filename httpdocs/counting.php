@@ -148,7 +148,7 @@ $mysqli->query($query) or error($mysqli->error);
 $answers_list = '("' . join('","', explode("\n", $referendum['answers'])). '")';
 $query = "UPDATE stations SET "
         ."registrations_count=(SELECT COUNT(*) FROM registrations WHERE registrations.station = stations.id), "
-        ."ballots_count=(SELECT COUNT(*) FROM ballots WHERE ballots.station=station.id "
+        ."ballots_count=(SELECT COUNT(*) FROM ballots WHERE ballots.station=stations.id "
         ."AND ballots.answer NOT IN $answers_list)";
 $mysqli->query($query) or error($mysqli->error);
 
