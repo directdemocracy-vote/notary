@@ -154,7 +154,7 @@ $mysqli->query($query) or error($mysqli->error);
 $query = "UPDATE stations "
         ."INNER JOIN ballots ON ballots.station=stations.id "
         ."SET ballots_count=COUNT(ballots.*) "
-        ."WHERE ballots.`revoke`=0";
+        ."WHERE ballots.answer!=''";
 $mysqli->query($query) or error($mysqli->error);
 
 if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
