@@ -149,7 +149,7 @@ $answers_list = '("' . join('","', explode("\n", $referendum['answers'])). '")';
 $query = "UPDATE stations SET "
         ."registrations_count=(SELECT COUNT(*) FROM registrations WHERE registrations.station = stations.id), "
         ."ballots_count=(SELECT COUNT(*) FROM ballots WHERE ballots.station=stations.id "
-        ."AND ballots.answer NOT IN $answers_list)";
+        ."AND ballots.answer IN $answers_list)";
 $mysqli->query($query) or error($mysqli->error);
 
 if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
