@@ -73,7 +73,7 @@ window.onload = function() {
         let color_count = 0;
         let count = 0;
         answers.forEach(function(answer) {
-          const percent = Math.round(10000 * results[count] / total) / 100;
+          const percent = (total == 0) ? 0 : Math.round(10000 * results[count] / total) / 100;
           answers_table +=
             '<td><div class="progress"><div id="answer-percent-' + count + '" ' +
             'class="progress-bar progress-bar-striped bg-' + colors[color_count++] +
