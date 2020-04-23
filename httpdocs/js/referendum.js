@@ -68,11 +68,13 @@ window.onload = function() {
         const colors = ['primary', 'danger', 'success', 'warning', 'info', 'secondary', 'light', 'dark'];
         const width = Math.round(100 / (answer_count + 2));
         answers.forEach(function(answer) {
-          answers_table += '<th width="' + width + '%" scope="col">' + answer + '</th>';
+          answers_table += '<th width="' + width + '%" scope="col" class="text-center">' + answer + '</th>';
         });
-        answers_table += '<th width="' + width + '%" scope="col" style="color:blue">void</th>';
-        answers_table += '<th width="' + width + '%" scope="col" style="color:blue">rejected</th>';
-        answers_table += '</tr></thead><tbody><tr>';
+        answers_table += '<th width="' + width +
+          '%" scope="col" class="text-center font-italic" style="color:blue">void</th>' +
+          '<th width="' + width +
+          '%" scope="col" class="text-center font-italic" style="color:blue">rejected</th>' +
+          '</tr></thead><tbody><tr>';
         let color_count = 0;
         let count = 0;
         answers.forEach(function(answer) {
@@ -94,16 +96,17 @@ window.onload = function() {
           answers_table += '<td class="text-center">' + results[count] + '</td>';
           count++;
         });
-        answers_table += '<td class="text-center">' + results.void + '</td>';
-        answers_table += '<td class="text-center">' + results.rejected + '</td>';
+        answers_table += '<td class="text-center">' + referendum.void + '</td>';
+        answers_table += '<td class="text-center">' + referendum.rejected + '</td>';
         answers_table += '</tr></tbody></table>';
         document.getElementById('content').innerHTML = '<h2>' + referendum.title + '</h2>' +
           '<div><small><b>Deadline:</b> ' + unix_time_to_text(referendum.deadline / 1000) +
           ' &mdash; <b>Area:</b> <a target="_blank" href="' + area_url + '">' + area_name +
           '</a> (' + area_type + ')' + '</small></div><br><div><p>' + referendum.description + '</p></div><div><p><b>' +
           referendum.question + '</b><p></div>' + answers_table +
-          '<div>corpus: ' + referendum.corpus + '</div>' +
-          '<div>participation: ' + referendum.participation + '</div>';
+          '<div>estimated population: <span id="population">?</span> &mdash; corpus: ' + referendum.corpus +
+          ' &mdash participation: ' +
+          (Math.round(10000 * referendum.corpus / referendum.participation) * 100) + '%</div>';
       }
     }
   };
