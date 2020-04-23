@@ -67,7 +67,8 @@ window.onload = function() {
               if (r.length) {
                 const response = r[0];
                 if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population'))
-                  population.innerHTML = response.extratags.population;
+                  population.innerHTML = '<a target="_blank" href="' + population_url + '">' + response.extratags.population +
+                  '</a>';
                 else
                   population.innerHTML = '?';
               } else
