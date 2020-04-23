@@ -163,7 +163,7 @@ $mysqli->query($query) or error($mysqli->error);
 # count registrations
 $query = "SELECT COUNT(*) AS c FROM registrations WHERE referendum=$referendum_id";
 $r = $mysqli->query($query) or error($mysqli->error);
-$b = $r->fetch_assoc($r);
+$b = $r->fetch_assoc();
 $r->free();
 $results->registrations = intval($b['c']);
 
@@ -178,7 +178,7 @@ $mysqli->query($query) or error($mysqli->error);
 # count rejected registrations (not counted)
 $query = "SELECT COUNT(*) AS c FROM registrations WHERE referendum=$referendum_id";
 $r = $mysqli->query($query) or error($mysqli->error);
-$b = $r->fetch_assoc($r);
+$b = $r->fetch_assoc();
 $r->free();
 $results->rejected = $results->registrations - intval($b['c']);
 
