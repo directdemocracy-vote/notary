@@ -65,7 +65,7 @@ window.onload = function() {
             if (this.status == 200) {
               const r = JSON.parse(this.responseText);
               if (r.length) {
-                const reponse = r[0];
+                const response = r[0];
                 console.log('extratags: ' + response.hasOwnProperty('extratags'));
                 if (response.hasOwnProperty('extratags'))
                   console.log('population: ' + response.extratags.hasOwnProperty('extratags'));
