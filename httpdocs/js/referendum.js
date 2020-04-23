@@ -56,8 +56,23 @@ window.onload = function() {
           area_url = 'https://en.wikipedia.org/wiki/Earth';
         } else if (area_type == 'union')
           area_url = 'https://en.wikipedia.org/wiki/European_Union';
-        else
+        else {
           area_url = 'https://nominatim.openstreetmap.org/search.php?' + area_query + '&polygon_geojson=1';
+          population_url = 'https://nominatim.openstreetmap.org/search.php?' + area_query + '&format=json&extratags=1';
+          let xhttp = new XMLHttpRequest();
+          xhttp.onload = function() {
+            let population = document.getElementById('population');
+            if (this.status == 200) {
+              const response = JSON.parse(this.responseText);
+              if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population'))
+                population.innerHTML = response.extratags.population;
+              else
+                population.innerHTML = '?';
+            } else
+              population.innerHTML = '&times;';
+          };
+          xhttp.open('GET', population_url, true);
+        }
         const answers = referendum.answers.split('\n');
         const answer_count = answers.length;
         let results = [];
@@ -71,9 +86,9 @@ window.onload = function() {
           answers_table += '<th width="' + width + '%" scope="col" class="text-center">' + answer + '</th>';
         });
         answers_table += '<th width="' + width +
-          '%" scope="col" class="text-center font-italic" style="color:blue">void</th>' +
+          '%" scope="col" class="text-center font-italic font-weight-normal" style="color:blue">void</th>' +
           '<th width="' + width +
-          '%" scope="col" class="text-center font-italic" style="color:blue">rejected</th>' +
+          '%" scope="col" class="text-center font-italic font-weight-normal" style="color:blue">rejected</th>' +
           '</tr></thead><tbody><tr>';
         let color_count = 0;
         let count = 0;
@@ -104,7 +119,7 @@ window.onload = function() {
           ' &mdash; <b>Area:</b> <a target="_blank" href="' + area_url + '">' + area_name +
           '</a> (' + area_type + ')' + '</small></div><br><div><p>' + referendum.description + '</p></div><div><p><b>' +
           referendum.question + '</b><p></div>' + answers_table +
-          '<div>estimated population: <span id="population">?</span> &mdash; corpus: ' + referendum.corpus +
+          '<div>estimated population: <span id="population">&hellip;</span> &mdash; corpus: ' + referendum.corpus +
           ' &mdash; participation: ' +
           (Math.round(10000 * referendum.participation / referendum.corpus) / 100) + '%</div>';
       }
