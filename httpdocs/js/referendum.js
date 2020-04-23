@@ -72,6 +72,7 @@ window.onload = function() {
               population.innerHTML = '&times;';
           };
           xhttp.open('GET', population_url, true);
+          xhttp.send();
         }
         const answers = referendum.answers.split('\n');
         const answer_count = answers.length;
