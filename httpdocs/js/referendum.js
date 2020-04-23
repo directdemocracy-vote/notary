@@ -63,10 +63,17 @@ window.onload = function() {
           xhttp.onload = function() {
             let population = document.getElementById('population');
             if (this.status == 200) {
-              const response = JSON.parse(this.responseText);
-              if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population'))
-                population.innerHTML = response.extratags.population;
-              else
+              const r = JSON.parse(this.responseText);
+              if (r.length) {
+                const reponse = r[0];
+                console.log('extratags: ' + response.hasOwnProperty('extratags'));
+                if (response.hasOwnProperty('extratags'))
+                  console.log('population: ' + response.extratags.hasOwnProperty('extratags'));
+                if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population'))
+                  population.innerHTML = response.extratags.population;
+                else
+                  population.innerHTML = '?';
+              } else
                 population.innerHTML = '?';
             } else
               population.innerHTML = '&times;';
