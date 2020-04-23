@@ -105,8 +105,8 @@ window.onload = function() {
           '</a> (' + area_type + ')' + '</small></div><br><div><p>' + referendum.description + '</p></div><div><p><b>' +
           referendum.question + '</b><p></div>' + answers_table +
           '<div>estimated population: <span id="population">?</span> &mdash; corpus: ' + referendum.corpus +
-          ' &mdash participation: ' +
-          (Math.round(10000 * referendum.corpus / referendum.participation) * 100) + '%</div>';
+          ' &mdash; participation: ' +
+          (Math.round(10000 * referendum.participation / referendum.corpus) / 100) + '%</div>';
       }
     }
   };
