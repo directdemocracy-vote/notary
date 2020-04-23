@@ -72,7 +72,7 @@ window.onload = function() {
         });
         answers_table += '<th width="' + width + '%" scope="col" style="color:blue">void</th>';
         answers_table += '<th width="' + width + '%" scope="col" style="color:blue">rejected</th>';
-        answer_table += '</tr></thead><tbody><tr>';
+        answers_table += '</tr></thead><tbody><tr>';
         let color_count = 0;
         let count = 0;
         answers.forEach(function(answer) {
