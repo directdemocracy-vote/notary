@@ -66,9 +66,6 @@ window.onload = function() {
               const r = JSON.parse(this.responseText);
               if (r.length) {
                 const response = r[0];
-                console.log('extratags: ' + response.hasOwnProperty('extratags'));
-                if (response.hasOwnProperty('extratags'))
-                  console.log('population: ' + response.extratags.hasOwnProperty('extratags'));
                 if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population'))
                   population.innerHTML = response.extratags.population;
                 else
