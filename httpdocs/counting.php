@@ -191,7 +191,7 @@ $total = 0;
 foreach($answers as $i => $answer) {
   $query = "SELECT COUNT(*) AS c FROM ballots WHERE answer=\"$answer\" AND referendum=$referendum_id";
   $r = $mysqli->query($query) or error($mysqli->error);
-  $b = $r->fetch_assoc($r);
+  $b = $r->fetch_assoc();
   $r->free();
   $c = intval($b['c']);
   $results->count[$i] = $c;
