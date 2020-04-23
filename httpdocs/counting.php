@@ -137,6 +137,13 @@ $results->participation = intval($c['participation']);
 $n_answers = substr_count($results->answers, "\n") + 1;
 $results->count = array_fill(0, $n_answers, 0);
 
+/* FIXME: uncomment this
+if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
+  $results->query = $query;
+  die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+}
+*/
+
 # list all the ballots for each station
 $query = "INSERT INTO ballots(referendum, station, `key`, answer) "
         ."SELECT $referendum_id, station.id, ballot_p.`key`, ballot.answer FROM station "
@@ -145,46 +152,62 @@ $query = "INSERT INTO ballots(referendum, station, `key`, answer) "
 $mysqli->query($query) or error($mysqli->error);
 
 # count registrations and ballots for each station
-$answers_list = '("' . join('","', explode("\n", $referendum['answers'])). '")';
+$answers = explode("\n", $referendum['answers']);
+$answers_list = '("' . join('","', $answers). '")';
 $query = "UPDATE stations SET "
         ."registrations_count=(SELECT COUNT(*) FROM registrations WHERE registrations.station = stations.id), "
         ."ballots_count=(SELECT COUNT(*) FROM ballots WHERE ballots.station=stations.id "
         ."AND ballots.answer IN $answers_list)";
 $mysqli->query($query) or error($mysqli->error);
 
-if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
-  $results->query = $query;
-  die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-}
+# count registrations
+$query = "SELECT COUNT(*) AS c FROM registrations WHERE referendum=$referendum_id";
+$r = $mysqli->query($query) or error($mysqli->error);
+$b = $r->fetch_assoc($r);
+$r->free();
+$results->registrations = intval($b['c']);
 
 # delete bad stations and their ballots
 $query = "DELETE FROM stations WHERE ballots_count > registrations_count";
 $mysqli->query($query) or error($mysqli->error);
 $query = "DELETE FROM ballots WHERE station NOT IN (SELECT id FROM stations)";
 $mysqli->query($query) or error($mysqli->error);
-
-# list valid votes
-$query = "INSERT INTO votes(referendum, answer) "
-        ."SELECT $referendum_id, answer FROM vote "
-        ."LEFT JOINT vote_p ON vote.id=vote_p.id "
-        ."LEFT JOIN ballots ON ballots.`key`=vote_p.`key` "
-        ."WHERE ballots.referendum=$referendum_id";
+$query = "DELETE FROM registrations WHERE station NOT IN (SELECT id FROM stations)";
 $mysqli->query($query) or error($mysqli->error);
 
-# count votes
-$query = "INSERT INTO results(referendum, answer, `count`) "
-        ."SELECT $referendum_id, answer, COUNT(*) FROM votes "
-        ."GROUP BY answer";
-$mysqli->query($query) or error($mysqli->error);
+# count rejected registrations (not counted)
+$query = "SELECT COUNT(*) AS c FROM registrations WHERE referendum=$referendum_id";
+$r = $mysqli->query($query) or error($mysqli->error);
+$b = $r->fetch_assoc($r);
+$r->free();
+$results->rejected = $results->registrations - intval($b['c']);
 
+# count ballots
+$mysqli->query("DELETE FROM results WHERE referendum=$referendum_id");
 # save corpus size in results
-$query = "INSERT INTO results(referendum, answer, `count`) "
-        ."VALUES($referendum_id, '', $count)";
+$query = "INSERT INTO results(referendum, answer, `count`) VALUES($referendum_id, '', $count)";
 $mysqli->query($query) or error($mysqli->error);
+$total = 0;
+foreach($answers as $i => $answer) {
+  $query = "SELECT COUNT(*) AS c FROM ballots WHERE answer=\"$answer\" AND referendum=$referendum_id";
+  $r = $mysqli->query($query) or error($mysqli->error);
+  $b = $r->fetch_assoc($r);
+  $r->free();
+  $c = intval($b['c']);
+  $results->count[$i] = $c;
+  $total += $c;
+  $query = "INSERT INTO results(referendum, answer, `count`) VALUES($referendum_id, \"$answer\", $c)";
+  $mysqli->query($query) or error($mysqli->error);
+}
 
-# delete the content of intermediary table for referendum
-# TODO: this should done once tested
+$results->void = $results->registrations - $results->rejected - $total;
+
+# delete the content of intermediary tables
+$mysqli->query("DELETE FROM corpus WHERE referendum=$referendum_id");
+$mysqli->query("DELETE FROM stations WHERE referendum=$referendum_id");
+$mysqli->query("DELETE FROM registrations WHERE referendum=$referendum_id");
+$mysqli->query("DELETE FROM ballots WHERE referendum=$referendum_id");
 
 $mysqli->close();
-die("{\"status\":\"OK\"}");
+die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
