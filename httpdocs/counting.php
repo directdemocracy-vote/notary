@@ -137,12 +137,10 @@ $results->participation = intval($c['participation']);
 $n_answers = substr_count($results->answers, "\n") + 1;
 $results->count = array_fill(0, $n_answers, 0);
 
-/* FIXME: uncomment this
 if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
   $results->query = $query;
   die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 }
-*/
 
 # list all the ballots for each station
 $query = "INSERT INTO ballots(referendum, station, `key`, answer) "
