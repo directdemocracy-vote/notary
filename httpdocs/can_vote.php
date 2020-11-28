@@ -38,7 +38,7 @@ $result = $mysqli->query($query) or die($mysqli->error);
 $endorsement = $result->fetch_assoc();
 $result->free();
 if (!$endorsement)
-  die('Citizen not endorsed by trustee' . ": " . $query);
+  die('Citizen not endorsed by trustee');
 if ($endorsement['revoke'] == 1)
   die('Citizen revokey by trustee');
 
@@ -67,7 +67,7 @@ $result = $mysqli->query($query) or die($mysqli->error);
 $a = $result->fetch_assoc();
 $result->free();
 if (!$a)
-  die("Citizen's home not in referendum area");
+  die("Home of citizen not in referendum area");
 
 die("yes");
 ?>
