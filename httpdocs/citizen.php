@@ -24,7 +24,7 @@ settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
 $endorsements = endorsements($mysqli, $key);
 $query = "SELECT pc.fingerprint, pe.published, e.revoke, "
-        ."c.familyName, c.givenNames, c.picture, c.latitude, c.longitude FROM "
+        ."c.familyName, c.givenNames, c.picture, ST_Y(home) AS latitude, ST_X(home) AS longitude FROM "
         ."publication pe INNER JOIN endorsement e ON pe.id = e.id, "
         ."publication pc INNER JOIN citizen c ON pc.id = c.id "
         ."WHERE e.publicationKey = '$key' AND pc.`key` = pe.`key` "
@@ -36,6 +36,8 @@ $citizen_endorsements = array();
 while($e = $result->fetch_assoc()) {
   settype($e['published'], 'int');
   settype($e['revoke'], 'bool');
+  settype($e['latitude'], 'float');
+  settype($e['longitude'], 'float');
   $citizen_endorsements[] = $e;
 }
 $result->free();
