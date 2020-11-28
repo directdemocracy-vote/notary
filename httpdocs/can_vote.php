@@ -15,10 +15,10 @@ $mysqli->set_charset('utf8mb4');
 
 $referendum = $mysqli->escape_string(get_string_parameter('referendum'));
 if (!$referendum)
-  die("Missing referendum argument");
+  die("Missing referendum argument.");
 $citizen = $mysqli->escape_string(get_string_parameter('citizen'));
 if (!$citizen)
-  die("Missing citizen argument");
+  die("Missing citizen argument.");
 
 $query = "SELECT trustee, area FROM referendum LEFT JOIN publication ON publication.id=referendum.id "
         ."WHERE publication.`key`='$referendum'";
@@ -26,7 +26,7 @@ $result = $mysqli->query($query) or die($mysqli->error);
 $r = $result->fetch_assoc();
 $result->free();
 if (!$r)
-  die('Referendum not found');
+  die('Referendum not found.');
 $trustee = $r['trustee'];
 $area = $r['area'];
 
@@ -38,9 +38,9 @@ $result = $mysqli->query($query) or die($mysqli->error);
 $endorsement = $result->fetch_assoc();
 $result->free();
 if (!$endorsement)
-  die('Citizen not endorsed by trustee');
+  die('Citizen not endorsed by trustee.');
 if ($endorsement['revoke'] == 1)
-  die('Citizen revokey by trustee');
+  die('Citizen revokey by trustee.');
 
 # check if citizen's home is inside the referendum area
 $query = "SELECT ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen "
@@ -49,7 +49,7 @@ $result = $mysqli->query($query) or die($mysqli->error);
 $citizen = $result->fetch_assoc();
 $result->free();
 if (!$citizen)
-  die('Citizen not found');
+  die('Citizen not found.');
 $latitude = $citizen['latitude'];
 $longitude = $citizen['longitude'];
 
@@ -59,7 +59,7 @@ $result = $mysqli->query($query) or die($mysqli->error);
 $a = $result->fetch_assoc();
 $result->free();
 if (!$a)
-  die('Area not found');
+  die('Area not found.');
 $area = $a['id'];
 
 $query = "SELECT area.id FROM area WHERE area.id=$area AND ST_Contains(polygons, POINT($longitude, $latitude))";
@@ -67,7 +67,7 @@ $result = $mysqli->query($query) or die($mysqli->error);
 $a = $result->fetch_assoc();
 $result->free();
 if (!$a)
-  die("Home of citizen not in referendum area");
+  die("Home of citizen not in referendum area.");
 
 die("yes");
 ?>
