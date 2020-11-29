@@ -84,10 +84,12 @@ if ($result) {
       $query = "SELECT answer, count FROM results WHERE referendum=$referendum_id";
       $result = $mysqli->query($query) or error($mysqli->error);
       while ($r = $result->fetch_assoc()) {
-        $i = array_search($r['answer'], $answers);
-        if ($i === FALSE)
-          error("Wrong answer found in results: $r[answer]");
-        $results->count[$i] = intval($r['count']);
+        if ($r['answer']) {
+          $i = array_search($r['answer'], $answers);
+          if ($i === FALSE)
+            error("Wrong answer found in results: $r[answer]");
+          $results->count[$i] = intval($r['count']);
+        }
       }
       $result->free();
       die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
