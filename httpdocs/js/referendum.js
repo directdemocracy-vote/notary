@@ -68,11 +68,13 @@ window.onload = function() {
               const r = JSON.parse(this.responseText);
               if (r.length) {
                 const response = r[0];
-                if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population'))
-                  population.innerHTML = '<a target="_blank" href="' + population_url + '">' + response.extratags.population +
-                  '</a>';
-                else
-                  population.innerHTML = '?';
+                if (response.hasOwnProperty('osm_id')) {
+                  const url = 'https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=' + response.osm_id;
+                  if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population'))
+                    population.innerHTML = `<a target="_blank" href="${url}">${response.extratags.population}</a>`;
+                  else
+                    population.innerHTML = `<a target="_blank" href="${url}">N/A</a>`;
+                } else population.innerHTML = '?';
               } else
                 population.innerHTML = '?';
             } else
