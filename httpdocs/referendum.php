@@ -24,7 +24,7 @@ $query = "SELECT "
         ."participation.count AS participation "
         ."FROM referendum "
         ."LEFT JOIN publication ON publication.id = referendum.id "
-        ."LEFT JOIN participation ON participation.referendium = referendum.id "
+        ."LEFT JOIN participation ON participation.referendum = referendum.id "
         ."WHERE RIGHT(\"$area\", CHAR_LENGTH(referendum.area)) = referendum.area "
         ."ORDER BY CHAR_LENGTH(referendum.area) DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
