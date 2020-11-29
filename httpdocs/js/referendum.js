@@ -43,7 +43,9 @@ window.onload = function() {
         let area_query = '';
         area_array.forEach(function(argument) {
           const eq = argument.indexOf('=');
-          const type = argument.substr(0, eq);
+          let type = argument.substr(0, eq);
+          if (type === 'village')
+            type = 'city';
           const name = argument.substr(eq + 1);
           if (type)
             area_query += type + '=' + encodeURIComponent(name) + '&';
