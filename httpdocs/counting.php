@@ -134,6 +134,10 @@ $c = $result->fetch_assoc();
 $result->free();
 $results->participation = intval($c['participation']);
 
+$query = "INSERT INTO participation (referendum, count) VALUES($referendum_id, $results->participation) "
+        ."ON DUPLICATE KEY UPDATE count=$results->participation";
+$mysqli->query($query) or error($mysqli->error);
+
 $n_answers = substr_count($results->answers, "\n") + 1;
 $results->count = array_fill(0, $n_answers, 0);
 

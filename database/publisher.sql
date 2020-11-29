@@ -48,6 +48,11 @@ CREATE TABLE `endorsement` (
   `comment` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE `participation` (
+  `referendum` int(11) NOT NULL,
+  `count` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE `publication` (
   `id` int(11) NOT NULL,
   `schema` varchar(256) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
@@ -143,6 +148,9 @@ ALTER TABLE `endorsement`
   ADD PRIMARY KEY (`id`),
   ADD KEY `publicationFingerprint` (`publicationFingerprint`);
 
+ALTER TABLE `participation`
+  ADD PRIMARY KEY `referendum` (`referendum`);
+
 ALTER TABLE `publication`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `fingerprint` (`fingerprint`);
@@ -176,7 +184,6 @@ ALTER TABLE `vote`
 
 ALTER TABLE `votes`
   ADD KEY `referendum` (`referendum`);
-
 
 ALTER TABLE `area`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
