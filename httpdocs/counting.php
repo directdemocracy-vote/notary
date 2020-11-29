@@ -84,7 +84,7 @@ if ($result) {
       $query = "SELECT answer, count FROM results WHERE referendum=$referendum_id";
       $result = $mysqli->query($query) or error($mysqli->error);
       while ($r = $result->fetch_assoc()) {
-        if ($r['answer']) {
+        if ($r['answer']) {  // FIXME: should be removed when answer cannot be empty
           $i = array_search($r['answer'], $answers);
           if ($i === FALSE)
             error("Wrong answer found in results: $r[answer]");
@@ -174,6 +174,8 @@ $query = "INSERT INTO participation (referendum, count, corpus, updated) "
         ."VALUES($referendum_id, $results->participation, $count, NOW()) "
         ."ON DUPLICATE KEY UPDATE count=$results->participation, corpus=$count, updated=NOW()";
 $mysqli->query($query) or error($mysqli->error);
+
+$results->updated = time();
 
 $now = intval(microtime(true) * 1000);
 
