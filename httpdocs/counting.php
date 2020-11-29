@@ -70,26 +70,28 @@ $result = $mysqli->query($query) or error($mysqli->error);
 if ($result) {
   $participation = $result->fetch_assoc();
   $result->free();
-  $updated = strtotime($participation['updated']);
-  // die(time() . " - $updated = " . (time() - $updated));
-  if (time() - $updated < 300)  {  # updated less than 5 minutes ago, return cached values
-    $results->corpus = intval($participation['corpus']);
-    $results->participation = intval($participation['count']);
-    $results->registrations = intval($participation['registrations']);
-    $results->rejected = intval($participation['rejected']);
-    $results->void = intval($participation['void']);
-    $results->count = array_fill(0, $n_answers, 0);
-    $results->updated = $updated;
-    $query = "SELECT answer, count FROM results WHERE referendum=$referendum_id";
-    $result = $mysqli->query($query) or error($mysqli->error);
-    while ($r = $result->fetch_assoc()) {
-      $i = array_search($r['answer'], $answers);
-      if ($i === FALSE)
-        error("Wrong answer found in results: " + $r['answer']);
-      $results->count[$i] = intval($r['count']);
+  if ($participation) {
+    $updated = strtotime($participation['updated']);
+    // die(time() . " - $updated = " . (time() - $updated));
+    if (time() - $updated < 300)  {  # updated less than 5 minutes ago, return cached values
+      $results->corpus = intval($participation['corpus']);
+      $results->participation = intval($participation['count']);
+      $results->registrations = intval($participation['registrations']);
+      $results->rejected = intval($participation['rejected']);
+      $results->void = intval($participation['void']);
+      $results->count = array_fill(0, $n_answers, 0);
+      $results->updated = $updated;
+      $query = "SELECT answer, count FROM results WHERE referendum=$referendum_id";
+      $result = $mysqli->query($query) or error($mysqli->error);
+      while ($r = $result->fetch_assoc()) {
+        $i = array_search($r['answer'], $answers);
+        if ($i === FALSE)
+          error("Wrong answer found in results: " + $r['answer']);
+        $results->count[$i] = intval($r['count']);
+      }
+      $result->free();
+      die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     }
-    $result->free();
-    die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
   }
 }
 
