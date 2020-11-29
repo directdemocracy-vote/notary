@@ -82,12 +82,8 @@ window.onload = function() {
         const answers = referendum.answers.split('\n');
         const answer_count = answers.length;
         let results = [];
-        for (i = 0; i < answers.length; i++) {
-          if (referendum.count)
-            results.push(referendum.count[i]);
-          else
-            results.push(0);
-        }
+        for (i = 0; i < answers.length; i++)
+          results.push(referendum.count ? referendum.count[i] : 0);
         const total = results.reduce((a, b) => a + b, 0);
         answers_table = '<table class="table table-bordered"><thead class="thead-light"><tr>';
         const colors = ['primary', 'danger', 'success', 'warning', 'info', 'secondary', 'light', 'dark'];
