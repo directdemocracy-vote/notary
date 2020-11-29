@@ -120,14 +120,15 @@ window.onload = function() {
         answers_table += '<td class="text-center">' + referendum.void + '</td>';
         answers_table += '<td class="text-center">' + referendum.rejected + '</td>';
         answers_table += '</tr></tbody></table>';
+        const participation = (referendum.corpus > 0) ? (Math.round(10000 * referendum.participation / referendum.corpus) /
+          100) + '%' : 'N/A';
         document.getElementById('content').innerHTML = '<h2>' + referendum.title + '</h2>' +
           '<div><small><b>Deadline:</b> ' + unix_time_to_text(referendum.deadline / 1000) +
           ' &mdash; <b>Area:</b> <a target="_blank" href="' + area_url + '">' + area_name +
           '</a> (' + area_type + ')' + '</small></div><br><div><p>' + referendum.description + '</p></div><div><p><b>' +
           referendum.question + '</b><p></div>' + answers_table +
           '<div>estimated population: <span id="population">&hellip;</span> &mdash; corpus: ' + referendum.corpus +
-          ' &mdash; participation: ' +
-          (Math.round(10000 * referendum.participation / referendum.corpus) / 100) + '%</div>';
+          ' &mdash; participation: ' + participation + '</div>';
       }
     }
   };
