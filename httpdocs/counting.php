@@ -86,7 +86,7 @@ if ($result) {
       while ($r = $result->fetch_assoc()) {
         $i = array_search($r['answer'], $answers);
         if ($i === FALSE)
-          error("Wrong answer found in results: " + $r['answer']);
+          error("Wrong answer found in results: $r[answer]");
         $results->count[$i] = intval($r['count']);
       }
       $result->free();
