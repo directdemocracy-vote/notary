@@ -21,7 +21,7 @@ $query = "SELECT "
         ."publication.schema, publication.key, publication.signature, publication.published, publication.expires, "
         ."referendum.trustee, referendum.area, referendum.title, referendum.description, "
         ."referendum.question, referendum.answers, referendum.deadline, referendum.website, "
-        ."participation.count AS participation "
+        ."participation.count AS participation, participation.corpus AS corpus "
         ."FROM referendum "
         ."LEFT JOIN publication ON publication.id = referendum.id "
         ."LEFT JOIN participation ON participation.referendum = referendum.id "
@@ -34,6 +34,7 @@ while ($referendum = $result->fetch_assoc()) {
   settype($referendum['expires'], 'int');
   settype($referendum['deadline'], 'int');
   settype($referendum['participation'], 'int');
+  settype($referendum['corpus'], 'int');
   $referendums[] = $referendum;
 }
 $result->free();
