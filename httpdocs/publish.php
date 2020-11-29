@@ -244,7 +244,6 @@ elseif ($type == 'endorsement') {
   $referendum =&$publication;
   if (!isset($referendum->website))  # optional
     $referendum->website = '';
-  $mysqli->query("INSERT INTO participation(id, count) VALUES($id, 0)") or error($mysqli->error);
   $query = "INSERT INTO referendum(id, trustee, area, title, description, question, answers, deadline, website) "
           ."VALUES($id, \"$referendum->trustee\", \"$referendum->area\", \"$referendum->title\", \"$referendum->description\", "
           ."\"$referendum->question\", \"$referendum->answers\", $referendum->deadline, \"$referendum->website\")";
