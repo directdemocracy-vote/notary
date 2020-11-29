@@ -80,7 +80,7 @@ if ($result) {
     $results->count = array_fill(0, $n_answers, 0);
     $query = "SELECT answer, count FROM results WHERE referendum=$referendum_id";
     $result = $mysqli->query($query) or error($mysqli->error);
-    while $r = $result->fetch_assoc() {
+    while ($r = $result->fetch_assoc()) {
       $i = array_search($r['answer'], $answers);
       if ($i === FALSE)
         error("Wrong answer found in results: " + $r['answer']);
