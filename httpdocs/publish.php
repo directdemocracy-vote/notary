@@ -244,6 +244,7 @@ elseif ($type == 'endorsement') {
   $referendum =&$publication;
   if (!isset($referendum->website))  # optional
     $referendum->website = '';
+  $mysqli->query("INSERT INTO participation(id, count) VALUES($id, 0)") or error($mysqli->error);
   $query = "INSERT INTO referendum(id, trustee, area, title, description, question, answers, deadline, website) "
           ."VALUES($id, \"$referendum->trustee\", \"$referendum->area\", \"$referendum->title\", \"$referendum->description\", "
           ."\"$referendum->question\", \"$referendum->answers\", $referendum->deadline, \"$referendum->website\")";
@@ -286,7 +287,7 @@ elseif ($type == 'ballot') {
   $query = "INSERT INTO area(id, name, polygons) VALUES($id, \"$publication->name\", $polygons)";
 } else
   error("unknown publication type");
-$mysqli->query($query) or error($mysqli->error . " " . $query);
+$mysqli->query($query) or error($mysqli->error);
 if ($type == 'endorsement')
   echo json_encode(endorsements($mysqli, $publication->key), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 else {

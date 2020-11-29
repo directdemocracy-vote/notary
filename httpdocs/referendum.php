@@ -20,9 +20,11 @@ if (!$area)
 $query = "SELECT "
         ."publication.schema, publication.key, publication.signature, publication.published, publication.expires, "
         ."referendum.trustee, referendum.area, referendum.title, referendum.description, "
-        ."referendum.question, referendum.answers, referendum.deadline, referendum.website "
+        ."referendum.question, referendum.answers, referendum.deadline, referendum.website, "
+        ."participation.count AS participation "
         ."FROM referendum "
         ."LEFT JOIN publication ON publication.id = referendum.id "
+        ."LEFT JOIN participation ON participation.referendium = referendum.id "
         ."WHERE RIGHT(\"$area\", CHAR_LENGTH(referendum.area)) = referendum.area "
         ."ORDER BY CHAR_LENGTH(referendum.area) DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
@@ -31,6 +33,7 @@ while ($referendum = $result->fetch_assoc()) {
   settype($referendum['published'], 'int');
   settype($referendum['expires'], 'int');
   settype($referendum['deadline'], 'int');
+  settype($referendum['participation'], 'int');
   $referendums[] = $referendum;
 }
 $result->free();
