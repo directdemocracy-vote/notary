@@ -52,6 +52,9 @@ CREATE TABLE `participation` (
   `referendum` int(11) NOT NULL,
   `count` int(11) NOT NULL,
   `corpus` int(11) NOT NULL,
+  `registrations` int(11) NOT NULL,
+  `rejected` int(11) NOT NULL,
+  `void` int(11) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

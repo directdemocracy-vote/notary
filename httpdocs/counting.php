@@ -48,6 +48,49 @@ $area = $referendum['area'];
 $referendum_id = $referendum['id'];
 $referendum_key = $referendum['key'];
 
+$results = new stdClass();
+$results->key = $referendum_key;
+$results->trustee = $trustee;
+$results->area = $area;
+$results->title = $referendum['title'];
+$results->description = $referendum['description'];
+$results->website = $referendum['website'];
+$results->question = $referendum['question'];
+$results->answers = $referendum['answers'];
+$results->deadline = intval($referendum['deadline']);
+$results->published = intval($referendum['published']);
+$results->expires = intval($referendum['expires']);
+
+$answers = explode("\n", $referendum['answers']);
+$n_answers = count($answers);
+
+$query = "SELECT updated, count, corpus, registrations, rejected, void FROM participation WHERE referendum=$referendum_id";
+$result = $mysqli->query($query) or error($mysqli->error);
+
+if ($result) {
+  $participation = $result->fetch_assoc();
+  $result->free();
+  $updated = strtotime($participation['updated']);
+  if (time() - $updated < 300)  {  # updated less than 5 minutes ago, return cached values
+    $results->corpus = intval($participation['corpus']);
+    $results->participation = intval($participation['count']);
+    $results->registrations = intval($participation['registrations']);
+    $results->rejected = intval($participation['rejected']);
+    $results->void = intval($participation['void']);
+    $results->count = array_fill(0, $n_answers, 0);
+    $query = "SELECT answer, count FROM results WHERE referendum=$referendum_id"
+    $result = $mysqli->query($query) or error($mysqli->error);
+    while $r = $result->fetch_assoc() {
+      $i = array_search($r['answer'], $answers);
+      if ($i === FALSE)
+        error("Wrong answer found in results: " + $r['answer']);
+      $results->count[$i] = intval($r['count']);
+    }
+    $result->free();
+    die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+  }
+}
+
 $query = "SELECT area.id FROM area LEFT JOIN publication on publication.id=area.id "
         ."WHERE name='$area' AND publication.key='$trustee'";
 $result = $mysqli->query($query) or error($mysqli->error);
@@ -91,19 +134,6 @@ if ($count == 0) {
   $mysqli->query($query) or error($mysqli->error);
   $count = $mysqli->affected_rows;
 }
-$now = intval(microtime(true) * 1000);
-
-$results = new stdClass();
-$results->key = $referendum['key'];
-$results->trustee = $referendum['trustee'];
-$results->area = $referendum['area'];
-$results->title = $referendum['title'];
-$results->description = $referendum['description'];
-$results->question = $referendum['question'];
-$results->answers = $referendum['answers'];
-$results->deadline = intval($referendum['deadline']);
-$results->published = intval($referendum['published']);
-$results->expires = intval($referendum['expires']);
 $results->corpus = $count;
 
 # list all the stations involved in the referendum
@@ -138,13 +168,12 @@ $query = "INSERT INTO participation (referendum, count, corpus) VALUES($referend
         ."ON DUPLICATE KEY UPDATE count=$results->participation, corpus=$count";
 $mysqli->query($query) or error($mysqli->error);
 
-$n_answers = substr_count($results->answers, "\n") + 1;
 $results->count = array_fill(0, $n_answers, 0);
 
-if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
-  $results->query = $query;
+$now = intval(microtime(true) * 1000);
+
+if (intval($referendum['deadline']) > $now)  # we should not count ballots, but can count participation
   die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-}
 
 # list all the ballots for each station
 $query = "INSERT INTO ballots(referendum, station, `key`, answer) "
@@ -154,7 +183,6 @@ $query = "INSERT INTO ballots(referendum, station, `key`, answer) "
 $mysqli->query($query) or error($mysqli->error);
 
 # count registrations and ballots for each station
-$answers = explode("\n", $referendum['answers']);
 $answers_list = '("' . join('","', $answers). '")';
 $query = "UPDATE stations SET "
         ."registrations_count=(SELECT COUNT(*) FROM registrations WHERE registrations.station = stations.id), "
@@ -187,6 +215,7 @@ $results->rejected = $results->registrations - intval($b['c']);
 # count ballots
 $mysqli->query("DELETE FROM results WHERE referendum=$referendum_id");
 # save corpus size in results
+# FIXME: not needed any more as the corpus is also stored in the participation table
 $query = "INSERT INTO results(referendum, answer, `count`) VALUES($referendum_id, '', $count)";
 $mysqli->query($query) or error($mysqli->error);
 $total = 0;
@@ -203,6 +232,10 @@ foreach($answers as $i => $answer) {
 }
 
 $results->void = $results->registrations - $results->rejected - $total;
+
+$query = "UPDATE participation SET registrations=$results->registrations, rejected=$results->rejected, void=$results->void "
+        ."WHERE referendum = $referendum_id";
+$mysqli->query($query) or error($mysqli->error);
 
 # delete the content of intermediary tables
 $mysqli->query("DELETE FROM corpus WHERE referendum=$referendum_id");
