@@ -29,9 +29,9 @@ if (!$referendum_key && !$fingerprint)
   error("Missing referendum or fingerprint argument");
 
 if ($fingerprint)
-  $condition = "publication.fingerprint='$fingerprint'";
+  $condition = "publication.fingerprint=\"$fingerprint\"";
 else
-  $condition = "publication.`key`='$referendum_key'";
+  $condition = "publication.`key`=\"$referendum_key\"";
 
 $query = "SELECT referendum.id, `key`, published, expires, "
         ."trustee, area, title, description, question, answers, deadline, website "
@@ -96,7 +96,7 @@ if ($result) {
 }
 
 $query = "SELECT area.id FROM area LEFT JOIN publication on publication.id=area.id "
-        ."WHERE name='$area' AND publication.key='$trustee'";
+        ."WHERE name=\"$area\" AND publication.key=\"$trustee\"";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
   error("Area was not published by trustee");
@@ -132,7 +132,7 @@ if ($count == 0) {
           ."citizen "
           ."INNER JOIN publication AS citizen_p ON citizen_p.id=citizen.id "
           ."INNER JOIN endorsement ON endorsement.publicationKey=citizen_p.`key` AND endorsement.`revoke`=0 "
-          ."INNER JOIN publication AS endorsement_p ON endorsement_p.id=endorsement.id AND endorsement_p.`key`='$trustee' "
+          ."INNER JOIN publication AS endorsement_p ON endorsement_p.id=endorsement.id AND endorsement_p.`key`=\"$trustee\" "
           ."INNER JOIN area ON area.id=$area_id "
           ."WHERE ST_Contains(area.polygons, citizen.home)";
   $mysqli->query($query) or error($mysqli->error);
@@ -144,13 +144,13 @@ $results->corpus = $count;
 $query = "INSERT INTO stations(id, referendum, registrations_count, ballots_count) "
         ."SELECT DISTINCT station.id, $referendum_id, 0, 0 "
         ."FROM station INNER JOIN registration ON registration.stationKey=station.`key` "
-        ."WHERE registration.referendum='$referendum_key'";
+        ."WHERE registration.referendum=\"$referendum_key\"";
 $mysqli->query($query) or error($mysqli->error);
 
 # list all the registrations for each station
 $query = "INSERT INTO registrations(referendum, station, citizen, published) "
         ."SELECT $referendum_id, station.id, corpus.citizen, registration_p.published FROM station "
-        ."INNER JOIN registration ON registration.stationKey=station.`key` AND registration.referendum='$referendum_key' "
+        ."INNER JOIN registration ON registration.stationKey=station.`key` AND registration.referendum=\"$referendum_key\" "
         ."INNER JOIN publication AS registration_p ON registration_p.id=registration.id "
         ."INNER JOIN publication AS citizen_p ON citizen_p.`key`=registration_p.`key` "
         ."INNER JOIN corpus ON corpus.citizen=citizen_p.id";
@@ -182,7 +182,7 @@ $results->count = array_fill(0, $n_answers, 0);
 # list all the ballots for each station
 $query = "INSERT INTO ballots(referendum, station, `key`, answer) "
         ."SELECT $referendum_id, station.id, ballot_p.`key`, ballot.answer FROM station "
-        ."INNER JOIN ballot ON ballot.stationKey=station.`key` AND ballot.referendum='$referendum_key' "
+        ."INNER JOIN ballot ON ballot.stationKey=station.`key` AND ballot.referendum=\"$referendum_key\" "
         ."INNER JOIN publication AS ballot_p ON ballot_p.id=ballot.id";
 $mysqli->query($query) or error($mysqli->error);
 
