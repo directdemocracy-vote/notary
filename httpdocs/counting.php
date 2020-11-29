@@ -84,12 +84,10 @@ if ($result) {
       $query = "SELECT answer, count FROM results WHERE referendum=$referendum_id";
       $result = $mysqli->query($query) or error($mysqli->error);
       while ($r = $result->fetch_assoc()) {
-        if ($r['answer']) {  // FIXME: should be removed when answer cannot be empty
-          $i = array_search($r['answer'], $answers);
-          if ($i === FALSE)
-            error("Wrong answer found in results: $r[answer]");
-          $results->count[$i] = intval($r['count']);
-        }
+        $i = array_search($r['answer'], $answers);
+        if ($i === FALSE)
+          error("Wrong answer found in results: $r[answer]");
+        $results->count[$i] = intval($r['count']);
       }
       $result->free();
       die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
@@ -105,15 +103,6 @@ if (!$result)
 $area = $result->fetch_assoc();
 $result->free();
 $area_id = intval($area['id']);
-
-
-# FIXME: remove that
-$mysqli->query("DELETE FROM corpus");
-$mysqli->query("DELETE FROM stations");
-$mysqli->query("DELETE FROM registrations");
-$mysqli->query("DELETE FROM ballots");
-
-
 
 # The following intermediary tables are created:
 # corpus, stations, registrations and ballots
@@ -223,10 +212,6 @@ $results->rejected = $results->registrations - intval($b['c']);
 
 # count ballots
 $mysqli->query("DELETE FROM results WHERE referendum=$referendum_id");
-# save corpus size in results
-# FIXME: not needed any more as the corpus is also stored in the participation table
-$query = "INSERT INTO results(referendum, answer, `count`) VALUES($referendum_id, '', $count)";
-$mysqli->query($query) or error($mysqli->error);
 $total = 0;
 foreach($answers as $i => $answer) {
   $query = "SELECT COUNT(*) AS c FROM ballots WHERE answer=\"$answer\" AND referendum=$referendum_id";
