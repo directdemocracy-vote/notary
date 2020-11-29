@@ -24,7 +24,7 @@ $query = "SELECT "
         ."FROM referendum "
         ."LEFT JOIN publication ON publication.id = referendum.id "
         ."WHERE RIGHT(\"$area\", CHAR_LENGTH(referendum.area)) = referendum.area "
-        ."ORDER BY CHAR_LENGHT(referendum.area)";
+        ."ORDER BY CHAR_LENGTH(referendum.area)";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $referendums = array();
 while ($referendum = $result->fetch_assoc()) {
