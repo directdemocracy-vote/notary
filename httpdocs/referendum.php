@@ -23,13 +23,13 @@ $query = "SELECT "
         ."referendum.question, referendum.answers, referendum.deadline, referendum.website "
         ."FROM referendum "
         ."LEFT JOIN publication ON publication.id = referendum.id "
-        ."WHERE RIGHT(\"$area\", CHAR_LENGTH(referendum.area)) = referendum.area";
+        ."WHERE RIGHT(\"$area\", CHAR_LENGTH(referendum.area)) = referendum.area "
+        ."ORDER BY CHAR_LENGHT(referendum.area)";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $referendums = array();
 while ($referendum = $result->fetch_assoc()) {
   settype($referendum['published'], 'int');
   settype($referendum['expires'], 'int');
-  settype($referendum['areas'], 'int');
   settype($referendum['deadline'], 'int');
   $referendums[] = $referendum;
 }
