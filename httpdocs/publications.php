@@ -39,8 +39,6 @@ elseif ($type == 'citizen')
   $fields = 'citizen.familyName, citizen.givenNames, citizen.picture, ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude';
 elseif ($type == 'referendum')
   $fields = 'referendum.trustee, referendum.area, referendum.title, referendum.description, referendum.question, referendum.answers, referendum.deadline, referendum.website';
-elseif ($type == 'vote')
-  $fields = 'vote.answer';
 else
   error("Unsupported type argument: $type.");
 

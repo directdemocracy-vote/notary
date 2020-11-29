@@ -86,17 +86,6 @@ if ($type == 'citizen') {
                       'published' => floatval($publication['published']),
                       'expires' => floatval($publication['expires'])) + $referendum;
   echo json_encode($referendum, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-} elseif ($type == 'vote') {
-  $query = "SELECT answer from vote WHERE id=$publication[id]";
-  $result = $mysqli->query($query) or error($mysqli->error);
-  $vote = $result->fetch_assoc();
-  $result->free();
-  $vote = array('schema' => $publication['schema'],
-                'key' => $publication['key'],
-                'signature' => $publication['signature'],
-                'published' => floatval($publication['published']),
-                'expires' => floatval($publication['expires'])) + $vote;
-  echo json_encode($vote, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 }
 $mysqli->close();
 ?>
