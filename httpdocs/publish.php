@@ -38,7 +38,7 @@ function get_type($schema) {
 }
 
 function delete_citizen($mysqli, $key) {
-  $query = "SELECT id FROM publication WHERE `key`='$key' AND `schema` LIKE '%citizen.schema.json'";
+  $query = "SELECT id FROM publication WHERE `key`=\"$key\" AND `schema` LIKE '%citizen.schema.json'";
   $result = $mysqli->query($query) or error($mysqli->error);
   while ($p = $result->fetch_assoc()) {  # there should be only one
     $mysqli->query("DELETE FROM publication WHERE id=$p[id]") or error($mysqli->error);
@@ -46,7 +46,7 @@ function delete_citizen($mysqli, $key) {
   }
   $result->free();
   # delete any endorsement of the deleted citizen card
-  $query = "SELECT id FROM endorsement WHERE publicationKey='$key'";
+  $query = "SELECT id FROM endorsement WHERE publicationKey=\"$key\"";
   $result = $mysqli->query($query) or error($mysqli->error);
   while ($p = $result->fetch_assoc()) {
     $mysqli->query("DELETE FROM publication WHERE id=$p[id]") or error($mysqli->error);
@@ -56,14 +56,14 @@ function delete_citizen($mysqli, $key) {
 }
 
 function delete_older_endorsements($mysqli, $key, $published, $endorsedKey, $endorsedSignature) {
-  $query = "DELETE p, e FROM publication p JOIN endorsement e ON e.id = p.id WHERE p.`key` = '$key' "
-          ."AND p.published < $published AND e.publicationKey = '$endorsedKey' "
-          ."AND e.publicationSignature = '$endorsedSignature'";
+  $query = "DELETE p, e FROM publication p JOIN endorsement e ON e.id = p.id WHERE p.`key` = \"$key\" "
+          ."AND p.published < $published AND e.publicationKey = \"$endorsedKey\" "
+          ."AND e.publicationSignature = \"$endorsedSignature\"";
   $mysqli->query($query) or error($mysqli->error);
 }
 
 function delete_publication($mysqli, $key, $signature) {
-  $query = "SELECT id, `schema` FROM publication WHERE `key`='$key' AND signature='$signature'";
+  $query = "SELECT id, `schema` FROM publication WHERE `key`=\"$key\" AND signature=\"$signature\"";
   $result = $mysqli->query($query) or error($mysqli->error);
   $p = $result->fetch_assoc();
   if ($p) {
@@ -75,7 +75,7 @@ function delete_publication($mysqli, $key, $signature) {
 }
 
 function delete_all_publications($mysqli, $key) {
-  $query = "SELECT id, `schema` FROM publication WHERE `key`='$key'";
+  $query = "SELECT id, `schema` FROM publication WHERE `key`=\"$key\"";
   $result = $mysqli->query($query) or error($mysqli->error);
   while($p = $result->fetch_assoc()) {
     $mysqli->query("DELETE FROM publication WHERE id=$p[id]") or error($mysqli->error);
@@ -196,7 +196,7 @@ elseif ($type == 'endorsement') {
     error("Empty signature");
   delete_older_endorsements($mysqli, $endorsement->key, $endorsement->published, $key, $signature);
   if ($endorsement->revoke && $endorsement->key == $key) {  # revoking my own stuff
-    $query = "SELECT id, `schema` FROM publication WHERE `key`='$key' AND signature='$signature'";
+    $query = "SELECT id, `schema` FROM publication WHERE `key`=\"$key\" AND signature=\"$signature\"";
     $result = $mysqli->query($query) or error($mysqli->error);
     $p = $result->fetch_assoc();
     if ($p) {
@@ -210,21 +210,21 @@ elseif ($type == 'endorsement') {
   }
 }
 $query = "INSERT INTO publication(`schema`, `key`, signature, fingerprint, published, expires) "
-        ."VALUES('$publication->schema', '$publication->key', '$publication->signature', "
-        ."SHA1('$publication->signature'), $publication->published, $publication->expires)";
+        ."VALUES(\"$publication->schema\", \"$publication->key\", \"$publication->signature\", "
+        ."SHA1(\"$publication->signature\"), $publication->published, $publication->expires)";
 $mysqli->query($query) or error($mysqli->error);
 $id = $mysqli->insert_id;
 
 if ($type == 'citizen')
   $query = "INSERT INTO citizen(id, familyName, givenNames, picture, home) "
-          ."VALUES($id, '$citizen->familyName', '$citizen->givenNames', "
-          ."'$citizen->picture', POINT($citizen->longitude, $citizen->latitude))";
+          ."VALUES($id, \"$citizen->familyName\", \"$citizen->givenNames\", "
+          ."\"$citizen->picture\", POINT($citizen->longitude, $citizen->latitude))";
 elseif ($type == 'endorsement') {
   if (!isset($endorsement->message))
     $endorsement->message = '';
   if (!isset($endorsement->comment))
     $endorsement->comment = '';
-  $query = "SELECT id, `schema`, `key`, signature, expires FROM publication WHERE fingerprint=SHA1('$signature')";
+  $query = "SELECT id, `schema`, `key`, signature, expires FROM publication WHERE fingerprint=SHA1(\"$signature\")";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsed = $result->fetch_assoc();
   $result->free();
@@ -238,8 +238,8 @@ elseif ($type == 'endorsement') {
       error("endorsement doesn't expire at the same time as publication: $endorsement->expires != $endorsed_expires");
   }
   $query = "INSERT INTO endorsement(id, publicationKey, publicationSignature, publicationFingerprint, "
-          ."`revoke`, message, comment) VALUES($id, '$key', '$signature', SHA1('$signature'), "
-          ."'$endorsement->revoke', '$endorsement->message', '$endorsement->comment')";
+          ."`revoke`, message, comment) VALUES($id, \"$key\", \"$signature\", SHA1(\"$signature\"), "
+          ."\"$endorsement->revoke\", \"$endorsement->message\", \"$endorsement->comment\")";
 } elseif ($type == 'referendum') {
   $referendum =&$publication;
   if (!isset($referendum->website))  # optional
