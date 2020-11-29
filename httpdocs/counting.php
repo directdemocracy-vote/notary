@@ -166,8 +166,8 @@ $c = $result->fetch_assoc();
 $result->free();
 $results->participation = intval($c['participation']);
 
-$query = "INSERT INTO participation (referendum, count, corpus) VALUES($referendum_id, $results->participation, $count) "
-        ."ON DUPLICATE KEY UPDATE count=$results->participation, corpus=$count";
+$query = "INSERT INTO participation (referendum, count, corpus, updated) VALUES($referendum_id, $results->participation, $count, NOW()) "
+        ."ON DUPLICATE KEY UPDATE count=$results->participation, corpus=$count, updated=NOW()";
 $mysqli->query($query) or error($mysqli->error);
 
 $now = intval(microtime(true) * 1000);
