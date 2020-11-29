@@ -55,7 +55,7 @@ CREATE TABLE `participation` (
   `registrations` int(11) NOT NULL,
   `rejected` int(11) NOT NULL,
   `void` int(11) NOT NULL,
-  `updated` timestamp NOT NULL DEFAULT current_timestamp()
+  `updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `publication` (
