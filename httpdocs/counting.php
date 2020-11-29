@@ -169,12 +169,12 @@ $query = "INSERT INTO participation (referendum, count, corpus) VALUES($referend
         ."ON DUPLICATE KEY UPDATE count=$results->participation, corpus=$count";
 $mysqli->query($query) or error($mysqli->error);
 
-$results->count = array_fill(0, $n_answers, 0);
-
 $now = intval(microtime(true) * 1000);
 
 if (intval($referendum['deadline']) > $now)  # we should not count ballots, but can count participation
   die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+
+$results->count = array_fill(0, $n_answers, 0);
 
 # list all the ballots for each station
 $query = "INSERT INTO ballots(referendum, station, `key`, answer) "
