@@ -8,23 +8,15 @@ function findGetParameter(parameterName) {
   return result;
 }
 
-function unix_time_to_text(unix_timestamp) {
-  const a = new Date(unix_timestamp * 1000);
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const year = a.getFullYear();
-  const month = months[a.getMonth()];
-  const date = a.getDate();
-  const hour = a.getHours();
-  const minute = '0' + a.getMinutes();
-  const second = '0' + a.getSeconds();
-  const time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + minute.substr(-2) + ':' + second.substr(-2);
-  return time;
-}
-
 window.onload = function() {
   const fingerprint = findGetParameter('fingerprint');
   if (!fingerprint) {
-    console.log('Missing fingerprint GET argument');
+    console.log('Missing fingerprint GET argument.');
+    return;
+  }
+  const osm_id = findGetParameter('osm_id');
+  if (!osm_id) {
+    console.log('Missing osm_id GET argument.');
     return;
   }
   let xhttp = new XMLHttpRequest();
@@ -131,23 +123,8 @@ window.onload = function() {
           '</a> (' + area_type + ')' + '</small></div><br><div><p>' + referendum.description + '</p></div><div><p><b>' +
           referendum.question + '</b><p></div>' + answers_table +
           '<div>estimated population: <span id="population">&hellip;</span> &mdash; corpus: ' + referendum.corpus +
-          ' &mdash; participation: <span id="participation">' + referendum.participation + '</span> (' + participation +
-          ')</div>';
-        let xhttp = new XMLHttpRequest();
-        xhttp.onload = function() {
-          if (this.status == 200) {
-            let answer = JSON.parse(this.responseText);
-            if (answer.error)
-              console.log('nominatis error', JSON.stringify(referendum.error));
-            else {
-              console.log(answer[0].osm_id);
-              document.getElementById('participation').innerHTML =
-                `<a href="participants?fingerprint=${fingerprint}&osm_id=${answer[0].osm_id}">${referendum.participation}</a>`;
-            }
-          }
-        };
-        xhttp.open('GET', 'https://nominatim.openstreetmap.org/search?' + area_query + '&format=json');
-        xhttp.send();
+          ' &mdash; participation: <a href="participants?fingerprint=' + fingerprint + '">' + referendum.participation +
+          '</a> (' + participation + ')</div>';
       }
     }
   };
