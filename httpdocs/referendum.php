@@ -20,15 +20,10 @@ if (!$area)
 $areas = explode("\\n", rtrim($area));
 $count = count($areas);
 $referendums = array();
-$test = new StdClass();
-$test->count = $count;
-$test->original_areas = $areas;
-$test->areas = array();
 foreach($areas as $i => $area) {
   $area_name = $area;
   for($j = $i + 1; $j < $count; $j++)
     $area_name .= "\n" . $areas[$j];
-  $test->areas[] = $area_name;
   $query = "SELECT "
           ."publication.schema, publication.key, publication.signature, publication.published, publication.expires, "
           ."referendum.trustee, referendum.area, referendum.title, referendum.description, "
@@ -51,7 +46,5 @@ foreach($areas as $i => $area) {
   $result->free();
 }
 $mysqli->close();
-// die(json_encode($test, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-
 die(json_encode($referendums, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
