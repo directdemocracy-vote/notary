@@ -23,7 +23,7 @@ $referendums = array();
 foreach($areas as $i => $area) {
   $area_name = $area;
   for($j = $i + 1; $j < $count; $j++)
-    $area_name .= $areas[$j] . "\n";
+    $area_name .= "\n" . $areas[$j];
   $query = "SELECT "
           ."publication.schema, publication.key, publication.signature, publication.published, publication.expires, "
           ."referendum.trustee, referendum.area, referendum.title, referendum.description, "
