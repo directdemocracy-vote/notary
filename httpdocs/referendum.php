@@ -21,9 +21,9 @@ $areas = explode("\n", $area);
 $count = count($areas);
 $referendums = array();
 foreach($areas as $i => $area) {
-  $area_name = $area;
-  for($j = $i + 1; $j < $count; $j++)
-    $area_name .= "\n".$area[$j];
+  $area_name = '';
+  for($j = $i; $j < $count; $j++)
+    $area_name .= $area[$j]."\n";
   $query = "SELECT "
           ."publication.schema, publication.key, publication.signature, publication.published, publication.expires, "
           ."referendum.trustee, referendum.area, referendum.title, referendum.description, "
