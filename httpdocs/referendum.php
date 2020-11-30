@@ -17,7 +17,7 @@ $mysqli->set_charset('utf8mb4');
 $area = $mysqli->escape_string($_POST['area']);
 if (!$area)
   error("Unable to parse JSON post");
-$areas = explode("\n", $area);
+$areas = explode("\\n", $area);
 $count = count($areas);
 $referendums = array();
 $test = new StdClass();
