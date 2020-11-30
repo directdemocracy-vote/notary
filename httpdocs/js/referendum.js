@@ -132,7 +132,7 @@ window.onload = function() {
           '</a> (' + area_type + ')' + '</small></div><br><div><p>' + referendum.description + '</p></div><div><p><b>' +
           referendum.question + '</b><p></div>' + answers_table +
           '<div>estimated population: <span id="population">&hellip;</span> &mdash; corpus: ' + referendum.corpus +
-          ' &mdash; participation: ' + referendum.participation + ' (' + participation + ')</div>';
+          ' &mdash; participation: <a href="participants?fingerprint=' + fingerprint + '">' + referendum.participation + '</a> (' + participation + ')</div>';
       }
     }
   };
