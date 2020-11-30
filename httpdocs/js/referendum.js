@@ -142,7 +142,7 @@ window.onload = function() {
             else {
               console.log(answer[0].osm_id);
               document.getElementById('participation').innerHTML =
-                `<a href="participants?fingerprint=${fingerprint}&osm_id=${answer[0].osm_id}">${referendum.participation}</a>`;
+                `<a href="participants.html?fingerprint=${fingerprint}&osm_id=${answer[0].osm_id}">${referendum.participation}</a>`;
             }
           }
         };
