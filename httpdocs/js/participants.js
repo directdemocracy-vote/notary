@@ -28,7 +28,7 @@ window.onload = function() {
       else {
         answer.hierarchy.forEach(function(place) {
           if (answer.osm_type === 'R' && place.class === 'boundary' && place.type === 'administrative')
-            console.log(place.localname, osm.osm_id);
+            console.log(place.localname, place.osm_id);
         });
       }
     }
