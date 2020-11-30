@@ -26,7 +26,9 @@ window.onload = function() {
       if (answer.error)
         console.log('publisher error', JSON.stringify(referendum.error));
       else {
-        console.log(answer);
+        answer.hierarchy.forEach(function(place) {
+          console.log(place.localname);
+        });
       }
     }
   };
