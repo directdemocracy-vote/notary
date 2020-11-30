@@ -27,7 +27,7 @@ foreach($areas as $i => $area) {
   $area_name = $area;
   for($j = $i + 1; $j < $count; $j++)
     $area_name .= "\n" . $areas[$j];
-  $test.areas[] = $area_name;
+  $test->areas[] = $area_name;
   $query = "SELECT "
           ."publication.schema, publication.key, publication.signature, publication.published, publication.expires, "
           ."referendum.trustee, referendum.area, referendum.title, referendum.description, "
