@@ -17,27 +17,34 @@ $mysqli->set_charset('utf8mb4');
 $area = $mysqli->escape_string($_POST['area']);
 if (!$area)
   error("Unable to parse JSON post");
-$query = "SELECT "
-        ."publication.schema, publication.key, publication.signature, publication.published, publication.expires, "
-        ."referendum.trustee, referendum.area, referendum.title, referendum.description, "
-        ."referendum.question, referendum.answers, referendum.deadline, referendum.website, "
-        ."participation.count AS participation, participation.corpus AS corpus "
-        ."FROM referendum "
-        ."LEFT JOIN publication ON publication.id = referendum.id "
-        ."LEFT JOIN participation ON participation.referendum = referendum.id "
-        ."WHERE RIGHT(\"$area\", CHAR_LENGTH(referendum.area)) = referendum.area "
-        ."ORDER BY CHAR_LENGTH(referendum.area) DESC";
-$result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
+$areas = explode("\n", $area);
+$count = count($areas);
 $referendums = array();
-while ($referendum = $result->fetch_assoc()) {
-  settype($referendum['published'], 'int');
-  settype($referendum['expires'], 'int');
-  settype($referendum['deadline'], 'int');
-  settype($referendum['participation'], 'int');
-  settype($referendum['corpus'], 'int');
-  $referendums[] = $referendum;
+foreach($areas as $i => $area) {
+  $area_name = $area;
+  for($j = $i + 1; $j < $count; $j++)
+    $area_name .= "\n".$area[$j];
+  $query = "SELECT "
+          ."publication.schema, publication.key, publication.signature, publication.published, publication.expires, "
+          ."referendum.trustee, referendum.area, referendum.title, referendum.description, "
+          ."referendum.question, referendum.answers, referendum.deadline, referendum.website, "
+          ."participation.count AS participation, participation.corpus AS corpus "
+          ."FROM referendum "
+          ."LEFT JOIN publication ON publication.id = referendum.id "
+          ."LEFT JOIN participation ON participation.referendum = referendum.id "
+          ."WHERE referendum.area = \"$area_name\" "
+          ."ORDER BY participation DESC LIMIT 5";
+  $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
+  while ($referendum = $result->fetch_assoc()) {
+    settype($referendum['published'], 'int');
+    settype($referendum['expires'], 'int');
+    settype($referendum['deadline'], 'int');
+    settype($referendum['participation'], 'int');
+    settype($referendum['corpus'], 'int');
+    $referendums[] = $referendum;
+  }
+  $result->free();
 }
-$result->free();
 $mysqli->close();
 die(json_encode($referendums, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
