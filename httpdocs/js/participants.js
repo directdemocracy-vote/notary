@@ -27,7 +27,8 @@ window.onload = function() {
         console.log('publisher error', JSON.stringify(referendum.error));
       else {
         answer.hierarchy.forEach(function(place) {
-          console.log(place.localname);
+          if (answer.osm_type === 'R' && place.class === 'boundary' && place.type === 'administrative')
+            console.log(place.localname, osm.osm_id);
         });
       }
     }
