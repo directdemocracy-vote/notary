@@ -22,6 +22,7 @@ $count = count($areas);
 $referendums = array();
 $test = new StdClass();
 $test->count = $count;
+$test->original_areas = areas;
 $test->areas = array();
 foreach($areas as $i => $area) {
   $area_name = $area;
