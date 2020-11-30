@@ -22,113 +22,16 @@ window.onload = function() {
   let xhttp = new XMLHttpRequest();
   xhttp.onload = function() {
     if (this.status == 200) {
-      let referendum = JSON.parse(this.responseText);
-      if (referendum.error)
+      let answer = JSON.parse(this.responseText);
+      if (answer.error)
         console.log('publisher error', JSON.stringify(referendum.error));
       else {
-        const first_equal = referendum.area.indexOf('=');
-        const first_newline = referendum.area.indexOf('\n');
-        let area_name = referendum.area.substr(first_equal + 1, first_newline - first_equal);
-        let area_type = referendum.area.substr(0, first_equal);
-        const area_array = referendum.area.split('\n');
-        let area_query = '';
-        area_array.forEach(function(argument) {
-          const eq = argument.indexOf('=');
-          let type = argument.substr(0, eq);
-          if (type === 'village')
-            type = 'city';
-          const name = argument.substr(eq + 1);
-          if (type)
-            area_query += type + '=' + encodeURIComponent(name) + '&';
-        });
-        area_query = area_query.slice(0, -1);
-        let area_url;
-        if (!area_type) {
-          area_type = 'world';
-          area_name = 'Earth';
-          area_url = 'https://en.wikipedia.org/wiki/Earth';
-        } else if (area_type == 'union')
-          area_url = 'https://en.wikipedia.org/wiki/European_Union';
-        else {
-          area_url = 'https://nominatim.openstreetmap.org/search.php?' + area_query + '&polygon_geojson=1';
-          population_url = 'https://nominatim.openstreetmap.org/search.php?' + area_query + '&format=json&extratags=1';
-          let xhttp = new XMLHttpRequest();
-          xhttp.onload = function() {
-            let population = document.getElementById('population');
-            if (this.status == 200) {
-              const r = JSON.parse(this.responseText);
-              if (r.length) {
-                const response = r[0];
-                if (response.hasOwnProperty('osm_id')) {
-                  const url = 'https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=' + response.osm_id;
-                  if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population'))
-                    population.innerHTML = `<a target="_blank" href="${url}">${response.extratags.population}</a>`;
-                  else
-                    population.innerHTML = `<a target="_blank" href="${url}">N/A</a>`;
-                } else population.innerHTML = '?';
-              } else
-                population.innerHTML = '?';
-            } else
-              population.innerHTML = '&times;';
-          };
-          xhttp.open('GET', population_url, true);
-          xhttp.send();
-        }
-        const answers = referendum.answers.split('\n');
-        const answer_count = answers.length;
-        let results = [];
-        for (i = 0; i < answers.length; i++)
-          results.push(referendum.count ? referendum.count[i] : 0);
-        const total = results.reduce((a, b) => a + b, 0);
-        answers_table = '<table class="table table-bordered"><thead class="thead-light"><tr>';
-        const colors = ['primary', 'danger', 'success', 'warning', 'info', 'secondary', 'light', 'dark'];
-        const width = Math.round(100 / (answer_count + 2));
-        answers.forEach(function(answer) {
-          answers_table += '<th width="' + width + '%" scope="col" class="text-center">' + answer + '</th>';
-        });
-        answers_table += '<th width="' + width +
-          '%" scope="col" class="text-center font-italic font-weight-normal" style="color:blue">void</th>' +
-          '<th width="' + width +
-          '%" scope="col" class="text-center font-italic font-weight-normal" style="color:blue">rejected</th>' +
-          '</tr></thead><tbody><tr>';
-        let color_count = 0;
-        let count = 0;
-        answers.forEach(function(answer) {
-          const percent = (total == 0) ? 0 : Math.round(10000 * results[count] / total) / 100;
-          answers_table +=
-            '<td><div class="progress"><div id="answer-percent-' + count + '" ' +
-            'class="progress-bar progress-bar-striped bg-' + colors[color_count++] +
-            '" role="progressbar" ' +
-            'style="width:' + percent + '%" aria-valuemin="0" aria_valuemax="100">' + percent + ' %' +
-            '</div></div></td>';
-          if (color_count == colors.length)
-            color_count = 0;
-          count++;
-        });
-        answers_table += '<td class="text-center">N/A</td><td class="text-center">N/A</td>';
-        count = 0;
-        answers_table += '</tr><tr>';
-        answers.forEach(function(answer) {
-          answers_table += '<td class="text-center">' + results[count] + '</td>';
-          count++;
-        });
-        answers_table += '<td class="text-center">' + referendum.void + '</td>';
-        answers_table += '<td class="text-center">' + referendum.rejected + '</td>';
-        answers_table += '</tr></tbody></table>';
-        const participation = (referendum.corpus > 0) ? (Math.round(10000 * referendum.participation / referendum.corpus) /
-          100) + '%' : 'N/A';
-        document.getElementById('content').innerHTML = '<h2>' + referendum.title + '</h2>' +
-          '<div><small><b>Deadline:</b> ' + unix_time_to_text(referendum.deadline / 1000) +
-          ' &mdash; <b>Area:</b> <a target="_blank" href="' + area_url + '">' + area_name +
-          '</a> (' + area_type + ')' + '</small></div><br><div><p>' + referendum.description + '</p></div><div><p><b>' +
-          referendum.question + '</b><p></div>' + answers_table +
-          '<div>estimated population: <span id="population">&hellip;</span> &mdash; corpus: ' + referendum.corpus +
-          ' &mdash; participation: <a href="participants?fingerprint=' + fingerprint + '">' + referendum.participation +
-          '</a> (' + participation + ')</div>';
+        console.log(answer);
       }
     }
   };
-  xhttp.open('POST', '/counting.php', true);
-  xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  xhttp.send('fingerprint=' + fingerprint);
+  xhttp.open('GET',
+    `https://nominatim.openstreetmap.org/details.php?osmtype=R&osmid=${osm_id}&class=boundary&hierarchy=1&format=json`,
+    true);
+  xhttp.send();
 };
