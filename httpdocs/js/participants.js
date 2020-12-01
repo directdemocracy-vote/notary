@@ -65,6 +65,6 @@ window.onload = function() {
       xhttp.send(JSON.stringify(data));
     }
   };
-  xhttp.open('GET', poylgon_url);
+  xhttp.open('GET', polygon_url);
   xhttp.send();
 };
