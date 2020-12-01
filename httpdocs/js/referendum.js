@@ -36,6 +36,8 @@ window.onload = function() {
   let address = '';
   let markers = [];
   if (navigator.geolocation) navigator.geolocation.getCurrentPosition(getGeolocationPosition);
+
+  /*
   let xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200 && geolocation == false) {
@@ -52,6 +54,7 @@ window.onload = function() {
   };
   xhttp.open("GET", "https://ipinfo.io/loc", true);
   xhttp.send();
+  */
 
   function getGeolocationPosition(position) {
     geolocation = true;
@@ -70,8 +73,8 @@ window.onload = function() {
     }, 0);
   });
   const greenIcon = new L.Icon({
-    iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconUrl: '//cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+    shadowUrl: '//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -164,7 +167,6 @@ window.onload = function() {
     xhttp.open("GET", "https://publisher.directdemocracy.vote/search.php?" + parameters, true);
     xhttp.send();
   }
-
 
 
   xhttp = new XMLHttpRequest();
