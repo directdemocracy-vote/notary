@@ -24,6 +24,7 @@ $mysqli->set_charset('utf8mb4');
 $fingerprint = $participation->fingerprint;
 $polygons = 'ST_GeomFromText("MULTIPOLYGON(';
 $t1 = false;
+die(json_encode($participation->polygons));
 foreach($participation->polygons as $polygon1) {
   if ($t1)
     $polygons .= ', ';
