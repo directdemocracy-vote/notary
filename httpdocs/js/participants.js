@@ -19,6 +19,23 @@ window.onload = function() {
     console.log('Missing osm_id GET argument.');
     return;
   }
+  const title = findGetParameter('title');
+  if (!title) {
+    console.log('Missing title GET argument.');
+    return;
+  }
+  const address = findGetParameter('address');
+  if (!address) {
+    console.log('Missing address GET argument.');
+    return;
+  }
+  let content = document.getElementById('content');
+  let h2 = document.createElement('h2');
+  content.appendChild(h2);
+  h2.innerHTML = title;
+  let h3 = document.createElement('h3');
+  content.appendChild(h3);
+  h3.innerHTML = address;
   let xhttp = new XMLHttpRequest();
   xhttp.onload = function() {
     if (this.status == 200) {
@@ -31,7 +48,8 @@ window.onload = function() {
         answer.hierarchy.forEach(function(place) {
           console.log(place.localname, place.osm_id);
           if (answer.osm_type === 'R' && place.class === 'boundary' && place.type === 'administrative')
-            list += '<li><a href="/participants.html?fingerprint=' + fingerprint + '&osm_id=' + place.osm_id + '">' + place.localname + '</a></li>';
+            list += '<li><a href="/participants.html?fingerprint=' + fingerprint + '&osm_id=' + place.osm_id + '">' +
+            place.localname + '</a></li>';
         });
         list += '</ul>';
         document.getElementById('content').innerHTML = list;
