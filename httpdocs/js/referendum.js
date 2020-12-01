@@ -103,7 +103,7 @@ window.onload = function() {
         a = JSON.parse(this.responseText);
         address = a.display_name;
         console.log(a);
-        updateLabel();
+        document.getElementById("address").href = '/participants.html?fingerprint=' + fingerprint + '&osm_id=' + a.osm_id;
       }
     };
     xhttp.open('GET', 'https://nominatim.openstreetmap.org/reverse.php?format=json&lat=' + latitude + '&lon=' + longitude +
