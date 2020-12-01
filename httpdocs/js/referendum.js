@@ -77,7 +77,7 @@ window.onload = function() {
     shadowSize: [41, 41]
   });
   let marker = L.marker([latitude, longitude]).addTo(map).bindPopup(latitude + ',' + longitude).on('click', onMarkerClick);
-  marker.setPopupContent('<div style="text-align:center;width:300px" id="address">' + address + '</div>').openPopup();
+  marker.setPopupContent('<div style="text-align:center;width:240px" id="address">' + address + '</div>').openPopup();
   map.on('click', onMapClick);
   map.on('contextmenu', function(event) {
     return false;
