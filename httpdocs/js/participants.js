@@ -30,7 +30,7 @@ window.onload = function() {
         answer.hierarchy.forEach(function(place) {
           if (answer.osm_type === 'R' && place.class === 'boundary' && place.type === 'administrative') {
             console.log(place.localname, place.osm_id);
-            list += '<li><a href="/participants.html?fingerprint=' + fingerprint + '&osm_id=' + place.osm_id + '">' + place.localname + '</a></li>;
+            list += '<li><a href="/participants.html?fingerprint=' + fingerprint + '&osm_id=' + place.osm_id + '">' + place.localname + '</a></li>';
           }
         });
         list += '</ul>;
