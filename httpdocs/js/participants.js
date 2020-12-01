@@ -33,7 +33,7 @@ window.onload = function() {
             list += '<li><a href="/participants.html?fingerprint=' + fingerprint + '&osm_id=' + place.osm_id + '">' + place.localname + '</a></li>';
           }
         });
-        list += '</ul>;
+        list += '</ul>';
         document.getElementById('content').innerHTML = list;
       }
     }
