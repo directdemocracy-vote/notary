@@ -55,13 +55,13 @@ window.onload = function() {
             console.log('publisher error', JSON.stringify(answer.error));
           else {
             console.log(answer);
-            answer.citizens.forEach(function(citizen) {
-              console.log(citizen);
+            answer.geometry.coordinates.forEach(function(coordinates) {
+              console.log(coordinates[0] + ', ' + coordinates[1]);
             });
           }
         }
       };
-      xhttp.open('POST', '//participants.php', true);
+      xhttp.open('POST', '/participants.php', true);
       xhttp.send(JSON.stringify(data));
     }
   };
