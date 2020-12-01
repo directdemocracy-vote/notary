@@ -76,7 +76,7 @@ window.onload = function() {
     popupAnchor: [1, -34],
     shadowSize: [41, 41]
   });
-  let marker = L.marker([latitude, longitude]).addTo(map).bindPopup(latitude + ',' + longitude).on('click', onMarkerClick);
+  let marker = L.marker([latitude, longitude]).addTo(map).on('click', onMarkerClick);
   map.on('click', onMapClick);
   map.on('contextmenu', function(event) {
     return false;
@@ -88,7 +88,7 @@ window.onload = function() {
   }
 
   function onMapClick(e) {
-    marker.setLatLng(e.latlng).openPopup();
+    marker.setLatLng(e.latlng);
     latitude = e.latlng.lat;
     longitude = e.latlng.lng;
     updateLabel();
@@ -112,35 +112,6 @@ window.onload = function() {
 
   function updateLabel() {
     document.getElementById("address").innerHTML = address;
-  }
-
-  function search() {
-    const familyName = document.getElementById("family-name").value;
-    const givenNames = document.getElementById("given-names").value;
-    let xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        const a = JSON.parse(this.responseText);
-        markers.forEach(function(m) { // delete previous markers
-          map.removeLayer(m);
-        });
-        markers = [];
-        a.forEach(function(c) {
-          const name = c.givenNames + ' ' + c.familyName;
-          const fingerprint = CryptoJS.SHA1(c.signature).toString();
-          const label = '<div style="text-align:center"><a target="_blank" href="/publication.php?fingerprint=' +
-            fingerprint + '"><img src="' + c.picture + '" width="60" height="80"><br>' + name + '</a></div>';
-          markers.push(L.marker([c.latitude, c.longitude], {
-            icon: greenIcon
-          }).addTo(map).bindPopup(label));
-        });
-      }
-    };
-    let parameters = "latitude=" + latitude + "&longitude=" + longitude;
-    if (familyName) parameters += "&familyName=" + encodeURI(familyName);
-    if (givenNames) parameters += "&givenNames=" + encodeURI(givenNames);
-    xhttp.open("GET", "https://publisher.directdemocracy.vote/search.php?" + parameters, true);
-    xhttp.send();
   }
 
   xhttp = new XMLHttpRequest();
