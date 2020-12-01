@@ -163,7 +163,8 @@ window.onload = function() {
                     population.innerHTML = `<a target="_blank" href="${url}">N/A</a>`;
                   if (response.hasOwnProperty('geojson')) {
                     L.geoJSON(response.geojson).addTo(map);
-                    map.fitBounds(response.boundingbox);
+                    const bb = response.boundingbox;
+                    map.fitBounds([[bb[0], bb[1]], [bb[2], bb[3]]]);
                   }
 
                 } else population.innerHTML = '?';
