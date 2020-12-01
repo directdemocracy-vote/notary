@@ -102,6 +102,7 @@ window.onload = function() {
       if (this.readyState == 4 && this.status == 200) {
         a = JSON.parse(this.responseText);
         address = a.display_name;
+        console.log(a);
         updateLabel();
       }
     };
@@ -166,7 +167,6 @@ window.onload = function() {
                     const bb = response.boundingbox;
                     map.fitBounds([[bb[0], bb[2]], [bb[1], bb[3]]]);
                   }
-
                 } else population.innerHTML = '?';
               } else
                 population.innerHTML = '?';
