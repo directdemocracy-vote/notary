@@ -37,7 +37,6 @@ window.onload = function() {
   let markers = [];
   if (navigator.geolocation) navigator.geolocation.getCurrentPosition(getGeolocationPosition);
 
-  /*
   let xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200 && geolocation == false) {
@@ -54,7 +53,6 @@ window.onload = function() {
   };
   xhttp.open("GET", "https://ipinfo.io/loc", true);
   xhttp.send();
-  */
 
   function getGeolocationPosition(position) {
     geolocation = true;
@@ -63,7 +61,7 @@ window.onload = function() {
     map.setView([position.coords.latitude, position.coords.longitude], 12);
     setTimeout(updatePosition, 500);
   }
-  let map = L.map('map'); // .setView([latitude, longitude], 2);
+  let map = L.map('latlongmap').setView([latitude, longitude], 2);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
