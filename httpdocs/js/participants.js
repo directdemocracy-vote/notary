@@ -44,10 +44,11 @@ window.onload = function() {
       let answer = JSON.parse(this.responseText);
       console.log(answer);
       let geometry = answer.geometry;
-      let data = {
+      let participation = {
         fingerprint: fingerprint,
         polygon: answer.geometry.coordinates
       };
+      /*
       let coords = answer.geometry.coordinates[0];
       console.log(coords);
       console.log(coords.length);
@@ -57,6 +58,7 @@ window.onload = function() {
       coords.forEach(function(c) {
         console.log(c[0] + ', ' + c[1]);
       });
+      */
       xhttp.onload = function() {
         if (this.status == 200) {
           let answer = JSON.parse(this.responseText);
@@ -67,8 +69,8 @@ window.onload = function() {
           }
         }
       };
-      // xhttp.open('POST', '/participants.php', true);
-      // xhttp.send(JSON.stringify(data));
+      xhttp.open('POST', '/participants.php', true);
+      xhttp.send(JSON.stringify(participation));
     }
   };
   xhttp.open('GET', polygon_url);

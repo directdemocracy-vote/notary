@@ -8,63 +8,62 @@ function error($message) {
   die("{\"error\":$message}");
 }
 
-function get_int_parameter($name) {
-  if (isset($_POST[$name]))
-    return intval($_POST[$name]);
-  return FALSE;
-}
-
-function get_string_parameter($name) {
-  if (isset($_POST[$name]))
-    return $_POST[$name];
-  return FALSE;
-}
-
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
+
+$participation = json_decode(file_get_contents("php://input"));
+if (!$participation)
+  error("Unable to parse JSON post");
+
 $mysqli = new mysqli($database_host, $database_username, $database_password, $database_name);
 if ($mysqli->connect_errno)
   error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
 $mysqli->set_charset('utf8mb4');
 
-$osm_id = get_int_parameter('osm_id');
-$fingerprint = get_string_parameter('fingerprint');
-
-$query = "SELECT id, familyName, givenNames, picture, ST_Y(home) AS latitude, ST_X(home) AS longitude";
-if ($range)  # Unfortunately, ST_Distance_Sphere is not available in MySQL 5.6, so we need to revert to this complex formula
-  $query .= ", (6371 * acos(cos(radians($latitude)) * cos(radians(ST_Y(home))) * cos(radians(ST_X(home)) - radians($longitude)) "
-           ."+ sin(radians($latitude)) * sin(radians(ST_Y(home))))) AS distance ";
-$query .= " FROM citizen";
-if ($familyName or $givenNames) {
-  $query .= " WHERE";
-  if ($familyName) {
-    $query .= " familyName LIKE \"%$familyName%\"";
-    if ($givenNames)
-      $query .= " AND";
+$fingerprint = $participation->fingerprint;
+$polygons = 'ST_GeomFromText("MULTIPOLYGON(';
+$t1 = false;
+foreach($participation->polygons as $polygon1) {
+  if ($t1)
+    $polygons .= ', ';
+  $polygons .= '(';
+  $t1 = true;
+  $t2 = false;
+  foreach($polygon1 as $polygon2) {
+    if ($t2)
+      $polygons .= ', ';
+    $polygons .= '(';
+    $t2 = true;
+    $t3 = false;
+    foreach($polygon2 as $coordinates) {
+      if ($t3)
+        $polygons .= ', ';
+      $t3 = true;
+      $polygons .= $coordinates[0] . ' ' . $coordinates[1];
+    }
+    $polygons .= ')';
   }
-  if ($givenNames)
-    $query .= " givenNames LIKE \"%$givenNames%\"";
+  $polygons .= ')';
 }
-if ($range)
-  $query .= " HAVING distance < $range ORDER BY distance";
-$query .= " LIMIT 0, 20;";
+$polygons .= ')")';
+
+$query = "SELECT id FROM publication WHERE fingerprint=\"$fingerprint\" LEFT JOIN referendum ON referendum.id=publication.id";
+$result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
+$referendum = $result->fetch_assoc();
+$referendum_id = $referendum['id'];
+
+# FIXME: add station
+$query = "SELECT citizen.id, citizen.familyName, citizen.givenNames, citizen.picture, "
+        ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude FROM citizen "
+        ."LEFT JOIN registrations ON registrations.citizen=citizen.id AND registrations.referendum=$referendum_id "
+        ."WHERE CONTAINS($polygons, home)";
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
 $citizens = array();
 while ($citizen = $result->fetch_assoc()) {
-  $q = "SELECT `schema`, `key`, signature, published, expires FROM publication WHERE id=$citizen[id]";
-  $r = $mysqli->query($q) or error($mysqli->error);
-  $publication = $r->fetch_assoc();
-  $r->free();
-  unset($citizen['id']);
-  unset($citizen['distance']);
+  $citizen['id'] = intval($citizen['id']);
   $citizen['latitude'] = floatval($citizen['latitude']);
   $citizen['longitude'] = floatval($citizen['longitude']);
-  $citizen = array('schema' => $publication['schema'],
-                   'key' => $publication['key'],
-                   'signature' => $publication['signature'],
-                   'published' => floatval($publication['published']),
-                   'expires' => floatval($publication['expires'])) + $citizen;
   $citizens[] = $citizen;
 }
 $result->free();
