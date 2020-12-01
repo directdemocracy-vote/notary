@@ -48,6 +48,7 @@ window.onload = function() {
         fingerprint: fingerprint,
         polygon: answer.geometry.coordinates
       };
+      console.log(answer.geometry.coordinates);
       answer.geometry.coordinates.forEach(function(coordinates) {
         console.log(coordinates[0] + ', ' + coordinates[1]);
       });
