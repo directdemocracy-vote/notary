@@ -162,9 +162,10 @@ window.onload = function() {
                   else
                     population.innerHTML = `<a target="_blank" href="${url}">N/A</a>`;
                   if (response.hasOwnProperty('geojson')) {
-                    console.log(response.geojson);
                     L.geoJSON(response.geojson).addTo(map);
+                    map.fitBounds(response.boundingbox);
                   }
+
                 } else population.innerHTML = '?';
               } else
                 population.innerHTML = '?';
