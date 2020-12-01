@@ -111,7 +111,7 @@ window.onload = function() {
   }
 
   function updateLabel() {
-    document.getElementById("municipality").innerHTML = address;
+    document.getElementById("address").innerHTML = address;
   }
 
   function search() {
