@@ -41,23 +41,15 @@ window.onload = function() {
     if (this.status == 200) {
       let answer = JSON.parse(this.responseText);
       if (answer.error)
-        console.log('publisher error', JSON.stringify(referendum.error));
+        console.log('publisher error', JSON.stringify(answer.error));
       else {
-        let list = '<ul>';
         console.log(answer);
-        answer.hierarchy.forEach(function(place) {
-          console.log(place.localname, place.osm_id);
-          if (answer.osm_type === 'R' && place.class === 'boundary' && place.type === 'administrative')
-            list += '<li><a href="/participants.html?fingerprint=' + fingerprint + '&osm_id=' + place.osm_id + '">' +
-            place.localname + '</a></li>';
+        answer.citizens.forEach(function(citizen) {
+          console.log(citizen);
         });
-        list += '</ul>';
-        document.getElementById('content').innerHTML = list;
       }
     }
   };
-  xhttp.open('GET',
-    `https://nominatim.openstreetmap.org/details.php?osmtype=R&osmid=${osm_id}&class=boundary&hierarchy=1&format=json`,
-    true);
+  xhttp.open('GET', `//participants.php?osm_id=${osm_id}&fingerprint=${fingerprint}`, true);
   xhttp.send();
 };
