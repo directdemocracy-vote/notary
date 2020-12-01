@@ -76,22 +76,16 @@ window.onload = function() {
     popupAnchor: [1, -34],
     shadowSize: [41, 41]
   });
-  let marker = L.marker([latitude, longitude]).addTo(map).on('click', onMarkerClick);
+  let marker = L.marker([latitude, longitude]).addTo(map);
   map.on('click', onMapClick);
   map.on('contextmenu', function(event) {
     return false;
   });
-  updatePosition();
-
-  function onMarkerClick(e) {
-    updateLabel();
-  }
 
   function onMapClick(e) {
     marker.setLatLng(e.latlng);
     latitude = e.latlng.lat;
     longitude = e.latlng.lng;
-    updateLabel();
     updatePosition();
   }
 
