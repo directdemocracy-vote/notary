@@ -46,7 +46,7 @@ window.onload = function() {
       let geometry = answer.geometry;
       let participation = {
         fingerprint: fingerprint,
-        polygon: answer.geometry.coordinates
+        polygons: answer.geometry.coordinates
       };
       /*
       let coords = answer.geometry.coordinates[0];
