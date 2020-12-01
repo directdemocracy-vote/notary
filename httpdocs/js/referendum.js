@@ -31,7 +31,6 @@ window.onload = function() {
   let geolocation = false;
   let latitude = 0;
   let longitude = 0;
-  let range = 500;
   let address = '';
   let markers = [];
   if (navigator.geolocation) navigator.geolocation.getCurrentPosition(getGeolocationPosition);
@@ -78,17 +77,7 @@ window.onload = function() {
     shadowSize: [41, 41]
   });
   let marker = L.marker([latitude, longitude]).addTo(map).bindPopup(latitude + ',' + longitude).on('click', onMarkerClick);
-  let circle = L.circle([latitude, longitude], {
-    color: 'red',
-    opacity: 0.4,
-    fillColor: '#f03',
-    fillOpacity: 0.2,
-    radius: range
-  }).addTo(map);
-  marker.setPopupContent('<div style="text-align:center" id="address">' + address + '</div>' +
-    '<div><input type="range" min="5" max="100" value="10" class="slider" id="range" oninput="rangeChanged(this)"></div>' +
-    '<div style="text-align:center;color:#999" id="position">(' + latitude + ', ' + longitude + ') &plusmn; ' + Math.round(
-      range / 100) / 10 + ' km</div></center>').openPopup();
+  marker.setPopupContent('<div style="text-align:center" id="address">' + address + '</div>').openPopup();
   map.on('click', onMapClick);
   map.on('contextmenu', function(event) {
     return false;
@@ -101,22 +90,14 @@ window.onload = function() {
 
   function onMapClick(e) {
     marker.setLatLng(e.latlng).openPopup();
-    circle.setLatLng(e.latlng);
     latitude = e.latlng.lat;
     longitude = e.latlng.lng;
     updateLabel();
     updatePosition();
   }
 
-  function rangeChanged(r) {
-    range = r.value * r.value * r.value;
-    circle.setRadius(range);
-    updateLabel();
-  }
-
   function updatePosition() {
     marker.setLatLng([latitude, longitude]);
-    circle.setLatLng([latitude, longitude]);
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -132,8 +113,6 @@ window.onload = function() {
 
   function updateLabel() {
     document.getElementById("address").innerHTML = address;
-    document.getElementById("position").innerHTML = '(' + latitude + ', ' + longitude + ') &plusmn; ' + Math.round(range /
-      100) / 10 + ' km';
   }
 
   function search() {
@@ -158,7 +137,7 @@ window.onload = function() {
         });
       }
     };
-    let parameters = "latitude=" + latitude + "&longitude=" + longitude + "&range=" + range;
+    let parameters = "latitude=" + latitude + "&longitude=" + longitude;
     if (familyName) parameters += "&familyName=" + encodeURI(familyName);
     if (givenNames) parameters += "&givenNames=" + encodeURI(givenNames);
     xhttp.open("GET", "https://publisher.directdemocracy.vote/search.php?" + parameters, true);
