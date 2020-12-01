@@ -104,6 +104,7 @@ window.onload = function() {
         address = a.display_name;
         console.log(a);
         document.getElementById("address").href = '/participants.html?fingerprint=' + fingerprint + '&osm_id=' + a.osm_id;
+        document.getElementById("address").innerHTML = address;
       }
     };
     xhttp.open('GET', 'https://nominatim.openstreetmap.org/reverse.php?format=json&lat=' + latitude + '&lon=' + longitude +
