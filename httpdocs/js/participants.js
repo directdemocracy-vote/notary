@@ -63,8 +63,8 @@ window.onload = function() {
           }
         }
       };
-      xhttp.open('POST', '/participants.php', true);
-      xhttp.send(JSON.stringify(data));
+      // xhttp.open('POST', '/participants.php', true);
+      // xhttp.send(JSON.stringify(data));
     }
   };
   xhttp.open('GET', polygon_url);
