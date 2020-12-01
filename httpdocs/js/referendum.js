@@ -113,6 +113,7 @@ window.onload = function() {
 
   function updateLabel() {
     document.getElementById("address").innerHTML = address;
+    document.getElementById("municipality").innerHTML = address;
   }
 
   function search() {
