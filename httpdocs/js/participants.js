@@ -44,9 +44,15 @@ window.onload = function() {
       let answer = JSON.parse(this.responseText);
       console.log(answer);
       let geometry = answer.geometry;
+      let polygons;
+      let type = geometry.type.toLowerCase();
+      if (type === 'polygon')
+        polygons = [geometry.coordinates];
+      else if (type === 'multipolygon')
+        polygons = geometry.coordinates;
       let participation = {
         fingerprint: fingerprint,
-        polygons: answer.geometry.coordinates
+        polygons: polygons
       };
       /*
       let coords = answer.geometry.coordinates[0];

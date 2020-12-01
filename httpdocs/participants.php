@@ -36,7 +36,6 @@ foreach($participation->polygons as $polygon1) {
     $polygons .= '(';
     $t2 = true;
     $t3 = false;
-    die(json_encode($polygon2));
     foreach($polygon2 as $coordinates) {
       if ($t3)
         $polygons .= ', ';
