@@ -31,8 +31,6 @@ window.onload = function() {
   let geolocation = false;
   let latitude = 0;
   let longitude = 0;
-  let address = '';
-  let markers = [];
   if (navigator.geolocation) navigator.geolocation.getCurrentPosition(getGeolocationPosition);
 
   let xhttp = new XMLHttpRequest();
@@ -95,19 +93,14 @@ window.onload = function() {
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         a = JSON.parse(this.responseText);
-        address = a.display_name;
-        console.log(a);
-        document.getElementById("address").href = '/participants.html?fingerprint=' + fingerprint + '&osm_id=' + a.osm_id;
-        document.getElementById("address").innerHTML = address;
+        document.getElementById("address").href = '/participants.html?fingerprint=' + fingerprint + '&osm_id=' + a.osm_id +
+          '&address=' + encodeURI(a.display_name);
+        document.getElementById("address").innerHTML = a.display_name;
       }
     };
     xhttp.open('GET', 'https://nominatim.openstreetmap.org/reverse.php?format=json&lat=' + latitude + '&lon=' + longitude +
       '&zoom=10', true);
     xhttp.send();
-  }
-
-  function updateLabel() {
-    document.getElementById("address").innerHTML = address;
   }
 
   xhttp = new XMLHttpRequest();
