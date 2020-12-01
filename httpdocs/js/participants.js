@@ -49,8 +49,8 @@ window.onload = function() {
         polygon: answer.geometry.coordinates
       };
       console.log(answer.geometry.coordinates);
-      answer.geometry.coordinates.forEach(function(coordinates) {
-        console.log(coordinates[0] + ', ' + coordinates[1]);
+      answer.geometry.coordinates.forEach(function(c) {
+        console.log(c[0] + ', ' + c[1]);
       });
       xhttp.onload = function() {
         if (this.status == 200) {
