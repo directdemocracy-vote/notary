@@ -49,6 +49,7 @@ window.onload = function() {
         polygon: answer.geometry.coordinates
       };
       console.log(answer.geometry.coordinates);
+      console.log(answer.geometry.coordinates.length);
       for (let i = 0; i < answer.geometry.coordinates.length; i++) {
         console.log(answer.geometry.coordinates[i][0] + ', ' + answer.geometry.coordinates[i][1]);
       }
