@@ -55,6 +55,8 @@ window.onload = function() {
             console.log('publisher error', JSON.stringify(answer.error));
           else {
             console.log(answer);
+            console.log(answer.geometry);
+            console.log(answer.geometry.type);
             answer.geometry.coordinates.forEach(function(coordinates) {
               console.log(coordinates[0] + ', ' + coordinates[1]);
             });
