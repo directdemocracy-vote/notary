@@ -28,7 +28,7 @@ if ($mysqli->connect_errno)
   error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
 $mysqli->set_charset('utf8mb4');
 
-$osm_id = get_float_parameter('osm_id');
+$osm_id = get_int_parameter('osm_id');
 $fingerprint = get_string_parameter('fingerprint');
 
 $query = "SELECT id, familyName, givenNames, picture, ST_Y(home) AS latitude, ST_X(home) AS longitude";
