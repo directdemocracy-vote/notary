@@ -27,11 +27,11 @@ window.onload = function() {
         console.log('publisher error', JSON.stringify(referendum.error));
       else {
         let list = '<ul>';
+        console.log(answer);
         answer.hierarchy.forEach(function(place) {
-          if (answer.osm_type === 'R' && place.class === 'boundary' && place.type === 'administrative') {
-            console.log(place.localname, place.osm_id);
+          console.log(place.localname, place.osm_id);
+          if (answer.osm_type === 'R' && place.class === 'boundary' && place.type === 'administrative')
             list += '<li><a href="/participants.html?fingerprint=' + fingerprint + '&osm_id=' + place.osm_id + '">' + place.localname + '</a></li>';
-          }
         });
         list += '</ul>';
         document.getElementById('content').innerHTML = list;
