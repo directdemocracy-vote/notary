@@ -33,23 +33,38 @@ window.onload = function() {
   let h2 = document.createElement('h2');
   content.appendChild(h2);
   h2.innerHTML = title;
-  let h3 = document.createElement('h3');
-  content.appendChild(h3);
-  h3.innerHTML = address;
+  let h4 = document.createElement('h4');
+  content.appendChild(h4);
+  h4.innerHTML = address;
   let xhttp = new XMLHttpRequest();
+  const polygon_url = 'https://nominatim.openstreetmap.org/details.php?osmtype=R&osmid=' + osm_id +
+    '&class=boundary&addressdetails=1&hierarchy=0&group_hierarchy=1&polygon_geojson=1&format=json';
   xhttp.onload = function() {
     if (this.status == 200) {
       let answer = JSON.parse(this.responseText);
-      if (answer.error)
-        console.log('publisher error', JSON.stringify(answer.error));
-      else {
-        console.log(answer);
-        answer.citizens.forEach(function(citizen) {
-          console.log(citizen);
-        });
-      }
+      console.log(answer);
+      let geometry = answer.geometry;
+      let data = {
+        fingerprint: fingerprint,
+        polygon: answer.geometry.coordinates
+      };
+      xhttp.onload = function() {
+        if (this.status == 200) {
+          let answer = JSON.parse(this.responseText);
+          if (answer.error)
+            console.log('publisher error', JSON.stringify(answer.error));
+          else {
+            console.log(answer);
+            answer.citizens.forEach(function(citizen) {
+              console.log(citizen);
+            });
+          }
+        }
+      };
+      xhttp.open('POST', '//participants.php', true);
+      xhttp.send(JSON.stringify(data));
     }
   };
-  xhttp.open('GET', `//participants.php?osm_id=${osm_id}&fingerprint=${fingerprint}`, true);
+  xhttp.open('GET', poylgon_url);
   xhttp.send();
 };
