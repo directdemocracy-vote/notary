@@ -146,7 +146,8 @@ window.onload = function() {
           area_url = 'https://en.wikipedia.org/wiki/European_Union';
         else {
           area_url = 'https://nominatim.openstreetmap.org/search.php?' + area_query + '&polygon_geojson=1';
-          population_url = 'https://nominatim.openstreetmap.org/search.php?' + area_query + '&format=json&extratags=1';
+          population_url = 'https://nominatim.openstreetmap.org/search.php?' + area_query +
+            '&polygon_geojson=1&format=json&extratags=1';
           let xhttp = new XMLHttpRequest();
           xhttp.onload = function() {
             let population = document.getElementById('population');
@@ -160,6 +161,10 @@ window.onload = function() {
                     population.innerHTML = `<a target="_blank" href="${url}">${response.extratags.population}</a>`;
                   else
                     population.innerHTML = `<a target="_blank" href="${url}">N/A</a>`;
+                  if (response.hasOwnProperty('geojson')) {
+                    console.log(response.geojson);
+                    L.geoJSON(response.geojson).addTo(map);
+                  }
                 } else population.innerHTML = '?';
               } else
                 population.innerHTML = '?';
