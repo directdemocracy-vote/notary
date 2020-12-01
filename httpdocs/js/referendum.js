@@ -31,6 +31,7 @@ window.onload = function() {
   let geolocation = false;
   let latitude = 0;
   let longitude = 0;
+  let referendum = null;
   if (navigator.geolocation) navigator.geolocation.getCurrentPosition(getGeolocationPosition);
 
   let xhttp = new XMLHttpRequest();
@@ -94,7 +95,7 @@ window.onload = function() {
       if (this.readyState == 4 && this.status == 200) {
         a = JSON.parse(this.responseText);
         document.getElementById("address").href = '/participants.html?fingerprint=' + fingerprint + '&osm_id=' + a.osm_id +
-          '&address=' + encodeURI(a.display_name);
+          '&address=' + encodeURI(a.display_name) + '&title=' + encodeURI(referendum.title);
         document.getElementById("address").innerHTML = a.display_name;
       }
     };
@@ -106,7 +107,7 @@ window.onload = function() {
   xhttp = new XMLHttpRequest();
   xhttp.onload = function() {
     if (this.status == 200) {
-      let referendum = JSON.parse(this.responseText);
+      referendum = JSON.parse(this.responseText);
       if (referendum.error)
         console.log('publisher error', JSON.stringify(referendum.error));
       else {
