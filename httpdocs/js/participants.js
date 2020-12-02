@@ -77,6 +77,7 @@ window.onload = function() {
               let card = document.createElement('div');
               content.appendChild(card);
               card.classList.add('card');
+              card.style.marginTop = '10px';
               let clearfix = document.createElement('clearfix');
               card.appendChild(clearfix);
               let img = document.createElement('img');
