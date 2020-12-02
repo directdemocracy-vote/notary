@@ -37,54 +37,6 @@ function get_type($schema) {
   return substr($schema, $p + 1, strlen($schema) - $p - 13);  # remove the .schema.json suffix
 }
 
-function delete_citizen($mysqli, $key) {
-  $query = "SELECT id FROM publication WHERE `key`=\"$key\" AND `schema` LIKE '%citizen.schema.json'";
-  $result = $mysqli->query($query) or error($mysqli->error);
-  while ($p = $result->fetch_assoc()) {  # there should be only one
-    $mysqli->query("DELETE FROM publication WHERE id=$p[id]") or error($mysqli->error);
-    $mysqli->query("DELETE FROM citizen WHERE id=$p[id]") or error($mysqli->error);
-  }
-  $result->free();
-  # delete any endorsement of the deleted citizen card
-  $query = "SELECT id FROM endorsement WHERE publicationKey=\"$key\"";
-  $result = $mysqli->query($query) or error($mysqli->error);
-  while ($p = $result->fetch_assoc()) {
-    $mysqli->query("DELETE FROM publication WHERE id=$p[id]") or error($mysqli->error);
-    $mysqli->query("DELETE FROM endorsement WHERE id=$p[id]") or error($mysqli->error);
-  }
-  $result->free();
-}
-
-function delete_older_endorsements($mysqli, $key, $published, $endorsedKey, $endorsedSignature) {
-  $query = "DELETE p, e FROM publication p JOIN endorsement e ON e.id = p.id WHERE p.`key` = \"$key\" "
-          ."AND p.published < $published AND e.publicationKey = \"$endorsedKey\" "
-          ."AND e.publicationSignature = \"$endorsedSignature\"";
-  $mysqli->query($query) or error($mysqli->error);
-}
-
-function delete_publication($mysqli, $key, $signature) {
-  $query = "SELECT id, `schema` FROM publication WHERE `key`=\"$key\" AND signature=\"$signature\"";
-  $result = $mysqli->query($query) or error($mysqli->error);
-  $p = $result->fetch_assoc();
-  if ($p) {
-    $mysqli->query("DELETE FROM publication WHERE id=$p[id]") or error($mysqli->error);
-    $type = get_type($p['schema']);
-    $mysqli->query("DELETE FROM $type WHERE id=$p[id]") or error($mysqli->error);
-  }
-  $result->free();
-}
-
-function delete_all_publications($mysqli, $key) {
-  $query = "SELECT id, `schema` FROM publication WHERE `key`=\"$key\"";
-  $result = $mysqli->query($query) or error($mysqli->error);
-  while($p = $result->fetch_assoc()) {
-    $mysqli->query("DELETE FROM publication WHERE id=$p[id]") or error($mysqli->error);
-    $type = get_type($p['schema']);
-    $mysqli->query("DELETE FROM $type WHERE id=$p[id]") or error($mysqli->error);
-  }
-  $result->free();
-}
-
 function public_key($key) {
   $public_key = "-----BEGIN PUBLIC KEY-----\n";
   $l = strlen($key);
@@ -182,9 +134,7 @@ $mysqli = new mysqli($database_host, $database_username, $database_password, $da
 if ($mysqli->connect_errno)
   error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
 $mysqli->set_charset('utf8mb4');
-if ($type == 'citizen')  # delete any previous citizen card with same key to replace it
-  delete_citizen($mysqli, $citizen->key);
-elseif ($type == 'endorsement') {
+if ($type == 'endorsement') {
   $endorsement = &$publication;
   if (!property_exists($endorsement, 'revoke'))
     $endorsement->revoke = false;
@@ -194,18 +144,12 @@ elseif ($type == 'endorsement') {
     error("Empty key");
   if ($signature == '')
     error("Empty signature");
-  delete_older_endorsements($mysqli, $endorsement->key, $endorsement->published, $key, $signature);
   if ($endorsement->revoke && $endorsement->key == $key) {  # revoking my own stuff
     $query = "SELECT id, `schema` FROM publication WHERE `key`=\"$key\" AND signature=\"$signature\"";
     $result = $mysqli->query($query) or error($mysqli->error);
     $p = $result->fetch_assoc();
-    if ($p) {
+    if ($p)
       $t = get_type($p['schema']);
-      if ($t === 'citizen')  # revoking my private key
-        delete_all_publications($mysqli, $key);
-      else  # revoking only one publication
-        delete_publication($mysqli, $key, $signature);
-    }
     $result->free();
   }
 }
