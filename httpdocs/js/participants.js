@@ -88,6 +88,7 @@ window.onload = function() {
               img.src = answer[i].picture;
               img.alt = answer[i].familyName + ' ' + answer[i].givenNames;
               let title = document.createElement('h5');
+              title.style.marginTop = '5px';
               clearfix.appendChild(title);
               title.classList.add('card-title');
               title.innerHTML = answer[i].familyName + ' ' + answer[i].givenNames;
