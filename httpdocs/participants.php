@@ -48,7 +48,8 @@ foreach($participation->polygons as $polygon1) {
 }
 $polygons .= ')")';
 
-$query = "SELECT id FROM publication WHERE fingerprint=\"$fingerprint\" LEFT JOIN referendum ON referendum.id=publication.id";
+$query = "SELECT referendum.id FROM referendum LEFT JOIN publication ON publication.id=referendum.id "
+        ."WHERE publication.fingerprint=\"$fingerprint\"";
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
 $referendum = $result->fetch_assoc();
 $referendum_id = $referendum['id'];
