@@ -74,22 +74,22 @@ window.onload = function() {
             console.log(answer);
             const n = answer.length;
             for (let i = 0; i < n; i++) {
-              let card = document.newElement('div');
+              let card = document.createElement('div');
               content.appendChild(card);
               card.classList.add('card');
-              let img = document.newElement('img');
+              let img = document.createElement('img');
               card.appendChild(img);
               img.classList.add('card-img-left');
               img.src = '';
               img.alt = answer[i].familyName + ' ' + answer[i].givenNames;
-              let body = document.newElement('div');
+              let body = document.createElement('div');
               card.appendChild(body);
               body.classList.add('card-body');
-              let title = document.newElement('h5');
+              let title = document.createElement('h5');
               body.appendChild(title);
               body.classList.add('card-title');
               title.innerHTML = answer[i].familyName + ' ' + answer[i].givenNames;
-              let text = document.newElement('p');
+              let text = document.createElement('p');
               body.appendChild(text);
               text.classList.add('card-text');
               text.innerHTML = "Hello";
