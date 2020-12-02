@@ -84,11 +84,11 @@ window.onload = function() {
               clearfix.appendChild(img);
               img.classList.add('float-left');
               img.style.width = '25%';
-              img.style.marginRight = '10px';
+              img.style.margin = '10px';
               img.src = answer[i].picture;
               img.alt = answer[i].familyName + ' ' + answer[i].givenNames;
               let title = document.createElement('h5');
-              title.style.marginTop = '5px';
+              title.style.marginTop = '15px';
               clearfix.appendChild(title);
               title.classList.add('card-title');
               title.innerHTML = answer[i].familyName + ' ' + answer[i].givenNames;
