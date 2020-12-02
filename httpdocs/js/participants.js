@@ -80,7 +80,7 @@ window.onload = function() {
               let img = document.createElement('img');
               card.appendChild(img);
               img.classList.add('card-img-left');
-              img.src = '';
+              img.src = answer[i].picture;
               img.alt = answer[i].familyName + ' ' + answer[i].givenNames;
               let body = document.createElement('div');
               card.appendChild(body);
@@ -92,7 +92,8 @@ window.onload = function() {
               let text = document.createElement('p');
               body.appendChild(text);
               text.classList.add('card-text');
-              text.innerHTML = "Hello";
+              text.innerHTML = "Created: " + new Date(answer[i].published).toISOString().slice(0, 10) + '<br>';
+              text.innerHTML = "Expires: " + new Date(answer[i].expires).toISOString().slice(0, 10);
             }
           }
         }
