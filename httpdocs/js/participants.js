@@ -78,6 +78,7 @@ window.onload = function() {
               content.appendChild(card);
               card.classList.add('card');
               let clearfix = document.createElement('clearfix');
+              card.appendChild(clearfix);
               let img = document.createElement('img');
               clearfix.appendChild(img);
               img.classList.add('float-left');
@@ -91,8 +92,8 @@ window.onload = function() {
               let text = document.createElement('p');
               clearfix.appendChild(text);
               text.classList.add('card-text');
-              text.innerHTML = "Created: " + new Date(answer[i].published).toISOString().slice(0, 10) + '<br>';
-              text.innerHTML = "Expires: " + new Date(answer[i].expires).toISOString().slice(0, 10);
+              text.innerHTML = "Created: " + new Date(answer[i].published).toISOString().slice(0, 10) + '<br>' +
+                "Expires: " + new Date(answer[i].expires).toISOString().slice(0, 10);
             }
           }
         }
