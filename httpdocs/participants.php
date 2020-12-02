@@ -48,16 +48,19 @@ foreach($participation->polygons as $polygon1) {
 }
 $polygons .= ')")';
 
-$query = "SELECT referendum.id FROM referendum LEFT JOIN publication ON publication.id=referendum.id "
+$query = "SELECT referendum.id, publication.`key` FROM referendum LEFT JOIN publication ON publication.id=referendum.id "
         ."WHERE publication.fingerprint=\"$fingerprint\"";
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
 $referendum = $result->fetch_assoc();
 $referendum_id = $referendum['id'];
+$referendum_key = $referendum['key'];
 
 # FIXME: add station
 $query = "SELECT citizen.id, citizen.familyName, citizen.givenNames, citizen.picture, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude FROM citizen "
-        ."LEFT JOIN registrations ON registrations.citizen=citizen.id AND registrations.referendum=$referendum_id "
+        ."citizen_publication.published, citizen_publication.expires "
+        ."LEFT JOIN publication AS citizen_publication ON citizen_publication.id=citizen.id "
+        ."LEFT JOIN registration ON registration.citizen=citizen.id AND registration.referendum=\"$referendum_key\" "
         ."WHERE CONTAINS($polygons, home)";
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
 $citizens = array();

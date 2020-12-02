@@ -82,7 +82,7 @@ window.onload = function() {
               let img = document.createElement('img');
               clearfix.appendChild(img);
               img.classList.add('float-left');
-              img.style.width = '100px';
+              img.style.width = '25%';
               img.style.marginRight = '10px';
               img.src = answer[i].picture;
               img.alt = answer[i].familyName + ' ' + answer[i].givenNames;
