@@ -57,7 +57,7 @@ $referendum_key = $referendum['key'];
 
 # FIXME: add station
 $query = "SELECT citizen.id, citizen.familyName, citizen.givenNames, citizen.picture, "
-        ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude "
+        ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude, "
         ."citizen_publication.published, citizen_publication.expires "
         ."FROM citizen "
         ."LEFT JOIN publication AS citizen_publication ON citizen_publication.id=citizen.id "
