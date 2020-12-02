@@ -62,7 +62,7 @@ $query = "SELECT citizen.id, citizen.familyName, citizen.givenNames, citizen.pic
         ."FROM citizen "
         ."LEFT JOIN publication AS citizen_publication ON citizen_publication.id=citizen.id "
         ; # ."LEFT JOIN registration ON registration.citizen=citizen.id AND registration.referendum=\"$referendum_key\" "
-        ; # ."WHERE CONTAINS($polygons, home)";
+        ."WHERE CONTAINS($polygons, home)";
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
 $citizens = array();
 while ($citizen = $result->fetch_assoc()) {
