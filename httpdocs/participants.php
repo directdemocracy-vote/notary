@@ -60,9 +60,9 @@ $query = "SELECT citizen.id, citizen.familyName, citizen.givenNames, citizen.pic
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude, "
         ."citizen_publication.published, citizen_publication.expires "
         ."FROM citizen "
-        ."LEFT JOIN publication AS citizen_publication ON citizen_publication.id=citizen.id "
-        ."LEFT JOIN registration ON registration.referendum=\"$referendum_key\" "
-        ."LEFT JOIN publication AS registration_publication ON registration_publication.`key`=citizen_publication.`key` "
+        ."INNER JOIN publication AS citizen_publication ON citizen_publication.id=citizen.id "
+        ."INNER JOIN registration ON registration.referendum=\"$referendum_key\" "
+        ."INNER JOIN publication AS registration_publication ON registration_publication.`key`=citizen_publication.`key` "
         ."WHERE CONTAINS($polygons, home) "
         ."ORDER BY familyName, givenNames";
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
