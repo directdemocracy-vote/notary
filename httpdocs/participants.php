@@ -56,6 +56,9 @@ $referendum_id = $referendum['id'];
 $referendum_key = $referendum['key'];
 
 # FIXME: add station
+
+# FIXME: was giving results with LEFT JOIN instead of INNER JOIN
+
 $query = "SELECT citizen.id, citizen.familyName, citizen.givenNames, citizen.picture, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude, "
         ."citizen_publication.published, citizen_publication.expires "
