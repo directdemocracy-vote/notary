@@ -96,7 +96,7 @@ window.onload = function() {
               clearfix.appendChild(text);
               text.classList.add('card-text');
               text.innerHTML = "Created: " + new Date(answer[i].published).toISOString().slice(0, 10) + '<br>' +
-                "Expires: " + new Date(answer[i].expires).toISOString().slice(0, 10);
+                "Expires: " + new Date(answer[i].expires).toISOString().slice(0, 10) + '<br>' + "Reputation: ";
             }
           }
         }
