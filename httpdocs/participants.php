@@ -57,8 +57,9 @@ $referendum_key = $referendum['key'];
 
 # FIXME: add station
 $query = "SELECT citizen.id, citizen.familyName, citizen.givenNames, citizen.picture, "
-        ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude FROM citizen "
+        ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude "
         ."citizen_publication.published, citizen_publication.expires "
+        ."FROM citizen "
         ."LEFT JOIN publication AS citizen_publication ON citizen_publication.id=citizen.id "
         ; # ."LEFT JOIN registration ON registration.citizen=citizen.id AND registration.referendum=\"$referendum_key\" "
         ; # ."WHERE CONTAINS($polygons, home)";
