@@ -42,10 +42,10 @@ window.onload = function() {
     button.setSelectionRange(0, 99999);
     document.execCommand("copy");
     message = document.getElementById('copy-message');
-    message.innerHTML = "Copied to clipboard!";
+    message.innerHTML = "Copied!";
     setTimeout(function() {
       message.innerHTML = '';
-    }, 5000);
+    }, 2000);
 
   });
   let geolocation = false;
