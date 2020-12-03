@@ -41,7 +41,12 @@ window.onload = function() {
     button.select();
     button.setSelectionRange(0, 99999);
     document.execCommand("copy");
-    console.log(copied, button.value);
+    message = document.getElementById('copy-message');
+    message.innerHTML = "Copied to clipboard!";
+    setTimeout(function() {
+      message.innerHTML = '';
+    }, 5000);
+
   });
   let geolocation = false;
   let latitude = 0;
