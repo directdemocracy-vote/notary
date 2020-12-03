@@ -40,12 +40,12 @@ window.onload = function() {
     padding: 0
   });
   document.getElementById('copy-button').addEventListener('click', function(event) {
-    let button = document.getElementById('fingerprint');
-    button.select();
-    button.setSelectionRange(0, 99999);
+    let input = document.getElementById('fingerprint');
+    input.select();
+    input.setSelectionRange(0, 99999);
     document.execCommand("copy");
-    button.setSelectionRange(0, 0);
-    button.blur();
+    input.setSelectionRange(0, 0);
+    input.blur();
     message = document.getElementById('copy-message');
     message.innerHTML = "copied!";
     setTimeout(function() {
