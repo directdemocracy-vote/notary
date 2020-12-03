@@ -42,6 +42,7 @@ window.onload = function() {
     button.setSelectionRange(0, 99999);
     document.execCommand("copy");
     button.setSelectionRange(0, 0);
+    button.blur();
     message = document.getElementById('copy-message');
     message.innerHTML = "Copied!";
     setTimeout(function() {
