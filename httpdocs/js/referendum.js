@@ -27,6 +27,18 @@ window.onload = function() {
     console.log('Missing fingerprint GET argument');
     return;
   }
+  document.getElementById('fingerprint').value = fingerprint;
+  let qrImage = document.getElementById('qr-code');
+  let qr = new QRious({
+    element: qrImage,
+    value: fingerprint,
+    level: 'M',
+    size,
+    padding: 0
+  });
+  document.getElementById('referendum-qr-code').style.width = '100%';
+  // document.getElementById('referendum-qr-code').style.height = size + 'px';
+
 
   let geolocation = false;
   let latitude = 0;
