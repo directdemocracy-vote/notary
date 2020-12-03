@@ -14,9 +14,9 @@ window.onload = function() {
     console.log('Missing fingerprint GET argument.');
     return;
   }
-  const osm_id = findGetParameter('osm_id');
-  if (!osm_id) {
-    console.log('Missing osm_id GET argument.');
+  const osmid = findGetParameter('osmid');
+  if (!osmid) {
+    console.log('Missing osmid GET argument.');
     return;
   }
   const title = findGetParameter('title');
@@ -35,9 +35,10 @@ window.onload = function() {
   h2.innerHTML = `<a href="/referendum.html?fingerprint=${fingerprint}">${title}</a>`;
   let h4 = document.createElement('h4');
   content.appendChild(h4);
-  h4.innerHTML = address;
+  h4.innerHTML =
+    `<a href="https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=${osmid}" target="_blank">${address}</a>`;
   let xhttp = new XMLHttpRequest();
-  const polygon_url = 'https://nominatim.openstreetmap.org/details.php?osmtype=R&osmid=' + osm_id +
+  const polygon_url = 'https://nominatim.openstreetmap.org/details.php?osmtype=R&osmid=' + osmid +
     '&class=boundary&addressdetails=1&hierarchy=0&group_hierarchy=1&polygon_geojson=1&format=json';
   xhttp.onload = function() {
     if (this.status == 200) {

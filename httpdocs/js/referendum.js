@@ -94,7 +94,7 @@ window.onload = function() {
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         a = JSON.parse(this.responseText);
-        document.getElementById("address").href = '/participants.html?fingerprint=' + fingerprint + '&osm_id=' + a.osm_id +
+        document.getElementById("address").href = '/participants.html?fingerprint=' + fingerprint + '&osmid=' + a.osm_id +
           '&address=' + encodeURI(a.display_name) + '&title=' + encodeURI(referendum.title);
         document.getElementById("address").innerHTML = a.display_name;
       }
@@ -225,7 +225,7 @@ window.onload = function() {
             else {
               console.log(answer[0].osm_id);
               document.getElementById('participation').innerHTML =
-                `<a href="participants.html?fingerprint=${fingerprint}&osm_id=${answer[0].osm_id}">${referendum.participation}</a>`;
+                `<a href="participants.html?fingerprint=${fingerprint}&osmid=${answer[0].osm_id}">${referendum.participation}</a>`;
             }
           }
         };
