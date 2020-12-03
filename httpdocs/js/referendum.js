@@ -37,10 +37,11 @@ window.onload = function() {
     padding: 0
   });
   document.getElementById('copy-button').addEventListener('click', function(event) {
-    event.target.select();
-    event.target.setSelectionRange(0, 99999);
+    let button = document.getElementById('fingerprint');
+    button.select();
+    button.setSelectionRange(0, 99999);
     document.execCommand("copy");
-    console.log(copied, event.target.value);
+    console.log(copied, button.value);
   });
   let geolocation = false;
   let latitude = 0;
