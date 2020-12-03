@@ -28,7 +28,7 @@ window.onload = function() {
     return;
   }
   document.getElementById('fingerprint').value = fingerprint;
-  const rectangle = document.getElementById('fingerprint').getBoundingClientRect();
+  const rectangle = document.getElementById('fingerprint-group').getBoundingClientRect();
   const size = rectangle.right - rectangle.left;
   let qrImage = document.getElementById('qr-code');
   let qr = new QRious({
