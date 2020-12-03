@@ -29,11 +29,14 @@ window.onload = function() {
   }
   document.getElementById('fingerprint').value = fingerprint;
   const rectangle = document.getElementById('fingerprint-group').getBoundingClientRect();
+  let size = rectangle.right - rectangle.left;
+  if (size > 512)
+    size = 512;
   let qr = new QRious({
     element: document.getElementById('qr-code'),
     value: fingerprint,
     level: 'M',
-    size: rectangle.right - rectangle.left,
+    size,
     padding: 0
   });
   document.getElementById('copy-button').addEventListener('click', function(event) {
@@ -48,7 +51,6 @@ window.onload = function() {
     setTimeout(function() {
       message.innerHTML = '';
     }, 1000);
-
   });
   let geolocation = false;
   let latitude = 0;
