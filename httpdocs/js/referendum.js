@@ -44,10 +44,10 @@ window.onload = function() {
     button.setSelectionRange(0, 0);
     button.blur();
     message = document.getElementById('copy-message');
-    message.innerHTML = "Copied!";
+    message.innerHTML = "copied!";
     setTimeout(function() {
       message.innerHTML = '';
-    }, 2000);
+    }, 1000);
 
   });
   let geolocation = false;
