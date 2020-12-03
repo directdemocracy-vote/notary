@@ -33,7 +33,7 @@ window.onload = function() {
     element: qrImage,
     value: fingerprint,
     level: 'M',
-    size: '100%',
+    size: 300,
     padding: 0
   });
   // document.getElementById('qr-code').style.width = '100%';
