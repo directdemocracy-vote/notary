@@ -32,7 +32,7 @@ window.onload = function() {
   let content = document.getElementById('content');
   let h2 = document.createElement('h2');
   content.appendChild(h2);
-  h2.innerHTML = title;
+  h2.innerHTML = `<a href="/referendum.html?fingerprint=${fingerprint}">title</a>`;
   let h4 = document.createElement('h4');
   content.appendChild(h4);
   h4.innerHTML = address;
