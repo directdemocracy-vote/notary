@@ -33,7 +33,7 @@ window.onload = function() {
     element: qrImage,
     value: fingerprint,
     level: 'M',
-    size,
+    size: '100%',
     padding: 0
   });
   document.getElementById('referendum-qr-code').style.width = '100%';
