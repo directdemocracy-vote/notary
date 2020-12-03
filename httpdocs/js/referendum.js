@@ -223,7 +223,6 @@ window.onload = function() {
             if (answer.error)
               console.log('nominatis error', JSON.stringify(referendum.error));
             else {
-              console.log(answer[0].osm_id);
               document.getElementById('participation').innerHTML =
                 `<a href="participants.html?fingerprint=${fingerprint}&osmid=${answer[0].osm_id}">${referendum.participation}</a>`;
             }
