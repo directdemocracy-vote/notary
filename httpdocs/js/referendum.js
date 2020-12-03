@@ -36,7 +36,7 @@ window.onload = function() {
     size: '100%',
     padding: 0
   });
-  document.getElementById('referendum-qr-code').style.width = '100%';
+  // document.getElementById('qr-code').style.width = '100%';
   // document.getElementById('referendum-qr-code').style.height = size + 'px';
 
 
