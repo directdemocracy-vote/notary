@@ -29,17 +29,19 @@ window.onload = function() {
   }
   document.getElementById('fingerprint').value = fingerprint;
   const rectangle = document.getElementById('fingerprint-group').getBoundingClientRect();
-  const size = rectangle.right - rectangle.left;
-  let qrImage = document.getElementById('qr-code');
   let qr = new QRious({
-    element: qrImage,
+    element: document.getElementById('qr-code'),
     value: fingerprint,
     level: 'M',
-    size,
+    size: rectangle.right - rectangle.left,
     padding: 0
   });
-
-
+  document.getElementById('copy-button').addEventListener('click', function(event) {
+    event.target.select();
+    event.target.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    console.log(copied, event.target.value);
+  });
   let geolocation = false;
   let latitude = 0;
   let longitude = 0;
