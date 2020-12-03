@@ -28,16 +28,16 @@ window.onload = function() {
     return;
   }
   document.getElementById('fingerprint').value = fingerprint;
+  const rectangle = document.getElementById('fingerprint').getBoundingClientRect();
+  const size = rectangle.right - rectangle.left;
   let qrImage = document.getElementById('qr-code');
   let qr = new QRious({
     element: qrImage,
     value: fingerprint,
     level: 'M',
-    size: 300,
+    size,
     padding: 0
   });
-  // document.getElementById('qr-code').style.width = '100%';
-  // document.getElementById('referendum-qr-code').style.height = size + 'px';
 
 
   let geolocation = false;
