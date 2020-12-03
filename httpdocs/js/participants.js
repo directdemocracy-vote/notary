@@ -43,7 +43,6 @@ window.onload = function() {
   xhttp.onload = function() {
     if (this.status == 200) {
       let answer = JSON.parse(this.responseText);
-      console.log(answer);
       let geometry = answer.geometry;
       let polygons;
       let type = geometry.type.toLowerCase();
@@ -55,50 +54,43 @@ window.onload = function() {
         fingerprint: fingerprint,
         polygons: polygons
       };
-      /*
-      let coords = answer.geometry.coordinates[0];
-      console.log(coords);
-      console.log(coords.length);
-      for (let i = 0; i < coords.length; i++) {
-        console.log(coords[i][0] + ', ' + coords[i][1]);
-      }
-      coords.forEach(function(c) {
-        console.log(c[0] + ', ' + c[1]);
-      });
-      */
       xhttp.onload = function() {
         if (this.status == 200) {
           let answer = JSON.parse(this.responseText);
           if (answer.error)
             console.log('publisher error', JSON.stringify(answer.error));
           else {
-            console.log(answer);
             const n = answer.length;
-            for (let i = 0; i < n; i++) {
-              let card = document.createElement('div');
-              content.appendChild(card);
-              card.classList.add('card');
-              card.style.marginTop = '10px';
-              let clearfix = document.createElement('clearfix');
-              card.appendChild(clearfix);
-              let img = document.createElement('img');
-              clearfix.appendChild(img);
-              img.classList.add('float-left');
-              img.style.width = '25%';
-              img.style.margin = '10px';
-              img.src = answer[i].picture;
-              img.alt = answer[i].familyName + ' ' + answer[i].givenNames;
+            if (n === 0) {
               let title = document.createElement('h5');
-              title.style.marginTop = '15px';
-              clearfix.appendChild(title);
-              title.classList.add('card-title');
-              title.innerHTML = answer[i].familyName + ' ' + answer[i].givenNames;
-              let text = document.createElement('p');
-              clearfix.appendChild(text);
-              text.classList.add('card-text');
-              text.innerHTML = "Created: " + new Date(answer[i].published).toISOString().slice(0, 10) + '<br>' +
-                "Expires: " + new Date(answer[i].expires).toISOString().slice(0, 10) + '<br>' + "Reputation: ";
-            }
+              content.appendChild(title);
+              title.innerHTML = "No participants for this referendum in this area.";
+            } else
+              for (let i = 0; i < n; i++) {
+                let card = document.createElement('div');
+                content.appendChild(card);
+                card.classList.add('card');
+                card.style.marginTop = '10px';
+                let clearfix = document.createElement('clearfix');
+                card.appendChild(clearfix);
+                let img = document.createElement('img');
+                clearfix.appendChild(img);
+                img.classList.add('float-left');
+                img.style.width = '25%';
+                img.style.margin = '10px';
+                img.src = answer[i].picture;
+                img.alt = answer[i].familyName + ' ' + answer[i].givenNames;
+                let title = document.createElement('h5');
+                title.style.marginTop = '15px';
+                clearfix.appendChild(title);
+                title.classList.add('card-title');
+                title.innerHTML = answer[i].familyName + ' ' + answer[i].givenNames;
+                let text = document.createElement('p');
+                clearfix.appendChild(text);
+                text.classList.add('card-text');
+                text.innerHTML = "Created: " + new Date(answer[i].published).toISOString().slice(0, 10) + '<br>' +
+                  "Expires: " + new Date(answer[i].expires).toISOString().slice(0, 10) + '<br>' + "Reputation: ";
+              }
           }
         }
       };
