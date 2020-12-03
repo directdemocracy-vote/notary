@@ -62,9 +62,9 @@ window.onload = function() {
           else {
             const n = answer.length;
             if (n === 0) {
-              let title = document.createElement('h5');
+              let title = document.createElement('p');
               content.appendChild(title);
-              title.innerHTML = "No participants for this referendum in this area.";
+              title.innerHTML = "No participants here.";
             } else
               for (let i = 0; i < n; i++) {
                 let card = document.createElement('div');
