@@ -15,7 +15,7 @@ if ($mysqli->connect_errno)
   die("{\"error\":\"Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)\"}");
 $mysqli->set_charset('utf8mb4');
 $area = $mysqli->escape_string($_POST['area']);
-$fingerprint = $mysqli->escape_string($_POST['fingerprint'])
+$fingerprint = $mysqli->escape_string($_POST['fingerprint']);
 if (!$area)
   error("Unable to parse JSON post");
 
