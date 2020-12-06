@@ -43,7 +43,7 @@ if ($fingerprint) {
   $referendum = $result->fetch_assoc();
   $result->free();
   set_types($referendum);
-  $json = json_encode($referendum, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+  $json = json_encode($referendum, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } else {
   $referendums = array();
   $areas = explode("\\n", rtrim($area));
