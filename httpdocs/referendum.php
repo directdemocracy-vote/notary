@@ -14,10 +14,12 @@ $mysqli = new mysqli($database_host, $database_username, $database_password, $da
 if ($mysqli->connect_errno)
   die("{\"error\":\"Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)\"}");
 $mysqli->set_charset('utf8mb4');
-$area = $mysqli->escape_string($_POST['area']);
-$fingerprint = $mysqli->escape_string($_POST['fingerprint']);
-if (!$area)
+if isset($_POST['area'])
+  $area = $mysqli->escape_string($_POST['area']);
+else
   error("Unable to parse JSON post");
+if isset($_POST['fingerprint'])
+  $fingerprint = $mysqli->escape_string($_POST['fingerprint']);
 
 $query_base = "SELECT "
              ."publication.schema, publication.key, publication.signature, publication.published, publication.expires, "
@@ -36,7 +38,7 @@ function set_types(&$referendum) {
   settype($referendum['corpus'], 'int');
 }
 
-if ($fingerprint) {
+if (isset($fingerprint)) {
   $query = "$query_base WHERE publication.fingerprint = \"$fingerprint\" "
           ."AND RIGHT(\"$area\", CHAR_LENGTH(referendum.area)) = referendum.area";
   $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
