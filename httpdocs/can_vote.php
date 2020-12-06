@@ -21,7 +21,7 @@ if (!$citizen)
   die("Missing citizen argument.");
 
 $query = "SELECT trustee, area FROM referendum LEFT JOIN publication ON publication.id=referendum.id "
-        ."WHERE publication.`key`='$referendum'";
+        ."WHERE publication.`key`=\"$referendum\"";
 $result = $mysqli->query($query) or die($mysqli->error);
 $r = $result->fetch_assoc();
 $result->free();
@@ -32,7 +32,7 @@ $area = $r['area'];
 
 # check if citizen's home is inside the referendum area
 $query = "SELECT ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen "
-        ."LEFT JOIN publication ON publication.id=citizen.id WHERE publication.`key`='$citizen'";
+        ."LEFT JOIN publication ON publication.id=citizen.id WHERE publication.`key`=\"$citizen\"";
 $result = $mysqli->query($query) or die($mysqli->error);
 $citizen = $result->fetch_assoc();
 $result->free();
@@ -42,7 +42,7 @@ $latitude = $citizen['latitude'];
 $longitude = $citizen['longitude'];
 
 $query = "SELECT area.id FROM area LEFT JOIN publication ON publication.id=area.id "
-        ." WHERE publication.`key`='$trustee' AND area.name='$area'";
+        ." WHERE publication.`key`=\"$trustee\" AND area.name=\"$area\"";
 $result = $mysqli->query($query) or die($mysqli->error);
 $a = $result->fetch_assoc();
 $result->free();
@@ -59,7 +59,7 @@ if (!$a)
 
 # check if citizen is endorsed by trustee
 $query = "SELECT `revoke` FROM endorsement LEFT JOIN publication ON publication.id=endorsement.id "
-        ."WHERE publication.`key`='$trustee' AND endorsement.publicationKey='$citizen' "
+        ."WHERE publication.`key`=\"$trustee\" AND endorsement.publicationKey=\"$citizen\" "
         ."ORDER BY publication.published DESC LIMIT 1";
 $result = $mysqli->query($query) or die($mysqli->error);
 $endorsement = $result->fetch_assoc();
