@@ -54,7 +54,8 @@ if (isset($fingerprint)) {
     $area_name = $area;
     for($j = $i + 1; $j < $count; $j++)
       $area_name .= "\n" . $areas[$j];
-    $query = "$query_base WHERE referendum.area = \"$area_name\" ORDER BY participation DESC LIMIT 5";
+    $query = "$query_base WHERE referendum.area = \"$area_name\" AND referendum.deadline < (1000 * UNIX_TIMESTAMP()) "
+            ."ORDER BY participation DESC LIMIT 5";
     $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
     while ($referendum = $result->fetch_assoc()) {
       set_types($referendum);
