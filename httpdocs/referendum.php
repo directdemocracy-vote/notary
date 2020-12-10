@@ -20,6 +20,10 @@ else
   error("Unable to parse JSON post");
 if (isset($_POST['fingerprint']))
   $fingerprint = $mysqli->escape_string($_POST['fingerprint']);
+if (isset($_POST['fingerprints']))
+  $fingerprints = explode(',', $mysqli->escape_string($_POST['fingerprints']));
+else
+  $fingerprints = [];
 
 $query_base = "SELECT "
              ."publication.schema, publication.key, publication.signature, publication.published, publication.expires, "
@@ -48,6 +52,20 @@ if (isset($fingerprint)) {
   $json = json_encode($referendum, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } else {
   $referendums = array();
+  if ($fingerprints) {
+    $list = '(';
+    foreach($fingerprints as $fingerprint)
+      $list .= '"$fingerprint",';
+    $list = substr($list, 0, -1).')';
+    $query = "$query_base WHERE publication.fingerprint IN ($list) "
+            ."AND RIGHT(\"$area\", CHAR_LENGTH(referendum.area)) = referendum.area ";
+            ."ORDER BY participation";
+    $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
+    while ($referendum = $result->fetch_assoc()) {
+      set_types($referendum);
+      $referendums[] = $referendum;
+    }
+  }
   $areas = explode("\\n", rtrim($area));
   $count = count($areas);
   foreach($areas as $i => $area) {
@@ -63,6 +81,7 @@ if (isset($fingerprint)) {
     }
     $result->free();
   }
+  $result->free();
   $json = json_encode($referendums, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 }
 $mysqli->close();
