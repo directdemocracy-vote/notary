@@ -65,6 +65,7 @@ if (isset($fingerprint)) {
       set_types($referendum);
       $referendums[] = $referendum;
     }
+    $result->free();
   }
   $areas = explode("\\n", rtrim($area));
   $count = count($areas);
@@ -81,7 +82,6 @@ if (isset($fingerprint)) {
     }
     $result->free();
   }
-  $result->free();
   $json = json_encode($referendums, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 }
 $mysqli->close();
