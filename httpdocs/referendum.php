@@ -60,7 +60,7 @@ if (isset($fingerprint)) {
     $query = "$query_base WHERE publication.fingerprint IN ($list) "
             ."AND RIGHT(\"$area\", CHAR_LENGTH(referendum.area)) = referendum.area "
             ."ORDER BY participation";
-    $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
+    $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error $query\"}");
     while ($referendum = $result->fetch_assoc()) {
       set_types($referendum);
       $referendums[] = $referendum;
