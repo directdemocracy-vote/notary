@@ -61,13 +61,13 @@ if (isset($fingerprint)) {
             ."AND RIGHT(\"$area\", CHAR_LENGTH(referendum.area)) = referendum.area "
             ."ORDER BY participation";
     $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
+    die("{\"error\":\"$query\"");
     while ($referendum = $result->fetch_assoc()) {
       set_types($referendum);
       $referendums[] = $referendum;
     }
     $result->free();
   }
-  /*
   $areas = explode("\\n", rtrim($area));
   $count = count($areas);
   foreach($areas as $i => $area) {
@@ -85,7 +85,6 @@ if (isset($fingerprint)) {
     }
     $result->free();
   }
-  */
   $json = json_encode($referendums, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 }
 $mysqli->close();
