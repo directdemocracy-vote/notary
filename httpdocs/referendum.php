@@ -58,7 +58,7 @@ if (isset($fingerprint)) {
       $list .= '"$fingerprint",';
     $list = substr($list, 0, -1).')';
     $query = "$query_base WHERE publication.fingerprint IN ($list) "
-            ."AND RIGHT(\"$area\", CHAR_LENGTH(referendum.area)) = referendum.area ";
+            ."AND RIGHT(\"$area\", CHAR_LENGTH(referendum.area)) = referendum.area "
             ."ORDER BY participation";
     $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
     while ($referendum = $result->fetch_assoc()) {
