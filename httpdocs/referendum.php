@@ -60,21 +60,6 @@ if (isset($fingerprint)) {
     $query = "$query_base WHERE publication.fingerprint IN $list "
             ."AND RIGHT(\"$area\", CHAR_LENGTH(referendum.area)) = referendum.area "
             ."ORDER BY participation";
-    $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error $query\"}");
-    while ($referendum = $result->fetch_assoc()) {
-      set_types($referendum);
-      $referendums[] = $referendum;
-    }
-    $result->free();
-  }
-  $areas = explode("\\n", rtrim($area));
-  $count = count($areas);
-  foreach($areas as $i => $area) {
-    $area_name = $area;
-    for($j = $i + 1; $j < $count; $j++)
-      $area_name .= "\n" . $areas[$j];
-    $query = "$query_base WHERE referendum.area = \"$area_name\" AND referendum.deadline > (1000 * UNIX_TIMESTAMP()) "
-            ."ORDER BY participation DESC LIMIT 2";
     $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
     while ($referendum = $result->fetch_assoc()) {
       set_types($referendum);
@@ -82,6 +67,25 @@ if (isset($fingerprint)) {
     }
     $result->free();
   }
+  /*
+  $areas = explode("\\n", rtrim($area));
+  $count = count($areas);
+  foreach($areas as $i => $area) {
+    $area_name = $area;
+    for($j = $i + 1; $j < $count; $j++)
+      $area_name .= "\n" . $areas[$j];
+    $query = "$query_base WHERE referendum.area = \"$area_name\" AND referendum.deadline > (1000 * UNIX_TIMESTAMP()) ";
+    if ($fingerprints)
+      $query.= "AND publication.fingerprint NOT IN $list ";
+    $query.= "ORDER BY participation DESC LIMIT 2";
+    $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
+    while ($referendum = $result->fetch_assoc()) {
+      set_types($referendum);
+      $referendums[] = $referendum;
+    }
+    $result->free();
+  }
+  */
   $json = json_encode($referendums, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 }
 $mysqli->close();
