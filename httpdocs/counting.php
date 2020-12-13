@@ -95,9 +95,6 @@ if ($result) {
   }
 }
 
-# re-counting
-$mysqli->query("DELETE FROM participation WHERE referendum=$referendum_id");
-
 $query = "SELECT area.id FROM area LEFT JOIN publication on publication.id=area.id "
         ."WHERE name=\"$area\" AND publication.key=\"$trustee\"";
 $result = $mysqli->query($query) or error($mysqli->error);
