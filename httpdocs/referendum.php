@@ -64,7 +64,7 @@ if (isset($fingerprint)) {
     $area_name = $area;
     for($j = $i + 1; $j < $count; $j++)
       $area_name .= "\n" . $areas[$j];
-    if ($fingerprints) {
+    if ($fingerprints == 'raté') {
       $query = "$query_base WHERE publication.fingerprint IN $list AND referendum.area=\"$area_name\" ORDER BY participation";
       $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
       while ($referendum = $result->fetch_assoc()) {
