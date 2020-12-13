@@ -57,15 +57,6 @@ if (isset($fingerprint)) {
     foreach($fingerprints as $fingerprint)
       $list .= "\"$fingerprint\",";
     $list = substr($list, 0, -1).')';
-    $query = "$query_base WHERE publication.fingerprint IN $list "
-            ."AND RIGHT(\"$area\", CHAR_LENGTH(referendum.area)) = referendum.area "
-            ."ORDER BY participation";
-    $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
-    while ($referendum = $result->fetch_assoc()) {
-      set_types($referendum);
-      $referendums[] = $referendum;
-    }
-    $result->free();
   }
   $areas = explode("\\n", rtrim($area));
   $count = count($areas);
@@ -73,6 +64,15 @@ if (isset($fingerprint)) {
     $area_name = $area;
     for($j = $i + 1; $j < $count; $j++)
       $area_name .= "\n" . $areas[$j];
+    if ($fingerprints) {
+      $query = "$query_base WHERE publication.fingerprint IN $list AND referendum.area=\"$area_name\" ORDER BY participation";
+      $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
+      while ($referendum = $result->fetch_assoc()) {
+        set_types($referendum);
+        $referendums[] = $referendum;
+      }
+      $result->free();
+    }
     $query = "$query_base WHERE referendum.area = \"$area_name\" AND referendum.deadline > (1000 * UNIX_TIMESTAMP()) ";
     if ($fingerprints)
       $query.= "AND publication.fingerprint NOT IN $list ";
