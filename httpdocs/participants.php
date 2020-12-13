@@ -64,7 +64,7 @@ $query = "SELECT citizen.id, citizen.familyName, citizen.givenNames, citizen.pic
         ."citizen_publication.published, citizen_publication.expires "
         ."FROM citizen "
         ."LEFT JOIN publication AS citizen_publication ON citizen_publication.id=citizen.id "
-        ."LEFT JOIN registration ON registration.referendum=\"$referendum_key\" "
+        ."LEFT JOIN registration ON registration.`key`=citizen.`key` AND registration.referendum=\"$referendum_key\" "
         ."LEFT JOIN publication AS registration_publication ON registration_publication.`key`=citizen_publication.`key` "
         ."WHERE CONTAINS($polygons, home) "
         ."ORDER BY familyName, givenNames";
