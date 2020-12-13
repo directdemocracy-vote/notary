@@ -119,7 +119,7 @@ window.onload = function() {
       if (this.readyState == 4 && this.status == 200) {
         a = JSON.parse(this.responseText);
         document.getElementById("address").href = '/participants.html?fingerprint=' + fingerprint + '&osmid=' + a.osm_id +
-          '&address=' + encodeURI(a.display_name) + '&title=' + encodeURI(referendum.title);
+          '&address=' + encodeURIComponent(a.display_name) + '&title=' + encodeURIComponent(referendum.title);
         document.getElementById("address").innerHTML = a.display_name;
       }
     };
@@ -246,10 +246,8 @@ window.onload = function() {
             let answer = JSON.parse(this.responseText);
             if (answer.error)
               console.log('nominatis error', JSON.stringify(referendum.error));
-            else {
-              document.getElementById('participation').innerHTML =
-                `<a href="participants.html?fingerprint=${fingerprint}&osmid=${answer[0].osm_id}">${referendum.participation}</a>`;
-            }
+            else
+              document.getElementById('participation').innerHTML = referendum.participation;
           }
         };
         xhttp.open('GET', 'https://nominatim.openstreetmap.org/search?' + area_query + '&format=json');
