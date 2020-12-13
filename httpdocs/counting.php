@@ -45,7 +45,7 @@ $result->free();
 
 $trustee = $referendum['trustee'];
 $area = $referendum['area'];
-$referendum_id = $referendum['id'];
+$referendum_id = intval($referendum['id']);
 $referendum_key = $referendum['key'];
 
 $results = new stdClass();
@@ -229,7 +229,7 @@ $results->void = $results->registrations - $results->rejected - $total;
 
 $query = "UPDATE participation SET "
         ."registrations=$results->registrations, rejected=$results->rejected, void=$results->void, updated=NOW() "
-        ."WHERE referendum = $referendum_id";
+        ."WHERE referendum=$referendum_id";
 $mysqli->query($query) or error($mysqli->error);
 
 # delete the content of intermediary tables
