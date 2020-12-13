@@ -70,7 +70,6 @@ if (isset($fingerprint)) {
         $referendums[] = $referendum;
       }
       $result->free();
-      die($query);
     }
     $query = "$query_base WHERE referendum.area = \"$area_name\" AND referendum.deadline > (1000 * UNIX_TIMESTAMP()) ";
     if (isset($fingerprints))
