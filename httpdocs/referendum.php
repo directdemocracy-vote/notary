@@ -61,7 +61,6 @@ if (isset($fingerprint)) {
             ."AND RIGHT(\"$area\", CHAR_LENGTH(referendum.area)) = referendum.area "
             ."ORDER BY participation";
     $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
-    die("{\"error\":\"$query\"");
     while ($referendum = $result->fetch_assoc()) {
       set_types($referendum);
       $referendums[] = $referendum;
