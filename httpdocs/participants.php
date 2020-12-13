@@ -56,7 +56,7 @@ $referendum = $result->fetch_assoc();
 $referendum_id = $referendum['id'];
 $referendum_key = $referendum['key'];
 $referendum_trustee = $referendum['trustee'];
-$results->free();
+$result->free();
 
 # FIXME: add station
 
