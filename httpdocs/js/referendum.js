@@ -240,18 +240,6 @@ window.onload = function() {
           '<div>estimated population: <span id="population">&hellip;</span> &mdash; corpus: ' + referendum.corpus +
           ' &mdash; participation: <span id="participation">' + referendum.participation + '</span> (' + participation +
           ')</div>';
-        let xhttp = new XMLHttpRequest();
-        xhttp.onload = function() {
-          if (this.status == 200) {
-            let answer = JSON.parse(this.responseText);
-            if (answer.error)
-              console.log('nominatis error', JSON.stringify(referendum.error));
-            else
-              document.getElementById('participation').innerHTML = referendum.participation;
-          }
-        };
-        xhttp.open('GET', 'https://nominatim.openstreetmap.org/search?' + area_query + '&format=json');
-        xhttp.send();
       }
     }
   };
