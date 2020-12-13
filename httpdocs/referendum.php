@@ -22,8 +22,6 @@ if (isset($_POST['fingerprint']))
   $fingerprint = $mysqli->escape_string($_POST['fingerprint']);
 if (isset($_POST['fingerprints']))
   $fingerprints = explode(',', $mysqli->escape_string($_POST['fingerprints']));
-else
-  $fingerprints = [];
 
 $query_base = "SELECT "
              ."publication.schema, publication.key, publication.signature, publication.published, publication.expires, "
@@ -52,7 +50,7 @@ if (isset($fingerprint)) {
   $json = json_encode($referendum, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } else {
   $referendums = array();
-  if ($fingerprints) {
+  if (isset($fingerprints)) {
     $list = '(';
     foreach($fingerprints as $fingerprint)
       $list .= "\"$fingerprint\",";
@@ -64,7 +62,7 @@ if (isset($fingerprint)) {
     $area_name = $area;
     for($j = $i + 1; $j < $count; $j++)
       $area_name .= "\n" . $areas[$j];
-    if ($fingerprints == 'raté') {
+    if (isset($fingerprints)) {
       $query = "$query_base WHERE publication.fingerprint IN $list AND referendum.area=\"$area_name\" ORDER BY participation";
       $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
       while ($referendum = $result->fetch_assoc()) {
@@ -74,7 +72,7 @@ if (isset($fingerprint)) {
       $result->free();
     }
     $query = "$query_base WHERE referendum.area = \"$area_name\" AND referendum.deadline > (1000 * UNIX_TIMESTAMP()) ";
-    if ($fingerprints)
+    if (isset($fingerprints))
       $query.= "AND publication.fingerprint NOT IN $list ";
     $query.= "ORDER BY participation DESC LIMIT 2";
     $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
