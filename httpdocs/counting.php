@@ -110,6 +110,13 @@ $area_id = intval($area['id']);
 # create corpus, see https://github.com/directdemocracy-vote/doc/blob/master/voting.md#31-list-eligible-citizens
 # the corpus table should contain all citizen entitled to vote to referendum:
 # they must be endorsed by the trustee of the referendum and their home must be inside the area of the referendum
+
+
+# FIXME: move this down
+$mysqli->query("DELETE FROM stations WHERE referendum=$referendum_id");
+$mysqli->query("DELETE FROM registrations WHERE referendum=$referendum_id");
+
+
 $query = "INSERT INTO corpus(citizen, referendum) SELECT DISTINCT citizen.id, $referendum_id FROM "
         ."citizen "
         ."INNER JOIN publication AS citizen_p ON citizen_p.id=citizen.id "
@@ -161,8 +168,8 @@ $mysqli->query("DELETE FROM corpus WHERE referendum=$referendum_id");  # the cor
 $now = intval(microtime(true) * 1000);
 
 if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
-  $mysqli->query("DELETE FROM stations WHERE referendum=$referendum_id");
-  $mysqli->query("DELETE FROM registrations WHERE referendum=$referendum_id");
+  # $mysqli->query("DELETE FROM stations WHERE referendum=$referendum_id");
+  # $mysqli->query("DELETE FROM registrations WHERE referendum=$referendum_id");
   die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 }
 
