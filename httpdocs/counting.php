@@ -113,9 +113,9 @@ $area_id = intval($area['id']);
 
 
 # FIXME: move this down
+$mysqli->query("DELETE FROM corpus WHERE referendum=$referendum_id");
 $mysqli->query("DELETE FROM stations WHERE referendum=$referendum_id");
 $mysqli->query("DELETE FROM registrations WHERE referendum=$referendum_id");
-
 
 $query = "INSERT INTO corpus(citizen, referendum) SELECT DISTINCT citizen.id, $referendum_id FROM "
         ."citizen "
@@ -163,7 +163,7 @@ $mysqli->query($query) or error($mysqli->error);
 
 $results->updated = time();
 
-$mysqli->query("DELETE FROM corpus WHERE referendum=$referendum_id");  # the corpus table is not needed anymore after this point
+# $mysqli->query("DELETE FROM corpus WHERE referendum=$referendum_id");  # the corpus table is not needed anymore after this point
 
 $now = intval(microtime(true) * 1000);
 
