@@ -166,10 +166,15 @@ $mysqli->query($query) or error($mysqli->error);
 
 $results->updated = time();
 
+$mysqli->query("DELETE FROM corpus WHERE referendum=$referendum_id");  # the corpus table is not needed anymore after this point
+
 $now = intval(microtime(true) * 1000);
 
-if (intval($referendum['deadline']) > $now)  # we should not count ballots, but can count participation
+if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
+  $mysqli->query("DELETE FROM stations WHERE referendum=$referendum_id");
+  $mysqli->query("DELETE FROM registrations WHERE referendum=$referendum_id");
   die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+}
 
 $results->count = array_fill(0, $n_answers, 0);
 
@@ -233,7 +238,6 @@ $query = "UPDATE participation SET "
 $mysqli->query($query) or error($mysqli->error);
 
 # delete the content of intermediary tables
-$mysqli->query("DELETE FROM corpus WHERE referendum=$referendum_id");
 $mysqli->query("DELETE FROM stations WHERE referendum=$referendum_id");
 $mysqli->query("DELETE FROM registrations WHERE referendum=$referendum_id");
 $mysqli->query("DELETE FROM ballots WHERE referendum=$referendum_id");
