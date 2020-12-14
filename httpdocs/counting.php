@@ -106,29 +106,19 @@ $area_id = intval($area['id']);
 
 # The following intermediary tables are created:
 # corpus, stations, registrations and ballots
-$query = "SELECT COUNT(*) AS c FROM corpus WHERE referendum=$referendum_id";
-$result = $mysqli->query($query) or error($mysqli->error);
-$c = $result->fetch_assoc();
-if ($c)
-  $count = $c['c'];
-else
-  $count = 0;
-$result->free();
 
-if ($count == 0) {
-  # create corpus, see https://github.com/directdemocracy-vote/doc/blob/master/voting.md#31-list-eligible-citizens
-  # the corpus table should contain all citizen entitled to vote to referendum:
-  # they must be endorsed by the trustee of the referendum and their home must be inside the area of the referendum
-  $query = "INSERT INTO corpus(citizen, referendum, station) SELECT DISTINCT citizen.id, $referendum_id, 0 FROM "
-          ."citizen "
-          ."INNER JOIN publication AS citizen_p ON citizen_p.id=citizen.id "
-          ."INNER JOIN endorsement ON endorsement.publicationKey=citizen_p.`key` AND endorsement.`revoke`=0 "
-          ."INNER JOIN publication AS endorsement_p ON endorsement_p.id=endorsement.id AND endorsement_p.`key`=\"$trustee\" "
-          ."INNER JOIN area ON area.id=$area_id "
-          ."WHERE ST_Contains(area.polygons, citizen.home)";
-  $mysqli->query($query) or error($mysqli->error);
-  $count = $mysqli->affected_rows;
-}
+# create corpus, see https://github.com/directdemocracy-vote/doc/blob/master/voting.md#31-list-eligible-citizens
+# the corpus table should contain all citizen entitled to vote to referendum:
+# they must be endorsed by the trustee of the referendum and their home must be inside the area of the referendum
+$query = "INSERT INTO corpus(citizen, referendum) SELECT DISTINCT citizen.id, $referendum_id FROM "
+        ."citizen "
+        ."INNER JOIN publication AS citizen_p ON citizen_p.id=citizen.id "
+        ."INNER JOIN endorsement ON endorsement.publicationKey=citizen_p.`key` "
+        ."INNER JOIN publication AS endorsement_p ON endorsement_p.id=endorsement.id "
+        ."INNER JOIN area ON area.id=$area_id "
+        ."WHERE ST_Contains(area.polygons, citizen.home) AND endorsement_p.`key`=\"$trustee\" AND endorsement.`revoke`=0";
+$mysqli->query($query) or error($mysqli->error);
+$count = $mysqli->affected_rows;
 $results->corpus = $count;
 
 # list all the stations involved in the referendum

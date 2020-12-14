@@ -34,7 +34,6 @@ CREATE TABLE `citizen` (
 
 CREATE TABLE `corpus` (
   `referendum` int(11) NOT NULL,
-  `station` int(11) NOT NULL,
   `citizen` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -135,8 +134,7 @@ ALTER TABLE `citizen`
 
 ALTER TABLE `corpus`
   ADD KEY `referendum` (`referendum`),
-  ADD KEY `citizen` (`citizen`),
-  ADD KEY `station` (`station`);
+  ADD KEY `citizen` (`citizen`);
 
 ALTER TABLE `endorsement`
   ADD PRIMARY KEY (`id`),
