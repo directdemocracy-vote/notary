@@ -73,7 +73,9 @@ if ($result) {
   if ($participation) {
     $updated = strtotime($participation['updated']);
     // die(time() . " - $updated = " . (time() - $updated));
-    if (time() - $updated < 300)  {  # updated less than 5 minutes ago, return cached values
+    #FIXME: restore the 5 minutes delay
+    #if (time() - $updated < 300)  {  # updated less than 5 minutes ago, return cached values
+    if (time() - $updated < 3)  {  # updated less than 3 seconds, return cached values
       $results->corpus = intval($participation['corpus']);
       $results->participation = intval($participation['count']);
       $results->registrations = intval($participation['registrations']);
