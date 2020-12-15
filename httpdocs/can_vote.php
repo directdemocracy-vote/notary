@@ -57,20 +57,18 @@ $result->free();
 if (!$a)
   die("Home of citizen not in referendum area.");
 
-# check if citizen is endorsed by trustee
-$query = "SELECT `revoke` FROM endorsement LEFT JOIN publication ON publication.id=endorsement.id "
+# check if citizen is currently endorsed by trustee
+$query = "SELECT endorsement.revoked "
+        ."FROM endorsement LEFT JOIN publication ON publication.id=endorsement.id "
         ."WHERE publication.`key`=\"$trustee\" AND endorsement.publicationKey=\"$citizen_key\" "
-        ."ORDER BY publication.published DESC LIMIT 1";
+        ."AND endorsement.revoked=publication.expires "
+        ."ORDER BY publication.revoked DESC LIMIT 1";
 $result = $mysqli->query($query) or die($mysqli->error);
 $endorsement = $result->fetch_assoc();
 $result->free();
-if (!$endorsement)
+$now = intval(microtime(true) * 1000);  # milliseconds
+if (!$endorsement || $endorsement['revoked'] < $now)
   die('Citizen not endorsed by trustee.');
-if ($endorsement['revoke'] == 1)
-  die('Citizen revoked by trustee.');
-
-# FIXME: we should mark the current endorsement with a cleanup-date of one year after the deadline of the referendum
-# This is to prevent the publish.php script to delete this proof of validity
 
 die("yes");
 ?>

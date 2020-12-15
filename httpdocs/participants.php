@@ -48,7 +48,7 @@ foreach($participation->polygons as $polygon1) {
 }
 $polygons .= ')")';
 
-$query = "SELECT referendum.id, referendum.trustee, referendum.deadline, publication.`key` FROM referendum "
+$query = "SELECT referendum.id, referendum.trustee, publication.`key` FROM referendum "
         ."LEFT JOIN publication ON publication.id=referendum.id "
         ."WHERE publication.fingerprint=\"$fingerprint\"";
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
@@ -56,7 +56,6 @@ $referendum = $result->fetch_assoc();
 $referendum_id = intval($referendum['id']);
 $referendum_key = $referendum['key'];
 $trustee = $referendum['trustee'];
-$deadline = intval($referendum['deadline']);
 $result->free();
 
 $query = "SELECT DISTINCT citizen.id, citizen.familyName, citizen.givenNames, citizen.picture, "
@@ -71,9 +70,8 @@ $query = "SELECT DISTINCT citizen.id, citizen.familyName, citizen.givenNames, ci
         ."LEFT JOIN publication AS endorsement_publication ON endorsement_publication.id=endorsement.id "
         ."WHERE CONTAINS($polygons, home) AND registration.referendum=\"$referendum_key\" "
         ."AND endorsement_publication.`key`=\"$trustee\" "
-        ."AND endorsement_publication.published < $deadline "
-        ."AND endorsement_publication.expires > $deadline "
-        ."AND endorsement.`revoke`=0 "
+        ."AND endorsement_publication.published < registration_publication.published "
+        ."AND endorsement.revoked > registration_publication.published "
         ."ORDER BY familyName, givenNames";
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
 $citizens = array();

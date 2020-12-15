@@ -34,7 +34,7 @@ if ($v)
 if (!$type)
   error("No type argument provided.");
 if ($type == 'endorsement')
-  $fields = 'endorsement.publicationKey, endorsement.publicationSignature, endorsement.`revoke`, endorsement.message, endorsement.comment';
+  $fields = 'endorsement.publicationKey, endorsement.publicationSignature, endorsement.revoked, endorsement.message, endorsement.comment';
 elseif ($type == 'citizen')
   $fields = 'citizen.familyName, citizen.givenNames, citizen.picture, ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude';
 elseif ($type == 'referendum')
@@ -56,16 +56,15 @@ $result = $mysqli->query($query) or error($mysqli->error);
 $publications = array();
 if ($result) {
   while($publication = $result->fetch_object()) {
-    $publication->published = floatval($publication->published);
-    $publication->expires = floatval($publication->expires);
+    $publication->published = intval($publication->published);
+    $publication->expires = intval($publication->expires);
     if ($type == 'citizen') {
       $publication->latitude = floatval($publication->latitude);
       $publication->longitude = floatval($publication->longitude);
     } elseif ($type == 'endorsement') {
-      if ($publication->revoke == "0")
-        unset($publication->revoke);
-      else
+      if (intval($publication->revoked) === $publication->published)
         $publication->revoke = true;
+      unset($publication->revoked);
       if ($publication->message == '')
         unset($publication->message);
       if ($publication->comment == '')

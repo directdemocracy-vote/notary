@@ -137,21 +137,15 @@ $mysqli->set_charset('utf8mb4');
 if ($type == 'endorsement') {
   $endorsement = &$publication;
   if (!property_exists($endorsement, 'revoke'))
-    $endorsement->revoke = false;
+    $endorsement->revoked = $endorsement->expires;
+  else
+    $endorsement->revoked = $endorsement->revoke ? $endorsement->published : $endorsement->expires;
   $key = $endorsement->publication->key;
   $signature = $endorsement->publication->signature;
   if ($key == '')
     error("Empty key");
   if ($signature == '')
     error("Empty signature");
-  if ($endorsement->revoke && $endorsement->key == $key) {  # revoking my own stuff
-    $query = "SELECT id, `schema` FROM publication WHERE `key`=\"$key\" AND signature=\"$signature\"";
-    $result = $mysqli->query($query) or error($mysqli->error);
-    $p = $result->fetch_assoc();
-    if ($p)
-      $t = get_type($p['schema']);
-    $result->free();
-  }
 }
 $query = "INSERT INTO publication(`schema`, `key`, signature, fingerprint, published, expires) "
         ."VALUES(\"$publication->schema\", \"$publication->key\", \"$publication->signature\", "
@@ -182,8 +176,8 @@ elseif ($type == 'endorsement') {
       error("endorsement doesn't expire at the same time as publication: $endorsement->expires != $endorsed_expires");
   }
   $query = "INSERT INTO endorsement(id, publicationKey, publicationSignature, publicationFingerprint, "
-          ."`revoke`, message, comment) VALUES($id, \"$key\", \"$signature\", SHA1(\"$signature\"), "
-          ."\"$endorsement->revoke\", \"$endorsement->message\", \"$endorsement->comment\")";
+          ."revoked, message, comment) VALUES($id, \"$key\", \"$signature\", SHA1(\"$signature\"), "
+          ."$endorsement->revoked, \"$endorsement->message\", \"$endorsement->comment\")";
 } elseif ($type == 'referendum') {
   $referendum =&$publication;
   if (!isset($referendum->website))  # optional

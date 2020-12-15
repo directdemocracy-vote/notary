@@ -56,20 +56,21 @@ if ($type == 'citizen') {
   $citizen = array('schema' => $publication['schema'],
                    'key' => $publication['key'],
                    'signature' => $publication['signature'],
-                   'published' => floatval($publication['published']),
-                   'expires' => floatval($publication['expires'])) + $citizen;
+                   'published' => intval($publication['published']),
+                   'expires' => intval($publication['expires'])) + $citizen;
   echo json_encode($citizen, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'endorsement') {
-  $query = "SELECT publicationKey, publicationSignature, `revoke`, message, comment FROM endorsement WHERE id=$publication[id]";
+  $query = "SELECT publicationKey, publicationSignature, revoked, message, comment FROM endorsement WHERE id=$publication[id]";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsement = $result->fetch_assoc();
   $result->free();
-  $endorsement['revoke'] = ($endorsement['revoke'] == 1);
+  $endorsement['revoke'] = ($endorsement['revoked'] === $publication['published']);
+  unset($endorsement['revoked']);
   $endorsement = array('schema' => $publication['schema'],
                        'key' => $publication['key'],
                        'signature' => $publication['signature'],
-                       'published' => floatval($publication['published']),
-                       'expires' => floatval($publication['expires'])) + $endorsement;
+                       'published' => intval($publication['published']),
+                       'expires' => intval($publication['expires'])) + $endorsement;
   echo json_encode($endorsement, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'referendum') {
   $query = "SELECT trustee, area, title, description, question, answers, deadline, website FROM referendum WHERE id=$publication[id]";
@@ -79,12 +80,12 @@ if ($type == 'citizen') {
   $result->free();
   if ($referendum['website'] == '')
     unset($referendum['website']);
-  $referendum['deadline'] = floatval($referendum['deadline']);
+  $referendum['deadline'] = intval($referendum['deadline']);
   $referendum = array('schema' => $publication['schema'],
                       'key' => $publication['key'],
                       'signature' => $publication['signature'],
-                      'published' => floatval($publication['published']),
-                      'expires' => floatval($publication['expires'])) + $referendum;
+                      'published' => intval($publication['published']),
+                      'expires' => intval($publication['expires'])) + $referendum;
   echo json_encode($referendum, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 }
 $mysqli->close();

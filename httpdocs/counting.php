@@ -47,6 +47,8 @@ $trustee = $referendum['trustee'];
 $area = $referendum['area'];
 $referendum_id = intval($referendum['id']);
 $referendum_key = $referendum['key'];
+$referendum_published = intval($referendum['published']);
+$referendum_deadline = intval($referendum['deadline']);
 
 $results = new stdClass();
 $results->key = $referendum_key;
@@ -57,8 +59,8 @@ $results->description = $referendum['description'];
 $results->website = $referendum['website'];
 $results->question = $referendum['question'];
 $results->answers = $referendum['answers'];
-$results->deadline = intval($referendum['deadline']);
-$results->published = intval($referendum['published']);
+$results->deadline = $referendum_deadline;
+$results->published = $referendum_published;
 $results->expires = intval($referendum['expires']);
 
 $answers = explode("\n", $referendum['answers']);
@@ -119,15 +121,23 @@ $mysqli->query("DELETE FROM corpus WHERE referendum=$referendum_id");
 $mysqli->query("DELETE FROM stations WHERE referendum=$referendum_id");
 $mysqli->query("DELETE FROM registrations WHERE referendum=$referendum_id");
 
-$query = "INSERT INTO corpus(citizen, referendum) SELECT DISTINCT citizen.id, $referendum_id FROM "
-        ."citizen "
+#FIXME: the following fails if:
+# citizen was endorsed before referendum.published with endorsement.expires after referendum.published
+# and endorsement was revoked before referendum.published
+
+$query = "INSERT INTO corpus(citizen, referendum, endorsement) "
+        ."SELECT DISTINCT citizen.id, $referendum_id, endorsement.id FROM citizen "
         ."INNER JOIN publication AS citizen_p ON citizen_p.id=citizen.id "
         ."INNER JOIN endorsement ON endorsement.publicationKey=citizen_p.`key` "
         ."INNER JOIN publication AS endorsement_p ON endorsement_p.id=endorsement.id "
         ."INNER JOIN area ON area.id=$area_id "
-        ."WHERE ST_Contains(area.polygons, citizen.home) AND endorsement_p.`key`=\"$trustee\" AND endorsement.`revoke`=0";
+        ."WHERE ST_Contains(area.polygons, citizen.home) "
+        ."AND endorsement.revoked > $referendum_published "
+        ."AND endorsement_p.published < $referendum_deadline ";
+        ."AND endorsement_p.`key`=\"$trustee\""
 $mysqli->query($query) or error($mysqli->error);
 $count = $mysqli->affected_rows;
+
 $results->corpus = $count;
 
 # list all the stations involved in the referendum
