@@ -79,6 +79,7 @@ while ($citizen = $result->fetch_assoc()) {
   $citizen['id'] = intval($citizen['id']);
   $citizen['published'] = intval($citizen['published']);
   $citizen['expires'] = intval($citizen['expires']);
+  $citizen['voted'] = intval($citizen['voted']);
   $citizen['latitude'] = floatval($citizen['latitude']);
   $citizen['longitude'] = floatval($citizen['longitude']);
   $citizens[] = $citizen;
