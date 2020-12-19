@@ -125,8 +125,8 @@ $mysqli->query("DELETE FROM registrations WHERE referendum=$referendum_id");
 # citizen was endorsed before referendum.published with endorsement.expires after referendum.published
 # and endorsement was revoked before referendum.published
 
-$query = "INSERT INTO corpus(citizen, referendum, endorsement) "
-        ."SELECT DISTINCT citizen.id, $referendum_id, endorsement.id FROM citizen "
+$query = "INSERT INTO corpus(citizen, referendum) "
+        ."SELECT DISTINCT citizen.id, $referendum_id FROM citizen "
         ."INNER JOIN publication AS citizen_p ON citizen_p.id=citizen.id "
         ."INNER JOIN endorsement ON endorsement.publicationKey=citizen_p.`key` "
         ."INNER JOIN publication AS endorsement_p ON endorsement_p.id=endorsement.id "
