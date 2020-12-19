@@ -90,7 +90,7 @@ window.onload = function() {
                 text.classList.add('card-text');
                 text.innerHTML = "<small>Created: " + new Date(answer[i].published).toLocaleDateString() + '<br>' +
                   "Expires: " + new Date(answer[i].expires).toLocaleDateString() + '</small><br>' + "Voted: <b>" +
-                  new Date(answer[i].voted).toLocaleString() + '</b>';
+                  new Date(answer[i].voted).toLocaleString().slice(-3) + '</b>';
               }
           }
         }
