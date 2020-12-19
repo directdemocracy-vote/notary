@@ -68,7 +68,7 @@ $endorsement = $result->fetch_assoc();
 $result->free();
 $now = intval(microtime(true) * 1000);  # milliseconds
 if (!$endorsement || $endorsement['revoked'] < $now)
-  die("Citizen not endorsed by trustee: $query");
+  die("Citizen not endorsed by trustee");
 
 die("yes");
 ?>
