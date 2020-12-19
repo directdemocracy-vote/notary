@@ -2,7 +2,7 @@
 function endorsements($mysqli, $key) {
   $query = "SELECT pc.fingerprint, pe.published, pe.expires, e.revoked, pc.`key`, pc.`signature`, "
           ."c.familyName, c.givenNames, ST_Y(home) AS latitude, ST_X(home) AS longitude, c.picture FROM "
-          ."publication pe INNER JOIN (SELECT MAX(revoked) AS revoked, publicationKey, id FROM endorsement) e ON pe.id = e.id, "
+          ."publication pe INNER JOIN (SELECT MAX(revoked) AS revoked, publicationKey, publicationSignature, id FROM endorsement) e ON pe.id = e.id, "
           ."publication pc INNER JOIN citizen c ON pc.id = c.id "
           ."WHERE pe.`key` = '$key' AND pc.`key` = e.publicationKey "
           ."AND pc.`signature` = e.publicationSignature "
