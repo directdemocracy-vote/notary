@@ -88,8 +88,9 @@ window.onload = function() {
                 let text = document.createElement('p');
                 clearfix.appendChild(text);
                 text.classList.add('card-text');
-                text.innerHTML = "Created: " + new Date(answer[i].published).toISOString().slice(0, 10) + '<br>' +
-                  "Expires: " + new Date(answer[i].expires).toISOString().slice(0, 10) + '<br>' + "Reputation: ";
+                text.innerHTML = "<small>Created: " + new Date(answer[i].published).toISOString().slice(0, 10) + '<br>' +
+                  "Expires: " + new Date(answer[i].expires).toISOString().slice(0, 10) + '</small><br>' + "Voted: <b>" +
+                  new Date(answer[i].voted).toISOString().slice(0, 10) + '</b>';
               }
           }
         }

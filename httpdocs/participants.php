@@ -61,7 +61,7 @@ $result->free();
 $query = "SELECT DISTINCT citizen.id, citizen.familyName, citizen.givenNames, citizen.picture, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude, "
         ."citizen_publication.`key`, citizen_publication.published, citizen_publication.expires, "
-        ."registration.stationKey "
+        ."registration.stationKey, registration_publication.published AS voted "
         ."FROM citizen "
         ."LEFT JOIN publication AS citizen_publication ON citizen_publication.id=citizen.id "
         ."LEFT JOIN publication AS registration_publication ON registration_publication.`key`=citizen_publication.`key` "
