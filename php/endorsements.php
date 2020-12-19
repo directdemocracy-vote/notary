@@ -9,7 +9,7 @@ function endorsements($mysqli, $key) {
           ."ORDER BY e.revoke ASC, c.familyName, c.givenNames";
   $result = $mysqli->query($query);
   if (!$result)
-    return array('error' => $mysql->error);
+    return array('error' => $mysqli->error);
   $endorsements = array();
   while($e = $result->fetch_assoc()) {
     settype($e['published'], 'int');
