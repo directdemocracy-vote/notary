@@ -121,10 +121,6 @@ $mysqli->query("DELETE FROM corpus WHERE referendum=$referendum_id");
 $mysqli->query("DELETE FROM stations WHERE referendum=$referendum_id");
 $mysqli->query("DELETE FROM registrations WHERE referendum=$referendum_id");
 
-#FIXME: the following fails if:
-# citizen was endorsed before referendum.published with endorsement.expires after referendum.published
-# and endorsement was revoked before referendum.published
-
 $query = "INSERT INTO corpus(citizen, referendum) "
         ."SELECT DISTINCT citizen.id, $referendum_id FROM citizen "
         ."INNER JOIN publication AS citizen_p ON citizen_p.id=citizen.id "
@@ -132,8 +128,8 @@ $query = "INSERT INTO corpus(citizen, referendum) "
         ."INNER JOIN publication AS endorsement_p ON endorsement_p.id=endorsement.id "
         ."INNER JOIN area ON area.id=$area_id "
         ."WHERE ST_Contains(area.polygons, citizen.home) "
-        ."AND endorsement.revoked > $referendum_published "
         ."AND endorsement_p.published < $referendum_deadline "
+        ."AND endorsement.revoked > $referendum_published "
         ."AND endorsement_p.`key`=\"$trustee\"";
 $mysqli->query($query) or error($mysqli->error);
 $count = $mysqli->affected_rows;
