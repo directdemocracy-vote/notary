@@ -6,7 +6,7 @@ function endorsements($mysqli, $key) {
           ."publication pc INNER JOIN citizen c ON pc.id = c.id "
           ."WHERE pe.`key` = '$key' AND pc.`key` = e.publicationKey "
           ."AND pc.`signature` = e.publicationSignature "
-          ."ORDER BY e.revoke ASC, c.familyName, c.givenNames";
+          ."ORDER BY pe.published";
   $result = $mysqli->query($query);
   if (!$result)
     return array('error' => $mysqli->error);
