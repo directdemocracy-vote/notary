@@ -133,8 +133,8 @@ $query = "INSERT INTO corpus(citizen, referendum, endorsement) "
         ."INNER JOIN area ON area.id=$area_id "
         ."WHERE ST_Contains(area.polygons, citizen.home) "
         ."AND endorsement.revoked > $referendum_published "
-        ."AND endorsement_p.published < $referendum_deadline ";
-        ."AND endorsement_p.`key`=\"$trustee\""
+        ."AND endorsement_p.published < $referendum_deadline "
+        ."AND endorsement_p.`key`=\"$trustee\"";
 $mysqli->query($query) or error($mysqli->error);
 $count = $mysqli->affected_rows;
 
