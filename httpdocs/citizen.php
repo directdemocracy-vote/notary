@@ -23,12 +23,15 @@ settype($citizen['expires'], 'int');
 settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
 $endorsements = endorsements($mysqli, $key);
-$query = "SELECT pc.fingerprint, pe.published, e.revoked, "
-        ."c.familyName, c.givenNames, c.picture, ST_Y(home) AS latitude, ST_X(home) AS longitude FROM "
-        ."publication pe INNER JOIN (SELECT MAX(revoked) AS revoked, publicationKey, id FROM endorsement) e ON pe.id = e.id, "
-        ."publication pc INNER JOIN citizen c ON pc.id = c.id "
-        ."WHERE e.publicationKey = '$key' AND pc.`key` = pe.`key` "
-        ."ORDER BY pe.published";
+$query = "SELECT pc.fingerprint, MAX(pe.published), e.revoked, "
+        ."c.familyName, c.givenNames, c.picture, ST_Y(home) AS latitude, ST_X(home) AS longitude "
+        ."FROM publication pe "
+        ."INNER JOIN endorsement e ON e.id = pe.id "
+        ."INNER JOINT publication pc ON pc.`key` = pe.`key` "
+        ."INNER JOIN citizen c ON pc.id = c.id "
+        ."WHERE e.publicationKey = '$key' "
+        ."GROUP BY c.id "
+        ."ORDER BY pe.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 if (!$result)
   return "{\"error\":\"$mysqli->error\"}";
