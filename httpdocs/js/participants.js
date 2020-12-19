@@ -89,8 +89,8 @@ window.onload = function() {
                 clearfix.appendChild(text);
                 text.classList.add('card-text');
                 text.innerHTML = "<small>Created: " + new Date(answer[i].published).toISOString().slice(0, 10) + '<br>' +
-                  "Expires: " + new Date(answer[i].expires).toISOString().slice(0, 10) + '</small><br>' + "Voted: <b>" +
-                  new Date(answer[i].voted).toISOString().slice(0, 10) + '</b>';
+                  "Expires: " + new Date(answer[i].expires).toLocaleDateString() + '</small><br>' + "Voted: <b>" +
+                  new Date(answer[i].voted).toLocaleString() + '</b>';
               }
           }
         }
