@@ -1,7 +1,7 @@
 <?php
 function endorsements($mysqli, $key) {
   $now = intval(microtime(true) * 1000);  # milliseconds
-  $query = "SELECT pc.fingerprint, MAX(pe.published), pe.expires, e.revoked, pc.`key`, pc.`signature`, "
+  $query = "SELECT pc.fingerprint, MAX(pe.published) AS published, pe.expires, e.revoked, pc.`key`, pc.`signature`, "
           ."c.familyName, c.givenNames, ST_Y(home) AS latitude, ST_X(home) AS longitude, c.picture "
           ."FROM publication pe "
           ."INNER JOIN endorsement e ON e.id = pe.id "
