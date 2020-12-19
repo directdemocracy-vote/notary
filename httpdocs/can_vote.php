@@ -58,11 +58,11 @@ if (!$a)
   die("Home of citizen not in referendum area.");
 
 # check if citizen is currently endorsed by trustee
-$query = "SELECT endorsement.revoked "
+$query = "SELECT revoked "
         ."FROM endorsement LEFT JOIN publication ON publication.id=endorsement.id "
         ."WHERE publication.`key`=\"$trustee\" AND endorsement.publicationKey=\"$citizen_key\" "
         ."AND endorsement.revoked=publication.expires "
-        ."ORDER BY publication.revoked DESC LIMIT 1";
+        ."ORDER BY revoked DESC LIMIT 1";
 $result = $mysqli->query($query) or die($mysqli->error);
 $endorsement = $result->fetch_assoc();
 $result->free();
