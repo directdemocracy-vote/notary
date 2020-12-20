@@ -107,6 +107,8 @@ $area = $result->fetch_assoc();
 $result->free();
 $area_id = intval($area['id']);
 
+die("area_id = $area_id\n\narea = $area");
+
 # The following intermediary tables are created:
 # corpus, stations, registrations and ballots
 
@@ -129,14 +131,15 @@ SELECT DISTINCT citizen.id, citizen.familyName, citizen.givenNames FROM citizen
 WHERE area.id=85
 */
 
+# !! $area_id seems to be wrong.
+
 $query = "INSERT INTO corpus(citizen, referendum) "
         ."SELECT DISTINCT citizen.id, $referendum_id FROM citizen "
         ."LEFT JOIN area ON ST_Contains(area.polygons, citizen.home) "
         ."INNER JOIN publication AS citizen_p ON citizen_p.id=citizen.id "
         ."INNER JOIN endorsement ON endorsement.publicationKey=citizen_p.`key` "
         ."INNER JOIN publication AS endorsement_p ON endorsement_p.id=endorsement.id "
-        ."WHERE area.id=85 "
-#        ."WHERE area.id=$area_id "
+        ."WHERE area.id=$area_id "
         ."AND endorsement_p.published < $referendum_deadline "
         ."AND endorsement.revoked > $referendum_published "
         ."AND endorsement_p.`key`=\"$trustee\"";
