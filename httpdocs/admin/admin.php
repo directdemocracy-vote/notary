@@ -52,8 +52,12 @@ if ($registrations)
 if ($ballots)
   $n += delete_publication($mysqli, 'ballot');
 if ($results) {
-  $query = "DELETE FROM results;"; # FIXME: also "DELETE FROM ballots; DELETE FROM registrations; DELETE FROM stations;";
-  $mysqli->query($query) or error($mysqli->error);
+  $mysqli->query("DELETE FROM results") or error($mysqli->error);
+  $mysqli->query("DELETE FROM participation") or error($mysqli->error);
+  $mysqli->query("DELETE FROM corpus") or error($mysqli->error);
+  $mysqli->query("DELETE FROM ballots") or error($mysqli->error);
+  $mysqli->query("DELETE FROM registrations") or error($mysqli->error);
+  $mysqli->query("DELETE FROM stations") or error($mysqli->error);
 }
 $query = "SELECT MAX(id) AS `max` FROM publication";
 $result = $mysqli->query($query) or error($mysqli->error);
