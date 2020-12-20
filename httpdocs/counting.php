@@ -144,11 +144,13 @@ $mysqli->query($query) or error($mysqli->error);
 
 # list all the registrations for each station
 $query = "INSERT INTO registrations(referendum, station, citizen, published) "
-        ."SELECT $referendum_id, station.id, corpus.citizen, registration_p.published FROM station "
-        ."INNER JOIN registration ON registration.stationKey=station.`key` AND registration.referendum=\"$referendum_key\" "
-        ."INNER JOIN publication AS registration_p ON registration_p.id=registration.id "
-        ."INNER JOIN publication AS citizen_p ON citizen_p.`key`=registration_p.`key` "
-        ."INNER JOIN corpus ON corpus.citizen=citizen_p.id";
+        ."SELECT corpus.referendum, station.id, corpus.citizen, registration_p.published "
+        ."FROM corpus "
+        ."INNER JOIN publication AS citizen_p ON citizen_p.id=corpus.citizen "
+        ."INNER JOIN publication AS registration_p ON registration_p.`key`=citizen_p.`key` "
+        ."INNER JOIN registration ON registration.id=registration_p.id"
+        ."INNER JOIN station ON station.`key`=registration.stationKey"
+        ."WHERE registration.referendum=\"$referendum_key\" AND corpus.referendum=$referendum_id";
 $mysqli->query($query) or error($mysqli->error);
 
 # if a citizen registered several times (possibly at several stations) keep only the most recent registration
