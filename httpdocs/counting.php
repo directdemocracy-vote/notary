@@ -131,7 +131,7 @@ SELECT DISTINCT citizen.id, citizen.familyName, citizen.givenNames FROM citizen
 WHERE area.id=85
 */
 
-# area generated for referendum seems to be wrong.
+# area generated for referendum seems to be wrong: problem with village / city
 
 $query = "INSERT INTO corpus(citizen, referendum) "
         ."SELECT DISTINCT citizen.id, $referendum_id FROM citizen "
