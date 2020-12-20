@@ -155,7 +155,7 @@ $mysqli->query($query) or error($mysqli->error);
 
 # if a citizen registered several times (possibly at several stations) keep only the most recent registration
 $query = "DELETE r1 FROM registrations r1 INNER JOIN registrations r2 "
-        ."WHERE r1.citizen=r2.citizen AND r1.published < r2.published";
+        ."WHERE r1.citizen=r2.citizen AND r1.referendum=r2.referendum AND r1.published < r2.published";
 $mysqli->query($query) or error($mysqli->error);
 
 # count participation
