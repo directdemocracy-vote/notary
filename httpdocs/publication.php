@@ -96,7 +96,7 @@ if ($type == 'citizen') {
                   'key' => $publication['key'],
                   'signature' => $publication['signature'],
                   'published' => intval($publication['published']),
-                  'expires' = > intval($publication['expires'])) + $ballot;
+                  'expires' => intval($publication['expires'])) + $ballot;
   echo json_encode($ballot, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } else {
   error('Publication type not supported: ' + $type);
