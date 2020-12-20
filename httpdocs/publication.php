@@ -87,6 +87,19 @@ if ($type == 'citizen') {
                       'published' => intval($publication['published']),
                       'expires' => intval($publication['expires'])) + $referendum;
   echo json_encode($referendum, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+} elseif ($type == 'ballot') {
+  $query = "SELECT referendum, stationKey, stationSignature, answer from ballot WHERE id=$publication[id]";
+  $result = $mysqli->query($query) or error($mysqli->error);
+  $ballot = $result->fetch_assoc();
+  $result->free();
+  $ballot = array('schema' => $publication['schema'],
+                  'key' => $publication['key'],
+                  'signature' => $publication['signature'],
+                  'published' => intval($publication['published']),
+                  'expires' = > intval($publication['expires'])) + $ballot;
+  echo json_encode($ballot, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+} else {
+  error('Publication type not supported: ' + $type);
 }
 $mysqli->close();
 ?>
