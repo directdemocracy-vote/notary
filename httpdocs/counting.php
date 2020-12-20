@@ -148,8 +148,8 @@ $query = "INSERT INTO registrations(referendum, station, citizen, published) "
         ."FROM corpus "
         ."INNER JOIN publication AS citizen_p ON citizen_p.id=corpus.citizen "
         ."INNER JOIN publication AS registration_p ON registration_p.`key`=citizen_p.`key` "
-        ."INNER JOIN registration ON registration.id=registration_p.id"
-        ."INNER JOIN station ON station.`key`=registration.stationKey"
+        ."INNER JOIN registration ON registration.id=registration_p.id "
+        ."INNER JOIN station ON station.`key`=registration.stationKey "
         ."WHERE registration.referendum=\"$referendum_key\" AND corpus.referendum=$referendum_id";
 $mysqli->query($query) or error($mysqli->error);
 
