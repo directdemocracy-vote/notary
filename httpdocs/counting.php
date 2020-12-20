@@ -103,9 +103,9 @@ $query = "SELECT area.id FROM area LEFT JOIN publication on publication.id=area.
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
   error("Area was not published by trustee");
-$area = $result->fetch_assoc();
+$a = $result->fetch_assoc();
 $result->free();
-$area_id = intval($area['id']);
+$area_id = intval($a['id']);
 
 die("area_id = $area_id\n\narea = $area");
 
