@@ -40,6 +40,8 @@ elseif ($fingerprint)
 else
   error("No fingerprint or key argument provided.");
 
+die($query);
+
 $result = $mysqli->query($query) or error($mysqli->error);
 $publication = $result->fetch_assoc();
 if (!$publication)
