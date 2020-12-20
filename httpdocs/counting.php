@@ -130,7 +130,7 @@ WHERE area.id=85
 */
 
 $query = "INSERT INTO corpus(citizen, referendum) "
-        ."SELECT citizen.id, $referendum_id FROM citizen "
+        ."SELECT DISTINCT citizen.id, $referendum_id FROM citizen "
         ."LEFT JOIN area ON ST_Contains(area.polygons, citizen.home) "
         ."INNER JOIN publication AS citizen_p ON citizen_p.id=citizen.id "
         ."INNER JOIN endorsement ON endorsement.publicationKey=citizen_p.`key` "
