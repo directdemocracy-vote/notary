@@ -120,12 +120,21 @@ $mysqli->query("DELETE FROM corpus WHERE referendum=$referendum_id");
 $mysqli->query("DELETE FROM stations WHERE referendum=$referendum_id");
 $mysqli->query("DELETE FROM registrations WHERE referendum=$referendum_id");
 
+/*
+SELECT DISTINCT citizen.id, citizen.familyName, citizen.givenNames FROM citizen
+  LEFT JOIN area ON ST_Contains(area.polygons, citizen.home)
+  INNER JOIN publication AS citizen_p ON citizen_p.id=citizen.id
+  INNER JOIN endorsement ON endorsement.publicationKey=citizen_p.`key`
+  INNER JOIN publication AS endorsement_p ON endorsement_p.id=endorsement.id
+WHERE area.id=85
+*/
+
 $query = "INSERT INTO corpus(citizen, referendum) "
-        ."SELECT DISTINCT citizen.id, $referendum_id FROM citizen "
+        ."SELECT citizen.id, $referendum_id FROM citizen "
+        ."LEFT JOIN area ON ST_Contains(area.polygons, citizen.home) "
         ."INNER JOIN publication AS citizen_p ON citizen_p.id=citizen.id "
         ."INNER JOIN endorsement ON endorsement.publicationKey=citizen_p.`key` "
         ."INNER JOIN publication AS endorsement_p ON endorsement_p.id=endorsement.id "
-        ."INNER JOIN area ON ST_Contains(area.polygons, citizen.home) "
         ."WHERE area.id=$area_id "
         ."AND endorsement_p.published < $referendum_deadline "
         ."AND endorsement.revoked > $referendum_published "
