@@ -67,7 +67,6 @@ window.onload = function() {
     latitude = position.coords.latitude;
     longitude = position.coords.longitude;
     map.setView([position.coords.latitude, position.coords.longitude], 12);
-    setTimeout(updatePosition, 500);
   }
   let map = L.map('latlongmap').setView([latitude, longitude], 2);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -227,6 +226,7 @@ window.onload = function() {
           '<div>estimated population: <span id="population">&hellip;</span> &mdash; corpus: ' + referendum.corpus +
           ' &mdash; participation: <span id="participation">' + referendum.participation + '</span> (' + participation +
           ')</div>';
+        setTimeout(updatePosition, 500);
       }
     }
   };
