@@ -74,7 +74,6 @@ if ($result) {
   $result->free();
   if ($participation) {
     $updated = strtotime($participation['updated']);
-    // die(time() . " - $updated = " . (time() - $updated));
     #FIXME: restore the 5 minutes delay
     #if (time() - $updated < 300)  {  # updated less than 5 minutes ago, return cached values
     if (time() - $updated < 3)  {  # updated less than 3 seconds, return cached values
