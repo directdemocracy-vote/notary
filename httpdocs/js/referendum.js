@@ -8,19 +8,6 @@ function findGetParameter(parameterName) {
   return result;
 }
 
-function unix_time_to_text(unix_timestamp) {
-  const a = new Date(unix_timestamp * 1000);
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const year = a.getFullYear();
-  const month = months[a.getMonth()];
-  const date = a.getDate();
-  const hour = a.getHours();
-  const minute = '0' + a.getMinutes();
-  const second = '0' + a.getSeconds();
-  const time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + minute.substr(-2) + ':' + second.substr(-2);
-  return time;
-}
-
 window.onload = function() {
   const fingerprint = findGetParameter('fingerprint');
   if (!fingerprint) {
@@ -233,7 +220,7 @@ window.onload = function() {
         const participation = (referendum.corpus > 0) ? (Math.round(10000 * referendum.participation / referendum.corpus) /
           100) + '%' : 'N/A';
         document.getElementById('content').innerHTML = '<h2>' + referendum.title + '</h2>' +
-          '<div><small><b>Deadline:</b> ' + unix_time_to_text(referendum.deadline / 1000) +
+          '<div><small><b>Deadline:</b> ' + new Date(referendum.deadline).toLocaleString() +
           ' &mdash; <b>Area:</b> <a target="_blank" href="' + area_url + '">' + area_name +
           '</a> (' + area_type + ')' + '</small></div><br><div><p>' + referendum.description + '</p></div><div><p><b>' +
           referendum.question + '</b><p></div>' + answers_table +
