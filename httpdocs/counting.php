@@ -174,7 +174,7 @@ $results->updated = time();
 
 $now = intval(microtime(true) * 1000);
 
-if (intval($referendum['deadline']) > $now) {  # we should not count ballots, but can count participation
+if (intval($referendum['deadline']) > $now && $count < $corpus) {  # we should not count ballots, but can count participation
   # $mysqli->query("DELETE FROM stations WHERE referendum=$referendum_id");
   # $mysqli->query("DELETE FROM registrations WHERE referendum=$referendum_id");
   die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
