@@ -46,7 +46,7 @@ if (!$publication)
   error("Publication not found.");
 $result->free();
 $publication_id = intval($publication['id']);
-unset($publication['id'];
+unset($publication['id']);
 $publication['published'] = intval($publication['published']);
 $publication['expires'] = intval($publication['expires']);
 $type = get_type($publication['schema']);
