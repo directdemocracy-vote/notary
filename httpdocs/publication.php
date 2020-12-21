@@ -87,11 +87,10 @@ if ($type == 'citizen') {
   $ballot = $publication + $ballot;
   echo json_encode($ballot, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'area') {
-  $query = "SELECT name, ST_AsText(polygons) FROM area WHERE id=$publication_id";
+  $query = "SELECT name, ST_AsText(polygons) AS polygons FROM area WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $area = $result->fetch_assoc();
-  // $area['polygons'] = json_decode(str_replace(['(', ')'], ['[', ']'], substr($area['polygons'], 12))); // remove MULTIPOLYGON and replace parenthesis with square brackets
-  // $area['polygons'] = json_decode('[[[10,10],[11,11]],[[12,12],[13,13]]]');
+  $area['polygons'] = json_decode(str_replace(['(', ')'], ['[', ']'], substr($area['polygons'], 12))); // remove MULTIPOLYGON and replace parenthesis with square brackets
   $result->free();
   $area = $publication + $area;
   echo json_encode($area, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
