@@ -107,8 +107,6 @@ $a = $result->fetch_assoc();
 $result->free();
 $area_id = intval($a['id']);
 
-die("area_id = $area_id\n\narea = $area");
-
 # The following intermediary tables are created:
 # corpus, stations, registrations and ballots
 
@@ -121,17 +119,6 @@ die("area_id = $area_id\n\narea = $area");
 $mysqli->query("DELETE FROM corpus WHERE referendum=$referendum_id");
 $mysqli->query("DELETE FROM stations WHERE referendum=$referendum_id");
 $mysqli->query("DELETE FROM registrations WHERE referendum=$referendum_id");
-
-/*
-SELECT DISTINCT citizen.id, citizen.familyName, citizen.givenNames FROM citizen
-  LEFT JOIN area ON ST_Contains(area.polygons, citizen.home)
-  INNER JOIN publication AS citizen_p ON citizen_p.id=citizen.id
-  INNER JOIN endorsement ON endorsement.publicationKey=citizen_p.`key`
-  INNER JOIN publication AS endorsement_p ON endorsement_p.id=endorsement.id
-WHERE area.id=85
-*/
-
-# area generated for referendum seems to be wrong: problem with village / city
 
 $query = "INSERT INTO corpus(citizen, referendum) "
         ."SELECT DISTINCT citizen.id, $referendum_id FROM citizen "
