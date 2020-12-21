@@ -32,7 +32,7 @@ $fingerprint = $mysqli->escape_string(get_string_parameter('fingerprint'));
 $key = $mysqli->escape_string(get_string_parameter('key'));
 
 $now = intval(microtime(true) * 1000);  # milliseconds
-$query = "SELECT `schema`, `key`, signature, published, expires FROM publication WHERE published <= $now AND expires >= $now AND ";
+$query = "SELECT id, `schema`, `key`, signature, published, expires FROM publication WHERE published <= $now AND expires >= $now AND ";
 if ($key)
   $query .= "`key`=\"$key\"";
 elseif ($fingerprint)
@@ -45,11 +45,13 @@ $publication = $result->fetch_assoc();
 if (!$publication)
   error("Publication not found.");
 $result->free();
+$publication_id = intval($publication['id']);
+unset($publication['id'];
 $publication['published'] = intval($publication['published']);
 $publication['expires'] = intval($publication['expires']);
 $type = get_type($publication['schema']);
 if ($type == 'citizen') {
-  $query = "SELECT familyName, givenNames, picture, ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen WHERE id=$publication[id]";
+  $query = "SELECT familyName, givenNames, picture, ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $citizen = $result->fetch_assoc();
   $result->free();
@@ -58,16 +60,16 @@ if ($type == 'citizen') {
   $citizen = $publication + $citizen;
   echo json_encode($citizen, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'endorsement') {
-  $query = "SELECT publicationKey, publicationSignature, revoked, message, comment FROM endorsement WHERE id=$publication[id]";
+  $query = "SELECT publicationKey, publicationSignature, revoked, message, comment FROM endorsement WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsement = $result->fetch_assoc();
   $result->free();
-  $endorsement['revoke'] = ($endorsement['revoked'] === $publication['published']);
+  $endorsement['revoke'] = (intval($endorsement['revoked']) === $publication['published']);
   unset($endorsement['revoked']);
   $endorsement = $publication + $endorsement;
   echo json_encode($endorsement, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'referendum') {
-  $query = "SELECT trustee, area, title, description, question, answers, deadline, website FROM referendum WHERE id=$publication[id]";
+  $query = "SELECT trustee, area, title, description, question, answers, deadline, website FROM referendum WHERE id=$publication_id";
   # id AS areas is just a placeholder for having areas in the right order of fields
   $result = $mysqli->query($query) or error($mysqli->error);
   $referendum = $result->fetch_assoc();
@@ -78,14 +80,14 @@ if ($type == 'citizen') {
   $referendum = $publication + $referendum;
   echo json_encode($referendum, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'ballot') {
-  $query = "SELECT referendum, stationKey, stationSignature, answer from ballot WHERE id=$publication[id]";
+  $query = "SELECT referendum, stationKey, stationSignature, answer from ballot WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $ballot = $result->fetch_assoc();
   $result->free();
   $ballot = $publication + $ballot;
   echo json_encode($ballot, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'area') {
-  $query = "SELECT name, polygons FROM area WHERE id=$publication[id]";
+  $query = "SELECT name, polygons FROM area WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $area = $result->fetch_assoc();
   $area['polygons'] = json_decode(str_replace(['(', ')'], ['[', ']'], substr($area['polygon'], 12))); // remove MULTIPOLYGON and replace parenthesis with square brackets
