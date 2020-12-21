@@ -90,8 +90,10 @@ if ($type == 'citizen') {
   $query = "SELECT name, ST_AsGeoJSON(polygons) AS polygons FROM area WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $area = $result->fetch_assoc();
-//  $area['polygons'] = json_decode(str_replace(['(', ')'], ['[', ']'], substr($area['polygons'], 12))); // remove MULTIPOLYGON and replace parenthesis with square brackets
-//  $area['polygons'] = str_replace(['(', ')'], ['[', ']'], substr($area['polygons'], 12)); // remove MULTIPOLYGON and replace parenthesis with square brackets
+  $polygons = json_decode($area['polygons']);
+  if ($polygons->type !== 'MultiPolygon')
+    error("Area without MultiPolygon: $polygons->type");
+  $area['polygons'] = json_decode($polygons->coordinates);
   $result->free();
   $area = $publication + $area;
   echo json_encode($area, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
