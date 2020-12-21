@@ -91,6 +91,7 @@ if ($type == 'citizen') {
   $result = $mysqli->query($query) or error($mysqli->error);
   $area = $result->fetch_assoc();
   // $area['polygons'] = json_decode(str_replace(['(', ')'], ['[', ']'], substr($area['polygons'], 12))); // remove MULTIPOLYGON and replace parenthesis with square brackets
+  $area['polygons'] = json_decode('[10,10]');
   $result->free();
   $area = $publication + $area;
   echo json_encode($area, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
