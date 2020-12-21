@@ -93,7 +93,7 @@ if ($type == 'citizen') {
   $polygons = json_decode($area['polygons']);
   if ($polygons->type !== 'MultiPolygon')
     error("Area without MultiPolygon: $polygons->type");
-  $area['polygons'] = json_decode($polygons->coordinates);
+  $area['polygons'] = $polygons->coordinates;
   $result->free();
   $area = $publication + $area;
   echo json_encode($area, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
