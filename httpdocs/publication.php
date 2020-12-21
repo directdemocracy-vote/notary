@@ -32,7 +32,7 @@ $fingerprint = $mysqli->escape_string(get_string_parameter('fingerprint'));
 $key = $mysqli->escape_string(get_string_parameter('key'));
 
 $now = intval(microtime(true) * 1000);  # milliseconds
-$query = "SELECT * FROM publication WHERE published <= $now AND expires >= $now AND ";
+$query = "SELECT `schema`, `key`, signature, publised, expires FROM publication WHERE published <= $now AND expires >= $now AND ";
 if ($key)
   $query .= "`key`=\"$key\"";
 elseif ($fingerprint)
@@ -45,6 +45,8 @@ $publication = $result->fetch_assoc();
 if (!$publication)
   error("Publication not found.");
 $result->free();
+$publication['published'] = intval($publication['published']);
+$publication['expires'] = intval($publication['expires']);
 $type = get_type($publication['schema']);
 if ($type == 'citizen') {
   $query = "SELECT familyName, givenNames, picture, ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen WHERE id=$publication[id]";
@@ -53,11 +55,7 @@ if ($type == 'citizen') {
   $result->free();
   $citizen['latitude'] = floatval($citizen['latitude']);
   $citizen['longitude'] = floatval($citizen['longitude']);
-  $citizen = array('schema' => $publication['schema'],
-                   'key' => $publication['key'],
-                   'signature' => $publication['signature'],
-                   'published' => intval($publication['published']),
-                   'expires' => intval($publication['expires'])) + $citizen;
+  $citizen = $publication + $citizen;
   echo json_encode($citizen, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'endorsement') {
   $query = "SELECT publicationKey, publicationSignature, revoked, message, comment FROM endorsement WHERE id=$publication[id]";
@@ -66,11 +64,7 @@ if ($type == 'citizen') {
   $result->free();
   $endorsement['revoke'] = ($endorsement['revoked'] === $publication['published']);
   unset($endorsement['revoked']);
-  $endorsement = array('schema' => $publication['schema'],
-                       'key' => $publication['key'],
-                       'signature' => $publication['signature'],
-                       'published' => intval($publication['published']),
-                       'expires' => intval($publication['expires'])) + $endorsement;
+  $endorsement = $publication + $endorsement;
   echo json_encode($endorsement, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'referendum') {
   $query = "SELECT trustee, area, title, description, question, answers, deadline, website FROM referendum WHERE id=$publication[id]";
@@ -81,22 +75,14 @@ if ($type == 'citizen') {
   if ($referendum['website'] == '')
     unset($referendum['website']);
   $referendum['deadline'] = intval($referendum['deadline']);
-  $referendum = array('schema' => $publication['schema'],
-                      'key' => $publication['key'],
-                      'signature' => $publication['signature'],
-                      'published' => intval($publication['published']),
-                      'expires' => intval($publication['expires'])) + $referendum;
+  $referendum = $publication + $referendum;
   echo json_encode($referendum, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'ballot') {
   $query = "SELECT referendum, stationKey, stationSignature, answer from ballot WHERE id=$publication[id]";
   $result = $mysqli->query($query) or error($mysqli->error);
   $ballot = $result->fetch_assoc();
   $result->free();
-  $ballot = array('schema' => $publication['schema'],
-                  'key' => $publication['key'],
-                  'signature' => $publication['signature'],
-                  'published' => intval($publication['published']),
-                  'expires' => intval($publication['expires'])) + $ballot;
+  $ballot = $publication + $ballot;
   echo json_encode($ballot, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } else {
   error('Publication type not supported: ' + $type);
