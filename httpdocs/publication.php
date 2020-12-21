@@ -84,6 +84,13 @@ if ($type == 'citizen') {
   $result->free();
   $ballot = $publication + $ballot;
   echo json_encode($ballot, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+} elseif ($type == 'area') {
+  $query = "SELECT name, polygons FROM area WHERE id=$publication[id]";
+  $result = $mysqli->query($query) or error($mysqli->error);
+  $area = $result->fetch_assoc();
+  $result->free();
+  $area = $publication + $area;
+  echo json_encode($area, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } else {
   error('Publication type not supported: ' + $type);
 }
