@@ -144,7 +144,6 @@ window.onload = function() {
             });
           });
         });
-        console.log("bounding box: (" + minLon + ", " + minLat + ") - (" + maxLon + ", " + maxLat + ")");
         map.fitBounds([[minLat, minLon], [maxLat, maxLon]]);
 
         const first_equal = referendum.area.indexOf('=');
@@ -172,8 +171,7 @@ window.onload = function() {
           area_url = 'https://en.wikipedia.org/wiki/European_Union';
         else {
           area_url = 'https://nominatim.openstreetmap.org/search.php?' + area_query + '&polygon_geojson=1';
-          population_url = 'https://nominatim.openstreetmap.org/search.php?' + area_query +
-            '&polygon_geojson=1&format=json&extratags=1';
+          population_url = 'https://nominatim.openstreetmap.org/search.php?' + area_query + '&format=json&extratags=1';
           let xhttp = new XMLHttpRequest();
           xhttp.onload = function() {
             let population = document.getElementById('population');
@@ -187,11 +185,6 @@ window.onload = function() {
                     population.innerHTML = `<a target="_blank" href="${url}">${response.extratags.population}</a>`;
                   else
                     population.innerHTML = `<a target="_blank" href="${url}">N/A</a>`;
-                  if (response.hasOwnProperty('geojson')) {
-                    const bb = response.boundingbox;
-                    console.log("bounding box: (" + bb[0] + ", " + bb[2] + ") - (" + bb[1] + ", " + bb[3] + ")");
-                    // map.fitBounds([[bb[0], bb[2]], [bb[1], bb[3]]]);
-                  }
                 } else population.innerHTML = '?';
               } else
                 population.innerHTML = '?';
