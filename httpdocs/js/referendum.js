@@ -121,6 +121,20 @@ window.onload = function() {
       if (referendum.error)
         console.log('publisher error', JSON.stringify(referendum.error));
       else {
+        let geojson = {
+          type: 'MultiPolygon',
+          coordinates: referendum.area_polygons
+        };
+        L.geoJSON(geojson).addTo(map);
+        referendum.area_polygons.forEach(function(polygons) {
+          polygons.forEach(function(polygon) {
+            console.log('X = ' + polygon[0] + ' Y = ' + polygon[1]);
+          });
+        });
+        const bb = response.boundingbox;
+        map.fitBounds([[bb[0], bb[2]], [bb[1], bb[3]]]);
+
+
         const first_equal = referendum.area.indexOf('=');
         const first_newline = referendum.area.indexOf('\n');
         let area_name = referendum.area.substr(first_equal + 1, first_newline - first_equal);
