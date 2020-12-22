@@ -145,7 +145,7 @@ window.onload = function() {
           });
         });
         console.log("bounding box: (" + minLon + ", " + minLat + ") - (" + maxLon + ", " + maxLat + ")");
-        map.fitBounds([[minLon, minLat], [maxLon, maxLat]]);
+        map.fitBounds([[minLat, minLon], [maxLat, maxLon]]);
 
         const first_equal = referendum.area.indexOf('=');
         const first_newline = referendum.area.indexOf('\n');
