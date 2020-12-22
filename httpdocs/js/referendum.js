@@ -126,14 +126,26 @@ window.onload = function() {
           coordinates: referendum.area_polygons
         };
         L.geoJSON(geojson).addTo(map);
+        let maxLon = -1000;
+        let minLon = 1000;
+        let maxLat = -1000;
+        let minLat = 1000;
         referendum.area_polygons.forEach(function(polygons) {
           polygons.forEach(function(polygon) {
-            console.log('X = ' + polygon[0] + ' Y = ' + polygon[1]);
+            polygon.forEach(function(point) {
+              if (point[0] > maxLon)
+                maxLon = point[0];
+              else if (point[0] < minLon)
+                minLon = point[0];
+              if (point[1] > maxLat)
+                maxLat = point[1];
+              else if (point[1] < minLat)
+                minLat = point[1];
+            });
           });
         });
-        const bb = response.boundingbox;
-        map.fitBounds([[bb[0], bb[2]], [bb[1], bb[3]]]);
-
+        console.log("bounding box: (" + minLon + ", " + minLat + ") - (" + maxLon + ", " + maxLat + ")");
+        map.fitBounds([[minLon, minLat], [maxLon, maxLat]]);
 
         const first_equal = referendum.area.indexOf('=');
         const first_newline = referendum.area.indexOf('\n');
