@@ -98,7 +98,7 @@ if ($result) {
   }
 }
 
-$query = "SELECT area.id FROM area LEFT JOIN publication on publication.id=area.id "
+$query = "SELECT area.id, ST_AsGeoJSON(polygons) AS polygons FROM area LEFT JOIN publication on publication.id=area.id "
         ."WHERE name=\"$area\" AND publication.key=\"$trustee\"";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
@@ -106,7 +106,10 @@ if (!$result)
 $a = $result->fetch_assoc();
 $result->free();
 $area_id = intval($a['id']);
-
+$polygons = json_decode($a['polygons']);
+if ($polygons->type !== 'MultiPolygon')
+  error("Area without MultiPolygon: $polygons->type");
+$results->area_polygons = &$polygons->coordinates;
 # The following intermediary tables are created:
 # corpus, stations, registrations and ballots
 
