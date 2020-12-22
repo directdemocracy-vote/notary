@@ -155,7 +155,7 @@ window.onload = function() {
         area_array.forEach(function(argument) {
           const eq = argument.indexOf('=');
           let type = argument.substr(0, eq);
-          if (type === 'village')
+          if (['village', 'town', 'municipality'].includes(type))
             type = 'city';
           const name = argument.substr(eq + 1);
           if (type)
