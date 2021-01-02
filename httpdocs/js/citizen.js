@@ -39,7 +39,7 @@ window.onload = function() {
       col.classList.add('col');
       col.innerHTML =
         `<div class="citizen-label">Family name:</div><div class="citizen-entry">${answer.citizen.familyName}</div>` +
-        `<div class="citizen-label">Given names:</div><div class="citizen-entry>${answer.citizen.givenNames}</div>"`;
+        `<div class="citizen-label">Given names:</div><div class="citizen-entry">${answer.citizen.givenNames}</div>`;
     }
   };
 };
