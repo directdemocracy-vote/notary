@@ -29,7 +29,7 @@ window.onload = function() {
       img.src = answer.citizen.picture;
       content.appendChild(img);
       let p = document.createElement('p');
-      p.innerHTML = answer.citizen.lastName;
+      p.innerHTML = answer.citizen.familyName;
       content.appendChild(p);
     }
   };
