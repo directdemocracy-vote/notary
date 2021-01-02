@@ -31,6 +31,7 @@ window.onload = function() {
       let col = document.createElement('div');
       row.appendChild(col);
       col.classList.add('col');
+      col.style.maxWidth = '150px';
       let img = document.createElement('img');
       col.appendChild(img);
       img.src = answer.citizen.picture;
