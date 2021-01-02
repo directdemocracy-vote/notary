@@ -26,6 +26,7 @@ window.onload = function() {
         console.log(answer.error);
         return;
       }
+      console.log(answer);
       let row = document.createElement('div');
       content.appendChild(row);
       row.classList.add('row');
@@ -70,7 +71,7 @@ window.onload = function() {
         attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
       marker = L.marker([latitude, longitude]).addTo(map);
-      marker.bindPopup(latitude + ', ' + longitude);
+      marker.bindPopup(`<b>${familyName}</b> ${givenNames}<br>[${latitude}, ${longitude}]`);
       map.setView([latitude, longitude], 18);
       map.on('contextmenu', function(event) {
         return false;
@@ -80,7 +81,6 @@ window.onload = function() {
       nominatim.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
           const a = JSON.parse(this.responseText);
-          console.log(a);
           const address = a.display_name;
           marker.setPopupContent(`<b>${familyName}</b> ${givenNames}<br>${address}`).openPopup();
         }
