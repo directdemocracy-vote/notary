@@ -88,6 +88,25 @@ window.onload = function() {
       nominatim.open('GET', 'https://nominatim.openstreetmap.org/reverse.php?format=json&lat=' + latitude + '&lon=' +
         longitude + '&zoom=20', true);
       nominatim.send();
+
+      row = document.createElement('div');
+      content.appendChild(row);
+      row.classList.add('row');
+      row.innerHTML = '<h4>Reputation: <span id="reputation">...</span></h4>';
+
+      function addEndorsement(endorsement) {
+
+      }
+
+      if (answer.endorsements.length) {
+        row = document.createElement('div');
+        content.appendChild(row);
+        row.classList.add('row');
+        row.innerHTML = `<h4>Endorsed by ${answer.endorsements.length}:</h4>`;
+        answer.endorsements.forEach(function(endorsement) {
+          addEndorsement(endorsement);
+        });
+      }
     }
   };
 };
