@@ -135,24 +135,28 @@ window.onload = function() {
       content.appendChild(row);
       row.classList.add('row');
       row.classList.add('mt-4');
-      if (answer.citizen_endorsements.length) {
-        row.innerHTML = `<h4>Endorsed by ${answer.citizen_endorsements.length}:</h4>`;
-        answer.citizen_endorsements.forEach(function(endorsement) {
-          addEndorsement(endorsement);
-        });
-      } else
-        row.innerHTML = `<h4>Not endorsed by others</h4>`;
+      let count = 0;
+      answer.citizen_endorsements.forEach(function(endorsement) {
+        if (!endorsement.revoke)
+          count++;
+      });
+      row.innerHTML = count ? `<h4>Endorsed by ${count}:</h4>` : `<h4>Not endorsed by anyone</h4>`;
+      answer.citizen_endorsements.forEach(function(endorsement) {
+        addEndorsement(endorsement);
+      });
       row = document.createElement('div');
       content.appendChild(row);
       row.classList.add('row');
       row.classList.add('mt-4');
-      if (answer.endorsements.length) {
-        row.innerHTML = `<h4>Endorsed ${answer.endorsements.length}:</h4>`;
-        answer.endorsements.forEach(function(endorsement) {
-          addEndorsement(endorsement);
-        });
-      } else
-        row.innerHTML = `<h4>Did not endorse others</h4>`;
+      count = 0;
+      answer.endorsements.forEach(function(endorsement) {
+        if (!endorsement.revoke)
+          count++;
+      });
+      row.innerHTML = count ? `<h4>Endorsing ${count}:</h4>` : `<h4>Not endorsing anyone</h4>`;
+      answer.endorsements.forEach(function(endorsement) {
+        addEndorsement(endorsement);
+      });
     }
   };
 };
