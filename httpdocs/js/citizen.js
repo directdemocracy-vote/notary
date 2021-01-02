@@ -115,9 +115,13 @@ window.onload = function() {
         let card = document.createElement('div');
         content.appendChild(card);
         card.classList.add('card');
+        if (endorsement.revoked)
+          card.classList.add('revoked');
+        const published = new Date(endorsement.published).toISOString().slice(0, 10);
         card.innerHTML =
-          `<div class="card-body"><div class="row"><div class="col"><img style="width:50px" src="${endorsement.picture}"></div>` +
-          `<div class="col"><b>${endorsement.familyName}</b> ${endorsement.givenNames}</div></div></div>`;
+          `<div class="card-body"><div class="row"><div class="col"><img style="width:75px" src="${endorsement.picture}"></div>` +
+          `<div class="col"><a href="/citizen.html?fingerprint=${endorsement.fingerprint}"<b>${endorsement.familyName}</b> ` +
+          `${endorsement.givenNames}</a><br>Endorsed on ${published}</div></div></div>`;
       }
 
       if (answer.endorsements.length) {
