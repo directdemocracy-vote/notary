@@ -9,6 +9,7 @@ function findGetParameter(parameterName) {
 }
 
 window.onload = function() {
+  const trustee = 'https://trustee.directdemocracy.vote';
   const fingerprint = findGetParameter('fingerprint');
   if (!fingerprint) {
     console.log('Missing fingerprint GET argument.');
