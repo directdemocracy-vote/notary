@@ -128,11 +128,16 @@ window.onload = function() {
         } else
           label = "Endorsed on";
         const published = new Date(endorsement.published).toISOString().slice(0, 10);
+        let expires;
+        if (endorsement.hasOwnProperty('expires') && !endorsement.revoke)
+          expires = `<br>Expires on ` + new Date(endorsement.expires).toISOString().slice(0, 10);
+        else
+          expires = '';
         card.innerHTML =
           `<div class="card-body"><div class="row"><div class="col-3"><img style="width:75px" ` +
           `src="${endorsement.picture}"></div><div class="col-9">` +
           `<a href="/citizen.html?fingerprint=${endorsement.fingerprint}"<b>${endorsement.familyName}</b> ` +
-          `${endorsement.givenNames}</a><br><small>${label} ${published}</small></div></div></div>`;
+          `${endorsement.givenNames}</a><br><small>${label} ${published}${expires}</small></div></div></div>`;
       }
 
       row = document.createElement('div');
