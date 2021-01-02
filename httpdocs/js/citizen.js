@@ -66,6 +66,11 @@ window.onload = function() {
         attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
       marker = L.marker([latitude, longitude]).addTo(map);
+      marker.bindPopup(latitude + ', ' + longitude);
+      map.setView([latitude, longitude], 18);
+      map.on('contextmenu', function(event) {
+        return false;
+      });
     }
   };
 };
