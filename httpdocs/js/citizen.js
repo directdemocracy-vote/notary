@@ -25,9 +25,12 @@ window.onload = function() {
       console.log(answer);
       if (answer.error)
         return;
-      img = document.createElement('img');
+      let img = document.createElement('img');
       img.src = answer.citizen.picture;
       content.appendChild(img);
+      let p = document.createElement('p');
+      p.innerHTML = citizen.lastName;
+      content.appendChild(p);
     }
   };
 };
