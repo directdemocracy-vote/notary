@@ -94,21 +94,24 @@ window.onload = function() {
       content.appendChild(row);
       row.classList.add('row');
       row.classList.add('mt-4');
-      row.innerHTML = '<h4>Reputation: <span id="reputation">...</span></h4>';
+      row.innerHTML = `<h4>Reputation: <span id="reputation">...</span></h4>` +
+        `<span id="trustee-action">Querying</span> <a href="${trustee}">${trustee}</a>`;
 
       xhttp = new XMLHttpRequest(); // get reputation from trustee
       xhttp.open('GET', trustee + '/reputation.php?key=' + encodeURIComponent(answer.citizen.key), true);
       xhttp.send();
       xhttp.onload = function() {
         if (this.status == 200) {
-          let reputation = document.getElementById('reputation');
           let answer = JSON.parse(this.responseText);
           if (answer.error) {
             console.log(answer.error);
             return;
           }
+          let reputation = document.getElementById('reputation');
           reputation.style.color = answer.endorsed ? 'blue' : 'red';
           reputation.innerHTML = answer.reputation;
+          let action = document.getElementById('trustee-action');
+          action.innerHTML = `From trustee: `;
         }
       };
 
