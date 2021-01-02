@@ -112,7 +112,12 @@ window.onload = function() {
       };
 
       function addEndorsement(endorsement) {
-
+        let card = document.createElement('div');
+        content.appendChild(card);
+        card.classList.add('card');
+        card.innerHTML =
+          `<div class="card-body"><div class="row"><div class="col"><img style="width:50px" src="${endorsement.picture}"></div>` +
+          `<div class="col"><b>${endorsement.familyName}</b> ${endorsement.givenNames}</div></div></div>`;
       }
 
       if (answer.endorsements.length) {
