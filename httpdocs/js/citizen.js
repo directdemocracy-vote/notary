@@ -93,6 +93,7 @@ window.onload = function() {
       row = document.createElement('div');
       content.appendChild(row);
       row.classList.add('row');
+      row.classList.add('mt-4');
       row.innerHTML = '<h4>Reputation: <span id="reputation">...</span></h4>';
 
       xhttp = new XMLHttpRequest(); // get reputation from trustee
@@ -116,7 +117,7 @@ window.onload = function() {
         content.appendChild(card);
         card.classList.add('card');
         let label;
-        if (endorsement.revoked) {
+        if (endorsement.revoke) {
           card.classList.add('revoked');
           label = "Revoked on";
         } else
@@ -132,22 +133,25 @@ window.onload = function() {
       row = document.createElement('div');
       content.appendChild(row);
       row.classList.add('row');
+      row.classList.add('mt-4');
       if (answer.endorsements.length) {
         row.innerHTML = `<h4>Endorsed by ${answer.endorsements.length}:</h4>`;
         answer.endorsements.forEach(function(endorsement) {
           addEndorsement(endorsement);
         });
       } else
-        row.innerHTML = `<h4>Not endorsed</h4>`;
+        row.innerHTML = `<h4>Not endorsed by others</h4>`;
       row = document.createElement('div');
       content.appendChild(row);
       row.classList.add('row');
+      row.classList.add('mt-4');
       if (answer.citizen_endorsements.length) {
         row.innerHTML = `<h4>Endorsed ${answer.citizen_endorsements.length}:</h4>`;
         answer.citizen_endorsements.forEach(function(endorsement) {
           addEndorsement(endorsement);
         });
-      }
+      } else
+        row.innerHTML = `<h4>Did not endorse others</h4>`;
     }
   };
 };
