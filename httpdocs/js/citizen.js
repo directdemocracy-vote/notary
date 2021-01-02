@@ -43,9 +43,11 @@ window.onload = function() {
       const expires = new Date(answer.citizen.expires).toISOString().slice(0, 10);
       const latitude = answer.citizen.latitude;
       const longitude = answer.citizen.longitude;
+      const familyName = answer.citizen.familyName;
+      const givenNames = answer.citizen.givenNames;
       col.innerHTML =
-        `<div class="citizen-label">Family name:</div><div class="citizen-entry">${answer.citizen.familyName}</div>` +
-        `<div class="citizen-label">Given names:</div><div class="citizen-entry">${answer.citizen.givenNames}</div>` +
+        `<div class="citizen-label">Family name:</div><div class="citizen-entry">${familyName}</div>` +
+        `<div class="citizen-label">Given names:</div><div class="citizen-entry">${givenNames}</div>` +
         `<div class="citizen-label">Latitude, longitude:</div>` +
         `<div class="citizen-entry">${latitude}, ${longitude}</div>` +
         `<div><span class="citizen-label">Created:</span><b style="float:right">${published}</b></div>` +
@@ -78,7 +80,7 @@ window.onload = function() {
           const a = JSON.parse(this.responseText);
           console.log(a);
           const address = a.display_name;
-          marker.setPopupContent(address).openPopup();
+          marker.setPopupContent(`<b>${familyName}</b> ${givenNames}<br>${address}`).openPopup();
         }
       };
       nominatim.open('GET', 'https://nominatim.openstreetmap.org/reverse.php?format=json&lat=' + latitude + '&lon=' +
