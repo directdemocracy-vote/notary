@@ -9,32 +9,37 @@ $mysqli = new mysqli($database_host, $database_username, $database_password, $da
 if ($mysqli->connect_errno)
   die("{\"error\":\"Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)\"}");
 $mysqli->set_charset('utf8mb4');
-$key = $mysqli->escape_string($_POST['key']);
-$query = "SELECT publication.published, publication.expires, publication.signature, "
+if (isset($_POST['key']))
+  $condition = "publication.`key`='" . $mysqli->escape_string($_POST['key']) . "'";
+else if (isset($_POST['fingerprint']))
+  $condition = "publication.fingerprint='" . $mysqli->escape_string($_POST['fingerprint']) . "'";
+else
+  die("{\"error\":\"missing key or fingerprint POST argument\"}");
+$query = "SELECT publication.`key`, publication.published, publication.expires, publication.signature, "
         ."citizen.familyName, citizen.givenNames, citizen.picture, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude "
         ."FROM publication INNER JOIN citizen ON publication.id = citizen.id "
-        ."WHERE publication.`key` = '$key'";
+        ."WHERE $condition";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
-$citizen = $result->fetch_assoc() or die("{\"error\":\"citizen not found: $key\"}");
+$citizen = $result->fetch_assoc() or die("{\"error\":\"citizen not found: $condition\"}");
 $result->free();
 settype($citizen['published'], 'int');
 settype($citizen['expires'], 'int');
 settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
-$endorsements = endorsements($mysqli, $key);
+$endorsements = endorsements($mysqli, $citizen['key']);
 $query = "SELECT pc.fingerprint, MAX(pe.published) AS published, e.revoked, "
         ."c.familyName, c.givenNames, c.picture, ST_Y(home) AS latitude, ST_X(home) AS longitude "
         ."FROM publication pe "
         ."INNER JOIN endorsement e ON e.id = pe.id "
         ."INNER JOIN publication pc ON pc.`key` = pe.`key` "
         ."INNER JOIN citizen c ON pc.id = c.id "
-        ."WHERE e.publicationKey = '$key' "
+        ."WHERE e.publicationKey = '$citizen[key]' "
         ."GROUP BY c.id "
         ."ORDER BY pe.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 if (!$result)
-  return "{\"error\":\"$mysqli->error\"}";
+  die("{\"error\":\"$mysqli->error\"}");
 $citizen_endorsements = array();
 $now = intval(microtime(true) * 1000);  # milliseconds
 while($e = $result->fetch_assoc()) {
