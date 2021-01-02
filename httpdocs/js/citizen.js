@@ -40,13 +40,32 @@ window.onload = function() {
       col.classList.add('col');
       const published = new Date(answer.citizen.published).toISOString().slice(0, 10);
       const expires = new Date(answer.citizen.expires).toISOString().slice(0, 10);
+      const latitude = answer.citizen.latitude;
+      const longitude = answer.citizen.longitude;
       col.innerHTML =
         `<div class="citizen-label">Family name:</div><div class="citizen-entry">${answer.citizen.familyName}</div>` +
         `<div class="citizen-label">Given names:</div><div class="citizen-entry">${answer.citizen.givenNames}</div>` +
         `<div class="citizen-label">Latitude, longitude:</div>` +
-        `<div class="citizen-entry">${answer.citizen.latitude}, ${answer.citizen.longitude}</div>` +
+        `<div class="citizen-entry">${latitude}, ${longitude}</div>` +
         `<div><span class="citizen-label">Created:</span><b style="float:right">${published}</b></div>` +
         `<div><span class="citizen-label">Expires:</span><b style="float:right">${expires}</b></div>`;
+      row = document.createElement('div');
+      content.appendChild(row);
+      row.id = 'map';
+      row.style.width = '100%';
+      row.style.height = '400px';
+      let map = L.map('map', {
+        dragging: false
+      });
+      map.whenReady(function() {
+        setTimeout(() => {
+          this.invalidateSize();
+        }, 0);
+      });
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+      marker = L.marker([latitude, longitude]).addTo(map);
     }
   };
 };
