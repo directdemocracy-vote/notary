@@ -83,7 +83,7 @@ window.onload = function() {
         }
       };
       nominatim.open('GET', 'https://nominatim.openstreetmap.org/reverse.php?format=json&lat=' + latitude + '&lon=' +
-        longitude + '&zoom=18', true);
+        longitude + '&zoom=20', true);
       nominatim.send();
     }
   };
