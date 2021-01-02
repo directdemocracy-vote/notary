@@ -78,7 +78,7 @@ window.onload = function() {
           const a = JSON.parse(this.responseText);
           console.log(a);
           const address = a.display_name;
-          marker.setPopupContent(`<center style="color:#999">${latitude}, ${longitude}</center><br>${address}`).openPopup();
+          marker.setPopupContent(address).openPopup();
         }
       };
       nominatim.open('GET', 'https://nominatim.openstreetmap.org/reverse.php?format=json&lat=' + latitude + '&lon=' +
