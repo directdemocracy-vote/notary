@@ -94,11 +94,12 @@ window.onload = function() {
       content.appendChild(row);
       row.classList.add('row');
       row.classList.add('mt-4');
+      const url = trustee + '/reputation.php?key=' + encodeURIComponent(answer.citizen.key);
       row.innerHTML = `<h4>Reputation: <span id="reputation">...</span></h4>` +
-        `<span id="trustee-action">Querying</span> <a href="${trustee}">${trustee}</a>`;
+        `<div><span id="trustee-action">Querying</span> <a href="${url}">${trustee.substring(8)}</a></div>`;
 
       xhttp = new XMLHttpRequest(); // get reputation from trustee
-      xhttp.open('GET', trustee + '/reputation.php?key=' + encodeURIComponent(answer.citizen.key), true);
+      xhttp.open('GET', url, true);
       xhttp.send();
       xhttp.onload = function() {
         if (this.status == 200) {
@@ -111,7 +112,7 @@ window.onload = function() {
           reputation.style.color = answer.endorsed ? 'blue' : 'red';
           reputation.innerHTML = answer.reputation;
           let action = document.getElementById('trustee-action');
-          action.innerHTML = `From trustee: `;
+          action.innerHTML = `From: `;
         }
       };
 
