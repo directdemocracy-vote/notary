@@ -25,12 +25,21 @@ window.onload = function() {
       console.log(answer);
       if (answer.error)
         return;
+      let row = document.createElement('div');
+      content.appendChild(row);
+      row.classList.add('row');
+      let col = document.createElement('div');
+      row.appendChild(col);
+      col.classList.add('col');
       let img = document.createElement('img');
+      col.appendChild(img);
       img.src = answer.citizen.picture;
-      content.appendChild(img);
-      let p = document.createElement('p');
-      p.innerHTML = answer.citizen.familyName;
-      content.appendChild(p);
+      col = document.createElement('div');
+      row.appendChild(col);
+      col.classList.add('col');
+      col.innerHTML =
+        `<div class="citizen-label">Family name:</div><div class="citizen-entry">${answer.citizen.familyName}</div>` +
+        `<div class="citizen-label">Given names:</div><div class="citizen-entry>${answer.citizen.givenNames}</div>"`;
     }
   };
 };
