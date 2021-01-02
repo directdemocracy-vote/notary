@@ -71,6 +71,18 @@ window.onload = function() {
       map.on('contextmenu', function(event) {
         return false;
       });
+      let nominatim = new XMLHttpRequest();
+      nominatim.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          const a = JSON.parse(this.responseText);
+          const address = a.display_name;
+          marker.setPopupContent(address + '<br><br><center style="color:#999">(' +
+            latitude + ', ' + longitude + ')</center>').openPopup();
+        }
+      };
+      nominatim.open('GET', 'https://nominatim.openstreetmap.org/reverse.php?format=json&lat=' + lat + '&lon=' + lon +
+        '&zoom=10', true);
+      nominatim.send();
     }
   };
 };
