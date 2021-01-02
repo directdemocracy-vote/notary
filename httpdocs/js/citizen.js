@@ -77,22 +77,38 @@ window.onload = function() {
         return false;
       });
       map.dragging.disable();
-      let nominatim = new XMLHttpRequest();
-      nominatim.onreadystatechange = function() {
+      let xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
           const a = JSON.parse(this.responseText);
           const address = a.display_name;
           marker.setPopupContent(`<b>${familyName}</b> ${givenNames}<br>${address}`).openPopup();
         }
       };
-      nominatim.open('GET', 'https://nominatim.openstreetmap.org/reverse.php?format=json&lat=' + latitude + '&lon=' +
-        longitude + '&zoom=20', true);
-      nominatim.send();
+      xhttp.open('GET', 'https://nominatim.openstreetmap.org/reverse.php?format=json&lat=' + latitude + '&lon=' + longitude +
+        '&zoom=20', true);
+      xhttp.send();
 
       row = document.createElement('div');
       content.appendChild(row);
       row.classList.add('row');
       row.innerHTML = '<h4>Reputation: <span id="reputation">...</span></h4>';
+
+      xhttp = new XMLHttpRequest(); // get reputation from trustee
+      xhttp.open('GET', trustee + '/reputation.php?key=' + encodeURIComponent(answer.citizen.key), true);
+      xhttp.send();
+      xhttp.onload = function() {
+        if (this.status == 200) {
+          let reputation = document.getElementById('reputation');
+          let answer = JSON.parse(this.responseText);
+          if (answer.error) {
+            console.log(answer.error);
+            return;
+          }
+          reputation.style.color = answer.endorsed ? 'blue' : 'red';
+          reputation.innerHTML = answer.reputation;
+        }
+      };
 
       function addEndorsement(endorsement) {
 
