@@ -38,7 +38,7 @@ window.onload = function() {
       row.appendChild(col);
       col.classList.add('col');
       const published = new Date(answer.citizen.published).toISOString().slice(0, 10);
-      const expires = new Date(answeer.citizen.expires).toISOString().slice(0, 10);
+      const expires = new Date(answer.citizen.expires).toISOString().slice(0, 10);
       col.innerHTML =
         `<div class="citizen-label">Family name:</div><div class="citizen-entry">${answer.citizen.familyName}</div>` +
         `<div class="citizen-label">Given names:</div><div class="citizen-entry">${answer.citizen.givenNames}</div>` +
