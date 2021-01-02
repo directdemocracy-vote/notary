@@ -115,22 +115,36 @@ window.onload = function() {
         let card = document.createElement('div');
         content.appendChild(card);
         card.classList.add('card');
-        if (endorsement.revoked)
+        let label;
+        if (endorsement.revoked) {
           card.classList.add('revoked');
+          label = "Revoked on";
+        } else
+          label = "Endorsed on";
         const published = new Date(endorsement.published).toISOString().slice(0, 10);
         card.innerHTML =
           `<div class="card-body"><div class="row"><div class="col-3"><img style="width:75px" ` +
           `src="${endorsement.picture}"></div><div class="col-9">` +
           `<a href="/citizen.html?fingerprint=${endorsement.fingerprint}"<b>${endorsement.familyName}</b> ` +
-          `${endorsement.givenNames}</a><br><small>Endorsed on ${published}</small></div></div></div>`;
+          `${endorsement.givenNames}</a><br><small>${label} ${published}</small></div></div></div>`;
       }
 
+      row = document.createElement('div');
+      content.appendChild(row);
+      row.classList.add('row');
       if (answer.endorsements.length) {
-        row = document.createElement('div');
-        content.appendChild(row);
-        row.classList.add('row');
         row.innerHTML = `<h4>Endorsed by ${answer.endorsements.length}:</h4>`;
         answer.endorsements.forEach(function(endorsement) {
+          addEndorsement(endorsement);
+        });
+      } else
+        row.innerHTML = `<h4>Not endorsed</h4>`;
+      row = document.createElement('div');
+      content.appendChild(row);
+      row.classList.add('row');
+      if (answer.citizen_endorsements.length) {
+        row.innerHTML = `<h4>Endorsed ${answer.citizen_endorsements.length}:</h4>`;
+        answer.citizen_endorsements.forEach(function(endorsement) {
           addEndorsement(endorsement);
         });
       }
