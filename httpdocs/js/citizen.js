@@ -74,6 +74,7 @@ window.onload = function() {
       map.on('contextmenu', function(event) {
         return false;
       });
+      map.dragging.disable();
       let nominatim = new XMLHttpRequest();
       nominatim.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
