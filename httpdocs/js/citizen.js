@@ -80,8 +80,8 @@ window.onload = function() {
             latitude + ', ' + longitude + ')</center>').openPopup();
         }
       };
-      nominatim.open('GET', 'https://nominatim.openstreetmap.org/reverse.php?format=json&lat=' + lat + '&lon=' + lon +
-        '&zoom=10', true);
+      nominatim.open('GET', 'https://nominatim.openstreetmap.org/reverse.php?format=json&lat=' + latitude + '&lon=' +
+        longitude + '&zoom=10', true);
       nominatim.send();
     }
   };
