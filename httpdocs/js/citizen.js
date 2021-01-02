@@ -116,6 +116,7 @@ window.onload = function() {
         let card = document.createElement('div');
         content.appendChild(card);
         card.classList.add('card');
+        card.classList.add('mb-1');
         let label;
         if (endorsement.revoke) {
           card.classList.add('revoked');
@@ -134,9 +135,9 @@ window.onload = function() {
       content.appendChild(row);
       row.classList.add('row');
       row.classList.add('mt-4');
-      if (answer.endorsements.length) {
-        row.innerHTML = `<h4>Endorsed by ${answer.endorsements.length}:</h4>`;
-        answer.endorsements.forEach(function(endorsement) {
+      if (answer.citizen_endorsements.length) {
+        row.innerHTML = `<h4>Endorsed by ${answer.citizen_endorsements.length}:</h4>`;
+        answer.citizen_endorsements.forEach(function(endorsement) {
           addEndorsement(endorsement);
         });
       } else
@@ -145,9 +146,9 @@ window.onload = function() {
       content.appendChild(row);
       row.classList.add('row');
       row.classList.add('mt-4');
-      if (answer.citizen_endorsements.length) {
-        row.innerHTML = `<h4>Endorsed ${answer.citizen_endorsements.length}:</h4>`;
-        answer.citizen_endorsements.forEach(function(endorsement) {
+      if (answer.endorsements.length) {
+        row.innerHTML = `<h4>Endorsed ${answer.endorsements.length}:</h4>`;
+        answer.endorsements.forEach(function(endorsement) {
           addEndorsement(endorsement);
         });
       } else
