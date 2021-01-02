@@ -58,7 +58,8 @@ window.onload = function() {
       row.style.width = '100%';
       row.style.height = '400px';
       let map = L.map('map', {
-        dragging: false
+        dragging: false,
+        scrollWheelZoom: false
       });
       map.whenReady(function() {
         setTimeout(() => {
