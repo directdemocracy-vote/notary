@@ -119,8 +119,8 @@ window.onload = function() {
           card.classList.add('revoked');
         const published = new Date(endorsement.published).toISOString().slice(0, 10);
         card.innerHTML =
-          `<div class="card-body"><div class="row"><div class="col-4"><img style="width:75px" ` +
-          `src="${endorsement.picture}"></div><div class="col-8">` +
+          `<div class="card-body"><div class="row"><div class="col-3"><img style="width:75px" ` +
+          `src="${endorsement.picture}"></div><div class="col-9">` +
           `<a href="/citizen.html?fingerprint=${endorsement.fingerprint}"<b>${endorsement.familyName}</b> ` +
           `${endorsement.givenNames}</a><br><small>Endorsed on ${published}</small></div></div></div>`;
       }
