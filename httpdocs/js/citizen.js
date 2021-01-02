@@ -22,9 +22,10 @@ window.onload = function() {
   xhttp.onload = function() {
     if (this.status == 200) {
       let answer = JSON.parse(this.responseText);
-      console.log(answer);
-      if (answer.error)
+      if (answer.error) {
+        console.log(answer.error);
         return;
+      }
       let row = document.createElement('div');
       content.appendChild(row);
       row.classList.add('row');
@@ -75,6 +76,7 @@ window.onload = function() {
       nominatim.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
           const a = JSON.parse(this.responseText);
+          console.log(a);
           const address = a.display_name;
           marker.setPopupContent(address + '<br><br><center style="color:#999">(' +
             latitude + ', ' + longitude + ')</center>').openPopup();
