@@ -23,6 +23,11 @@ window.onload = function() {
     if (this.status == 200) {
       let answer = JSON.parse(this.responseText);
       console.log(answer);
+      if (answer.error)
+        return;
+      img = document.createElement('img');
+      img.src = answer.citizen.picture;
+      content.appendChild(img);
     }
   };
 };
