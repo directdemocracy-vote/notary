@@ -42,8 +42,8 @@ window.onload = function() {
         `<div class="citizen-label">Given names:</div><div class="citizen-entry">${answer.citizen.givenNames}</div>` +
         `<div class="citizen-label">Latitude, longitude:</div>` +
         `<div class="citizen-entry">${answer.citizen.latitude}, ${answer.citizen.longitude}</div>` +
-        `<div class="citizen-entry">Created: <b>${answer.citizen.published}</b></div>` +
-        `<div class="citizen-entry">Expires: <b>${answer.citizen.expires}</b></div>`;
+        `<div><span class="citizen-label">Created:</span><b>${answer.citizen.published}</b></div>` +
+        `<div class="citizen-label">Expires: <b>${answer.citizen.expires}</b></div>`;
     }
   };
 };
