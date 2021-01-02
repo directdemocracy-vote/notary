@@ -37,13 +37,15 @@ window.onload = function() {
       col = document.createElement('div');
       row.appendChild(col);
       col.classList.add('col');
+      const published = new Date(answer.citizen.published).toISOString().slice(0, 10);
+      const expires = new Date(answeer.citizen.expires).toISOString().slice(0, 10);
       col.innerHTML =
         `<div class="citizen-label">Family name:</div><div class="citizen-entry">${answer.citizen.familyName}</div>` +
         `<div class="citizen-label">Given names:</div><div class="citizen-entry">${answer.citizen.givenNames}</div>` +
         `<div class="citizen-label">Latitude, longitude:</div>` +
         `<div class="citizen-entry">${answer.citizen.latitude}, ${answer.citizen.longitude}</div>` +
-        `<div><span class="citizen-label">Created:</span><b>${answer.citizen.published}</b></div>` +
-        `<div class="citizen-label">Expires: <b>${answer.citizen.expires}</b></div>`;
+        `<div><span class="citizen-label">Created:</span><b style="float:right">${published}</b></div>` +
+        `<div><span class="citizen-label">Expires:</span><b style="float:right">${expires}</b></div>`;
     }
   };
 };
