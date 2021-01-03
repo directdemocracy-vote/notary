@@ -1,15 +1,13 @@
-function findGetParameter(parameterName) {
-  let result = null;
-  let tmp = [];
+function findGetParameter(parameterName, result = null) {
   location.search.substr(1).split("&").forEach(function(item) {
-    tmp = item.split("=");
+    let tmp = item.split("=");
     if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
   });
   return result;
 }
 
 window.onload = function() {
-  const trustee = 'https://trustee.directdemocracy.vote';
+  const trustee = 'https://' + findGetParameter('trustee', 'trustee.directdemocracy.vote');
   const fingerprint = findGetParameter('fingerprint');
   if (!fingerprint) {
     console.log('Missing fingerprint GET argument.');
@@ -52,8 +50,8 @@ window.onload = function() {
         `<div class="citizen-label">Given names:</div><div class="citizen-entry">${givenNames}</div>` +
         `<div class="citizen-label">Latitude, longitude:</div>` +
         `<div class="citizen-entry">${latitude}, ${longitude}</div>` +
-        `<div><span class="citizen-label">Created:</span><b style="float:right">${published}</b></div>` +
-        `<div><span class="citizen-label">Expires:</span><b style="float:right">${expires}</b></div>`;
+        `<div><span class="citizen-label">Created:</span> <b>${published}</b></div>` +
+        `<div><span class="citizen-label">Expires:</span> <b>${expires}</b></div>`;
       row = document.createElement('div');
       content.appendChild(row);
       row.id = 'map';
@@ -96,7 +94,7 @@ window.onload = function() {
       row.classList.add('mt-4');
       const url = trustee + '/reputation.php?key=' + encodeURIComponent(answer.citizen.key);
       row.innerHTML = `<h4>Reputation: <span id="reputation">...</span></h4>` +
-        `<div><span id="trustee-action">Querying</span> <a href="${url}">${trustee.substring(8)}</a></div>`;
+        `<div><span id="trustee-action">Querying</span> <input name="trustee">${trustee.substring(8)}</input></div>`;
 
       xhttp = new XMLHttpRequest(); // get reputation from trustee
       xhttp.open('GET', url, true);
