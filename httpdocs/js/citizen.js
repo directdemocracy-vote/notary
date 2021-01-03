@@ -25,7 +25,6 @@ window.onload = function() {
         console.log(answer.error);
         return;
       }
-      console.log(answer);
       let row = document.createElement('div');
       content.appendChild(row);
       row.classList.add('row');
@@ -105,7 +104,6 @@ window.onload = function() {
 </div>`;
       document.getElementById('reload').addEventListener('click', function(event) {
         trustee = 'https://' + document.getElementById('trustee').value;
-        console.log("trustee = " + trustee);
         document.getElementById('reputation').innerHTML = '...';
         loadReputation();
       });
