@@ -7,7 +7,7 @@ function findGetParameter(parameterName, result = null) {
 }
 
 window.onload = function() {
-  const trustee = findGetParameter('trustee', 'https://trustee.directdemocracy.vote');
+  let trustee = findGetParameter('trustee', 'https://trustee.directdemocracy.vote');
   const fingerprint = findGetParameter('fingerprint');
   if (!fingerprint) {
     console.log('Missing fingerprint GET argument.');
@@ -106,6 +106,7 @@ window.onload = function() {
 </div>`;
       document.getElementById('reload').addEventListener('click', function(event) {
         trustee = 'https://' + document.getElementById('trustee').value;
+        document.getElementById('reputation').innerHTML = '...';
         loadReputation();
       });
 
