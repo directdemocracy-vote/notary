@@ -7,7 +7,7 @@ function findGetParameter(parameterName, result = null) {
 }
 
 window.onload = function() {
-  const trustee = 'https://' + findGetParameter('trustee', 'trustee.directdemocracy.vote');
+  const trustee = findGetParameter('trustee', 'https://trustee.directdemocracy.vote');
   const fingerprint = findGetParameter('fingerprint');
   if (!fingerprint) {
     console.log('Missing fingerprint GET argument.');
@@ -94,7 +94,8 @@ window.onload = function() {
       row.classList.add('mt-4');
       const url = trustee + '/reputation.php?key=' + encodeURIComponent(answer.citizen.key);
       row.innerHTML = `<h4>Reputation: <span id="reputation">...</span></h4>` +
-        `<div><span id="trustee-action">Querying</span> <input name="trustee">${trustee.substring(8)}</input></div>`;
+        `<div><span id="trustee-action">Querying</span> <input name="trustee" value="${trustee.substring(8)}">` +
+        `<button class="btn btn-primary"><span class="glyphicon glyphicon-refresh"></span> Refresh</button></div>`;
 
       xhttp = new XMLHttpRequest(); // get reputation from trustee
       xhttp.open('GET', url, true);
