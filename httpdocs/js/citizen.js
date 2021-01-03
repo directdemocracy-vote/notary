@@ -97,29 +97,41 @@ window.onload = function() {
         `<h4>Reputation: <span id="reputation">...</span></h4>
 <div class="input-group mb-3">
   <span class="input-group-text" id="protocol">https://</span>
-  <input type="text" class="form-control" placeholder="https://trustee.directdemocracy.vote" aria-label="Trustee URL"
-   aria-describedby="protocol" value="${trustee.substring(8)}">
+  <input id="trustee" type="text" class="form-control" placeholder="https://trustee.directdemocracy.vote"
+   aria-label="Trustee URL" aria-describedby="protocol" value="${trustee.substring(8)}">
    <button class="btn btn-outline-secondary" type="button" id="reload"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
   <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
   <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
 </svg></button>
 </div>`;
+      document.getElementById('reload').addEventListener('click', function(event) {
+        trustee = 'https://' + document.getElementById('trustee').value;
+        loadReputation();
+      });
 
-      xhttp = new XMLHttpRequest(); // get reputation from trustee
-      xhttp.open('GET', url, true);
-      xhttp.send();
-      xhttp.onload = function() {
-        if (this.status == 200) {
-          let answer = JSON.parse(this.responseText);
-          if (answer.error) {
-            console.log(answer.error);
-            return;
-          }
+      function loadReputation() {
+        xhttp = new XMLHttpRequest(); // get reputation from trustee
+        xhttp.open('GET', url, true);
+        xhttp.send();
+        xhttp.onload = function() {
           let reputation = document.getElementById('reputation');
-          reputation.style.color = answer.endorsed ? 'blue' : 'red';
-          reputation.innerHTML = answer.reputation;
-        }
-      };
+          if (this.status == 200) {
+            let answer = JSON.parse(this.responseText);
+            if (answer.error) {
+              reputation.style.color = 'red';
+              reputation.innerHTML = answer.error;
+              return;
+            }
+            reputation.style.color = answer.endorsed ? 'blue' : 'red';
+            reputation.innerHTML = answer.reputation;
+          } else {
+            reputation.style.color = 'red';
+            reputation.innerHTML = this.statusText + ' (' + this.status + ')';
+          }
+        };
+      }
+
+      loadReputation();
 
       function addEndorsement(endorsement) {
         let card = document.createElement('div');
