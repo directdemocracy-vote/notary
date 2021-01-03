@@ -99,7 +99,7 @@ window.onload = function() {
   <span class="input-group-text" id="protocol">https://</span>
   <input type="text" class="form-control" placeholder="https://trustee.directdemocracy.vote" aria-label="Trustee URL"
    aria-describedby="protocol" value="${trustee.substring(8)}">
-   <button class="btn" type="button" id="reload">Reload</button>
+   <button class="btn" type="button" id="reload"><i class="bi bi-arrow-repeat"></i></button>
 </div>`;
 
       xhttp = new XMLHttpRequest(); // get reputation from trustee
