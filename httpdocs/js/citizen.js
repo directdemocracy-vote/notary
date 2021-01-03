@@ -93,9 +93,13 @@ window.onload = function() {
       row.classList.add('row');
       row.classList.add('mt-4');
       const url = trustee + '/reputation.php?key=' + encodeURIComponent(answer.citizen.key);
-      row.innerHTML = `<h4>Reputation: <span id="reputation">...</span></h4>` +
-        `<div><span id="trustee-action">Querying</span> <input name="trustee" value="${trustee.substring(8)}">` +
-        `<button class="btn btn-primary"><span class="glyphicon glyphicon-refresh"></span> Refresh</button></div>`;
+      row.innerHTML =
+        `<h4>Reputation: <span id="reputation">...</span></h4>
+<div class="input-group mb-3">
+  <span class="input-group-text" id="protocol">https://</span>
+  <input type="text" class="form-control" placeholder="https://trustee.directdemocracy.vote" aria-label="Trustee URL"
+   aria-describedby="protocol" value="${trustee.substring(8)}">
+</div>`;
 
       xhttp = new XMLHttpRequest(); // get reputation from trustee
       xhttp.open('GET', url, true);
@@ -110,8 +114,6 @@ window.onload = function() {
           let reputation = document.getElementById('reputation');
           reputation.style.color = answer.endorsed ? 'blue' : 'red';
           reputation.innerHTML = answer.reputation;
-          let action = document.getElementById('trustee-action');
-          action.innerHTML = `From: `;
         }
       };
 
