@@ -92,7 +92,6 @@ window.onload = function() {
       content.appendChild(row);
       row.classList.add('row');
       row.classList.add('mt-4');
-      const url = trustee + '/reputation.php?key=' + encodeURIComponent(answer.citizen.key);
       row.innerHTML =
         `<h4>Reputation: <span id="reputation">...</span></h4>
 <div class="input-group mb-3">
@@ -106,11 +105,13 @@ window.onload = function() {
 </div>`;
       document.getElementById('reload').addEventListener('click', function(event) {
         trustee = 'https://' + document.getElementById('trustee').value;
+        console.log("trustee = " + trustee);
         document.getElementById('reputation').innerHTML = '...';
         loadReputation();
       });
 
       function loadReputation() {
+        const url = trustee + '/reputation.php?key=' + encodeURIComponent(answer.citizen.key);
         xhttp = new XMLHttpRequest(); // get reputation from trustee
         xhttp.open('GET', url, true);
         xhttp.send();
