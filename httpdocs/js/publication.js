@@ -42,7 +42,7 @@ window.onload = function() {
   let geolocation = false;
   let latitude = 0;
   let longitude = 0;
-  let referendum = null;
+  let publication = null;
   if (navigator.geolocation) navigator.geolocation.getCurrentPosition(getGeolocationPosition);
 
   let xhttp = new XMLHttpRequest();
@@ -105,7 +105,7 @@ window.onload = function() {
       if (this.readyState == 4 && this.status == 200) {
         a = JSON.parse(this.responseText);
         document.getElementById("address").href = '/participants.html?fingerprint=' + fingerprint + '&osmid=' + a.osm_id +
-          '&address=' + encodeURIComponent(a.display_name) + '&title=' + encodeURIComponent(referendum.title);
+          '&address=' + encodeURIComponent(a.display_name) + '&title=' + encodeURIComponent(publication.title);
         document.getElementById("address").innerHTML = a.display_name;
       }
     };
@@ -117,20 +117,20 @@ window.onload = function() {
   xhttp = new XMLHttpRequest();
   xhttp.onload = function() {
     if (this.status == 200) {
-      referendum = JSON.parse(this.responseText);
-      if (referendum.error)
-        console.log('publisher error', JSON.stringify(referendum.error));
+      publication = JSON.parse(this.responseText);
+      if (publication.error)
+        console.log('publisher error', JSON.stringify(publication.error));
       else {
         let geojson = {
           type: 'MultiPolygon',
-          coordinates: referendum.area_polygons
+          coordinates: publication.area_polygons
         };
         L.geoJSON(geojson).addTo(map);
         let maxLon = -1000;
         let minLon = 1000;
         let maxLat = -1000;
         let minLat = 1000;
-        referendum.area_polygons.forEach(function(polygons) {
+        publication.area_polygons.forEach(function(polygons) {
           polygons.forEach(function(polygon) {
             polygon.forEach(function(point) {
               if (point[0] > maxLon)
@@ -146,11 +146,11 @@ window.onload = function() {
         });
         map.fitBounds([[minLat, minLon], [maxLat, maxLon]]);
 
-        const first_equal = referendum.area.indexOf('=');
-        const first_newline = referendum.area.indexOf('\n');
-        let area_name = referendum.area.substr(first_equal + 1, first_newline - first_equal);
-        let area_type = referendum.area.substr(0, first_equal);
-        const area_array = referendum.area.split('\n');
+        const first_equal = publication.area.indexOf('=');
+        const first_newline = publication.area.indexOf('\n');
+        let area_name = publication.area.substr(first_equal + 1, first_newline - first_equal);
+        let area_type = publication.area.substr(0, first_equal);
+        const area_array = publication.area.split('\n');
         let area_query = '';
         area_array.forEach(function(argument) {
           const eq = argument.indexOf('=');
@@ -194,57 +194,61 @@ window.onload = function() {
           xhttp.open('GET', population_url, true);
           xhttp.send();
         }
-        const answers = referendum.answers.split('\n');
-        const answer_count = answers.length;
-        let results = [];
-        for (i = 0; i < answers.length; i++)
-          results.push(referendum.count ? referendum.count[i] : 0);
-        const total = results.reduce((a, b) => a + b, 0);
-        answers_table = '<table class="table table-bordered"><thead class="thead-light"><tr>';
-        const colors = ['primary', 'danger', 'success', 'warning', 'info', 'secondary', 'light', 'dark'];
-        const width = Math.round(100 / (answer_count + 2));
-        answers.forEach(function(answer) {
-          answers_table += '<th width="' + width + '%" scope="col" class="text-center">' + answer + '</th>';
-        });
-        answers_table += '<th width="' + width +
-          '%" scope="col" class="text-center font-italic font-weight-normal" style="color:blue">void</th>' +
-          '<th width="' + width +
-          '%" scope="col" class="text-center font-italic font-weight-normal" style="color:blue">rejected</th>' +
-          '</tr></thead><tbody><tr>';
-        let color_count = 0;
-        let count = 0;
-        answers.forEach(function(answer) {
-          const percent = (total == 0) ? 0 : Math.round(10000 * results[count] / total) / 100;
-          answers_table +=
-            '<td><div class="progress"><div id="answer-percent-' + count + '" ' +
-            'class="progress-bar progress-bar-striped bg-' + colors[color_count++] +
-            '" role="progressbar" ' +
-            'style="width:' + percent + '%" aria-valuemin="0" aria_valuemax="100">' + percent + ' %' +
-            '</div></div></td>';
-          if (color_count == colors.length)
-            color_count = 0;
-          count++;
-        });
-        answers_table += '<td class="text-center">N/A</td><td class="text-center">N/A</td>';
-        count = 0;
-        answers_table += '</tr><tr>';
-        answers.forEach(function(answer) {
-          answers_table += '<td class="text-center">' + results[count] + '</td>';
-          count++;
-        });
-        answers_table += '<td class="text-center">' + referendum.void + '</td>';
-        answers_table += '<td class="text-center">' + referendum.rejected + '</td>';
-        answers_table += '</tr></tbody></table>';
-        const participation = (referendum.corpus > 0) ? (Math.round(10000 * referendum.participation / referendum.corpus) /
+        if (publication_type == 'referendum') {
+          const answers = publication.answers.split('\n');
+          const answer_count = answers.length;
+          let results = [];
+          for (i = 0; i < answers.length; i++)
+            results.push(publication.count ? publication.count[i] : 0);
+          const total = results.reduce((a, b) => a + b, 0);
+          answers_table = '<table class="table table-bordered"><thead class="thead-light"><tr>';
+          const colors = ['primary', 'danger', 'success', 'warning', 'info', 'secondary', 'light', 'dark'];
+          const width = Math.round(100 / (answer_count + 2));
+          answers.forEach(function(answer) {
+            answers_table += '<th width="' + width + '%" scope="col" class="text-center">' + answer + '</th>';
+          });
+          answers_table += '<th width="' + width +
+            '%" scope="col" class="text-center font-italic font-weight-normal" style="color:blue">void</th>' +
+            '<th width="' + width +
+            '%" scope="col" class="text-center font-italic font-weight-normal" style="color:blue">rejected</th>' +
+            '</tr></thead><tbody><tr>';
+          let color_count = 0;
+          let count = 0;
+          answers.forEach(function(answer) {
+            const percent = (total == 0) ? 0 : Math.round(10000 * results[count] / total) / 100;
+            answers_table +=
+              '<td><div class="progress"><div id="answer-percent-' + count + '" ' +
+              'class="progress-bar progress-bar-striped bg-' + colors[color_count++] +
+              '" role="progressbar" ' +
+              'style="width:' + percent + '%" aria-valuemin="0" aria_valuemax="100">' + percent + ' %' +
+              '</div></div></td>';
+            if (color_count == colors.length)
+              color_count = 0;
+            count++;
+          });
+          answers_table += '<td class="text-center">N/A</td><td class="text-center">N/A</td>';
+          count = 0;
+          answers_table += '</tr><tr>';
+          answers.forEach(function(answer) {
+            answers_table += '<td class="text-center">' + results[count] + '</td>';
+            count++;
+          });
+          answers_table += '<td class="text-center">' + publication.void + '</td>';
+          answers_table += '<td class="text-center">' + publication.rejected + '</td>';
+          answers_table += '</tr></tbody></table>';
+        }
+        const participation = (publication.corpus > 0) ? (Math.round(10000 * publication.participation / publication.corpus) /
           100) + '%' : 'N/A';
-        document.getElementById('content').innerHTML = '<h2>' + referendum.title + '</h2>' +
-          '<div><small><b>Deadline:</b> ' + new Date(referendum.deadline).toLocaleString() +
+        let content = '<h2>' + publication.title + '</h2>' +
+          '<div><small><b>Deadline:</b> ' + new Date(publication.deadline).toLocaleString() +
           ' &mdash; <b>Area:</b> <a target="_blank" href="' + area_url + '">' + area_name +
-          '</a> (' + area_type + ')' + '</small></div><br><div><p>' + referendum.description + '</p></div><div><p><b>' +
-          referendum.question + '</b><p></div>' + answers_table +
-          '<div>estimated population: <span id="population">&hellip;</span> &mdash; corpus: ' + referendum.corpus +
-          ' &mdash; participation: <span id="participation">' + referendum.participation + '</span> (' + participation +
+          '</a> (' + area_type + ')' + '</small></div><br><div><p>' + publication.description + '</p></div>';
+        if (publication_type == 'referendum')
+          content += '<div><p><b>' + publication.question + '</b><p></div>' + answers_table;
+        content += '<div>estimated population: <span id="population">&hellip;</span> &mdash; corpus: ' + publication.corpus +
+          ' &mdash; participation: <span id="participation">' + publication.participation + '</span> (' + participation +
           ')</div>';
+        document.getElementById('content').innerHTML = content;
         setTimeout(updatePosition, 500);
       }
     }
