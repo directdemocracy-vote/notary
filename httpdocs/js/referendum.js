@@ -240,7 +240,7 @@ window.onload = function() {
         const ballot_type = publication.secret ? 'anonymous' : 'public';
         const content = '<h2>' + publication.title + '</h2>' +
           '<div><small><b>Deadline:</b> ' + new Date(publication.deadline).toLocaleString() +
-          ' &mdash; <b>Ballots:</b>' + ballot_type + ' &mdash; <b>Area:</b> <a target="_blank" href="' + area_url + '">' + area_name +
+          ' &mdash; <b>Ballots:</b> ' + ballot_type + ' &mdash; <b>Area:</b> <a target="_blank" href="' + area_url + '">' + area_name +
           '</a> (' + area_type + ')' + '</small></div><br><div><p>' + publication.description + '</p></div>' +
           '<div><p><b>' + publication.question + '</b><p></div>' + answers_table +
           '<div>estimated population: <span id="population">&hellip;</span> &mdash; corpus: ' + publication.corpus +
