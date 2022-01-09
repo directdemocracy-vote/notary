@@ -194,58 +194,56 @@ window.onload = function() {
           xhttp.open('GET', population_url, true);
           xhttp.send();
         }
-        if (publication_type == 'referendum') {
-          const answers = publication.answers.split('\n');
-          const answer_count = answers.length;
-          let results = [];
-          for (i = 0; i < answers.length; i++)
-            results.push(publication.count ? publication.count[i] : 0);
-          const total = results.reduce((a, b) => a + b, 0);
-          answers_table = '<table class="table table-bordered"><thead class="thead-light"><tr>';
-          const colors = ['primary', 'danger', 'success', 'warning', 'info', 'secondary', 'light', 'dark'];
-          const width = Math.round(100 / (answer_count + 2));
-          answers.forEach(function(answer) {
-            answers_table += '<th width="' + width + '%" scope="col" class="text-center">' + answer + '</th>';
-          });
-          answers_table += '<th width="' + width +
-            '%" scope="col" class="text-center font-italic font-weight-normal" style="color:blue">void</th>' +
-            '<th width="' + width +
-            '%" scope="col" class="text-center font-italic font-weight-normal" style="color:blue">rejected</th>' +
-            '</tr></thead><tbody><tr>';
-          let color_count = 0;
-          let count = 0;
-          answers.forEach(function(answer) {
-            const percent = (total == 0) ? 0 : Math.round(10000 * results[count] / total) / 100;
-            answers_table +=
-              '<td><div class="progress"><div id="answer-percent-' + count + '" ' +
-              'class="progress-bar progress-bar-striped bg-' + colors[color_count++] +
-              '" role="progressbar" ' +
-              'style="width:' + percent + '%" aria-valuemin="0" aria_valuemax="100">' + percent + ' %' +
-              '</div></div></td>';
-            if (color_count == colors.length)
-              color_count = 0;
-            count++;
-          });
-          answers_table += '<td class="text-center">N/A</td><td class="text-center">N/A</td>';
-          count = 0;
-          answers_table += '</tr><tr>';
-          answers.forEach(function(answer) {
-            answers_table += '<td class="text-center">' + results[count] + '</td>';
-            count++;
-          });
-          answers_table += '<td class="text-center">' + publication.void + '</td>';
-          answers_table += '<td class="text-center">' + publication.rejected + '</td>';
-          answers_table += '</tr></tbody></table>';
-        }
+        const answers = publication.answers.split('\n');
+        const answer_count = answers.length;
+        let results = [];
+        for (i = 0; i < answers.length; i++)
+          results.push(publication.count ? publication.count[i] : 0);
+        const total = results.reduce((a, b) => a + b, 0);
+        answers_table = '<table class="table table-bordered"><thead class="thead-light"><tr>';
+        const colors = ['primary', 'danger', 'success', 'warning', 'info', 'secondary', 'light', 'dark'];
+        const width = Math.round(100 / (answer_count + 2));
+        answers.forEach(function(answer) {
+          answers_table += '<th width="' + width + '%" scope="col" class="text-center">' + answer + '</th>';
+        });
+        answers_table += '<th width="' + width +
+          '%" scope="col" class="text-center font-italic font-weight-normal" style="color:blue">void</th>' +
+          '<th width="' + width +
+          '%" scope="col" class="text-center font-italic font-weight-normal" style="color:blue">rejected</th>' +
+          '</tr></thead><tbody><tr>';
+        let color_count = 0;
+        let count = 0;
+        answers.forEach(function(answer) {
+          const percent = (total == 0) ? 0 : Math.round(10000 * results[count] / total) / 100;
+          answers_table +=
+            '<td><div class="progress"><div id="answer-percent-' + count + '" ' +
+            'class="progress-bar progress-bar-striped bg-' + colors[color_count++] +
+            '" role="progressbar" ' +
+            'style="width:' + percent + '%" aria-valuemin="0" aria_valuemax="100">' + percent + ' %' +
+            '</div></div></td>';
+          if (color_count == colors.length)
+            color_count = 0;
+          count++;
+        });
+        answers_table += '<td class="text-center">N/A</td><td class="text-center">N/A</td>';
+        count = 0;
+        answers_table += '</tr><tr>';
+        answers.forEach(function(answer) {
+          answers_table += '<td class="text-center">' + results[count] + '</td>';
+          count++;
+        });
+        answers_table += '<td class="text-center">' + publication.void + '</td>';
+        answers_table += '<td class="text-center">' + publication.rejected + '</td>';
+        answers_table += '</tr></tbody></table>';
         const participation = (publication.corpus > 0) ? (Math.round(10000 * publication.participation / publication.corpus) /
           100) + '%' : 'N/A';
-        let content = '<h2>' + publication.title + '</h2>' +
+        const ballot_type = publication.secret ? 'anonymous' : 'public';
+        const content = '<h2>' + publication.title + '</h2>' +
           '<div><small><b>Deadline:</b> ' + new Date(publication.deadline).toLocaleString() +
-          ' &mdash; <b>Area:</b> <a target="_blank" href="' + area_url + '">' + area_name +
-          '</a> (' + area_type + ')' + '</small></div><br><div><p>' + publication.description + '</p></div>';
-        if (publication_type == 'referendum')
-          content += '<div><p><b>' + publication.question + '</b><p></div>' + answers_table;
-        content += '<div>estimated population: <span id="population">&hellip;</span> &mdash; corpus: ' + publication.corpus +
+          ' &mdash; <b>Ballots:</b>' + ballot_type + ' &mdash; <b>Area:</b> <a target="_blank" href="' + area_url + '">' + area_name +
+          '</a> (' + area_type + ')' + '</small></div><br><div><p>' + publication.description + '</p></div>' +
+          '<div><p><b>' + publication.question + '</b><p></div>' + answers_table +
+          '<div>estimated population: <span id="population">&hellip;</span> &mdash; corpus: ' + publication.corpus +
           ' &mdash; participation: <span id="participation">' + publication.participation + '</span> (' + participation +
           ')</div>';
         document.getElementById('content').innerHTML = content;
