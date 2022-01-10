@@ -34,7 +34,7 @@ else
   $condition = "publication.`key`=\"$referendum_key\"";
 
 $query = "SELECT referendum.id, `key`, published, expires, "
-        ."trustee, area, title, description, question, answers, secret, deadline, website "
+        ."trustee, area, title, description, question, answers, `secret`, deadline, website "
         ."FROM referendum LEFT JOIN publication ON publication.id=referendum.id "
         ."WHERE $condition";
 $result = $mysqli->query($query) or error($mysqli->error);
@@ -59,7 +59,7 @@ $results->description = $referendum['description'];
 $results->website = $referendum['website'];
 $results->question = $referendum['question'];
 $results->answers = $referendum['answers'];
-$results->secret = ($referendum['secret'] === 1);
+$results->secret = ($referendum['secret'] === 1)?true:false;
 $results->deadline = $referendum_deadline;
 $results->published = $referendum_published;
 $results->expires = intval($referendum['expires']);
