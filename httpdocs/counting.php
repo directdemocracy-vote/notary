@@ -59,7 +59,7 @@ $results->description = $referendum['description'];
 $results->website = $referendum['website'];
 $results->question = $referendum['question'];
 $results->answers = $referendum['answers'];
-$results->secret = $referendum['secret'] === 1;
+$results->secret = ($referendum['secret'] === 1);
 $results->deadline = $referendum_deadline;
 $results->published = $referendum_published;
 $results->expires = intval($referendum['expires']);
