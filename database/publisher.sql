@@ -67,16 +67,6 @@ CREATE TABLE `publication` (
   `expires` bigint(15) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `petition` (
-  `id` int(11) NOT NULL,
-  `trustee` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  `area` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `title` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `deadline` bigint(15) NOT NULL,
-  `website` varchar(2048) CHARACTER SET ascii COLLATE ascii_bin NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 CREATE TABLE `referendum` (
   `id` int(11) NOT NULL,
   `trustee` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
@@ -85,6 +75,7 @@ CREATE TABLE `referendum` (
   `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `question` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `answers` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `secret` tinyint(1) NOT NULL
   `deadline` bigint(15) NOT NULL,
   `website` varchar(2048) CHARACTER SET ascii COLLATE ascii_bin NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -156,9 +147,6 @@ ALTER TABLE `participation`
 ALTER TABLE `publication`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `fingerprint` (`fingerprint`);
-
-ALTER TABLE `petition`
-  ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `referendum`
   ADD PRIMARY KEY (`id`);
