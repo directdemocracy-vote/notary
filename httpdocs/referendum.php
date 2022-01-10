@@ -26,7 +26,7 @@ if (isset($_POST['fingerprints']))
 $query_base = "SELECT "
              ."publication.schema, publication.key, publication.signature, publication.published, publication.expires, "
              ."referendum.trustee, referendum.area, referendum.title, referendum.description, "
-             ."referendum.question, referendum.answers, referendum.deadline, referendum.website, "
+             ."referendum.question, referendum.answers, referendum.secret, referendum.deadline, referendum.website, "
              ."participation.count AS participation, participation.corpus AS corpus "
              ."FROM referendum "
              ."LEFT JOIN publication ON publication.id = referendum.id "
@@ -35,6 +35,7 @@ $query_base = "SELECT "
 function set_types(&$referendum) {
   settype($referendum['published'], 'int');
   settype($referendum['expires'], 'int');
+  settype($referendum['secret'], 'bool');
   settype($referendum['deadline'], 'int');
   settype($referendum['participation'], 'int');
   settype($referendum['corpus'], 'int');
