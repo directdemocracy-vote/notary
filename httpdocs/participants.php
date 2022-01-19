@@ -61,17 +61,18 @@ $result->free();
 $query = "SELECT DISTINCT citizen.id, citizen.familyName, citizen.givenNames, citizen.picture, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude, "
         ."citizen_publication.`key`, citizen_publication.published, citizen_publication.expires, "
-        ."registration.stationKey, registration_publication.published AS voted "
+#       ."registration.stationKey, registration_publication.published AS voted "
         ."FROM citizen "
         ."LEFT JOIN publication AS citizen_publication ON citizen_publication.id=citizen.id "
-        ."LEFT JOIN publication AS registration_publication ON registration_publication.`key`=citizen_publication.`key` "
+#        ."LEFT JOIN publication AS registration_publication ON registration_publication.`key`=citizen_publication.`key` "
 #        ."LEFT JOIN registration ON registration.id=registration_publication.id "
         ."LEFT JOIN endorsement ON endorsement.publicationKey=citizen_publication.`key` "
         ."LEFT JOIN publication AS endorsement_publication ON endorsement_publication.id=endorsement.id "
-        ."WHERE CONTAINS($polygons, home) AND registration.referendum=\"$referendum_key\" "
+        ."WHERE CONTAINS($polygons, home) "
+#       ."AND registration.referendum=\"$referendum_key\" "
         ."AND endorsement_publication.`key`=\"$trustee\" "
-        ."AND endorsement_publication.published < registration_publication.published "
-        ."AND endorsement.revoked > registration_publication.published "
+#        ."AND endorsement_publication.published < registration_publication.published "
+#        ."AND endorsement.revoked > registration_publication.published "
         ."ORDER BY familyName, givenNames";
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
 $citizens = array();
@@ -79,7 +80,8 @@ while ($citizen = $result->fetch_assoc()) {
   $citizen['id'] = intval($citizen['id']);
   $citizen['published'] = intval($citizen['published']);
   $citizen['expires'] = intval($citizen['expires']);
-  $citizen['voted'] = intval($citizen['voted']);
+#  $citizen['voted'] = intval($citizen['voted']);
+  $citizen['voted'] = '1';
   $citizen['latitude'] = floatval($citizen['latitude']);
   $citizen['longitude'] = floatval($citizen['longitude']);
   $citizens[] = $citizen;
