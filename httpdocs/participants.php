@@ -65,7 +65,7 @@ $query = "SELECT DISTINCT citizen.id, citizen.familyName, citizen.givenNames, ci
         ."FROM citizen "
         ."LEFT JOIN publication AS citizen_publication ON citizen_publication.id=citizen.id "
         ."LEFT JOIN publication AS registration_publication ON registration_publication.`key`=citizen_publication.`key` "
-        ."LEFT JOIN registration ON registration.id=registration_publication.id "
+#        ."LEFT JOIN registration ON registration.id=registration_publication.id "
         ."LEFT JOIN endorsement ON endorsement.publicationKey=citizen_publication.`key` "
         ."LEFT JOIN publication AS endorsement_publication ON endorsement_publication.id=endorsement.id "
         ."WHERE CONTAINS($polygons, home) AND registration.referendum=\"$referendum_key\" "
