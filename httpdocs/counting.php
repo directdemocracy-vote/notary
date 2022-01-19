@@ -135,7 +135,7 @@ $results->corpus = $count;
 
 if (!$results->secret) {  # public referendum
   # count participation
-  $query = "SELECT COUNT(citizen) AS participation FROM ballot INNER JOINT corpus ON corpus.citizen=ballot.citizen AND corpus.referendum=ballot.referendum WHERE ballot.referendum=$referendum_id";
+  $query = "SELECT COUNT(citizen) AS participation FROM ballot INNER JOIN corpus ON corpus.citizen=ballot.citizen AND corpus.referendum=ballot.referendum WHERE ballot.referendum=$referendum_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $c = $result->fetch_assoc();
   $result->free();
