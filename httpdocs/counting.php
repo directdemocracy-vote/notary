@@ -118,12 +118,6 @@ $results->area_polygons = &$polygons->coordinates;
 # the corpus table should contain all citizen entitled to vote to referendum:
 # they must be endorsed by the trustee of the referendum and their home must be inside the area of the referendum
 
-
-# FIXME: move this down
-$mysqli->query("DELETE FROM corpus WHERE referendum=$referendum_id");
-$mysqli->query("DELETE FROM stations WHERE referendum=$referendum_id");
-$mysqli->query("DELETE FROM registrations WHERE referendum=$referendum_id");
-
 $query = "INSERT INTO corpus(citizen, referendum) "
         ."SELECT DISTINCT citizen.id, $referendum_id FROM citizen "
         ."LEFT JOIN area ON ST_Contains(area.polygons, citizen.home) "
@@ -138,6 +132,29 @@ $mysqli->query($query) or error($mysqli->error);
 $count = $mysqli->affected_rows;
 
 $results->corpus = $count;
+
+if (!$results->secret) {  # public referendum
+  # count participation
+  $query = "SELECT COUNT(citizen) AS participation FROM ballot, corpus INNER JOINT citizen ON corpus.citizen=ballot.citizen AND corpus.referendum=ballot.referendum WHERE ballot.referendum=$referendum_id";
+  $result = $mysqli->query($query) or error($mysqli->error);
+  $c = $result->fetch_assoc();
+  $result->free();
+  $results->participation = intval($c['participation']);
+
+  $query = "INSERT INTO participation (referendum, count, corpus, updated) "
+          ."VALUES($referendum_id, $results->participation, $count, NOW()) "
+          ."ON DUPLICATE KEY UPDATE count=$results->participation, corpus=$count, updated=NOW()";
+  $mysqli->query($query) or error($mysqli->error);
+
+  $results->updated = time();
+  die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+}
+
+# secret referendum
+
+$mysqli->query("DELETE FROM corpus WHERE referendum=$referendum_id");
+$mysqli->query("DELETE FROM stations WHERE referendum=$referendum_id");
+$mysqli->query("DELETE FROM registrations WHERE referendum=$referendum_id");
 
 # list all the stations involved in the referendum
 $query = "INSERT INTO stations(id, referendum, registrations_count, ballots_count) "
