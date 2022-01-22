@@ -26,7 +26,8 @@ $query = "SELECT "
         ."INNER JOIN endorsement ON endorsement.id = endorsement_p.id "
         ."INNER JOIN publication AS citizen_p ON citizen_p.fingerprint = endorsement.publicationFingerprint "
         ."INNER JOIN citizen ON citizen.id = citizen_p.id "
-        ."WHERE endorsement_p.`key`=\"$trustee_key\"";
+        ."WHERE endorsement_p.`key`=\"$trustee_key\" "
+        ."ORDER BY endorsement_p.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $endorsements = array();
 while ($endorsement = $result->fetch_assoc()) {
