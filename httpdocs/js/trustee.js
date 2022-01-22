@@ -27,6 +27,7 @@ window.onload = function() {
         let col = document.createElement('div');
         row.appendChild(col);
         col.classList.add('col');
+        console.log('published: ' + endorsement.published);
         col.innerHTML = new Date(endorsement.published).toISOString().slice(0, 10);
         col = document.createElement('div');
         row.appendChild(col);
