@@ -21,8 +21,10 @@ window.onload = function() {
         return;
       }
       console.log(answer.endorsements);
+      console.log(answer.endorsements[0]);
+      console.log(answer.endorsements.length);
+      console.log(answer.endorsements[0].givenNames);
       for (endorsement in answer.endorsements) {
-        console.log(endorsement);
         let row = document.createElement('div');
         content.appendChild(row);
         row.classList.add('row');
