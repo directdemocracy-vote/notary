@@ -21,6 +21,7 @@ window.onload = function() {
         return;
       }
       for (endorsement in answer.endorsements) {
+        console.log(endorsement);
         let row = document.createElement('div');
         content.appendChild(row);
         row.classList.add('row');
