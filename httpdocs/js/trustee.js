@@ -31,7 +31,7 @@ window.onload = function() {
         col = document.createElement('div');
         row.appendChild(col);
         col.classList.add('col');
-        if (answer.endorsement[i].hasOwnProperty('revoke'))
+        if (answer.endorsement[i].revoked < answer.endorsement[i].expires)
           col.style.textDecoration = 'line-through';
         col.innerHTML = answer.endorsement[i].name;
       }
