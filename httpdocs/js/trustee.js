@@ -13,6 +13,13 @@ window.onload = function() {
   xhttp.open('POST', '/trustee.php', true);
   xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   xhttp.send('trustee=' + encodeURIComponent(trustee));
+  let title = document.createElement('h2');
+  let a = document.createElement('a');
+  a.href = trustee;
+  a.innerHTML = trustee;
+  a.target = '_blank';
+  title.appendChild(a);
+  content.appendChild(title);
   xhttp.onload = function() {
     if (this.status == 200) {
       let answer = JSON.parse(this.responseText);
