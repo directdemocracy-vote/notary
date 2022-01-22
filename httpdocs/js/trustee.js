@@ -20,20 +20,20 @@ window.onload = function() {
         console.log(answer.error);
         return;
       }
-      for (i = 0; i < answer.endorsements.length; i++) {
+      for (endorsement in answer.endorsements) {
         let row = document.createElement('div');
         content.appendChild(row);
         row.classList.add('row');
         let col = document.createElement('div');
         row.appendChild(col);
         col.classList.add('col');
-        col.innerHTML = new Date(answer.endorsement[i].published).toISOString.slice(0, 10);
+        col.innerHTML = new Date(endorsement.published).toISOString.slice(0, 10);
         col = document.createElement('div');
         row.appendChild(col);
         col.classList.add('col');
-        if (answer.endorsement[i].revoked < answer.endorsement[i].expires)
+        if (endorsement.revoked < endorsement.expires)
           col.style.textDecoration = 'line-through';
-        col.innerHTML = answer.endorsement[i].name;
+        col.innerHTML = endorsement.givenNames + ' ' + endorsement.familyName;
       }
     }
   };
