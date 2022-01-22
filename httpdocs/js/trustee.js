@@ -20,6 +20,7 @@ window.onload = function() {
         console.log(answer.error);
         return;
       }
+      console.log(answer.endorsements);
       for (endorsement in answer.endorsements) {
         console.log(endorsement);
         let row = document.createElement('div');
