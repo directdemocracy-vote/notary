@@ -201,9 +201,15 @@ elseif ($type == 'endorsement') {
 elseif ($type == 'ballot') {
   if (!isset($publication->answer)) # optional
     $publication->answer = '';
-  $query = "INSERT INTO ballot(id, referendum, stationKey, stationSignature, answer) "
-          ."VALUES($id, \"$publication->referendum\", \"" . $publication->station->key
-          ."\", \"" . $publication->station->signature . "\", \"$publication->answer\")";
+  if (isset($publication->station)) {
+    $station_names = " stationKey, stationSignature,";
+    $station_values = ' "'.$publication->station->key.'", "'.$publication->station->signature.'",';
+  } else {
+    $station_names = "";
+    $station_values = "";
+  }
+  $query = "INSERT INTO ballot(id, referendum,$station_names answer) "
+          ."VALUES($id, \"$publication->referendum\",$station_values \"$publication->answer\")";
 } elseif ($type == 'area') {
   $polygons = 'ST_GeomFromText("MULTIPOLYGON(';
   $t1 = false;
