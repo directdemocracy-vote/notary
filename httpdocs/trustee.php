@@ -22,7 +22,7 @@ $trustee_key = $assoc['key'];
 
 $query = "SELECT "
         ."endorsement_p.published, endorsement_p.expires, endorsement.`revoke`, citizen.familyName, citizen.givenNames, "
-        ."FROM publication AS endorsement_p"
+        ."FROM publication AS endorsement_p "
         ."INNER JOIN endorsement ON endorsement.id = endorsement_p.id "
         ."INNER JOIN publication AS citizen_p ON citizen_p.fingerprint = endorsement.publicationFingerprint "
         ."INNER JOIN citizen ON citizen.id = citizen_p.id "
