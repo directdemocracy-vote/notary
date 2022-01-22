@@ -20,7 +20,7 @@ window.onload = function() {
         console.log(answer.error);
         return;
       }
-      for (i = 0; i < answer.endorsement.length; i++) {
+      for (i = 0; i < answer.endorsements.length; i++) {
         let row = document.createElement('div');
         content.appendChild(row);
         row.classList.add('row');
