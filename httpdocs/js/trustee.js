@@ -24,7 +24,8 @@ window.onload = function() {
       console.log(answer.endorsements[0]);
       console.log(answer.endorsements.length);
       console.log(answer.endorsements[0].givenNames);
-      for (endorsement in answer.endorsements) {
+      for (i = 0; i < answer.endorsements.length; i++) {
+        let endorsement = answer.endorsements[i];
         let row = document.createElement('div');
         content.appendChild(row);
         row.classList.add('row');
