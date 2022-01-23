@@ -60,9 +60,9 @@ window.onload = function() {
           td.title = 'revoked';
         } else
           td.title = 'endorsed';
-        a = document.createElement('a');
+        let a = document.createElement('a');
         td.appendChild(a);
-        a.url = '/citizen.html?fingerprint=' + endorsement.fingerprint;
+        a.href = '/citizen.html?fingerprint=' + endorsement.fingerprint;
         a.innerHTML = endorsement.givenNames + ' ' + endorsement.familyName;
         tr.appendChild(td);
       }
