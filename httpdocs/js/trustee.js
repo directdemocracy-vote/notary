@@ -40,7 +40,7 @@ window.onload = function() {
       th.appendChild(td);
       td = document.createElement('td');
       td.innerHTML = 'Name';
-      th.appendChild('td');
+      th.appendChild(td);
       for (i = 0; i < answer.endorsements.length; i++) {
         let tr = document.createElement('tr');
         let endorsement = answer.endorsements[i];
