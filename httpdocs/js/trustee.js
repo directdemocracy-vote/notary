@@ -33,16 +33,21 @@ window.onload = function() {
         return;
       }
       let table = document.createElement('table');
+      let thead = document.createElement('thead');
+      table.appendChild(thead);
+      let tr = document.createElement('tr');
+      thead.appendChild(tr);
       let th = document.createElement('th');
-      table.appendChild(th);
-      let td = document.createElement('td');
-      td.innerHTML = 'Date';
-      th.appendChild(td);
-      td = document.createElement('td');
-      td.innerHTML = 'Name';
-      th.appendChild(td);
+      tr.appendChild(th);
+      th.innerHTML = 'Date';
+      tr.appendChild(th);
+      th = document.createElement('th');
+      th.innerHTML = 'Name';
+      let tbody = document.createElement('tbody');
+      table.appendChild(tbody);
       for (i = 0; i < answer.endorsements.length; i++) {
         let tr = document.createElement('tr');
+        tbody.appendChild(tr);
         let endorsement = answer.endorsements[i];
         let td = document.createElement('td');
         td.innerHTML = new Date(endorsement.published).toISOString().slice(0, 19).replace('T', ' ');
