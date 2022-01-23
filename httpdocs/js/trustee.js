@@ -14,12 +14,16 @@ window.onload = function() {
   xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   xhttp.send('trustee=' + encodeURIComponent(trustee));
   let title = document.createElement('div');
+  let p = document.createElement('p');
   let a = document.createElement('a');
   a.href = trustee;
   a.innerHTML = trustee;
   a.target = '_blank';
-  title.innerHTML = 'Trustee: ';
-  title.appendChild(a);
+  let b = document.createElement('b');
+  b.innerHTML = 'Trustee: ';
+  p.appendChild(b);
+  p.appendChild(a);
+  title.appendChild(p);
   content.appendChild(title);
   xhttp.onload = function() {
     if (this.status == 200) {
@@ -28,27 +32,29 @@ window.onload = function() {
         console.log(answer.error);
         return;
       }
-      console.log(answer.endorsements);
-      console.log(answer.endorsements[0]);
-      console.log(answer.endorsements.length);
-      console.log(answer.endorsements[0].givenNames);
+      let table = document.createElement('table');
+      let th = document.createElement('th');
+      table.appendChild(th);
+      let td = document.createElement('td');
+      td.innerHTML = 'Date';
+      th.appendChild(td);
+      td = document.createElement('td');
+      td.innerHTML = 'Name';
+      th.appendChild('td');
       for (i = 0; i < answer.endorsements.length; i++) {
+        let tr = document.createElement('tr');
         let endorsement = answer.endorsements[i];
-        let row = document.createElement('div');
-        content.appendChild(row);
-        row.classList.add('row');
-        let col = document.createElement('div');
-        row.appendChild(col);
-        col.classList.add('col');
-        console.log('published: ' + endorsement.published);
-        col.innerHTML = new Date(endorsement.published).toISOString().slice(0, 19).replace('T', ' ');
-        col = document.createElement('div');
-        row.appendChild(col);
-        col.classList.add('col');
+        let td = document.createElement('td');
+        td.innerHTML = new Date(endorsement.published).toISOString().slice(0, 19).replace('T', ' ');
+        tr.appendChild(td);
+        td = document.createElement('td');
         if (endorsement.revoked < endorsement.expires)
-          col.style.textDecoration = 'line-through';
-        col.innerHTML = endorsement.givenNames + ' ' + endorsement.familyName;
+          td.style.textDecoration = 'line-through';
+        td.innerHTML = endorsement.givenNames + ' ' + endorsement.familyName;
+        tr.appendChild(td);
+        table.appendChild(tr);
       }
+      content.appendChild(table);
     }
   };
 };
