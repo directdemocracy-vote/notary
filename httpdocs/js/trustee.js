@@ -55,9 +55,15 @@ window.onload = function() {
         td.innerHTML = new Date(endorsement.published).toISOString().slice(0, 19).replace('T', ' ');
         tr.appendChild(td);
         td = document.createElement('td');
-        if (endorsement.revoked < endorsement.expires)
+        if (endorsement.revoked < endorsement.expires) {
           td.style.textDecoration = 'line-through';
-        td.innerHTML = endorsement.givenNames + ' ' + endorsement.familyName;
+          td.title = 'revoked';
+        } else
+          td.title = 'endorsed';
+        a = document.createElement('a');
+        td.appendChild(a);
+        a.url = '/citizen.html?fingerprint=' + endorsement.fingerprint;
+        a.innerHTML = endorsement.givenNames + ' ' + endorsement.familyName;
         tr.appendChild(td);
       }
       content.appendChild(table);
