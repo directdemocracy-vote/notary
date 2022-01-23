@@ -42,6 +42,7 @@ window.onload = function() {
       th.innerHTML = 'Date';
       tr.appendChild(th);
       th = document.createElement('th');
+      tr.appendChild(th);
       th.innerHTML = 'Name';
       let tbody = document.createElement('tbody');
       table.appendChild(tbody);
@@ -57,7 +58,6 @@ window.onload = function() {
           td.style.textDecoration = 'line-through';
         td.innerHTML = endorsement.givenNames + ' ' + endorsement.familyName;
         tr.appendChild(td);
-        table.appendChild(tr);
       }
       content.appendChild(table);
     }
