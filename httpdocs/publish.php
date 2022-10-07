@@ -180,17 +180,14 @@ elseif ($type == 'endorsement') {
   $query = "INSERT INTO endorsement(id, publicationKey, publicationSignature, publicationFingerprint, "
           ."revoked, message, comment) VALUES($id, \"$key\", \"$signature\", SHA1(\"$signature\"), "
           ."$endorsement->revoked, \"$endorsement->message\", \"$endorsement->comment\")";
-} elseif ($type == 'petition') {
-  $petition = &$publication;
-  if (!isset($petition->website))  # optional
-    $petition->website = '';
-   $query = "INSERT INTO petition(id, trustee, area, title, description, deadline, website) "
-           ."VALUES($id, \"$petition->trustee\", \"$petition->area\", \"$petition->title\", \"$petition->description\", "
-           ."$petition->deadline, \"$petition->website\")";
 } elseif ($type == 'referendum') {
   $referendum =&$publication;
   if (!isset($referendum->website))  # optional
     $referendum->website = '';
+  if (!isset($referendum->question))  # optional
+    $referendum->question = '';
+  if (!isset($referendum->answers))  # optional
+    $referendum->answers = '';
   $query = "INSERT INTO referendum(id, trustee, area, title, description, question, answers, deadline, website) "
           ."VALUES($id, \"$referendum->trustee\", \"$referendum->area\", \"$referendum->title\", \"$referendum->description\", "
           ."\"$referendum->question\", \"$referendum->answers\", $referendum->deadline, \"$referendum->website\")";
