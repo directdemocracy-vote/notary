@@ -1,1 +1,4 @@
+/httpdocs/.well-known
+/httpdocs/admin/error_log
+/httpdocs/error_log
 /id_rsa
