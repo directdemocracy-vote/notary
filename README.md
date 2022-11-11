@@ -10,3 +10,8 @@ However, it has a number of limitations.
 This publisher relies on a standard MySQL database which may not scale well with the number of users.
 Moreover a standard database may not be the best way to store directdemocracy data.
 A blockchain distributed ledger may be more appropriate but more complex to implement.
+However, this sample implementation aims at providing a simple reference code.
+
+## Scalable Implementations
+
+Developers and organizations are encouraged to implement their own publishers using more scalable technologies to handle a very large number of users.
