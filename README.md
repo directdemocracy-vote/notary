@@ -14,4 +14,4 @@ However, this sample implementation aims at providing a simple reference code.
 
 ## Scalable Implementations
 
-Developers and organizations are encouraged to implement their own publishers using more scalable technologies to handle a very large number of users.
+Developers and organizations are encouraged to implement their own publishers using more scalable and more robust technologies to handle a very large number of users.
