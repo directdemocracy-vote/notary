@@ -1,6 +1,7 @@
 # Publisher for *directdemocracy.vote* 
 
 This repository contains a reference implementation of a publisher service for *directdemocracy.vote*.
+It is live at https://publisher.directdemocracy.vote
 Such an implementation is fully functional.
 It aims at providing a simple working example for developers who would like to implement their own publisher service.
 However, it has a number of limitations.
