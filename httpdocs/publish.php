@@ -180,20 +180,20 @@ elseif ($type == 'endorsement') {
   $query = "INSERT INTO endorsement(id, publicationKey, publicationSignature, publicationFingerprint, "
           ."revoked, message, comment) VALUES($id, \"$key\", \"$signature\", SHA1(\"$signature\"), "
           ."$endorsement->revoked, \"$endorsement->message\", \"$endorsement->comment\")";
-} elseif ($type == 'referendum') {
-  $referendum =&$publication;
-  if (!isset($referendum->website))  # optional
-    $referendum->website = '';
-  if (!isset($referendum->question))  # optional
-    $referendum->question = '';
-  if (!isset($referendum->answers))  # optional
-    $referendum->answers = '';
-  $query = "INSERT INTO referendum(id, trustee, area, title, description, question, answers, deadline, website) "
-          ."VALUES($id, \"$referendum->trustee\", \"$referendum->area\", \"$referendum->title\", \"$referendum->description\", "
-          ."\"$referendum->question\", \"$referendum->answers\", $referendum->deadline, \"$referendum->website\")";
+} elseif ($type == 'proposal') {
+  $proposal =&$publication;
+  if (!isset($proposal->website))  # optional
+    $proposal->website = '';
+  if (!isset($proposal->question))  # optional
+    $proposal->question = '';
+  if (!isset($proposal->answers))  # optional
+    $proposal->answers = '';
+  $query = "INSERT INTO proposal(id, trustee, area, title, description, question, answers, deadline, website) "
+          ."VALUES($id, \"$proposal->trustee\", \"$proposal->area\", \"$proposal->title\", \"$proposal->description\", "
+          ."\"$proposal->question\", \"$proposal->answers\", $proposal->deadline, \"$proposal->website\")";
 } elseif ($type == 'registration')
-  $query = "INSERT INTO registration(id, referendum, stationKey, stationSignature) "
-          ."VALUES($id, \"$publication->referendum\", \"" . $publication->station->key
+  $query = "INSERT INTO registration(id, proposal, stationKey, stationSignature) "
+          ."VALUES($id, \"$publication->proposal\", \"" . $publication->station->key
           ."\", \"" . $publication->station->signature . "\")";
 elseif ($type == 'ballot') {
   if (!isset($publication->answer)) # optional
@@ -205,8 +205,8 @@ elseif ($type == 'ballot') {
     $station_names = "";
     $station_values = "";
   }
-  $query = "INSERT INTO ballot(id, referendum,$station_names answer) "
-          ."VALUES($id, \"$publication->referendum\",$station_values \"$publication->answer\")";
+  $query = "INSERT INTO ballot(id, proposal,$station_names answer) "
+          ."VALUES($id, \"$publication->proposal\",$station_values \"$publication->answer\")";
 } elseif ($type == 'area') {
   $polygons = 'ST_GeomFromText("MULTIPOLYGON(';
   $t1 = false;
