@@ -25,32 +25,32 @@ if (isset($_POST['fingerprints']))
 
 $query_base = "SELECT "
              ."publication.schema, publication.key, publication.signature, publication.published, publication.expires, "
-             ."referendum.trustee, referendum.area, referendum.title, referendum.description, "
-             ."referendum.question, referendum.answers, referendum.secret, referendum.deadline, referendum.website, "
+             ."proposal.trustee, proposal.area, proposal.title, proposal.description, "
+             ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
              ."participation.count AS participation, participation.corpus AS corpus "
-             ."FROM referendum "
-             ."LEFT JOIN publication ON publication.id = referendum.id "
-             ."LEFT JOIN participation ON participation.referendum = referendum.id ";
+             ."FROM proposal "
+             ."LEFT JOIN publication ON publication.id = proposal.id "
+             ."LEFT JOIN participation ON participation.proposal = proposal.id ";
 
-function set_types(&$referendum) {
-  settype($referendum['published'], 'int');
-  settype($referendum['expires'], 'int');
-  settype($referendum['secret'], 'bool');
-  settype($referendum['deadline'], 'int');
-  settype($referendum['participation'], 'int');
-  settype($referendum['corpus'], 'int');
+function set_types(&$proposal) {
+  settype($proposal['published'], 'int');
+  settype($proposal['expires'], 'int');
+  settype($proposal['secret'], 'bool');
+  settype($proposal['deadline'], 'int');
+  settype($proposal['participation'], 'int');
+  settype($proposal['corpus'], 'int');
 }
 
 if (isset($fingerprint)) {
   $query = "$query_base WHERE publication.fingerprint = \"$fingerprint\" "
-          ."AND RIGHT(\"$area\", CHAR_LENGTH(referendum.area)) = referendum.area";
+          ."AND RIGHT(\"$area\", CHAR_LENGTH(proposal.area)) = proposal.area";
   $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
-  $referendum = $result->fetch_assoc();
+  $proposal = $result->fetch_assoc();
   $result->free();
-  set_types($referendum);
-  $json = json_encode($referendum, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+  set_types($proposal);
+  $json = json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } else {
-  $referendums = array();
+  $proposals = array();
   if (isset($fingerprints)) {
     $list = '(';
     foreach($fingerprints as $fingerprint)
@@ -64,26 +64,26 @@ if (isset($fingerprint)) {
     for($j = $i + 1; $j < $count; $j++)
       $area_name .= "\n" . $areas[$j];
     if (isset($fingerprints)) {
-      $query = "$query_base WHERE publication.fingerprint IN $list AND referendum.area=\"$area_name\" ORDER BY participation";
+      $query = "$query_base WHERE publication.fingerprint IN $list AND proposal.area=\"$area_name\" ORDER BY participation";
       $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
-      while ($referendum = $result->fetch_assoc()) {
-        set_types($referendum);
-        $referendums[] = $referendum;
+      while ($proposal = $result->fetch_assoc()) {
+        set_types($proposal);
+        $proposals[] = $proposal;
       }
       $result->free();
     }
-    $query = "$query_base WHERE referendum.area = \"$area_name\" AND referendum.deadline > (1000 * UNIX_TIMESTAMP()) ";
+    $query = "$query_base WHERE proposal.area = \"$area_name\" AND proposal.deadline > (1000 * UNIX_TIMESTAMP()) ";
     if (isset($fingerprints))
       $query.= "AND publication.fingerprint NOT IN $list ";
     $query.= "ORDER BY participation DESC LIMIT 2";
     $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
-    while ($referendum = $result->fetch_assoc()) {
-      set_types($referendum);
-      $referendums[] = $referendum;
+    while ($proposal = $result->fetch_assoc()) {
+      set_types($proposal);
+      $proposals[] = $proposal;
     }
     $result->free();
   }
-  $json = json_encode($referendums, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+  $json = json_encode($proposals, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 }
 $mysqli->close();
 die($json);
