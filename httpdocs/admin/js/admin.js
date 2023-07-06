@@ -4,7 +4,7 @@ function update() {
     document.querySelector('input[name="registrations"]').checked = true;
     document.querySelector('input[name="ballots"]').checked = true;
     document.querySelector('input[name="results"]').checked = true;
-  } else if (document.querySelector('input[name="referendums"]').checked) {
+  } else if (document.querySelector('input[name="proposals"]').checked) {
     document.querySelector('input[name="registrations"]').checked = true;
     document.querySelector('input[name="ballots"]').checked = true;
     document.querySelector('input[name="results"]').checked = true;
@@ -22,7 +22,7 @@ function wipeout() {
     password: document.querySelector('input[type="password"]').value,
     citizens: document.querySelector('input[name="citizens"]').checked,
     endorsements: document.querySelector('input[name="endorsements"]').checked,
-    referendums: document.querySelector('input[name="referendums"]').checked,
+    proposals: document.querySelector('input[name="proposals"]').checked,
     areas: document.querySelector('input[name="areas"]').checked,
     registrations: document.querySelector('input[name="registrations"]').checked,
     ballots: document.querySelector('input[name="ballots"]').checked,
