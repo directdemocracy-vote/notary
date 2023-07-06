@@ -23,51 +23,51 @@ if ($mysqli->connect_errno)
   error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
 $mysqli->set_charset('utf8mb4');
 
-$referendum_key = $mysqli->escape_string(get_string_parameter('referendum'));
+$proposal_key = $mysqli->escape_string(get_string_parameter('proposal'));
 $fingerprint = $mysqli->escape_string(get_string_parameter('fingerprint'));
-if (!$referendum_key && !$fingerprint)
-  error("Missing referendum or fingerprint argument");
+if (!$proposal_key && !$fingerprint)
+  error("Missing proposal or fingerprint argument");
 
 if ($fingerprint)
   $condition = "publication.fingerprint=\"$fingerprint\"";
 else
-  $condition = "publication.`key`=\"$referendum_key\"";
+  $condition = "publication.`key`=\"$proposal_key\"";
 
-$query = "SELECT referendum.id, `key`, published, expires, "
+$query = "SELECT proposal.id, `key`, published, expires, "
         ."trustee, area, title, description, question, answers, `secret`, deadline, website "
-        ."FROM referendum LEFT JOIN publication ON publication.id=referendum.id "
+        ."FROM proposal LEFT JOIN publication ON publication.id=proposal.id "
         ."WHERE $condition";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
-  error("Referendum not found");
-$referendum = $result->fetch_assoc();
+  error("Proposal not found");
+$proposal = $result->fetch_assoc();
 $result->free();
 
-$trustee = $referendum['trustee'];
-$area = $referendum['area'];
-$referendum_id = intval($referendum['id']);
-$referendum_key = $referendum['key'];
-$referendum_published = intval($referendum['published']);
-$referendum_deadline = intval($referendum['deadline']);
+$trustee = $proposal['trustee'];
+$area = $proposal['area'];
+$proposal_id = intval($proposal['id']);
+$proposal_key = $proposal['key'];
+$proposal_published = intval($proposal['published']);
+$proposal_deadline = intval($proposal['deadline']);
 
 $results = new stdClass();
-$results->key = $referendum_key;
+$results->key = $proposal_key;
 $results->trustee = $trustee;
 $results->area = $area;
-$results->title = $referendum['title'];
-$results->description = $referendum['description'];
-$results->website = $referendum['website'];
-$results->question = $referendum['question'];
-$results->answers = $referendum['answers'];
-$results->secret = $referendum['secret'] === '1';
-$results->deadline = $referendum_deadline;
-$results->published = $referendum_published;
-$results->expires = intval($referendum['expires']);
+$results->title = $proposal['title'];
+$results->description = $proposal['description'];
+$results->website = $proposal['website'];
+$results->question = $proposal['question'];
+$results->answers = $proposal['answers'];
+$results->secret = $proposal['secret'] === '1';
+$results->deadline = $proposal_deadline;
+$results->published = $proposal_published;
+$results->expires = intval($proposal['expires']);
 
-$answers = explode("\n", $referendum['answers']);
+$answers = explode("\n", $proposal['answers']);
 $n_answers = count($answers);
 
-$query = "SELECT updated, count, corpus, registrations, rejected, void FROM participation WHERE referendum=$referendum_id";
+$query = "SELECT updated, count, corpus, registrations, rejected, void FROM participation WHERE proposal=$proposal_id";
 $result = $mysqli->query($query) or error($mysqli->error);
 
 if ($result) {
@@ -85,7 +85,7 @@ if ($result) {
       $results->void = intval($participation['void']);
       $results->count = array_fill(0, $n_answers, 0);
       $results->updated = $updated;
-      $query = "SELECT answer, count FROM results WHERE referendum=$referendum_id";
+      $query = "SELECT answer, count FROM results WHERE proposal=$proposal_id";
       $result = $mysqli->query($query) or error($mysqli->error);
       while ($r = $result->fetch_assoc()) {
         $i = array_search($r['answer'], $answers);
@@ -115,34 +115,34 @@ $results->area_polygons = &$polygons->coordinates;
 # corpus, stations, registrations and ballots
 
 # create corpus, see https://github.com/directdemocracy-vote/doc/blob/master/voting.md#31-list-eligible-citizens
-# the corpus table should contain all citizen entitled to vote to referendum:
-# they must be endorsed by the trustee of the referendum and their home must be inside the area of the referendum
+# the corpus table should contain all citizen entitled to vote to the proposal:
+# they must be endorsed by the trustee of the proposal and their home must be inside the area of the proposal
 
-$query = "INSERT INTO corpus(citizen, referendum) "
-        ."SELECT DISTINCT citizen.id, $referendum_id FROM citizen "
+$query = "INSERT INTO corpus(citizen, proposal) "
+        ."SELECT DISTINCT citizen.id, $proposal_id FROM citizen "
         ."LEFT JOIN area ON ST_Contains(area.polygons, citizen.home) "
         ."INNER JOIN publication AS citizen_p ON citizen_p.id=citizen.id "
         ."INNER JOIN endorsement ON endorsement.publicationKey=citizen_p.`key` "
         ."INNER JOIN publication AS endorsement_p ON endorsement_p.id=endorsement.id "
         ."WHERE area.id=$area_id "
-        ."AND endorsement_p.published < $referendum_deadline "
-        ."AND endorsement.revoked > $referendum_published "
+        ."AND endorsement_p.published < $proposal_deadline "
+        ."AND endorsement.revoked > $proposal_published "
         ."AND endorsement_p.`key`=\"$trustee\"";
 $mysqli->query($query) or error($mysqli->error);
 $count = $mysqli->affected_rows;
 
 $results->corpus = $count;
 
-if (!$results->secret) {  # public referendum
+if (!$results->secret) {  # public proposal
   # count participation
-  $query = "SELECT COUNT(citizen) AS participation FROM ballot INNER JOIN publication ON publication.id=ballot.id INNER JOIN corpus ON corpus.citizen=publication.`key` AND corpus.referendum=ballot.referendum WHERE ballot.referendum=$referendum_id";
+  $query = "SELECT COUNT(citizen) AS participation FROM ballot INNER JOIN publication ON publication.id=ballot.id INNER JOIN corpus ON corpus.citizen=publication.`key` AND corpus.proposal=ballot.proposal WHERE ballot.proposal=$proposal_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $c = $result->fetch_assoc();
   $result->free();
   $results->participation = intval($c['participation']);
 
-  $query = "INSERT INTO participation (referendum, count, corpus, updated) "
-          ."VALUES($referendum_id, $results->participation, $count, NOW()) "
+  $query = "INSERT INTO participation (proposal, count, corpus, updated) "
+          ."VALUES($proposal_id, $results->participation, $count, NOW()) "
           ."ON DUPLICATE KEY UPDATE count=$results->participation, corpus=$count, updated=NOW()";
   $mysqli->query($query) or error($mysqli->error);
 
@@ -150,65 +150,65 @@ if (!$results->secret) {  # public referendum
   die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 }
 
-# secret referendum
+# secret proposal
 
-$mysqli->query("DELETE FROM corpus WHERE referendum=$referendum_id");
-$mysqli->query("DELETE FROM stations WHERE referendum=$referendum_id");
-$mysqli->query("DELETE FROM registrations WHERE referendum=$referendum_id");
+$mysqli->query("DELETE FROM corpus WHERE proposal=$proposal_id");
+$mysqli->query("DELETE FROM stations WHERE proposal=$proposal_id");
+$mysqli->query("DELETE FROM registrations WHERE proposal=$proposal_id");
 
-# list all the stations involved in the referendum
-$query = "INSERT INTO stations(id, referendum, registrations_count, ballots_count) "
-        ."SELECT DISTINCT station.id, $referendum_id, 0, 0 "
+# list all the stations involved in the proposal
+$query = "INSERT INTO stations(id, proposal, registrations_count, ballots_count) "
+        ."SELECT DISTINCT station.id, $proposal_id, 0, 0 "
         ."FROM station INNER JOIN registration ON registration.stationKey=station.`key` "
-        ."WHERE registration.referendum=\"$referendum_key\"";
+        ."WHERE registration.proposal=\"$proposal_key\"";
 $mysqli->query($query) or error($mysqli->error);
 
 # list all the registrations for each station
-$query = "INSERT INTO registrations(referendum, station, citizen, published) "
-        ."SELECT corpus.referendum, station.id, corpus.citizen, registration_p.published "
+$query = "INSERT INTO registrations(proposal, station, citizen, published) "
+        ."SELECT corpus.proposal, station.id, corpus.citizen, registration_p.published "
         ."FROM corpus "
         ."INNER JOIN publication AS citizen_p ON citizen_p.id=corpus.citizen "
         ."INNER JOIN publication AS registration_p ON registration_p.`key`=citizen_p.`key` "
         ."INNER JOIN registration ON registration.id=registration_p.id "
         ."INNER JOIN station ON station.`key`=registration.stationKey "
-        ."WHERE registration.referendum=\"$referendum_key\" AND corpus.referendum=$referendum_id";
+        ."WHERE registration.proposal=\"$proposal_key\" AND corpus.proposal=$proposal_id";
 $mysqli->query($query) or error($mysqli->error);
 
 # if a citizen registered several times (possibly at several stations) keep only the most recent registration
 $query = "DELETE r1 FROM registrations r1 INNER JOIN registrations r2 "
-        ."WHERE r1.citizen=r2.citizen AND r1.referendum=r2.referendum AND r1.published < r2.published";
+        ."WHERE r1.citizen=r2.citizen AND r1.proposal=r2.proposal AND r1.published < r2.published";
 $mysqli->query($query) or error($mysqli->error);
 
 # count participation
-$query = "SELECT COUNT(citizen) AS participation FROM registrations WHERE referendum=$referendum_id";
+$query = "SELECT COUNT(citizen) AS participation FROM registrations WHERE proposal=$proposal_id";
 $result = $mysqli->query($query) or error($mysqli->error);
 $c = $result->fetch_assoc();
 $result->free();
 $results->participation = intval($c['participation']);
 
-$query = "INSERT INTO participation (referendum, count, corpus, updated) "
-        ."VALUES($referendum_id, $results->participation, $count, NOW()) "
+$query = "INSERT INTO participation (proposal, count, corpus, updated) "
+        ."VALUES($proposal_id, $results->participation, $count, NOW()) "
         ."ON DUPLICATE KEY UPDATE count=$results->participation, corpus=$count, updated=NOW()";
 $mysqli->query($query) or error($mysqli->error);
 
 $results->updated = time();
 
-# $mysqli->query("DELETE FROM corpus WHERE referendum=$referendum_id");  # the corpus table is not needed anymore after this point
+# $mysqli->query("DELETE FROM corpus WHERE proposal=$proposal_id");  # the corpus table is not needed anymore after this point
 
 $now = intval(microtime(true) * 1000);
 
-if (intval($referendum['deadline']) > $now && $results->participation < $count) {  # we should not count ballots, but can count participation
-  # $mysqli->query("DELETE FROM stations WHERE referendum=$referendum_id");
-  # $mysqli->query("DELETE FROM registrations WHERE referendum=$referendum_id");
+if (intval($proposal['deadline']) > $now && $results->participation < $count) {  # we should not count ballots, but can count participation
+  # $mysqli->query("DELETE FROM stations WHERE proposal=$proposal_id");
+  # $mysqli->query("DELETE FROM registrations WHERE proposal=$proposal_id");
   die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 }
 
 $results->count = array_fill(0, $n_answers, 0);
 
 # list all the ballots for each station
-$query = "INSERT INTO ballots(referendum, station, `key`, answer) "
-        ."SELECT $referendum_id, station.id, ballot_p.`key`, ballot.answer FROM station "
-        ."INNER JOIN ballot ON ballot.stationKey=station.`key` AND ballot.referendum=\"$referendum_key\" "
+$query = "INSERT INTO ballots(proposal, station, `key`, answer) "
+        ."SELECT $proposal_id, station.id, ballot_p.`key`, ballot.answer FROM station "
+        ."INNER JOIN ballot ON ballot.stationKey=station.`key` AND ballot.proposal=\"$proposal_key\" "
         ."INNER JOIN publication AS ballot_p ON ballot_p.id=ballot.id";
 $mysqli->query($query) or error($mysqli->error);
 
@@ -221,7 +221,7 @@ $query = "UPDATE stations SET "
 $mysqli->query($query) or error($mysqli->error);
 
 # count registrations
-$query = "SELECT COUNT(*) AS c FROM registrations WHERE referendum=$referendum_id";
+$query = "SELECT COUNT(*) AS c FROM registrations WHERE proposal=$proposal_id";
 $r = $mysqli->query($query) or error($mysqli->error);
 $b = $r->fetch_assoc();
 $r->free();
@@ -236,24 +236,24 @@ $query = "DELETE FROM registrations WHERE station NOT IN (SELECT id FROM station
 $mysqli->query($query) or error($mysqli->error);
 
 # count rejected registrations (not counted)
-$query = "SELECT COUNT(*) AS c FROM registrations WHERE referendum=$referendum_id";
+$query = "SELECT COUNT(*) AS c FROM registrations WHERE proposal=$proposal_id";
 $r = $mysqli->query($query) or error($mysqli->error);
 $b = $r->fetch_assoc();
 $r->free();
 $results->rejected = $results->registrations - intval($b['c']);
 
 # count ballots
-$mysqli->query("DELETE FROM results WHERE referendum=$referendum_id");
+$mysqli->query("DELETE FROM results WHERE proposal=$proposal_id");
 $total = 0;
 foreach($answers as $i => $answer) {
-  $query = "SELECT COUNT(*) AS c FROM ballots WHERE answer=\"$answer\" AND referendum=$referendum_id";
+  $query = "SELECT COUNT(*) AS c FROM ballots WHERE answer=\"$answer\" AND proposal=$proposal_id";
   $r = $mysqli->query($query) or error($mysqli->error);
   $b = $r->fetch_assoc();
   $r->free();
   $c = intval($b['c']);
   $results->count[$i] = $c;
   $total += $c;
-  $query = "INSERT INTO results(referendum, answer, `count`) VALUES($referendum_id, \"$answer\", $c)";
+  $query = "INSERT INTO results(proposal, answer, `count`) VALUES($proposal_id, \"$answer\", $c)";
   $mysqli->query($query) or error($mysqli->error);
 }
 
@@ -261,13 +261,13 @@ $results->void = $results->registrations - $results->rejected - $total;
 
 $query = "UPDATE participation SET "
         ."registrations=$results->registrations, rejected=$results->rejected, void=$results->void, updated=NOW() "
-        ."WHERE referendum=$referendum_id";
+        ."WHERE proposal=$proposal_id";
 $mysqli->query($query) or error($mysqli->error);
 
 # delete the content of intermediary tables
-$mysqli->query("DELETE FROM stations WHERE referendum=$referendum_id");
-$mysqli->query("DELETE FROM registrations WHERE referendum=$referendum_id");
-$mysqli->query("DELETE FROM ballots WHERE referendum=$referendum_id");
+$mysqli->query("DELETE FROM stations WHERE proposal=$proposal_id");
+$mysqli->query("DELETE FROM registrations WHERE proposal=$proposal_id");
+$mysqli->query("DELETE FROM ballots WHERE proposal=$proposal_id");
 
 $mysqli->close();
 die(json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
