@@ -23,7 +23,7 @@ if ($password !== $database_password)
 
 $citizens = $mysqli->escape_string($input->citizens);
 $endorsements = $mysqli->escape_string($input->endorsements);
-$referendums = $mysqli->escape_string($input->referendums);
+$proposals = $mysqli->escape_string($input->proposals);
 $areas = $mysqli->escape_string($input->areas);
 $registrations = $mysqli->escape_string($input->registrations);
 $ballots = $mysqli->escape_string($input->ballots);
@@ -43,8 +43,8 @@ if ($citizens)
   $n += delete_publication($mysqli, 'citizen');
 if ($endorsements)
   $n += delete_publication($mysqli, 'endorsement');
-if ($referendums)
-  $n += delete_publication($mysqli, 'referendum');
+if ($proposals)
+  $n += delete_publication($mysqli, 'proposal');
 if ($areas)
   $n += delete_publication($mysqli, 'area');
 if ($registrations)
