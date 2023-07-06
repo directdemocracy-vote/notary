@@ -67,7 +67,7 @@ CREATE TABLE `publication` (
   `expires` bigint(15) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `referendum` (
+CREATE TABLE `proposal` (
   `id` int(11) NOT NULL,
   `trustee` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `area` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -82,21 +82,21 @@ CREATE TABLE `referendum` (
 
 CREATE TABLE `registration` (
   `id` int(11) NOT NULL,
-  `referendum` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `proposal` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `stationKey` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `stationSignature` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `revoke` tinyint(1) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `registrations` (
-  `referendum` int(11) NOT NULL,
+  `proposal` int(11) NOT NULL,
   `station` int(11) NOT NULL,
   `citizen` int(11) NOT NULL,
   `published` bigint(15) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `results` (
-  `referendum` int(11) NOT NULL,
+  `proposal` int(11) NOT NULL,
   `answer` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `count` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -109,7 +109,7 @@ CREATE TABLE `station` (
 
 CREATE TABLE `stations` (
   `id` int(11) NOT NULL,
-  `referendum` int(11) NOT NULL,
+  `proposal` int(11) NOT NULL,
   `registrations_count` int(11) NOT NULL,
   `ballots_count` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -127,14 +127,14 @@ ALTER TABLE `ballot`
   ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `ballots`
-  ADD KEY `referendum` (`referendum`),
+  ADD KEY `proposal` (`proposal`),
   ADD KEY `station` (`station`);
 
 ALTER TABLE `citizen`
   ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `corpus`
-  ADD KEY `referendum` (`referendum`),
+  ADD KEY `proposal` (`proposal`),
   ADD KEY `citizen` (`citizen`);
 
 ALTER TABLE `endorsement`
@@ -142,32 +142,32 @@ ALTER TABLE `endorsement`
   ADD KEY `publicationFingerprint` (`publicationFingerprint`);
 
 ALTER TABLE `participation`
-  ADD PRIMARY KEY `referendum` (`referendum`);
+  ADD PRIMARY KEY `proposal` (`proposal`);
 
 ALTER TABLE `publication`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `fingerprint` (`fingerprint`);
 
-ALTER TABLE `referendum`
+ALTER TABLE `proposal`
   ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `registration`
   ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `registrations`
-  ADD KEY `referendum` (`referendum`),
+  ADD KEY `proposal` (`proposal`),
   ADD KEY `station` (`station`),
   ADD KEY `citizen` (`citizen`);
 
 ALTER TABLE `results`
-  ADD KEY `referendum` (`referendum`);
+  ADD KEY `proposal` (`proposal`);
 
 ALTER TABLE `station`
   ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `stations`
   ADD KEY `id` (`id`),
-  ADD KEY `referendum` (`referendum`);
+  ADD KEY `proposal` (`proposal`);
 
 ALTER TABLE `trustee`
   ADD PRIMARY KEY (`id`);
