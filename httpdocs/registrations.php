@@ -23,15 +23,15 @@ if ($mysqli->connect_errno)
   error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
 $mysqli->set_charset('utf8mb4');
 
-$referendum = $mysqli->escape_string(get_string_parameter('referendum'));
-if (!$referendum)
-  die("Missing referendum argument");
+$proposal = $mysqli->escape_string(get_string_parameter('proposal'));
+if (!$proposal)
+  die("Missing proposal argument");
 
 $now = intval(microtime(true) * 1000);  # milliseconds
 $query = "SELECT publication.`schema`, publication.`key`, publication.signature, publication.published, publication.expires, "
-        ."registration.referendum, registration.stationKey, registration.stationSignature "
+        ."registration.proposal, registration.stationKey, registration.stationSignature "
         ."FROM registration LEFT JOIN publication ON publication.id=registration.id "
-        ."WHERE registration.referendum='$referendum' AND published <= $now AND expires >= $now";
+        ."WHERE registration.proposal='$proposal' AND published <= $now AND expires >= $now";
 $result = $mysqli->query($query) or error($mysqli->error);
 $registrations = [];
 if ($result) {
@@ -48,9 +48,9 @@ if ($result) {
   $result->free();
 }
 $query = "SELECT publication.`schema`, publication.`key`, publication.signature, publication.published, publication.expires, "
-        ."ballot.referendum, ballot.stationKey, ballot.stationSignature "
+        ."ballot.proposal, ballot.stationKey, ballot.stationSignature "
         ."FROM ballot LEFT JOIN publication ON publication.id=ballot.id "
-        ."WHERE ballot.referendum='$referendum'"; // AND published <= $now AND expires >= $now"; FIXME
+        ."WHERE ballot.proposal='$proposal'"; // AND published <= $now AND expires >= $now"; FIXME
 $result = $mysqli->query($query) or error($mysqli->error);
 $ballots = [];
 if ($result) {
