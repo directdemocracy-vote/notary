@@ -68,19 +68,19 @@ if ($type == 'citizen') {
   unset($endorsement['revoked']);
   $endorsement = $publication + $endorsement;
   echo json_encode($endorsement, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-} elseif ($type == 'referendum') {
-  $query = "SELECT trustee, area, title, description, question, answers, deadline, website FROM referendum WHERE id=$publication_id";
+} elseif ($type == 'proposal') {
+  $query = "SELECT trustee, area, title, description, question, answers, deadline, website FROM proposal WHERE id=$publication_id";
   # id AS areas is just a placeholder for having areas in the right order of fields
   $result = $mysqli->query($query) or error($mysqli->error);
-  $referendum = $result->fetch_assoc();
+  $proposal = $result->fetch_assoc();
   $result->free();
-  if ($referendum['website'] == '')
-    unset($referendum['website']);
-  $referendum['deadline'] = intval($referendum['deadline']);
-  $referendum = $publication + $referendum;
-  echo json_encode($referendum, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+  if ($proposal['website'] == '')
+    unset($proposal['website']);
+  $proposal['deadline'] = intval($proposal['deadline']);
+  $proposal = $publication + $proposal;
+  echo json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'ballot') {
-  $query = "SELECT referendum, stationKey, stationSignature, answer from ballot WHERE id=$publication_id";
+  $query = "SELECT proposal, stationKey, stationSignature, answer from ballot WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $ballot = $result->fetch_assoc();
   $result->free();
