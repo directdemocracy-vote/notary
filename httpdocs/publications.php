@@ -37,8 +37,8 @@ if ($type == 'endorsement')
   $fields = 'endorsement.publicationKey, endorsement.publicationSignature, endorsement.revoked, endorsement.message, endorsement.comment';
 elseif ($type == 'citizen')
   $fields = 'citizen.familyName, citizen.givenNames, citizen.picture, ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude';
-elseif ($type == 'referendum')
-  $fields = 'referendum.trustee, referendum.area, referendum.title, referendum.description, referendum.question, referendum.answers, referendum.deadline, referendum.website';
+elseif ($type == 'proposal')
+  $fields = 'proposal.trustee, proposal.area, proposal.title, proposal.description, proposal.question, proposal.answers, proposal.deadline, proposal.website';
 else
   error("Unsupported type argument: $type.");
 
@@ -73,7 +73,7 @@ if ($result) {
                                         'signature' => $publication->publicationSignature);
       unset($publication->publicationKey);
       unset($publication->publicationSignature);
-    } elseif ($type == 'referendum') {
+    } elseif ($type == 'proposal') {
       $publication->deadline = floatval($publication->deadline);
       if ($publication->website == '')
         unset($publication->website);
