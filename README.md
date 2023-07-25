@@ -16,3 +16,8 @@ However, this sample implementation aims at providing a simple reference code.
 ## Scalable Implementations
 
 Developers and organizations are encouraged to implement their own publishers using more scalable and more robust technologies to handle a very large number of users.
+
+## Installation
+
+This sample publisher requires the [json-schema](https://github.com/opis/json-schema) PHP library to check the syntax of publications.
+It should be installed by running `composer require opis/json-schema` at the root of this repository.
