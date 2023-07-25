@@ -19,5 +19,5 @@ Developers and organizations are encouraged to implement their own publishers us
 
 ## Installation
 
-This sample publisher requires the [json-schema](https://github.com/opis/json-schema) PHP library to check the syntax of publications.
-It should be installed by running `composer require opis/json-schema` at the root of this repository.
+PHP dependencies should be installed by running `composer install` at the root of this repository.
+They include [json-schema](https://github.com/opis/json-schema) to check the syntax of publications.
