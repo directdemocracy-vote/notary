@@ -19,5 +19,11 @@ Developers and organizations are encouraged to implement their own publishers us
 
 ## Installation
 
+### Requirements
+
+You will need a simple web server running a recent version of PHP and MySQL.
+
+### Dependencies
+
 PHP dependencies should be installed by running `composer install` at the root of this repository.
 They include [json-schema](https://github.com/opis/json-schema) to check the syntax of publications.
