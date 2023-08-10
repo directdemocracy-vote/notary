@@ -5,9 +5,10 @@ require_once '../php/database.php';
 require_once '../php/endorsements.php';
 
 use Opis\JsonSchema\{
-  IMediaType, MediaTypeContainer, Schema, Validator, ValidationResult, ValidationError
+  Schema, Validator, ValidationResult, ValidationError
 };
 
+/*
 class MimeType implements IMediaType {
   public function validate(string $data, string $type): bool {
     if ($type == 'image/jpeg') {
@@ -25,6 +26,7 @@ class MimeType implements IMediaType {
     return false;
   }
 }
+*/
 
 function error($message) {
   if ($message[0] != '{')
@@ -56,11 +58,21 @@ if (!isset($publication->schema))
   error("Unable to read schema field");
 $schema_text = file_get_contents($publication->schema);
 $schema = Schema::fromJsonString($schema_text);
+
+
+/*
 $mediaTypes = new MediaTypeContainer();
 $mimeType = new MimeType();
 $mediaTypes->add("image/jpeg", $mimeType);
+*/
+
+
 $validator = new Validator();
-$validator->setMediaType($mediaTypes);
+
+
+# $validator->setMediaType($mediaTypes);
+
+
 $result = $validator->schemaValidation($publication, $schema);
 if (!$result->isValid()) {
   $error = $result->getFirstError();
