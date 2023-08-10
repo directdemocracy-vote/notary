@@ -68,7 +68,19 @@ $mediaTypes->add("image/jpeg", $mimeType);
 
 
 $validator = new Validator();
-
+$mediaTypes = $validator->parser()->getMediaTypeResolver();
+$mediaTypes->registerCallable('image/jpeg', function (string $content): bool {
+  $header = 'data:image/jpeg;base64,';
+  if (substr($content, 0, strlen($header)) != $header)
+    return false;
+  $data = base64_decode(substr($content, strlen($header)));
+  try {
+    $image = @imagecreatefromstring($data);
+    return $image !== false;
+  } catch(Exception $e) {
+    return false;
+  }
+});
 
 # $validator->setMediaType($mediaTypes);
 
