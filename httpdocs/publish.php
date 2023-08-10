@@ -59,8 +59,6 @@ $now = intval(microtime(true) * 1000);  # milliseconds
 $type = get_type($publication->schema);
 if ($type != 'ballot' && $publication->published > $now + 60000)  # allowing a 1 minute error
   error("Publication date in the future for $type: $publication->published > $now");
-if ($publication->expires < $now - 60000)  # allowing a 1 minute error
-  error("Expiration date in the past: $publication->expires < $now");
 if ($type == 'citizen') {
   $citizen = &$publication;
   $data = base64_decode(substr($citizen->picture, strlen('data:image/jpeg;base64,')));
@@ -126,9 +124,7 @@ $mysqli->set_charset('utf8mb4');
 if ($type == 'endorsement') {
   $endorsement = &$publication;
   if (!property_exists($endorsement, 'revoke'))
-    $endorsement->revoked = $endorsement->expires;
-  else
-    $endorsement->revoked = $endorsement->revoke ? $endorsement->published : $endorsement->expires;
+    $endorsement->revoke = false;
   $key = $endorsement->publication->key;
   $signature = $endorsement->publication->signature;
   if ($key == '')
@@ -136,9 +132,9 @@ if ($type == 'endorsement') {
   if ($signature == '')
     error("Empty signature");
 }
-$query = "INSERT INTO publication(`schema`, `key`, signature, fingerprint, published, expires) "
+$query = "INSERT INTO publication(`schema`, `key`, signature, fingerprint, published) "
         ."VALUES(\"$publication->schema\", \"$publication->key\", \"$publication->signature\", "
-        ."SHA1(\"$publication->signature\"), $publication->published, $publication->expires)";
+        ."SHA1(\"$publication->signature\"), $publication->published)";
 $mysqli->query($query) or error($mysqli->error);
 $id = $mysqli->insert_id;
 
@@ -151,7 +147,7 @@ elseif ($type == 'endorsement') {
     $endorsement->message = '';
   if (!isset($endorsement->comment))
     $endorsement->comment = '';
-  $query = "SELECT id, `schema`, `key`, signature, expires FROM publication WHERE fingerprint=SHA1(\"$signature\")";
+  $query = "SELECT id, `schema`, `key`, signature FROM publication WHERE fingerprint=SHA1(\"$signature\")";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsed = $result->fetch_assoc();
   $result->free();
@@ -160,13 +156,10 @@ elseif ($type == 'endorsement') {
       error("endorsement key mismatch");
     if ($endorsed['signature'] != $signature)
       error("endorsement signature mismatch");
-    $endorsed_expires = intval($endorsed['expires']);
-    if ($endorsement->expires != $endorsed_expires)
-      error("endorsement doesn't expire at the same time as publication: $endorsement->expires != $endorsed_expires");
   }
   $query = "INSERT INTO endorsement(id, publicationKey, publicationSignature, publicationFingerprint, "
-          ."revoked, message, comment) VALUES($id, \"$key\", \"$signature\", SHA1(\"$signature\"), "
-          ."$endorsement->revoked, \"$endorsement->message\", \"$endorsement->comment\")";
+          ."revoke, message, comment) VALUES($id, \"$key\", \"$signature\", SHA1(\"$signature\"), "
+          ."$endorsement->revoke, \"$endorsement->message\", \"$endorsement->comment\")";
 } elseif ($type == 'proposal') {
   $proposal =&$publication;
   if (!isset($proposal->website))  # optional
