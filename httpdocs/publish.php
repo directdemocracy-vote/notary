@@ -5,7 +5,7 @@ require_once '../php/database.php';
 require_once '../php/endorsements.php';
 
 use Opis\JsonSchema\{
-  Schema, Validator, ValidationResult, ValidationError
+  Schema, Validator, Resolvers\ContentMediaTypeResolver
 };
 
 /*
