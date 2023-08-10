@@ -43,8 +43,13 @@ if (!$result->isValid()) {
   $print = function ($value) {
     print(json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL);
   };
-  $print($formatter->format($error, false));
-  print_r($error->args());
+  $formatted_error = $formatter->format($error, false);
+  $key = array_key_first($formatted_error);
+  $value = $formatted_error[$key];
+  print('keyword = ' . $keyword . '\n');
+  print('key = ' . $key . '\n');
+  print('value = ' . $value . '\n');
+  // print_r($error->args());
   die('Error = ' . $error . 'keyword = ' . $keyword . 'message = ' . $error->message());
   $keywordArgs = json_encode($error->keywordArgs(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
   error("{\"keyword\":\"$keyword\",\"keywordArgs\":$keywordArgs}");
