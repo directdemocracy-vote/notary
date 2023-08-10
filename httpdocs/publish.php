@@ -48,7 +48,7 @@ $mediaTypes->registerCallable('image/jpeg', function (string $content): bool {
     return false;
   }
 });
-$result = $validator->validate($publication, $publication->schema);
+$result = $validator->validate($publication, file_get_contents($publication->schema));
 if (!$result->isValid()) {
   $error = $result->error();
   $keyword = $error->keyword();
