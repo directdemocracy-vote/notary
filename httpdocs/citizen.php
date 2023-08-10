@@ -15,7 +15,7 @@ else if (isset($_POST['fingerprint']))
   $condition = "publication.fingerprint='" . $mysqli->escape_string($_POST['fingerprint']) . "'";
 else
   die("{\"error\":\"missing key or fingerprint POST argument\"}");
-$query = "SELECT publication.`key`, publication.published, publication.expires, publication.signature, "
+$query = "SELECT publication.`key`, publication.published, publication.signature, "
         ."citizen.familyName, citizen.givenNames, citizen.picture, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude "
         ."FROM publication INNER JOIN citizen ON publication.id = citizen.id "
@@ -24,7 +24,6 @@ $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $citizen = $result->fetch_assoc() or die("{\"error\":\"citizen not found: $condition\"}");
 $result->free();
 settype($citizen['published'], 'int');
-settype($citizen['expires'], 'int');
 settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
 $endorsements = endorsements($mysqli, $citizen['key']);
