@@ -42,7 +42,7 @@ CREATE TABLE `endorsement` (
   `publicationKey` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `publicationSignature` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `publicationFingerprint` varchar(40) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  `revoked` bigint(15) NOT NULL,
+  `revoke` tinyint(1) NOT NULL,
   `message` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
   `comment` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -64,7 +64,6 @@ CREATE TABLE `publication` (
   `signature` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `fingerprint` varchar(40) CHARACTER SET ascii COLLATE ascii_bin NOT NULL COMMENT 'sha1 of signature',
   `published` bigint(15) NOT NULL,
-  `expires` bigint(15) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `proposal` (
