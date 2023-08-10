@@ -49,24 +49,11 @@ function public_key($key) {
 }
 
 header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: content-type");
 $publication = json_decode(file_get_contents("php://input"));
 if (!$publication)
   error("Unable to parse JSON post");
 if (!isset($publication->schema))
   error("Unable to read schema field");
-$schema_text = file_get_contents($publication->schema);
-$schema = Schema::fromJsonString($schema_text);
-
-
-/*
-$mediaTypes = new MediaTypeContainer();
-$mimeType = new MimeType();
-$mediaTypes->add("image/jpeg", $mimeType);
-*/
-
-
 $validator = new Validator();
 $mediaTypes = $validator->parser()->getMediaTypeResolver();
 $mediaTypes->registerCallable('image/jpeg', function (string $content): bool {
@@ -81,13 +68,9 @@ $mediaTypes->registerCallable('image/jpeg', function (string $content): bool {
     return false;
   }
 });
-
-# $validator->setMediaType($mediaTypes);
-
-
-$result = $validator->schemaValidation($publication, $schema);
+$result = $validator->validate($publication, $publication->schema);
 if (!$result->isValid()) {
-  $error = $result->getFirstError();
+  $error = $result->error();
   $keyword = $error->keyword();
   $keywordArgs = json_encode($error->keywordArgs(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
   error("{\"keyword\":\"$keyword\",\"keywordArgs\":$keywordArgs}");
