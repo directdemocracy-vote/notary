@@ -8,26 +8,6 @@ use Opis\JsonSchema\{
   Schema, Validator, Resolvers\ContentMediaTypeResolver
 };
 
-/*
-class MimeType implements IMediaType {
-  public function validate(string $data, string $type): bool {
-    if ($type == 'image/jpeg') {
-      $header = 'data:image/jpeg;base64,';
-      if (substr($data, 0, strlen($header)) != $header)
-        return false;
-      $data = base64_decode(substr($data, strlen($header)));
-      try {
-        $image = @imagecreatefromstring($data);
-        return $image !== false;
-      } catch(Exception $e) {
-        return false;
-      }
-    }
-    return false;
-  }
-}
-*/
-
 function error($message) {
   if ($message[0] != '{')
     $message = '"'.$message.'"';
@@ -68,6 +48,7 @@ $mediaTypes->registerCallable('image/jpeg', function (string $content): bool {
     return false;
   }
 });
+die($publication->schema);
 $result = $validator->validate($publication, $publication->schema);
 if (!$result->isValid()) {
   $error = $result->error();
