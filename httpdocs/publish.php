@@ -38,15 +38,8 @@ $validator = new Validator();
 $result = $validator->validate($publication, file_get_contents($publication->schema));
 if (!$result->isValid()) {
   $error = $result->error();
-  $keyword = $error->keyword();
   $formatter = new ErrorFormatter();
-  $print = function ($value) {
-    print(json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL);
-  };
-  $formatted_error = $formatter->format($error, false);
-  die(json_encode($formatted_error, JSON_UNESCAPED_SLASHES));
-  
-  error(json_encode($formatted_error, JSON_UNESCAPED_SLASHES));
+  error(json_encode($formatter->format($error, false), JSON_UNESCAPED_SLASHES));
 }
 $now = intval(microtime(true) * 1000);  # milliseconds
 $type = get_type($publication->schema);
