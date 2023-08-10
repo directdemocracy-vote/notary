@@ -44,15 +44,6 @@ if (!$result->isValid()) {
     print(json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL);
   };
   $formatted_error = $formatter->format($error, false);
-  /*
-  $key = array_key_first($formatted_error);
-  $value = $formatted_error[$key];
-  print('value = ' . $value . '\n');
-  // print_r($error->args());
-  die('Error = ' . $error . 'keyword = ' . $keyword . 'message = ' . $error->message());
-  $keywordArgs = json_encode($error->keywordArgs(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-  error("{\"keyword\":\"$key\",\"keywordArgs\":$keywordArgs}");
-  */
   die(json_encode($formatted_error, JSON_UNESCAPED_SLASHES));
   
   error(json_encode($formatted_error, JSON_UNESCAPED_SLASHES));
