@@ -40,7 +40,10 @@ if (!$result->isValid()) {
   $error = $result->error();
   $keyword = $error->keyword();
   $formatter = new ErrorFormatter();
-  print($formatter->format($error, false));
+  $print = function ($value) {
+    print(json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL);
+  };
+  $print($formatter->format($error, false));
   print_r($error->args());
   die('Error = ' . $error . 'keyword = ' . $keyword . 'message = ' . $error->message());
   $keywordArgs = json_encode($error->keywordArgs(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
