@@ -43,6 +43,8 @@ $mediaTypes->registerCallable('image/jpeg', function (string $content): bool {
   $data = base64_decode(substr($content, strlen($header)));
   try {
     $image = @imagecreatefromstring($data);
+    if ($image !== false)
+      die("Image OK");
     return $image !== false;
   } catch(Exception $e) {
     return false;
