@@ -5,7 +5,7 @@ require_once '../php/database.php';
 require_once '../php/endorsements.php';
 
 use Opis\JsonSchema\{
-  Validator
+  Validator, Errors\ErrorFormatter
 };
 
 function error($message) {
@@ -39,6 +39,7 @@ $result = $validator->validate($publication, file_get_contents($publication->sch
 if (!$result->isValid()) {
   $error = $result->error();
   $keyword = $error->keyword();
+  $formatter = new ErrorFormatter();
   print($formatter->format($error, false));
   print_r($error->args());
   die('Error = ' . $error . 'keyword = ' . $keyword . 'message = ' . $error->message());
