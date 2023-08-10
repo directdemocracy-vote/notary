@@ -39,7 +39,7 @@ $result = $validator->validate($publication, file_get_contents($publication->sch
 if (!$result->isValid()) {
   $error = $result->error();
   $keyword = $error->keyword();
-  die('Keyword = ' . $keyword . ' - Error = ' . $error);
+  die('Error = ' . $error . 'keyword = ' . $keyword . 'arg = ' . $error->args() . 'message = ' . $error->message());
   $keywordArgs = json_encode($error->keywordArgs(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
   error("{\"keyword\":\"$keyword\",\"keywordArgs\":$keywordArgs}");
 }
