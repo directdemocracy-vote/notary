@@ -32,7 +32,7 @@ $fingerprint = $mysqli->escape_string(get_string_parameter('fingerprint'));
 $key = $mysqli->escape_string(get_string_parameter('key'));
 
 $now = intval(microtime(true) * 1000);  # milliseconds
-$query = "SELECT id, `schema`, `key`, signature, published, expires FROM publication WHERE published <= $now AND expires >= $now AND ";
+$query = "SELECT id, `schema`, `key`, signature, published FROM publication WHERE published <= $now AND ";
 if ($key)
   $query .= "`key`=\"$key\"";
 elseif ($fingerprint)
@@ -48,7 +48,6 @@ $result->free();
 $publication_id = intval($publication['id']);
 unset($publication['id']);
 $publication['published'] = intval($publication['published']);
-$publication['expires'] = intval($publication['expires']);
 $type = get_type($publication['schema']);
 if ($type == 'citizen') {
   $query = "SELECT familyName, givenNames, picture, ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen WHERE id=$publication_id";
