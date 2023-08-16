@@ -9,9 +9,7 @@ use Opis\JsonSchema\{
 };
 
 function error($message) {
-  if ($message[0] != '{')
-    $message = '"'.$message.'"';
-  die("{\"error\":$message}");
+  die("{\"error\":\"$message\"}");
 }
 
 function get_type($schema) {
