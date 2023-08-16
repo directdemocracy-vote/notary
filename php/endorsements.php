@@ -5,7 +5,7 @@ function endorsements($mysqli, $key) {
           ."c.familyName, c.givenNames, ST_Y(home) AS latitude, ST_X(home) AS longitude, c.picture "
           ."FROM publication pe "
           ."INNER JOIN endorsement e ON e.id = pe.id "
-          ."INNER JOIN publication pc ON pc.`key` = e.publicationKey AND pc.`signature` = e.publicationSignature "
+          ."INNER JOIN publication pc ON pc.`signature` = e.publication "
           ."INNER JOIN citizen c ON pc.id = c.id "
           ."WHERE pe.`key` = '$key' "
           ."GROUP BY c.id "
