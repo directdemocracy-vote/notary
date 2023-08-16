@@ -39,7 +39,7 @@ $result = $validator->validate($publication, file_get_contents($publication->sch
 if (!$result->isValid()) {
   $error = $result->error();
   $formatter = new ErrorFormatter();
-  error(json_encode($formatter->format($error, false), JSON_UNESCAPED_SLASHES));
+  error(implode(". ", $formatter->formatFlat($error)) . ".");
 }
 $now = intval(microtime(true) * 1000);  # milliseconds
 $type = get_type($publication->schema);
