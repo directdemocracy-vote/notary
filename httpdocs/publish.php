@@ -125,14 +125,14 @@ elseif ($type == 'endorsement') {
     $endorsement->message = '';
   if (!isset($endorsement->comment))
     $endorsement->comment = '';
-  $query = "SELECT signature FROM publication WHERE fingerprint=SHA1(\"$endorsement->publication\")";
+  $query = "SELECT signature FROM publication WHERE fingerprint=SHA1(\"$endorsement->endorsedSignature\")";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsed = $result->fetch_assoc();
   $result->free();
-  if ($endorsed && ($endorsed['signature'] != $endorsement->publication)
+  if ($endorsed && ($endorsed['signature'] != $endorsement->signature)
     error("endorsement signature mismatch");
-  $query = "INSERT INTO endorsement(id, fingerprint, revoke, message, comment, publication) "
-          ."VALUES($id, SHA1(\"$signature\"), $endorsement->revoke, \"$endorsement->message\", \"$endorsement->comment\", \"$endorsement->publication\")";
+  $query = "INSERT INTO endorsement(id, endorsedFingerprint, revoke, message, comment, endorsedSignature) "
+          ."VALUES($id, SHA1(\"$endorsement->endorsedSignature\"), $endorsement->revoke, \"$endorsement->message\", \"$endorsement->comment\", \"$endorsement->endorsedSignature\")";
 } elseif ($type == 'proposal') {
   $proposal =&$publication;
   if (!isset($proposal->website))  # optional
