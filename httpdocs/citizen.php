@@ -33,7 +33,7 @@ $query = "SELECT pc.fingerprint, MAX(pe.published) AS published, e.revoked, "
         ."INNER JOIN endorsement e ON e.id = pe.id "
         ."INNER JOIN publication pc ON pc.`key` = pe.`key` "
         ."INNER JOIN citizen c ON pc.id = c.id "
-        ."WHERE e.signature = '$citizen[signature]' "
+        ."WHERE e.endorsedSignature = '$citizen[signature]' "
         ."GROUP BY c.id "
         ."ORDER BY pe.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
