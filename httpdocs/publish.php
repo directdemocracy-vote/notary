@@ -107,14 +107,6 @@ if ($mysqli->connect_errno)
 $mysqli->set_charset('utf8mb4');
 if ($type == 'endorsement') {
   $endorsement = &$publication;
-  if (!property_exists($endorsement, 'revoke'))
-    $endorsement->revoke = false;
-  $key = $endorsement->publication->key;
-  $signature = $endorsement->publication->signature;
-  if ($key == '')
-    error("Empty key");
-  if ($signature == '')
-    error("Empty signature");
 }
 $query = "INSERT INTO publication(`schema`, `key`, signature, fingerprint, published) "
         ."VALUES(\"$publication->schema\", \"$publication->key\", \"$publication->signature\", "
@@ -127,23 +119,20 @@ if ($type == 'citizen')
           ."VALUES($id, \"$citizen->familyName\", \"$citizen->givenNames\", "
           ."\"$citizen->picture\", POINT($citizen->longitude, $citizen->latitude))";
 elseif ($type == 'endorsement') {
+  if (!property_exists($endorsement, 'revoke'))
+    $endorsement->revoke = false;
   if (!isset($endorsement->message))
     $endorsement->message = '';
   if (!isset($endorsement->comment))
     $endorsement->comment = '';
-  $query = "SELECT id, `schema`, `key`, signature FROM publication WHERE fingerprint=SHA1(\"$signature\")";
+  $query = "SELECT signature FROM publication WHERE fingerprint=SHA1(\"$endorsement->publication\")";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsed = $result->fetch_assoc();
   $result->free();
-  if ($endorsed) {
-    if ($endorsed['key'] != $key)
-      error("endorsement key mismatch");
-    if ($endorsed['signature'] != $signature)
-      error("endorsement signature mismatch");
-  }
-  $query = "INSERT INTO endorsement(id, publicationKey, publicationSignature, publicationFingerprint, "
-          ."revoke, message, comment) VALUES($id, \"$key\", \"$signature\", SHA1(\"$signature\"), "
-          ."$endorsement->revoke, \"$endorsement->message\", \"$endorsement->comment\")";
+  if ($endorsed && ($endorsed['signature'] != $endorsement->publication)
+    error("endorsement signature mismatch");
+  $query = "INSERT INTO endorsement(id, fingerprint, revoke, message, comment, publication) "
+          ."VALUES($id, SHA1(\"$signature\"), $endorsement->revoke, \"$endorsement->message\", \"$endorsement->comment\", \"$endorsement->publication\")";
 } elseif ($type == 'proposal') {
   $proposal =&$publication;
   if (!isset($proposal->website))  # optional
