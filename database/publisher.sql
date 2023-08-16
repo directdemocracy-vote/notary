@@ -39,12 +39,11 @@ CREATE TABLE `corpus` (
 
 CREATE TABLE `endorsement` (
   `id` int(11) NOT NULL,
-  `publicationKey` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  `publicationSignature` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  `publicationFingerprint` varchar(40) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `fingerprint` varchar(40) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `revoke` tinyint(1) NOT NULL,
   `message` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `comment` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL
+  `comment` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `publication` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `participation` (
@@ -138,7 +137,7 @@ ALTER TABLE `corpus`
 
 ALTER TABLE `endorsement`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `publicationFingerprint` (`publicationFingerprint`);
+  ADD KEY `fingerprint` (`fingerprint`);
 
 ALTER TABLE `participation`
   ADD PRIMARY KEY `proposal` (`proposal`);
