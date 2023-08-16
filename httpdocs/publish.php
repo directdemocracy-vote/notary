@@ -129,7 +129,7 @@ elseif ($type == 'endorsement') {
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsed = $result->fetch_assoc();
   $result->free();
-  if ($endorsed && ($endorsed['signature'] != $endorsement->endorsedSignature)
+  if ($endorsed && $endorsed['signature'] != $endorsement->endorsedSignature)
     error("endorsement signature mismatch");
   $query = "INSERT INTO endorsement(id, endorsedFingerprint, revoke, message, comment, endorsedSignature) "
           ."VALUES($id, SHA1(\"$endorsement->endorsedSignature\"), $endorsement->revoke, \"$endorsement->message\", \"$endorsement->comment\", \"$endorsement->endorsedSignature\")";
