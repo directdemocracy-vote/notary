@@ -50,7 +50,7 @@ unset($publication['id']);
 $publication['published'] = intval($publication['published']);
 $type = get_type($publication['schema']);
 if ($type == 'citizen') {
-  $query = "SELECT familyName, givenNames, picture, ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen WHERE id=$publication_id";
+  $query = "SELECT givenNames, familyName, picture, ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $citizen = $result->fetch_assoc();
   $result->free();
