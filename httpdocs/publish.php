@@ -131,7 +131,7 @@ elseif ($type == 'endorsement') {
   $result->free();
   if ($endorsed && $endorsed['signature'] != $endorsement->endorsedSignature)
     error("endorsement signature mismatch");
-  $query = "INSERT INTO endorsement(id, endorsedFingerprint, revoke, message, comment, endorsedSignature) "
+  $query = "INSERT INTO endorsement(id, endorsedFingerprint, `revoke`, message, comment, endorsedSignature) "
           ."VALUES($id, SHA1(\"$endorsement->endorsedSignature\"), $endorsement->revoke, \"$endorsement->message\", \"$endorsement->comment\", \"$endorsement->endorsedSignature\")";
 } elseif ($type == 'proposal') {
   $proposal =&$publication;
