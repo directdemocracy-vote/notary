@@ -132,6 +132,7 @@ elseif ($type == 'endorsement') {
     error("Endorsed signature mismatch.");
   $query = "INSERT INTO endorsement(id, endorsedFingerprint, `revoke`, message, comment, endorsedSignature) "
           ."VALUES($id, SHA1(\"$endorsement->endorsedSignature\"), $endorsement->revoke, \"$endorsement->message\", \"$endorsement->comment\", \"$endorsement->endorsedSignature\")";
+  die($query);
 } elseif ($type == 'proposal') {
   $proposal =&$publication;
   if (!isset($proposal->website))  # optional
@@ -187,7 +188,7 @@ elseif ($type == 'ballot') {
   $polygons .= ')")';
   $query = "INSERT INTO area(id, name, polygons) VALUES($id, \"$publication->name\", $polygons)";
 } else
-  error("unknown publication type");
+  error("Unknown publication type.");
 $mysqli->query($query) or error($mysqli->error . " => " . $query);
 if ($type == 'endorsement')
   echo json_encode(endorsements($mysqli, $publication->key), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
