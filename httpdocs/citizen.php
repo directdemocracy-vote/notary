@@ -27,7 +27,7 @@ settype($citizen['published'], 'int');
 settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
 $endorsements = endorsements($mysqli, $citizen['key']);
-$query = "SELECT pc.fingerprint, MAX(pe.published) AS published, e.revoked, "
+$query = "SELECT pc.fingerprint, MAX(pe.published) AS published, e.revoke, "
         ."c.familyName, c.givenNames, c.picture, ST_Y(home) AS latitude, ST_X(home) AS longitude "
         ."FROM publication pe "
         ."INNER JOIN endorsement e ON e.id = pe.id "
@@ -42,9 +42,8 @@ if (!$result)
 $citizen_endorsements = array();
 $now = intval(microtime(true) * 1000);  # milliseconds
 while($e = $result->fetch_assoc()) {
-  settype($e['published'], 'int');
-  $e['revoke'] = intval($e['revoked']) < $now;
-  unset($e['revoked']);
+  settype($e['published'], 'int');  
+  $e['revoke'] = (intval($e['revoke']) == 1);
   settype($e['latitude'], 'float');
   settype($e['longitude'], 'float');
   $citizen_endorsements[] = $e;
