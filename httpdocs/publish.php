@@ -60,8 +60,7 @@ if ($type == 'citizen') {
     $station_signature = $publication->station->signature;
     $publication->station->signature = '';
     $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-    if (openssl_verify($data, base64_decode($station_signature), public_key($publication->station->key), OPENSSL_ALGO_SHA256)
-        == -1)
+    if (openssl_verify($data, base64_decode($station_signature), public_key($publication->station->key), OPENSSL_ALGO_SHA256) == -1)
       error("Wrong station signature for registration");
     unset($publication->station->signature);
   }
@@ -105,9 +104,6 @@ $mysqli = new mysqli($database_host, $database_username, $database_password, $da
 if ($mysqli->connect_errno)
   error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
 $mysqli->set_charset('utf8mb4');
-if ($type == 'endorsement') {
-  $endorsement = &$publication;
-}
 $query = "INSERT INTO publication(`schema`, `key`, signature, fingerprint, published) "
         ."VALUES(\"$publication->schema\", \"$publication->key\", \"$publication->signature\", "
         ."SHA1(\"$publication->signature\"), $publication->published)";
@@ -119,18 +115,21 @@ if ($type == 'citizen')
           ."VALUES($id, \"$citizen->familyName\", \"$citizen->givenNames\", "
           ."\"$citizen->picture\", POINT($citizen->longitude, $citizen->latitude))";
 elseif ($type == 'endorsement') {
+  $endorsement = &$publication;
   if (!property_exists($endorsement, 'revoke'))
     $endorsement->revoke = false;
-  if (!isset($endorsement->message))
+  if (!property_exists($endorsement, 'message'))
     $endorsement->message = '';
-  if (!isset($endorsement->comment))
+  if (!property_exists($endorsement, 'comment'))
     $endorsement->comment = '';
   $query = "SELECT signature FROM publication WHERE fingerprint=SHA1(\"$endorsement->endorsedSignature\")";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsed = $result->fetch_assoc();
   $result->free();
-  if ($endorsed && $endorsed['signature'] != $endorsement->endorsedSignature)
-    error("endorsement signature mismatch");
+  if (!$endorsed)
+    error("endorsed signature not found");
+  if ($endorsed['signature'] != $endorsement->endorsedSignature)
+    error("endorsed signature mismatch");
   $query = "INSERT INTO endorsement(id, endorsedFingerprint, `revoke`, message, comment, endorsedSignature) "
           ."VALUES($id, SHA1(\"$endorsement->endorsedSignature\"), $endorsement->revoke, \"$endorsement->message\", \"$endorsement->comment\", \"$endorsement->endorsedSignature\")";
 } elseif ($type == 'proposal') {
