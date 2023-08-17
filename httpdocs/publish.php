@@ -130,8 +130,9 @@ elseif ($type == 'endorsement') {
     error("Endorsed signature not found: " . $endorsement->endorsedSignature);
   if ($endorsed['signature'] != $endorsement->endorsedSignature)
     error("Endorsed signature mismatch.");
+  $revoke = $endorsement->revoke ? 1 : 0;
   $query = "INSERT INTO endorsement(id, endorsedFingerprint, `revoke`, message, comment, endorsedSignature) "
-          ."VALUES($id, SHA1(\"$endorsement->endorsedSignature\"), $endorsement->revoke, \"$endorsement->message\", \"$endorsement->comment\", \"$endorsement->endorsedSignature\")";
+          ."VALUES($id, SHA1(\"$endorsement->endorsedSignature\"), $revoke, \"$endorsement->message\", \"$endorsement->comment\", \"$endorsement->endorsedSignature\")";
   die($query);
 } elseif ($type == 'proposal') {
   $proposal =&$publication;
