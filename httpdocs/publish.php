@@ -127,9 +127,9 @@ elseif ($type == 'endorsement') {
   $endorsed = $result->fetch_assoc();
   $result->free();
   if (!$endorsed)
-    error("endorsed signature not found");
+    error("Endorsed signature not found: " + $endorsement->endorsedSignature);
   if ($endorsed['signature'] != $endorsement->endorsedSignature)
-    error("endorsed signature mismatch");
+    error("Endorsed signature mismatch.");
   $query = "INSERT INTO endorsement(id, endorsedFingerprint, `revoke`, message, comment, endorsedSignature) "
           ."VALUES($id, SHA1(\"$endorsement->endorsedSignature\"), $endorsement->revoke, \"$endorsement->message\", \"$endorsement->comment\", \"$endorsement->endorsedSignature\")";
 } elseif ($type == 'proposal') {
