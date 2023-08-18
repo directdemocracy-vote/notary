@@ -119,7 +119,7 @@ window.onload = function() {
     if (this.status == 200) {
       publication = JSON.parse(this.responseText);
       if (publication.error)
-        console.log('publisher error', JSON.stringify(publication.error));
+        console.log('notary error', JSON.stringify(publication.error));
       else {
         let geojson = {
           type: 'MultiPolygon',
