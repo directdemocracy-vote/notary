@@ -49,7 +49,7 @@ if ($published_to)
   $condition .="p.published <= $published_to AND ";
 $condition .= "p.schema='https://directdemocracy.vote/json-schema/$version/$type.schema.json'";
 
-$query = "SELECT p.`schema`, p.`key`, p.signature, p.published, p.expires, $fields FROM $type "
+$query = "SELECT p.`schema`, p.`key`, p.signature, p.published, $fields FROM $type "
         ."LEFT JOIN publication AS p ON p.id=$type.id AND $condition WHERE p.id IS NOT NULL";
 
 $result = $mysqli->query($query) or error($mysqli->error);
@@ -57,7 +57,6 @@ $publications = array();
 if ($result) {
   while($publication = $result->fetch_object()) {
     $publication->published = intval($publication->published);
-    $publication->expires = intval($publication->expires);
     if ($type == 'citizen') {
       $publication->latitude = floatval($publication->latitude);
       $publication->longitude = floatval($publication->longitude);
