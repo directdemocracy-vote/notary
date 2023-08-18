@@ -7,7 +7,7 @@ function findGetParameter(parameterName, result = null) {
 }
 
 window.onload = function() {
-  let judge = findGetParameter('judge', 'https://trustee.directdemocracy.vote');
+  let judge = findGetParameter('judge', 'https://judge.directdemocracy.vote');
   let content = document.getElementById('content');
   let xhttp = new XMLHttpRequest();
   xhttp.open('POST', '/judge.php', true);
