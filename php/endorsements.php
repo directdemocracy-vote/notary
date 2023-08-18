@@ -1,7 +1,7 @@
 <?php
 function endorsements($mysqli, $key) {
-  $query = "SELECT pc.id, pc.fingerprint, pe.published, e.`revoke`, pc.`key`, pc.`signature`, "
-          ."c.familyName, c.givenNames, ST_Y(home) AS latitude, ST_X(home) AS longitude, c.picture "
+  $query = "SELECT pc.id, pc.fingerprint, pe.published, e.`revoke`, pc.`signature`, "
+          ."c.familyName, c.givenNames, c.picture "
           ."FROM publication pe "
           ."INNER JOIN endorsement e ON e.id = pe.id "
           ."INNER JOIN publication pc ON pc.`signature` = e.endorsedSignature "
