@@ -53,6 +53,7 @@ $query = "SELECT p.`schema`, p.`key`, p.signature, p.published, $fields FROM $ty
         ."LEFT JOIN publication AS p ON p.id=$type.id AND $condition WHERE p.id IS NOT NULL";
 
 $result = $mysqli->query($query) or error($mysqli->error);
+print $query . "<br>";
 $publications = array();
 if ($result) {
   while($publication = $result->fetch_object()) {
