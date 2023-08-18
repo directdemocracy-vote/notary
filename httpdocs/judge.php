@@ -21,7 +21,7 @@ $result->free();
 $judge_key = $assoc['key'];
 
 $query = "SELECT "
-        ."endorsement_p.published, endorsement.revoked, citizen.familyName, citizen.givenNames, "
+        ."endorsement_p.published, endorsement.revoke, citizen.familyName, citizen.givenNames, "
         ."citizen_p.fingerprint "
         ."FROM publication AS endorsement_p "
         ."INNER JOIN endorsement ON endorsement.id = endorsement_p.id "
