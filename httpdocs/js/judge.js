@@ -55,7 +55,7 @@ window.onload = function() {
         td.innerHTML = new Date(endorsement.published).toISOString().slice(0, 19).replace('T', ' ');
         tr.appendChild(td);
         td = document.createElement('td');
-        if (endorsement.revoked < endorsement.expires) {
+        if (endorsement.revoke) {
           td.style.textDecoration = 'line-through';
           td.title = 'revoked';
         } else
