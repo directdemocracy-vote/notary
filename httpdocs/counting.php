@@ -34,7 +34,7 @@ else
   $condition = "publication.`key`=\"$proposal_key\"";
 
 $query = "SELECT proposal.id, `key`, published, expires, "
-        ."trustee, area, title, description, question, answers, `secret`, deadline, website "
+        ."judge, area, title, description, question, answers, `secret`, deadline, website "
         ."FROM proposal LEFT JOIN publication ON publication.id=proposal.id "
         ."WHERE $condition";
 $result = $mysqli->query($query) or error($mysqli->error);
@@ -43,7 +43,7 @@ if (!$result)
 $proposal = $result->fetch_assoc();
 $result->free();
 
-$trustee = $proposal['trustee'];
+$judge = $proposal['judge'];
 $area = $proposal['area'];
 $proposal_id = intval($proposal['id']);
 $proposal_key = $proposal['key'];
@@ -52,7 +52,7 @@ $proposal_deadline = intval($proposal['deadline']);
 
 $results = new stdClass();
 $results->key = $proposal_key;
-$results->trustee = $trustee;
+$results->judge = $judge;
 $results->area = $area;
 $results->title = $proposal['title'];
 $results->description = $proposal['description'];
@@ -100,10 +100,10 @@ if ($result) {
 }
 
 $query = "SELECT area.id, ST_AsGeoJSON(polygons) AS polygons FROM area LEFT JOIN publication on publication.id=area.id "
-        ."WHERE name=\"$area\" AND publication.key=\"$trustee\"";
+        ."WHERE name=\"$area\" AND publication.key=\"$judge\"";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
-  error("Area was not published by trustee");
+  error("Area was not published by judge");
 $a = $result->fetch_assoc();
 $result->free();
 $area_id = intval($a['id']);
@@ -116,7 +116,7 @@ $results->area_polygons = &$polygons->coordinates;
 
 # create corpus, see https://github.com/directdemocracy-vote/doc/blob/master/voting.md#31-list-eligible-citizens
 # the corpus table should contain all citizen entitled to vote to the proposal:
-# they must be endorsed by the trustee of the proposal and their home must be inside the area of the proposal
+# they must be endorsed by the judge of the proposal and their home must be inside the area of the proposal
 
 $query = "INSERT INTO corpus(citizen, proposal) "
         ."SELECT DISTINCT citizen.id, $proposal_id FROM citizen "
@@ -127,7 +127,7 @@ $query = "INSERT INTO corpus(citizen, proposal) "
         ."WHERE area.id=$area_id "
         ."AND endorsement_p.published < $proposal_deadline "
         ."AND endorsement.revoked > $proposal_published "
-        ."AND endorsement_p.`key`=\"$trustee\"";
+        ."AND endorsement_p.`key`=\"$judge\"";
 $mysqli->query($query) or error($mysqli->error);
 $count = $mysqli->affected_rows;
 
