@@ -34,7 +34,7 @@ if ($v)
 if (!$type)
   error("No type argument provided.");
 if ($type == 'endorsement')
-  $fields = 'endorsement.publicationKey, endorsement.publicationSignature, endorsement.revoked, endorsement.message, endorsement.comment';
+  $fields = 'endorsement.publicationKey, endorsement.publicationSignature, endorsement.revoke, endorsement.message, endorsement.comment';
 elseif ($type == 'citizen')
   $fields = 'citizen.familyName, citizen.givenNames, citizen.picture, ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude';
 elseif ($type == 'proposal')
@@ -61,9 +61,8 @@ if ($result) {
       $publication->latitude = floatval($publication->latitude);
       $publication->longitude = floatval($publication->longitude);
     } elseif ($type == 'endorsement') {
-      if (intval($publication->revoked) === $publication->published)
+      if (intval($publication->revoke) === 1)
         $publication->revoke = true;
-      unset($publication->revoked);
       if ($publication->message == '')
         unset($publication->message);
       if ($publication->comment == '')
