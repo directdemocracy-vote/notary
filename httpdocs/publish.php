@@ -140,8 +140,8 @@ elseif ($type == 'endorsement') {
     $proposal->question = '';
   if (!isset($proposal->answers))  # optional
     $proposal->answers = '';
-  $query = "INSERT INTO proposal(id, trustee, area, title, description, question, answers, deadline, website) "
-          ."VALUES($id, \"$proposal->trustee\", \"$proposal->area\", \"$proposal->title\", \"$proposal->description\", "
+  $query = "INSERT INTO proposal(id, judge, area, title, description, question, answers, deadline, website) "
+          ."VALUES($id, \"$proposal->judge\", \"$proposal->area\", \"$proposal->title\", \"$proposal->description\", "
           ."\"$proposal->question\", \"$proposal->answers\", $proposal->deadline, \"$proposal->website\")";
 } elseif ($type == 'registration')
   $query = "INSERT INTO registration(id, proposal, stationKey, stationSignature) "
