@@ -23,8 +23,8 @@ if (!$area)
   error("Missing area argument");
 
 $now = intval(microtime(true) * 1000);  # milliseconds
-$date_condition = "publication.published <= $now AND publication.expires >= $now";
-$query = "SELECT publication.expires FROM area LEFT JOIN publication ON publication.id=area.id "
+$date_condition = "publication.published <= $now";
+$query = "SELECT publication.published FROM area LEFT JOIN publication ON publication.id=area.id "
         ."WHERE publication.key='$judge' AND area.name='$area' AND $date_condition";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
@@ -32,5 +32,5 @@ if (!$result)
 $area = $result->fetch_assoc();
 $result->free();
 $mysqli->close();
-die("{\"expires\":\"$area[expires]\"}");
+die("{\"published\":\"$area[published]\"}");
 ?>
