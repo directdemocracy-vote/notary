@@ -13,7 +13,7 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js" integrity="sha256-yDc0eil8GjWFKqN1OSzHSVCiuGghTosZCcRje4tj7iQ=" crossorigin="anonymous"></script>
     <script src="//directdemocracy.vote/js/crypto-js.js"></script>
-    <title>publisher.directdemocracy.vote</title>
+    <title>notary.directdemocracy.vote</title>
     <style>
       .slider {
   -webkit-appearance: none;
@@ -65,7 +65,7 @@
             <div class="col-sd-1" style="margin-right:20px;margin-top:10px"><img class="directdemocracy-title-logo" src="//directdemocracy.vote/images/directdemocracy-title.png"></div>
             <div class="col-sd-11">
               <h1><b>direct</b>democracy</h1>
-              <div style="font-size:150%">publisher</div>
+              <div style="font-size:150%">notary</div>
             </div>
           </div>
           <div class="directdemocracy-subtitle" style="position:relative;top:0;margin-bottom:40px">
@@ -233,7 +233,7 @@
               let parameters = "latitude=" + latitude + "&longitude=" + longitude + "&range=" + range;
               if (familyName) parameters += "&familyName=" + encodeURI(familyName);
               if (givenNames) parameters += "&givenNames=" + encodeURI(givenNames);
-              xhttp.open("GET", "https://publisher.directdemocracy.vote/search.php?" + parameters, true);
+              xhttp.open("GET", "https://notary.directdemocracy.vote/search.php?" + parameters, true);
               xhttp.send();
             }
 
