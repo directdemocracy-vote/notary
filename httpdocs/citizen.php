@@ -28,7 +28,7 @@ settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
 $endorsements = endorsements($mysqli, $citizen['key']);
 $query = "SELECT pc.id, pc.fingerprint, pe.published, e.`revoke`, "
-        ."c.familyName, c.givenNames, c.picture, ST_Y(home) AS latitude, ST_X(home) AS longitude "
+        ."c.familyName, c.givenNames, c.picture "
         ."FROM publication pe "
         ."INNER JOIN endorsement e ON e.id = pe.id "
         ."INNER JOIN publication pc ON pc.`key` = pe.`key` "
