@@ -7,24 +7,24 @@ function endorsements($mysqli, $key) {
           ."INNER JOIN publication pc ON pc.`signature` = e.endorsedSignature "
           ."INNER JOIN citizen c ON pc.id = c.id "
           ."WHERE pe.`key` = '$key' "
-          ."ORDER BY pe.published ASC";
+          ."ORDER BY pe.published DESC";
   $result = $mysqli->query($query);
   if (!$result)
     return array('error' => $mysqli->error);
   $endorsements = array();
+  $already = array();
   while($e = $result->fetch_assoc()) {
+    if (in_array($e['id'], $already)
+      continue;
+    $already[] = $e['id'];
+    unset($e['id']);
     settype($e['published'], 'int');
     $e['revoke'] = (intval($e['revoke']) == 1);
     settype($e['latitude'], 'float');
     settype($e['longitude'], 'float');
-    $id = $e['id'];
-    unset($e['id']);
-    $endorsements[$id] = $e;
+    $endorsements[] = $e;
   }
   $result->free();
-  $e = array();
-  foreach ($endorsements as $endorsement)
-    $e[] = $endorsement;
-  return $e;
+  return $endorsements;
 }
 ?>
