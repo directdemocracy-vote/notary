@@ -32,12 +32,11 @@ $key = $mysqli->escape_string(get_string_parameter('key'));
 $now = intval(microtime(true) * 1000);  # milliseconds
 $query = "SELECT id, `schema`, `key`, signature, published FROM publication WHERE published <= $now AND ";
 if ($key)
-  $query .= "`key`=\"$key\"";
+  $query .= "`key`=\"$key\" ORDER BY published ASC";  # take the first publication from the key, e.g., the citizen publication
 elseif ($fingerprint)
-  $query .= "fingerprint=\"$fingerprint\";";
+  $query .= "fingerprint=\"$fingerprint\"";
 else
   error("No fingerprint or key argument provided.");
-
 $result = $mysqli->query($query) or error($mysqli->error);
 $publication = $result->fetch_assoc();
 if (!$publication)
