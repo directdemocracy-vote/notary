@@ -72,7 +72,7 @@ $query = "SELECT DISTINCT citizen.id, citizen.familyName, citizen.givenNames, ci
         ."AND registration.referendum=\"$referendum_key\" "
         ."AND endorsement_publication.`key`=\"$judge\" "
         ."AND endorsement_publication.published < registration_publication.published "
-        ."AND endorsement.revoked > registration_publication.published "
+        ."AND endorsement.revoke = 0 "
         ."ORDER BY familyName, givenNames";
 
 $query = "SELECT DISTINCT citizen.id, citizen.familyName, citizen.givenNames, citizen.picture, "
@@ -85,7 +85,7 @@ $query = "SELECT DISTINCT citizen.id, citizen.familyName, citizen.givenNames, ci
         ."WHERE CONTAINS($polygons, home) "
         ."AND endorsement_publication.`key`=\"$judge\" "
         # ."AND endorsement_publication.published < registration_publication.published " < referendum.deadline
-        # ."AND endorsement.revoked > registration_publication.published " > referendum.deadline
+        # ."AND endorsement.revoke = 0 "
         ."ORDER BY familyName, givenNames";
 
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
