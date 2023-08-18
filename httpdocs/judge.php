@@ -9,16 +9,16 @@ $mysqli = new mysqli($database_host, $database_username, $database_password, $da
 if ($mysqli->connect_errno)
   die("{\"error\":\"Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)\"}");
 $mysqli->set_charset('utf8mb4');
-if (isset($_POST['trustee']))
-  $trustee = $mysqli->escape_string($_POST['trustee']);
+if (isset($_POST['judge']))
+  $judge = $mysqli->escape_string($_POST['judge']);
 else
-  $trustee = 'https://trustee.directdemocracy.vote';
+  $judge = 'https://trustee.directdemocracy.vote';
 
-$query = "SELECT `key` FROM trustee WHERE url=\"$trustee\"";
+$query = "SELECT `key` FROM judge WHERE url=\"$judge\"";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
-$assoc = $result->fetch_assoc() or die("{\"error\":\"trustee not found: $trustee\"}");
+$assoc = $result->fetch_assoc() or die("{\"error\":\"judge not found: $judge\"}");
 $result->free();
-$trustee_key = $assoc['key'];
+$judge_key = $assoc['key'];
 
 $query = "SELECT "
         ."endorsement_p.published, endorsement_p.expires, endorsement.revoked, citizen.familyName, citizen.givenNames, "
@@ -27,7 +27,7 @@ $query = "SELECT "
         ."INNER JOIN endorsement ON endorsement.id = endorsement_p.id "
         ."INNER JOIN publication AS citizen_p ON citizen_p.fingerprint = endorsement.publicationFingerprint "
         ."INNER JOIN citizen ON citizen.id = citizen_p.id "
-        ."WHERE endorsement_p.`key`=\"$trustee_key\" "
+        ."WHERE endorsement_p.`key`=\"$judge_key\" "
         ."ORDER BY endorsement_p.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $endorsements = array();
