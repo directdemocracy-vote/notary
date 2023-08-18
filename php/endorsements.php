@@ -1,15 +1,13 @@
 <?php
 function endorsements($mysqli, $key) {
-  $now = intval(microtime(true) * 1000);  # milliseconds
-  $query = "SELECT pc.fingerprint, MAX(pe.published) AS published, e.`revoke`, pc.`key`, pc.`signature`, "
+  $query = "SELECT pc.id, pc.fingerprint, pe.published, e.`revoke`, pc.`key`, pc.`signature`, "
           ."c.familyName, c.givenNames, ST_Y(home) AS latitude, ST_X(home) AS longitude, c.picture "
           ."FROM publication pe "
           ."INNER JOIN endorsement e ON e.id = pe.id "
           ."INNER JOIN publication pc ON pc.`signature` = e.endorsedSignature "
           ."INNER JOIN citizen c ON pc.id = c.id "
           ."WHERE pe.`key` = '$key' "
-          ."GROUP BY c.id "
-          ."ORDER BY pe.published DESC";
+          ."ORDER BY pe.published ASC";
   $result = $mysqli->query($query);
   if (!$result)
     return array('error' => $mysqli->error);
@@ -19,7 +17,9 @@ function endorsements($mysqli, $key) {
     $e['revoke'] = (intval($e['revoke']) == 1);
     settype($e['latitude'], 'float');
     settype($e['longitude'], 'float');
-    $endorsements[] = $e;
+    $id = $e['id'];
+    unset($e['id']);
+    $endorsements[$id] = $e;
   }
   $result->free();
   return $endorsements;
