@@ -40,7 +40,7 @@ else
 $result = $mysqli->query($query) or error($mysqli->error);
 $publication = $result->fetch_assoc();
 if (!$publication)
-  error("Publication not found.");
+  error("Publication not found. $query");
 $result->free();
 $publication_id = intval($publication['id']);
 unset($publication['id']);
