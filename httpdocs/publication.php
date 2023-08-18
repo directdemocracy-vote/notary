@@ -57,12 +57,11 @@ if ($type == 'citizen') {
   $citizen = $publication + $citizen;
   echo json_encode($citizen, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'endorsement') {
-  $query = "SELECT revoked, message, comment, endorsedSignature FROM endorsement WHERE id=$publication_id";
+  $query = "SELECT revoke, message, comment, endorsedSignature FROM endorsement WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsement = $result->fetch_assoc();
   $result->free();
-  $endorsement['revoke'] = (intval($endorsement['revoked']) === $publication['published']);
-  unset($endorsement['revoked']);
+  $endorsement['revoke'] = (intval($endorsement['revoke']) === 1);
   $endorsement = $publication + $endorsement;
   echo json_encode($endorsement, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'proposal') {
