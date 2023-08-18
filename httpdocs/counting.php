@@ -33,7 +33,7 @@ if ($fingerprint)
 else
   $condition = "publication.`key`=\"$proposal_key\"";
 
-$query = "SELECT proposal.id, `key`, published, expires, "
+$query = "SELECT proposal.id, `key`, published, "
         ."judge, area, title, description, question, answers, `secret`, deadline, website "
         ."FROM proposal LEFT JOIN publication ON publication.id=proposal.id "
         ."WHERE $condition";
@@ -62,7 +62,6 @@ $results->answers = $proposal['answers'];
 $results->secret = $proposal['secret'] === '1';
 $results->deadline = $proposal_deadline;
 $results->published = $proposal_published;
-$results->expires = intval($proposal['expires']);
 
 $answers = explode("\n", $proposal['answers']);
 $n_answers = count($answers);
@@ -126,8 +125,8 @@ $query = "INSERT INTO corpus(citizen, proposal) "
         ."INNER JOIN publication AS endorsement_p ON endorsement_p.id=endorsement.id "
         ."WHERE area.id=$area_id "
         ."AND endorsement_p.published < $proposal_deadline "
-        ."AND endorsement.revoked > $proposal_published "
-        ."AND endorsement_p.`key`=\"$judge\"";
+        ."AND endorsement.revoke = 0 "
+        ."AND endorsement_p.`key` = \"$judge\"";
 $mysqli->query($query) or error($mysqli->error);
 $count = $mysqli->affected_rows;
 
