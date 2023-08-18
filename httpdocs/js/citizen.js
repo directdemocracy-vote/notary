@@ -48,7 +48,7 @@ window.onload = function() {
         `<div class="citizen-label">Given names:</div><div class="citizen-entry">${givenNames}</div>` +
         `<div class="citizen-label">Latitude, longitude:</div>` +
         `<div class="citizen-entry">${latitude}, ${longitude}</div>` +
-        `<div><span class="citizen-label">Created:</span> <b>${published}</b></div>` +
+        `<div><span class="citizen-label">Created:</span> <b>${published}</b></div>`;
       row = document.createElement('div');
       content.appendChild(row);
       row.id = 'map';
