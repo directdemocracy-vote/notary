@@ -20,14 +20,14 @@ $citizen_key = $mysqli->escape_string(get_string_parameter('citizen'));
 if (!$citizen_key)
   die("Missing citizen argument.");
 
-$query = "SELECT trustee, area FROM referendum LEFT JOIN publication ON publication.id=referendum.id "
+$query = "SELECT judge, area FROM referendum LEFT JOIN publication ON publication.id=referendum.id "
         ."WHERE publication.`key`=\"$referendum\"";
 $result = $mysqli->query($query) or die($mysqli->error);
 $r = $result->fetch_assoc();
 $result->free();
 if (!$r)
   die('Referendum not found.');
-$trustee = $r['trustee'];
+$judge = $r['judge'];
 $area = $r['area'];
 
 # check if citizen's home is inside the referendum area
@@ -42,7 +42,7 @@ $latitude = $citizen['latitude'];
 $longitude = $citizen['longitude'];
 
 $query = "SELECT area.id FROM area LEFT JOIN publication ON publication.id=area.id "
-        ." WHERE publication.`key`=\"$trustee\" AND area.name=\"$area\"";
+        ." WHERE publication.`key`=\"$judge\" AND area.name=\"$area\"";
 $result = $mysqli->query($query) or die($mysqli->error);
 $a = $result->fetch_assoc();
 $result->free();
@@ -57,10 +57,10 @@ $result->free();
 if (!$a)
   die("Home of citizen not in referendum area.");
 
-# check if citizen is currently endorsed by trustee
+# check if citizen is currently endorsed by judge
 $query = "SELECT revoked "
         ."FROM endorsement LEFT JOIN publication ON publication.id=endorsement.id "
-        ."WHERE publication.`key`=\"$trustee\" AND endorsement.publicationKey=\"$citizen_key\" "
+        ."WHERE publication.`key`=\"$judge\" AND endorsement.publicationKey=\"$citizen_key\" "
         ."AND endorsement.revoked=publication.expires "
         ."ORDER BY revoked DESC LIMIT 1";
 $result = $mysqli->query($query) or die($mysqli->error);
@@ -68,7 +68,7 @@ $endorsement = $result->fetch_assoc();
 $result->free();
 $now = intval(microtime(true) * 1000);  # milliseconds
 if (!$endorsement || $endorsement['revoked'] < $now)
-  die("Citizen not endorsed by trustee");
+  die("Citizen not endorsed by judge");
 
 die("yes");
 ?>
