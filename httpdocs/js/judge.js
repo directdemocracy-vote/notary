@@ -7,20 +7,20 @@ function findGetParameter(parameterName, result = null) {
 }
 
 window.onload = function() {
-  let trustee = findGetParameter('trustee', 'https://trustee.directdemocracy.vote');
+  let judge = findGetParameter('judge', 'https://trustee.directdemocracy.vote');
   let content = document.getElementById('content');
   let xhttp = new XMLHttpRequest();
-  xhttp.open('POST', '/trustee.php', true);
+  xhttp.open('POST', '/judge.php', true);
   xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  xhttp.send('trustee=' + encodeURIComponent(trustee));
+  xhttp.send('judge=' + encodeURIComponent(judge));
   let title = document.createElement('div');
   let p = document.createElement('p');
   let a = document.createElement('a');
-  a.href = trustee;
-  a.innerHTML = trustee;
+  a.href = judge;
+  a.innerHTML = judge;
   a.target = '_blank';
   let b = document.createElement('b');
-  b.innerHTML = 'Trustee: ';
+  b.innerHTML = 'Judge: ';
   p.appendChild(b);
   p.appendChild(a);
   title.appendChild(p);
