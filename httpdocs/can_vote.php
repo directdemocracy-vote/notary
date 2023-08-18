@@ -58,16 +58,15 @@ if (!$a)
   die("Home of citizen not in referendum area.");
 
 # check if citizen is currently endorsed by judge
-$query = "SELECT revoked "
+$query = "SELECT revoke "
         ."FROM endorsement LEFT JOIN publication ON publication.id=endorsement.id "
         ."WHERE publication.`key`=\"$judge\" AND endorsement.publicationKey=\"$citizen_key\" "
-        ."AND endorsement.revoked=publication.expires "
-        ."ORDER BY revoked DESC LIMIT 1";
+        ."ORDER BY publication.published DESC LIMIT 1";
 $result = $mysqli->query($query) or die($mysqli->error);
 $endorsement = $result->fetch_assoc();
 $result->free();
 $now = intval(microtime(true) * 1000);  # milliseconds
-if (!$endorsement || $endorsement['revoked'] < $now)
+if (!$endorsement || $endorsement['revoke'] == 1)
   die("Citizen not endorsed by judge");
 
 die("yes");
