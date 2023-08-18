@@ -25,7 +25,7 @@ if (isset($_POST['fingerprints']))
 
 $query_base = "SELECT "
              ."publication.schema, publication.key, publication.signature, publication.published, publication.expires, "
-             ."proposal.trustee, proposal.area, proposal.title, proposal.description, "
+             ."proposal.judge, proposal.area, proposal.title, proposal.description, "
              ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
              ."participation.count AS participation, participation.corpus AS corpus "
              ."FROM proposal "
