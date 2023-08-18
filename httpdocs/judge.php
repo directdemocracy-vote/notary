@@ -21,7 +21,7 @@ $result->free();
 $judge_key = $assoc['key'];
 
 $query = "SELECT "
-        ."endorsement_p.published, endorsement_p.expires, endorsement.revoked, citizen.familyName, citizen.givenNames, "
+        ."endorsement_p.published, endorsement.revoked, citizen.familyName, citizen.givenNames, "
         ."citizen_p.fingerprint "
         ."FROM publication AS endorsement_p "
         ."INNER JOIN endorsement ON endorsement.id = endorsement_p.id "
@@ -33,7 +33,6 @@ $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $endorsements = array();
 while ($endorsement = $result->fetch_assoc()) {
   settype($endorsement['published'], 'int');
-  settype($endorsement['expires'], 'int');
   settype($endorsement['revoke'], 'bool');
   $endorsements[] = $endorsement;
 }
