@@ -22,6 +22,9 @@ function endorsements($mysqli, $key) {
     $endorsements[$id] = $e;
   }
   $result->free();
-  return $endorsements;
+  $e = array();
+  foreach ($endorsements as $endorsement)
+    $e[] = $endorsement;
+  return $e;
 }
 ?>
