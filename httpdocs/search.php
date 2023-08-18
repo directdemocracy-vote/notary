@@ -62,7 +62,7 @@ $query .= " LIMIT 0, 20;";
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
 $citizens = array();
 while ($citizen = $result->fetch_assoc()) {
-  $q = "SELECT `schema`, `key`, signature, published, expires FROM publication WHERE id=$citizen[id]";
+  $q = "SELECT `schema`, `key`, signature, published FROM publication WHERE id=$citizen[id]";
   $r = $mysqli->query($q) or error($mysqli->error);
   $publication = $r->fetch_assoc();
   $r->free();
@@ -73,8 +73,7 @@ while ($citizen = $result->fetch_assoc()) {
   $citizen = array('schema' => $publication['schema'],
                    'key' => $publication['key'],
                    'signature' => $publication['signature'],
-                   'published' => floatval($publication['published']),
-                   'expires' => floatval($publication['expires'])) + $citizen;
+                   'published' => floatval($publication['published'])) + $citizen;
   $citizens[] = $citizen;
 }
 $result->free();
