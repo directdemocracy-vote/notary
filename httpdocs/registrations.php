@@ -28,16 +28,15 @@ if (!$proposal)
   die("Missing proposal argument");
 
 $now = intval(microtime(true) * 1000);  # milliseconds
-$query = "SELECT publication.`schema`, publication.`key`, publication.signature, publication.published, publication.expires, "
+$query = "SELECT publication.`schema`, publication.`key`, publication.signature, publication.published, "
         ."registration.proposal, registration.stationKey, registration.stationSignature "
         ."FROM registration LEFT JOIN publication ON publication.id=registration.id "
-        ."WHERE registration.proposal='$proposal' AND published <= $now AND expires >= $now";
+        ."WHERE registration.proposal='$proposal' AND published <= $now";
 $result = $mysqli->query($query) or error($mysqli->error);
 $registrations = [];
 if ($result) {
   while ($registration = $result->fetch_assoc()) {
     $registration['published'] = floatval($registration['published']);
-    $registration['expires'] = floatval($registration['expires']);
     $station_key = $registration['stationKey'];
     $station_signature = $registration['stationSignature'];
     unset($registration['stationKey']);
@@ -47,16 +46,15 @@ if ($result) {
   }
   $result->free();
 }
-$query = "SELECT publication.`schema`, publication.`key`, publication.signature, publication.published, publication.expires, "
+$query = "SELECT publication.`schema`, publication.`key`, publication.signature, publication.published, "
         ."ballot.proposal, ballot.stationKey, ballot.stationSignature "
         ."FROM ballot LEFT JOIN publication ON publication.id=ballot.id "
-        ."WHERE ballot.proposal='$proposal'"; // AND published <= $now AND expires >= $now"; FIXME
+        ."WHERE ballot.proposal='$proposal'"; // AND published <= $now"; FIXME
 $result = $mysqli->query($query) or error($mysqli->error);
 $ballots = [];
 if ($result) {
   while ($ballot = $result->fetch_assoc()) {
     $ballot['published'] = floatval($ballot['published']);
-    $ballot['expires'] = floatval($ballot['expires']);
     $station_key = $ballot['stationKey'];
     $station_signature = $ballot['stationSignature'];
     unset($ballot['stationKey']);
