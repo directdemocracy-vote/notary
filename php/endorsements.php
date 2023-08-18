@@ -14,15 +14,15 @@ function endorsements($mysqli, $key) {
   $endorsements = array();
   $already = array();
   while($e = $result->fetch_assoc()) {
-    if (in_array($e['id'], $already)
-      continue;
-    $already[] = $e['id'];
-    unset($e['id']);
-    settype($e['published'], 'int');
-    $e['revoke'] = (intval($e['revoke']) == 1);
-    settype($e['latitude'], 'float');
-    settype($e['longitude'], 'float');
-    $endorsements[] = $e;
+    if (!in_array($e['id'], $already) {
+      $already[] = $e['id'];
+      unset($e['id']);
+      settype($e['published'], 'int');
+      $e['revoke'] = (intval($e['revoke']) == 1);
+      settype($e['latitude'], 'float');
+      settype($e['longitude'], 'float');
+      $endorsements[] = $e;
+    }
   }
   $result->free();
   return $endorsements;
