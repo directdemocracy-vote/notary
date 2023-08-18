@@ -24,7 +24,7 @@ if (isset($_POST['fingerprints']))
   $fingerprints = explode(',', $mysqli->escape_string($_POST['fingerprints']));
 
 $query_base = "SELECT "
-             ."publication.schema, publication.key, publication.signature, publication.published, publication.expires, "
+             ."publication.schema, publication.key, publication.signature, publication.published, "
              ."proposal.judge, proposal.area, proposal.title, proposal.description, "
              ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
              ."participation.count AS participation, participation.corpus AS corpus "
@@ -34,7 +34,6 @@ $query_base = "SELECT "
 
 function set_types(&$proposal) {
   settype($proposal['published'], 'int');
-  settype($proposal['expires'], 'int');
   settype($proposal['secret'], 'bool');
   settype($proposal['deadline'], 'int');
   settype($proposal['participation'], 'int');
