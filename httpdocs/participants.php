@@ -60,7 +60,7 @@ $result->free();
 
 $query = "SELECT DISTINCT citizen.id, citizen.familyName, citizen.givenNames, citizen.picture, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude, "
-        ."citizen_publication.`key`, citizen_publication.published, citizen_publication.expires, "
+        ."citizen_publication.`key`, citizen_publication.published, "
         ."registration.stationKey, registration_publication.published AS voted "
         ."FROM citizen "
         ."LEFT JOIN publication AS citizen_publication ON citizen_publication.id=citizen.id "
@@ -77,7 +77,7 @@ $query = "SELECT DISTINCT citizen.id, citizen.familyName, citizen.givenNames, ci
 
 $query = "SELECT DISTINCT citizen.id, citizen.familyName, citizen.givenNames, citizen.picture, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude, "
-        ."citizen_publication.`key`, citizen_publication.published, citizen_publication.expires, NOW() AS voted "
+        ."citizen_publication.`key`, citizen_publication.published, NOW() AS voted "
         ."FROM citizen "
         ."LEFT JOIN publication AS citizen_publication ON citizen_publication.id=citizen.id "
         ."LEFT JOIN endorsement ON endorsement.publicationKey=citizen_publication.`key` "
@@ -93,7 +93,6 @@ $citizens = array();
 while ($citizen = $result->fetch_assoc()) {
   $citizen['id'] = intval($citizen['id']);
   $citizen['published'] = intval($citizen['published']);
-  $citizen['expires'] = intval($citizen['expires']);
   $citizen['voted'] = intval($citizen['voted']);
   $citizen['latitude'] = floatval($citizen['latitude']);
   $citizen['longitude'] = floatval($citizen['longitude']);
