@@ -58,7 +58,7 @@ window.onload = function() {
         if (this.status == 200) {
           let answer = JSON.parse(this.responseText);
           if (answer.error)
-            console.log('publisher error', JSON.stringify(answer.error));
+            console.log('notary error', JSON.stringify(answer.error));
           else {
             const n = answer.length;
             if (n === 0) {
