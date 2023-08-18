@@ -1,6 +1,6 @@
 <?php
 require_once '../php/database.php';
-$version = '0.0.1';
+$version = '0.0.2';
 
 function error($message) {
   if ($message[0] != '{')
