@@ -12,7 +12,7 @@ $mysqli->set_charset('utf8mb4');
 if (isset($_POST['judge']))
   $judge = $mysqli->escape_string($_POST['judge']);
 else
-  $judge = 'https://trustee.directdemocracy.vote';
+  $judge = 'https://judge.directdemocracy.vote';
 
 $query = "SELECT `key` FROM judge WHERE url=\"$judge\"";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
