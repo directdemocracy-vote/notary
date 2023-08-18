@@ -88,8 +88,7 @@ window.onload = function() {
                 let text = document.createElement('p');
                 clearfix.appendChild(text);
                 text.classList.add('card-text');
-                text.innerHTML = "<small>Created: " + new Date(answer[i].published).toLocaleDateString() + '<br>' +
-                  "Expires: " + new Date(answer[i].expires).toLocaleDateString() + '</small><br>' + "Voted: <b>" +
+                text.innerHTML = "<small>Created: " + new Date(answer[i].published).toLocaleDateString() + '</small><br>' + "Voted: <b>" +
                   new Date(answer[i].voted).toLocaleString().slice(0, -3) + '</b>';
               }
           }
