@@ -129,14 +129,6 @@ elseif ($type == 'endorsement') {
     error("Endorsed signature not found: " . $endorsement->endorsedSignature);
   if ($endorsed['signature'] != $endorsement->endorsedSignature)
     error("Endorsed signature mismatch.");
-
-  # delete previous endorsement from the same participant on the same publication if any
-  $query = "DELETE publication, endorsement FROM endorsement "
-          ."INNER JOIN publication ON publication.id=endorsement.id "
-          ."WHERE publication.key=\"$endorsement->key\" AND endorsement.endorsedFingerprint=SHA1(\"$endorsement->endorsedSignature\")";
-  # FIXME: we should probably add an indexed keyFingerprint field in the publication table to speed this up
-  $mysqli->query($query) or error($mysqli->error);
-
   $revoke = $endorsement->revoke ? 1 : 0;
   $query = "INSERT INTO endorsement(id, endorsedFingerprint, `revoke`, message, comment, endorsedSignature) "
           ."VALUES($id, SHA1(\"$endorsement->endorsedSignature\"), $revoke, \"$endorsement->message\", \"$endorsement->comment\", \"$endorsement->endorsedSignature\")";
