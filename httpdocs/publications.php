@@ -38,7 +38,7 @@ if ($type == 'endorsement')
 elseif ($type == 'citizen')
   $fields = 'citizen.familyName, citizen.givenNames, citizen.picture, ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude';
 elseif ($type == 'proposal')
-  $fields = 'proposal.trustee, proposal.area, proposal.title, proposal.description, proposal.question, proposal.answers, proposal.deadline, proposal.website';
+  $fields = 'proposal.judge, proposal.area, proposal.title, proposal.description, proposal.question, proposal.answers, proposal.deadline, proposal.website';
 else
   error("Unsupported type argument: $type.");
 
