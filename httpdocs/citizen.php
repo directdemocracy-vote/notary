@@ -27,7 +27,7 @@ settype($citizen['published'], 'int');
 settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
 $endorsements = endorsements($mysqli, $citizen['key']);
-$query = "SELECT pc.fingerprint, MAX(pe.published) AS published, e.revoke, "
+$query = "SELECT pc.fingerprint, pe.published, e.revoke, "
         ."c.familyName, c.givenNames, c.picture, ST_Y(home) AS latitude, ST_X(home) AS longitude "
         ."FROM publication pe "
         ."INNER JOIN endorsement e ON e.id = pe.id "
