@@ -67,7 +67,7 @@ CREATE TABLE `publication` (
 
 CREATE TABLE `proposal` (
   `id` int(11) NOT NULL,
-  `trustee` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `judge` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `area` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
   `title` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -112,7 +112,7 @@ CREATE TABLE `stations` (
   `ballots_count` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `trustee` (
+CREATE TABLE `judge` (
   `id` int(11) NOT NULL,
   `key` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `url` varchar(2048) CHARACTER SET ascii COLLATE ascii_bin NOT NULL
@@ -167,7 +167,7 @@ ALTER TABLE `stations`
   ADD KEY `id` (`id`),
   ADD KEY `proposal` (`proposal`);
 
-ALTER TABLE `trustee`
+ALTER TABLE `judge`
   ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `area`
@@ -179,6 +179,6 @@ ALTER TABLE `publication`
 ALTER TABLE `station`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `trustee`
+ALTER TABLE `judge`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
