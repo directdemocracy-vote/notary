@@ -34,7 +34,7 @@ if ($v)
 if (!$type)
   error("No type argument provided.");
 if ($type == 'endorsement')
-  $fields = 'endorsement.publicationKey, endorsement.publicationSignature, endorsement.revoke, endorsement.message, endorsement.comment';
+  $fields = 'endorsement.endorsedSignature, endorsement.revoke, endorsement.message, endorsement.comment';
 elseif ($type == 'citizen')
   $fields = 'citizen.familyName, citizen.givenNames, citizen.picture, ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude';
 elseif ($type == 'proposal')
@@ -67,10 +67,6 @@ if ($result) {
         unset($publication->message);
       if ($publication->comment == '')
         unset($publication->comment);
-      $publication->publication = array('key' => $publication->publicationKey,
-                                        'signature' => $publication->publicationSignature);
-      unset($publication->publicationKey);
-      unset($publication->publicationSignature);
     } elseif ($type == 'proposal') {
       $publication->deadline = floatval($publication->deadline);
       if ($publication->website == '')
