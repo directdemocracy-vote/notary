@@ -14,18 +14,18 @@ if ($mysqli->connect_errno)
 $mysqli->set_charset('utf8mb4');
 
 $input = json_decode(file_get_contents("php://input"));
-$trustee = $mysqli->escape_string($input->trustee);
+$judge = $mysqli->escape_string($input->judge);
 $area = $mysqli->escape_string($input->area);
 
-if (!$trustee)
-  error("Missing trustee argument");
+if (!$judge)
+  error("Missing judge argument");
 if (!$area)
   error("Missing area argument");
 
 $now = intval(microtime(true) * 1000);  # milliseconds
 $date_condition = "publication.published <= $now AND publication.expires >= $now";
 $query = "SELECT publication.expires FROM area LEFT JOIN publication ON publication.id=area.id "
-        ."WHERE publication.key='$trustee' AND area.name='$area' AND $date_condition";
+        ."WHERE publication.key='$judge' AND area.name='$area' AND $date_condition";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
   die("{\"status\":\"area not found\"}");
