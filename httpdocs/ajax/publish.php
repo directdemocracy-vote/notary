@@ -1,8 +1,8 @@
 <?php
 
-require_once '../vendor/autoload.php';
-require_once '../php/database.php';
-require_once '../php/endorsements.php';
+require_once '../../vendor/autoload.php';
+require_once '../../php/database.php';
+require_once '../../php/endorsements.php';
 
 use Opis\JsonSchema\{
   Validator, Errors\ErrorFormatter
