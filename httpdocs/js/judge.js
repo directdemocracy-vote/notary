@@ -10,7 +10,7 @@ window.onload = function() {
   let judge = findGetParameter('judge', 'https://judge.directdemocracy.vote');
   let content = document.getElementById('content');
   let xhttp = new XMLHttpRequest();
-  xhttp.open('POST', '/judge.php', true);
+  xhttp.open('POST', '/ajax/judge.php', true);
   xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   xhttp.send('judge=' + encodeURIComponent(judge));
   let title = document.createElement('div');
