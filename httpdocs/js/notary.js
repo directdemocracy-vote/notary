@@ -58,9 +58,7 @@ window.onload = function() {
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         const a = JSON.parse(this.responseText);
-        markers.forEach(function(m) { // delete previous markers
-          map.removeLayer(m);
-        });
+        markers.forEach(function(m) {map.removeLayer(m);});
         markers = [];
         a.forEach(function(c) {
           const name = `${c.givenNames} ${c.familyName}`;
