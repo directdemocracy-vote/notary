@@ -37,11 +37,11 @@ window.onload = function() {
   marker.setPopupContent(`<div style="text-align:center" id="address">${address}</div><div><input type="range" min="5" max="100" value="${slider}" class="slider" id="range"></div>` +
     `<div style="text-align:center;color:#999" id="position">(${latitude}, ${longitude} &plusmn; ${Math.round(range / 100) / 10} km</div></center>`).openPopup();
   document.getElementById('range').addEventListener('input', rangeChanged);
-  map.on('click', function(e) {
-    marker.setLatLng(e.latlng).openPopup();
-    circle.setLatLng(e.latlng);
-    latitude = e.latlng.lat;
-    longitude = e.latlng.lng;
+  map.on('click', function(event) {
+    marker.setLatLng(event.latlng).openPopup();
+    circle.setLatLng(event.latlng);
+    latitude = event.latlng.lat;
+    longitude = event.latlng.lng;
     updateLabel();
     updatePosition();
     let range = document.getElementById('range');
@@ -50,7 +50,8 @@ window.onload = function() {
   });
   map.on('contextmenu', function(event) { return false; });
   updatePosition();
-  document.getElementById('search-citizens').addEventListener('click', function() {
+  document.getElementById('search-citizens').addEventListener('click', function(event) {
+    document.getElementById('citizens-fieldset').setAttribute('disabled');
     const familyName = document.getElementById("family-name").value;
     const givenNames = document.getElementById("given-names").value;
     let xhttp = new XMLHttpRequest();
@@ -86,8 +87,8 @@ window.onload = function() {
     setTimeout(updatePosition, 500);
   }
   
-  function rangeChanged(e) {
-    slider = e.currentTarget.value;
+  function rangeChanged(event) {
+    slider = event.currentTarget.value;
     range = slider * slider * slider;
     circle.setRadius(range);
     updateLabel();
