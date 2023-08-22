@@ -8,6 +8,18 @@ let markers = [];
 
 window.onload = function() {
   if (navigator.geolocation) navigator.geolocation.getCurrentPosition(getGeolocationPosition);
+  fetch('https://ipinfo.io/loc')
+    .then((response) => {
+      if (response.status == 429)
+        console.log("quota exceeded");
+      response.text();
+    })
+    .then((answer) => {
+      if (!geolocation) {
+        coords = answer.split(',');
+        getGeolocationPosition({coords: {latitude: coords[0], longitude: coords[1]}});
+      }
+    })
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200 && geolocation == false) {
