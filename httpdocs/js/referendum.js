@@ -251,7 +251,7 @@ window.onload = function() {
       }
     }
   };
-  xhttp.open('POST', '/ajax/counting.php', true);
+  xhttp.open('POST', '/api/counting.php', true);
   xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   xhttp.send('fingerprint=' + fingerprint);
 };
