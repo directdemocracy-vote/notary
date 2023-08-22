@@ -51,7 +51,7 @@ window.onload = function() {
   }).addTo(map);
   marker.setPopupContent(`<div style="text-align:center" id="address">${address}</div><div><input type="range" min="5" max="100" value="10" class="slider" id="range"></div>` +
     `<div style="text-align:center;color:#999" id="position">(${latitude}, ${longitude} &plusmn; ${Math.round(range / 100) / 10} km</div></center>`).openPopup();
-  getElementById('range').addEventListener('input', rangeChanged);
+  document.getElementById('range').addEventListener('input', rangeChanged);
   map.on('click', onMapClick);
   map.on('contextmenu', function(event) {
     return false;
