@@ -67,8 +67,8 @@ window.onload = function() {
           const fingerprint = CryptoJS.SHA1(c.signature).toString();
           const label = `<div style="text-align:center"><a target="_blank" href="/citizen.html?fingerprint=${fingerprint}"><img src="${c.picture}" width="60" height="80"><br>${name}</a></div>`;
           markers.push(L.marker([c.latitude, c.longitude], {icon: greenIcon}).addTo(map).bindPopup(label));
-          document.getElementById('citizens-fieldset').setAttribute('disabled', false);
         });
+        document.getElementById('citizens-fieldset').setAttribute('disabled', false);
       }
     }
     let parameters = "latitude=" + latitude + "&longitude=" + longitude + "&range=" + range;
