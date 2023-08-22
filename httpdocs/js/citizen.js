@@ -58,13 +58,14 @@ window.onload = function() {
         '&zoom=20', true);
       xhttp.send();
 
-      /*
       document.getElementById('reload').addEventListener('click', function(event) {
+        event.currentTarget.addAttribute('disabled', '');
+        event.currentTarget.classList.add('is-loading');
         judge = 'https://' + document.getElementById('judge').value;
         document.getElementById('reputation').innerHTML = '...';
         loadReputation();
       });
-      */
+      
       function loadReputation() {
         const url = judge + '/api/reputation.php?key=' + encodeURIComponent(answer.citizen.key);
         xhttp = new XMLHttpRequest(); // get reputation from judge
@@ -77,14 +78,17 @@ window.onload = function() {
             if (answer.error) {
               reputation.style.color = 'red';
               reputation.innerHTML = answer.error;
-              return;
+            } else {
+              reputation.style.color = answer.endorsed ? 'blue' : 'red';
+              reputation.innerHTML = answer.reputation;
             }
-            reputation.style.color = answer.endorsed ? 'blue' : 'red';
-            reputation.innerHTML = answer.reputation;
           } else {
             reputation.style.color = 'red';
             reputation.innerHTML = this.statusText + ' (' + this.status + ')';
           }
+          let button = document.getElementById('reload');
+          button.removeAttribute('disabled');
+          button.classList.remove('is-loading');
         };
       }
 
