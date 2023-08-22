@@ -1,7 +1,8 @@
 function findGetParameter(parameterName, result = null) {
   location.search.substr(1).split("&").forEach(function(item) {
     let tmp = item.split("=");
-    if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+    if (tmp[0] === parameterName)
+      result = decodeURIComponent(tmp[1]);
   });
   return result;
 }
@@ -25,53 +26,47 @@ window.onload = function() {
         console.log(answer.error);
         return;
       }
-      let row = document.createElement('div');
-      content.appendChild(row);
-      row.classList.add('row');
-      let col = document.createElement('div');
-      row.appendChild(col);
-      col.classList.add('col');
-      col.style.maxWidth = '170px';
+      let article = document.createElement('article');
+      content.appendChild(article);
+      article.classList.add('media');
+      let figure = document.createElement('figure');
+      media.appendChild(figure);
+      figure.classList.add('media-left');
+      let p = document.createElement('p');
+      figure.appendChild(p);
+      p.classList.add('image');
       let img = document.createElement('img');
-      col.appendChild(img);
+      p.appendChild(img);
       img.src = answer.citizen.picture;
-      col = document.createElement('div');
-      row.appendChild(col);
-      col.classList.add('col');
+      let div = document.createElement('div');
+      article.appendChild(div);
+      div.classList.add('media-content');
+      let divContent = document.createElement('div');
+      div.appendChild(divContent);
+      divContent.classList.add('content');
+      p = document.createElement('p');
+      divContent.appendChild(p);
       const published = new Date(answer.citizen.published).toISOString().slice(0, 10);
       const latitude = answer.citizen.latitude;
       const longitude = answer.citizen.longitude;
       const familyName = answer.citizen.familyName;
       const givenNames = answer.citizen.givenNames;
-      col.innerHTML =
-        `<div class="citizen-label">Family name:</div><div class="citizen-entry">${familyName}</div>` +
-        `<div class="citizen-label">Given names:</div><div class="citizen-entry">${givenNames}</div>` +
-        `<div class="citizen-label">Latitude, longitude:</div>` +
-        `<div class="citizen-entry">${latitude}, ${longitude}</div>` +
-        `<div><span class="citizen-label">Created:</span> <b>${published}</b></div>`;
-      row = document.createElement('div');
-      content.appendChild(row);
-      row.id = 'map';
-      row.style.width = '100%';
-      row.style.height = '400px';
-      let map = L.map('map', {
-        dragging: false,
-        scrollWheelZoom: false
-      });
-      map.whenReady(function() {
-        setTimeout(() => {
-          this.invalidateSize();
-        }, 0);
-      });
+      p.innerHTML = `Given Name(s):</br><strong>${givenName}</strong><br>Family Name:<br><strong>${familyName}<br>` +
+        `Latitude, longitude:<br><strong>${latitude}, ${longitude}</strong><br>Created: <strong>${published}</strong><br>`;
+      let mapDiv = document.createElement('div');
+      div.appendChild(mapDiv);
+      mapDiv.id = 'map';
+      mapDiv.style.width = '100%';
+      mapDiv.style.height = '400px';
+      let map = L.map('map', {dragging: false, scrollWheelZoom: false});
+      map.whenReady(function() {setTimeout(() => {this.invalidateSize();}, 0);});
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
       marker = L.marker([latitude, longitude]).addTo(map);
       marker.bindPopup(`<b>${familyName}</b> ${givenNames}<br>[${latitude}, ${longitude}]`);
       map.setView([latitude, longitude], 18);
-      map.on('contextmenu', function(event) {
-        return false;
-      });
+      map.on('contextmenu', function(event) {return false;});
       map.dragging.disable();
       let xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
@@ -85,27 +80,17 @@ window.onload = function() {
         '&zoom=20', true);
       xhttp.send();
 
-      row = document.createElement('div');
-      content.appendChild(row);
-      row.classList.add('row');
-      row.classList.add('mt-4');
-      row.innerHTML =
-        `<h4>Reputation: <span id="reputation">...</span></h4>
-<div class="input-group mb-3">
-  <span class="input-group-text" id="protocol">https://</span>
-  <input id="judge" type="text" class="form-control" placeholder="https://judge.directdemocracy.vote"
-   aria-label="Judge URL" aria-describedby="protocol" value="${judge.substring(8)}">
-   <button class="btn btn-outline-secondary" type="button" id="reload"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
-  <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
-  <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
-</svg></button>
-</div>`;
+      let reputationDiv = document.createElement('div');
+      div.appendChild(reputationDiv);
+      reputationDiv.innerHTML =
+        `Reputation: <span id="reputation">...</span>`;
+      /*
       document.getElementById('reload').addEventListener('click', function(event) {
         judge = 'https://' + document.getElementById('judge').value;
         document.getElementById('reputation').innerHTML = '...';
         loadReputation();
       });
-
+      */
       function loadReputation() {
         const url = judge + '/api/reputation.php?key=' + encodeURIComponent(answer.citizen.key);
         xhttp = new XMLHttpRequest(); // get reputation from judge
