@@ -44,8 +44,7 @@ window.onload = function() {
       marker = L.marker([latitude, longitude]).addTo(map);
       marker.bindPopup(`<b>${familyName}</b> ${givenNames}<br>[${latitude}, ${longitude}]`);
       map.setView([latitude, longitude], 18);
-      map.on('contextmenu', function(event) {return false;});
-      map.dragging.disable();
+      // map.on('contextmenu', function(event) {return false;});
       let xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
