@@ -1,7 +1,8 @@
 let geolocation = false;
 let latitude = 0;
 let longitude = 0;
-let range = 500;
+let slider = 10;
+let range = slider * slider * slider;
 let address = '';
 let markers = [];
 
@@ -33,7 +34,7 @@ window.onload = function() {
   });
   let marker = L.marker([latitude, longitude]).addTo(map).bindPopup(latitude + ',' + longitude).on('click', onMarkerClick);
   let circle = L.circle([latitude, longitude], { color: 'red', opacity: 0.4, fillColor: '#f03', fillOpacity: 0.2, radius: range}).addTo(map);
-  marker.setPopupContent(`<div style="text-align:center" id="address">${address}</div><div><input type="range" min="5" max="100" value="10" class="slider" id="range"></div>` +
+  marker.setPopupContent(`<div style="text-align:center" id="address">${address}</div><div><input type="range" min="5" max="100" value="${slider}" class="slider" id="range"></div>` +
     `<div style="text-align:center;color:#999" id="position">(${latitude}, ${longitude} &plusmn; ${Math.round(range / 100) / 10} km</div></center>`).openPopup();
   document.getElementById('range').addEventListener('input', rangeChanged);
   map.on('click', onMapClick);
@@ -59,13 +60,15 @@ window.onload = function() {
     longitude = e.latlng.lng;
     updateLabel();
     updatePosition();
-    document.getElementById('range').addEventListener('input', rangeChanged);
+    let range = document.getElementById('range');
+    range.setAttribute('value', slider);
+    range.addEventListener('input', rangeChanged);
   }
   
   function rangeChanged(e) {
     console.log('range changed');
-    let input = e.currentTarget;
-    range = input.value * input.value * input.value;
+    slider = e.currentTarget.value;
+    range = slider * slider * slider;
     circle.setRadius(range);
     updateLabel();
   }
