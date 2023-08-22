@@ -31,6 +31,7 @@ window.onload = function() {
       const familyName = answer.citizen.familyName;
       const latitude = answer.citizen.latitude;
       const longitude = answer.citizen.longitude;
+      document.getElementById('picture').src = answer.citizen.picture;
       document.getElementById('given-names').innerHTML = givenNames;
       document.getElementById('family-name').innerHTML = familyName;
       document.getElementById('home').innerHTML = `${latitude}, ${longitude}`;
