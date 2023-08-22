@@ -63,12 +63,11 @@ window.onload = function() {
         });
         markers = [];
         a.forEach(function(c) {
-          const name = c.givenNames + ' ' + c.familyName;
+          const name = `${c.givenNames} ${c.familyName}`;
           const fingerprint = CryptoJS.SHA1(c.signature).toString();
-          const label = '<div style="text-align:center"><a target="_blank" href="/citizen.html?fingerprint=' + fingerprint + '"><img src="' + c.picture + '" width="60" height="80"><br>' + name + '</a></div>';
-          markers.push(L.marker([c.latitude, c.longitude], {
-            icon: greenIcon
-          }).addTo(map).bindPopup(label));
+          const label = `<div style="text-align:center"><a target="_blank" href="/citizen.html?fingerprint=${fingerprint}"><img src="${c.picture}" width="60" height="80"><br>${name}</a></div>`;
+          markers.push(L.marker([c.latitude, c.longitude], {icon: greenIcon}).addTo(map).bindPopup(label));
+          document.getElementById('citizens-fieldset').setAttribute('disabled', false);
         });
       }
     }
