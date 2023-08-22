@@ -128,7 +128,7 @@ window.onload = function() {
         if (!endorsement.revoke)
           count++;
       });
-      document.getElementById('endorsed-by-header').innerHTML = count ? `Has endorsed ${count}:` : `Has endorsed nobody`;
+      document.getElementById('has-endorsed-header').innerHTML = count ? `Has endorsed ${count}:` : `Has endorsed nobody`;
       answer.endorsements.forEach(function(endorsement) {
         addEndorsement(endorsement);
       });
