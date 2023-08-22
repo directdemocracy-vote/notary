@@ -62,7 +62,9 @@ window.onload = function() {
         event.currentTarget.setAttribute('disabled', '');
         event.currentTarget.classList.add('is-loading');
         judge = 'https://' + document.getElementById('judge').value;
-        document.getElementById('reputation').innerHTML = '...';
+        let reputation = document.getElementById('reputation');
+        reputation.innerHTML = '...';
+        reputation.style.color = 'black';
         loadReputation();
       });
       
