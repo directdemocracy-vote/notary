@@ -42,14 +42,24 @@
           <li class="tab" onclick="openTab(event,'judge')"><a>Judge</a></li>
         </ul>
       </div>
-      <div id="citizens" class="content-tab" >
-        <p>
-          citizens<br>
-          Overview Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-          It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-          It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-        </p>
+      <div id="citizens" class="content-tab">
+        <div class="field">
+          <label class="label">Given name(s):</label>
+          <div class="control">
+            <input id="given-names" class="input" type="text" placeholder="Given name(s)">
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Family name:</label>
+          <div class="control">
+            <input id="family-name" class="input" type="text" placeholder="Family name">
+          </div>
+        </div>
+        <div class="field">
+         <div class="control">
+           <button class="button is-link">Search</button>
+         </div>
+        </div>
       </div>
       <div id="referendums" class="content-tab" style="display:none">
         <p>
