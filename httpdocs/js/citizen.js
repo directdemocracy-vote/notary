@@ -9,6 +9,7 @@ function findGetParameter(parameterName, result = null) {
 
 window.onload = function() {
   let judge = findGetParameter('judge', 'https://judge.directdemocracy.vote');
+  document.getElementById('judge').value = judge.substring(8);
   const fingerprint = findGetParameter('fingerprint');
   if (!fingerprint) {
     console.log('Missing fingerprint GET argument.');
