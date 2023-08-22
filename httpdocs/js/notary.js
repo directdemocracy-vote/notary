@@ -51,7 +51,7 @@ window.onload = function() {
   map.on('contextmenu', function(event) { return false; });
   updatePosition();
   document.getElementById('search-citizens').addEventListener('click', function(event) {
-    document.getElementById('citizens-fieldset').setAttribute('disabled');
+    document.getElementById('citizens-fieldset').setAttribute('disabled', true);
     const familyName = document.getElementById("family-name").value;
     const givenNames = document.getElementById("given-names").value;
     let xhttp = new XMLHttpRequest();
