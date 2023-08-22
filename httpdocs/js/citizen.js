@@ -26,38 +26,15 @@ window.onload = function() {
         console.log(answer.error);
         return;
       }
-      let article = document.createElement('article');
-      content.appendChild(article);
-      article.classList.add('media');
-      let figure = document.createElement('figure');
-      article.appendChild(figure);
-      figure.classList.add('media-left');
-      let p = document.createElement('p');
-      figure.appendChild(p);
-      p.classList.add('image');
-      let img = document.createElement('img');
-      p.appendChild(img);
-      img.src = answer.citizen.picture;
-      let div = document.createElement('div');
-      article.appendChild(div);
-      div.classList.add('media-content');
-      let divContent = document.createElement('div');
-      div.appendChild(divContent);
-      divContent.classList.add('content');
-      p = document.createElement('p');
-      divContent.appendChild(p);
       const published = new Date(answer.citizen.published).toISOString().slice(0, 10);
+      const givenNames = answer.citizen.givenNames;
+      const FamilyName = answer.citizen.FamilyName;
       const latitude = answer.citizen.latitude;
       const longitude = answer.citizen.longitude;
-      const familyName = answer.citizen.familyName;
-      const givenNames = answer.citizen.givenNames;
-      p.innerHTML = `Given Name(s):</br><strong>${givenNames}</strong><br>Family Name:<br><strong>${familyName}</strong><br>` +
-        `Latitude, longitude:<br><strong>${latitude}, ${longitude}</strong><br>Created: <strong>${published}</strong><br>`;
-      let mapDiv = document.createElement('div');
-      div.appendChild(mapDiv);
-      mapDiv.id = 'map';
-      mapDiv.style.width = '100%';
-      mapDiv.style.height = '400px';
+      document.getElementById('given-names').innerHTML = givenNames;
+      document.getElementById('family-name').innerHTML = familyName;
+      document.getElementById('home').innerHTML = `{latitude}, ${longitude}`;
+      document.getElementById('created').innerHTML = published;
       let map = L.map('map', {dragging: false, scrollWheelZoom: false});
       map.whenReady(function() {setTimeout(() => {this.invalidateSize();}, 0);});
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -80,10 +57,6 @@ window.onload = function() {
         '&zoom=20', true);
       xhttp.send();
 
-      let reputationDiv = document.createElement('div');
-      div.appendChild(reputationDiv);
-      reputationDiv.innerHTML =
-        `Reputation: <span id="reputation">...</span>`;
       /*
       document.getElementById('reload').addEventListener('click', function(event) {
         judge = 'https://' + document.getElementById('judge').value;
