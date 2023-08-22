@@ -56,79 +56,79 @@ window.onload = function() {
     return false;
   });
   updatePosition();
-}
 
-function getGeolocationPosition(position) {
-  geolocation = true;
-  latitude = position.coords.latitude;
-  longitude = position.coords.longitude;
-  map.setView([position.coords.latitude, position.coords.longitude], 12);
-  setTimeout(updatePosition, 500);
-}
-
-function onMarkerClick(e) {
-  updateLabel();
-}
-
-function onMapClick(e) {
-  marker.setLatLng(e.latlng).openPopup();
-  circle.setLatLng(e.latlng);
-  latitude = e.latlng.lat;
-  longitude = e.latlng.lng;
-  updateLabel();
-  updatePosition();
-}
-
-function rangeChanged(r) {
-  range = r.value * r.value * r.value;
-  circle.setRadius(range);
-  updateLabel();
-}
-
-function updatePosition() {
-  marker.setLatLng([latitude, longitude]);
-  circle.setLatLng([latitude, longitude]);
-  let xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      a = JSON.parse(this.responseText);
-      address = a.display_name;
-      updateLabel();
-    }
-  };
-  xhttp.open('GET', 'https://nominatim.openstreetmap.org/reverse.php?format=json&lat=' + latitude + '&lon=' + longitude + '&zoom=10', true);
-  xhttp.send();
-}
-
-function updateLabel() {
-  document.getElementById("address").innerHTML = address;
-  document.getElementById("position").innerHTML = '(' + latitude + ', ' + longitude + ') &plusmn; ' + Math.round(range / 100) / 10 + ' km';
-}
-
-function search() {
-  const familyName = document.getElementById("family-name").value;
-  const givenNames = document.getElementById("given-names").value;
-  let xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      const a = JSON.parse(this.responseText);
-      markers.forEach(function(m) { // delete previous markers
-        map.removeLayer(m);
-      });
-      markers = [];
-      a.forEach(function(c) {
-        const name = c.givenNames + ' ' + c.familyName;
-        const fingerprint = CryptoJS.SHA1(c.signature).toString();
-        const label = '<div style="text-align:center"><a target="_blank" href="/citizen.html?fingerprint=' + fingerprint + '"><img src="' + c.picture + '" width="60" height="80"><br>' + name + '</a></div>';
-        markers.push(L.marker([c.latitude, c.longitude], {
-          icon: greenIcon
-        }).addTo(map).bindPopup(label));
-      });
-    }
+  function getGeolocationPosition(position) {
+    geolocation = true;
+    latitude = position.coords.latitude;
+    longitude = position.coords.longitude;
+    map.setView([position.coords.latitude, position.coords.longitude], 12);
+    setTimeout(updatePosition, 500);
   }
-  let parameters = "latitude=" + latitude + "&longitude=" + longitude + "&range=" + range;
-  if (familyName) parameters += "&familyName=" + encodeURI(familyName);
-  if (givenNames) parameters += "&givenNames=" + encodeURI(givenNames);
-  xhttp.open("GET", "https://notary.directdemocracy.vote/api/search.php?" + parameters, true);
-  xhttp.send();
+  
+  function onMarkerClick(e) {
+    updateLabel();
+  }
+  
+  function onMapClick(e) {
+    marker.setLatLng(e.latlng).openPopup();
+    circle.setLatLng(e.latlng);
+    latitude = e.latlng.lat;
+    longitude = e.latlng.lng;
+    updateLabel();
+    updatePosition();
+  }
+  
+  function rangeChanged(r) {
+    range = r.value * r.value * r.value;
+    circle.setRadius(range);
+    updateLabel();
+  }
+  
+  function updatePosition() {
+    marker.setLatLng([latitude, longitude]);
+    circle.setLatLng([latitude, longitude]);
+    let xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        a = JSON.parse(this.responseText);
+        address = a.display_name;
+        updateLabel();
+      }
+    };
+    xhttp.open('GET', 'https://nominatim.openstreetmap.org/reverse.php?format=json&lat=' + latitude + '&lon=' + longitude + '&zoom=10', true);
+    xhttp.send();
+  }
+  
+  function updateLabel() {
+    document.getElementById("address").innerHTML = address;
+    document.getElementById("position").innerHTML = '(' + latitude + ', ' + longitude + ') &plusmn; ' + Math.round(range / 100) / 10 + ' km';
+  }
+  
+  function search() {
+    const familyName = document.getElementById("family-name").value;
+    const givenNames = document.getElementById("given-names").value;
+    let xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        const a = JSON.parse(this.responseText);
+        markers.forEach(function(m) { // delete previous markers
+          map.removeLayer(m);
+        });
+        markers = [];
+        a.forEach(function(c) {
+          const name = c.givenNames + ' ' + c.familyName;
+          const fingerprint = CryptoJS.SHA1(c.signature).toString();
+          const label = '<div style="text-align:center"><a target="_blank" href="/citizen.html?fingerprint=' + fingerprint + '"><img src="' + c.picture + '" width="60" height="80"><br>' + name + '</a></div>';
+          markers.push(L.marker([c.latitude, c.longitude], {
+            icon: greenIcon
+          }).addTo(map).bindPopup(label));
+        });
+      }
+    }
+    let parameters = "latitude=" + latitude + "&longitude=" + longitude + "&range=" + range;
+    if (familyName) parameters += "&familyName=" + encodeURI(familyName);
+    if (givenNames) parameters += "&givenNames=" + encodeURI(givenNames);
+    xhttp.open("GET", "https://notary.directdemocracy.vote/api/search.php?" + parameters, true);
+    xhttp.send();
+  }
 }
