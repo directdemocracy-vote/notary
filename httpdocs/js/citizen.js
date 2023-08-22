@@ -59,7 +59,7 @@ window.onload = function() {
       xhttp.send();
 
       document.getElementById('reload').addEventListener('click', function(event) {
-        event.currentTarget.addAttribute('disabled', '');
+        event.currentTarget.setAttribute('disabled', '');
         event.currentTarget.classList.add('is-loading');
         judge = 'https://' + document.getElementById('judge').value;
         document.getElementById('reputation').innerHTML = '...';
