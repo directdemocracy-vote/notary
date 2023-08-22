@@ -96,9 +96,10 @@ window.onload = function() {
 
       loadReputation();
 
-      function addEndorsement(endorsement) {
+      function addEndorsement(endorsement, name) {
+        let parent = document.getElementById(name);        
         let card = document.createElement('div');
-        content.appendChild(card);
+        parent.appendChild(card);
         card.classList.add('card');
         card.classList.add('mb-1');
         let label;
@@ -121,7 +122,7 @@ window.onload = function() {
       });
       document.getElementById('endorsed-by-header').innerHTML = count ? `Endorsed by ${count}:` : `Not endorsed by anyone.`;
       answer.citizen_endorsements.forEach(function(endorsement) {
-        addEndorsement(endorsement);
+        addEndorsement(endorsement, 'endorsed-by');
       });
       count = 0;
       answer.endorsements.forEach(function(endorsement) {
@@ -130,7 +131,7 @@ window.onload = function() {
       });
       document.getElementById('has-endorsed-header').innerHTML = count ? `Has endorsed ${count}:` : `Has not endorsed anyone.`;
       answer.endorsements.forEach(function(endorsement) {
-        addEndorsement(endorsement);
+        addEndorsement(endorsement, 'has-endorsed');
       });
     }
   };
