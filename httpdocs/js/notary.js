@@ -19,18 +19,7 @@ window.onload = function() {
         coords = answer.split(',');
         getGeolocationPosition({coords: {latitude: coords[0], longitude: coords[1]}});
       }
-    })
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200 && geolocation == false) {
-      coords = this.responseText.split(',');
-      getGeolocationPosition({coords: {latitude: coords[0], longitude: coords[1]}});
-    } else if (this.status == 429)  // quota exceeded
-      console.log(this.responseText);
-  };
-  xhttp.open("GET", "https://ipinfo.io/loc", true);
-  xhttp.send();
-
+    });
   let map = L.map('map').setView([latitude, longitude], 2);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
