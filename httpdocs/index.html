@@ -233,7 +233,7 @@
               let parameters = "latitude=" + latitude + "&longitude=" + longitude + "&range=" + range;
               if (familyName) parameters += "&familyName=" + encodeURI(familyName);
               if (givenNames) parameters += "&givenNames=" + encodeURI(givenNames);
-              xhttp.open("GET", "https://notary.directdemocracy.vote/search.php?" + parameters, true);
+              xhttp.open("GET", "https://notary.directdemocracy.vote/api/search.php?" + parameters, true);
               xhttp.send();
             }
 
