@@ -15,7 +15,7 @@ window.onload = function() {
   }
   let content = document.getElementById('content');
   let xhttp = new XMLHttpRequest();
-  xhttp.open('POST', '/ajax/citizen.php', true);
+  xhttp.open('POST', '/api/citizen.php', true);
   xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   xhttp.send('fingerprint=' + encodeURIComponent(fingerprint));
   xhttp.onload = function() {
