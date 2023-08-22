@@ -23,7 +23,7 @@ window.onload = function() {
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
-  map.whenReady(function() { setTimeout(() => { this.invalidateSize(); }, 0); });
+  map.whenReady(function() {setTimeout(() => {this.invalidateSize();}, 0);});
   const greenIcon = new L.Icon({
     iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -51,7 +51,7 @@ window.onload = function() {
   map.on('contextmenu', function(event) { return false; });
   updatePosition();
   document.getElementById('search-citizens').addEventListener('click', function(event) {
-    document.getElementById('citizens-fieldset').setAttribute('disabled', true);
+    document.getElementById('citizens-fieldset').setAttribute('disabled', '');
     const familyName = document.getElementById("family-name").value;
     const givenNames = document.getElementById("given-names").value;
     let xhttp = new XMLHttpRequest();
@@ -66,7 +66,7 @@ window.onload = function() {
           const label = `<div style="text-align:center"><a target="_blank" href="/citizen.html?fingerprint=${fingerprint}"><img src="${c.picture}" width="60" height="80"><br>${name}</a></div>`;
           markers.push(L.marker([c.latitude, c.longitude], {icon: greenIcon}).addTo(map).bindPopup(label));
         });
-        document.getElementById('citizens-fieldset').setAttribute('disabled', false);
+        document.getElementById('citizens-fieldset').removeAttribute('disabled');
       }
     }
     let parameters = "latitude=" + latitude + "&longitude=" + longitude + "&range=" + range;
