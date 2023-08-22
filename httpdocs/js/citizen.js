@@ -30,7 +30,7 @@ window.onload = function() {
       content.appendChild(article);
       article.classList.add('media');
       let figure = document.createElement('figure');
-      media.appendChild(figure);
+      article.appendChild(figure);
       figure.classList.add('media-left');
       let p = document.createElement('p');
       figure.appendChild(p);
