@@ -59,6 +59,7 @@ window.onload = function() {
     longitude = e.latlng.lng;
     updateLabel();
     updatePosition();
+    document.getElementById('range').addEventListener('input', rangeChanged);
   }
   
   function rangeChanged(e) {
