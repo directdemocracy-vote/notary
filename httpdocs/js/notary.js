@@ -17,9 +17,8 @@ window.onload = function() {
           longitude: coords[1]
         }
       });
-    } else if (this.status == 429) { // quota exceeded
+    } else if (this.status == 429)  // quota exceeded
       console.log(this.responseText);
-    }
   };
   xhttp.open("GET", "https://ipinfo.io/loc", true);
   xhttp.send();
@@ -28,11 +27,7 @@ window.onload = function() {
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
-  map.whenReady(function() {
-    setTimeout(() => {
-      this.invalidateSize();
-    }, 0);
-  });
+  map.whenReady(function() { setTimeout(() => { this.invalidateSize(); }, 0); });
   const greenIcon = new L.Icon({
     iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -42,20 +37,12 @@ window.onload = function() {
     shadowSize: [41, 41]
   });
   let marker = L.marker([latitude, longitude]).addTo(map).bindPopup(latitude + ',' + longitude).on('click', onMarkerClick);
-  let circle = L.circle([latitude, longitude], {
-    color: 'red',
-    opacity: 0.4,
-    fillColor: '#f03',
-    fillOpacity: 0.2,
-    radius: range
-  }).addTo(map);
+  let circle = L.circle([latitude, longitude], { color: 'red', opacity: 0.4, fillColor: '#f03', fillOpacity: 0.2, radius: range}).addTo(map);
   marker.setPopupContent(`<div style="text-align:center" id="address">${address}</div><div><input type="range" min="5" max="100" value="10" class="slider" id="range"></div>` +
     `<div style="text-align:center;color:#999" id="position">(${latitude}, ${longitude} &plusmn; ${Math.round(range / 100) / 10} km</div></center>`).openPopup();
   document.getElementById('range').addEventListener('input', rangeChanged);
   map.on('click', onMapClick);
-  map.on('contextmenu', function(event) {
-    return false;
-  });
+  map.on('contextmenu', function(event) { return false; });
   updatePosition();
 
   function getGeolocationPosition(position) {
