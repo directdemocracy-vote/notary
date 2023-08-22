@@ -33,7 +33,7 @@ window.onload = function() {
       const longitude = answer.citizen.longitude;
       document.getElementById('given-names').innerHTML = givenNames;
       document.getElementById('family-name').innerHTML = familyName;
-      document.getElementById('home').innerHTML = `{latitude}, ${longitude}`;
+      document.getElementById('home').innerHTML = `${latitude}, ${longitude}`;
       document.getElementById('created').innerHTML = published;
       let map = L.map('map', {dragging: false, scrollWheelZoom: false});
       map.whenReady(function() {setTimeout(() => {this.invalidateSize();}, 0);});
@@ -107,7 +107,7 @@ window.onload = function() {
           `<a href="/citizen.html?fingerprint=${endorsement.fingerprint}"<b>${endorsement.familyName}</b> ` +
           `${endorsement.givenNames}</a><br><small>${label} ${published}</small></div></div></div>`;
       }
-
+/*
       row = document.createElement('div');
       content.appendChild(row);
       row.classList.add('row');
@@ -134,6 +134,7 @@ window.onload = function() {
       answer.endorsements.forEach(function(endorsement) {
         addEndorsement(endorsement);
       });
+      */
     }
   };
 };
