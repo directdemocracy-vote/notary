@@ -114,34 +114,24 @@ window.onload = function() {
           `<a href="/citizen.html?fingerprint=${endorsement.fingerprint}"<b>${endorsement.familyName}</b> ` +
           `${endorsement.givenNames}</a><br><small>${label} ${published}</small></div></div></div>`;
       }
-/*
-      row = document.createElement('div');
-      content.appendChild(row);
-      row.classList.add('row');
-      row.classList.add('mt-4');
       let count = 0;
       answer.citizen_endorsements.forEach(function(endorsement) {
         if (!endorsement.revoke)
           count++;
       });
-      row.innerHTML = count ? `<h4>Endorsed by ${count}:</h4>` : `<h4>Not endorsed by anyone</h4>`;
+      document.getElementById('endorsed-by-header').innerHTML = count ? `Endorsed by ${count}:` : `Not endorsed by anyone`;
       answer.citizen_endorsements.forEach(function(endorsement) {
         addEndorsement(endorsement);
       });
-      row = document.createElement('div');
-      content.appendChild(row);
-      row.classList.add('row');
-      row.classList.add('mt-4');
       count = 0;
       answer.endorsements.forEach(function(endorsement) {
         if (!endorsement.revoke)
           count++;
       });
-      row.innerHTML = count ? `<h4>Endorsing ${count}:</h4>` : `<h4>Not endorsing anyone</h4>`;
+      document.getElementById('endorsed-by-header').innerHTML = count ? `Has endorsed ${count}:` : `Has endorsed nobody`;
       answer.endorsements.forEach(function(endorsement) {
         addEndorsement(endorsement);
       });
-      */
     }
   };
 };
