@@ -62,8 +62,9 @@ window.onload = function() {
   }
   
   function rangeChanged(e) {
-    let div = e.currentTarget;
-    range = div.value * div.value * div.value;
+    console.log('range changed');
+    let input = e.currentTarget;
+    range = input.value * input.value * input.value;
     circle.setRadius(range);
     updateLabel();
   }
