@@ -57,27 +57,25 @@ window.onload = function() {
     searchCitizen.classList.add('is-loading');
     const familyName = document.getElementById("family-name").value;
     const givenNames = document.getElementById("given-names").value;
-    let xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        const a = JSON.parse(this.responseText);
-        markers.forEach(function(m) {map.removeLayer(m);});
+    let parameters = `latitude=${latitude}&longitude=${longitude}&range=${range}`;
+    if (familyName)
+      parameters += `&familyName=${encodeURI(familyName)}`;
+    if (givenNames)
+      parameters += `&givenNames=${encodeURI(givenNames)}`;
+    fetch(`https://notary.directdemocracy.vote/api/search.php?${parameters}`)
+      .then((response) => response.json())
+      .then((answer) => {
+        markers.forEach(function(marker) {map.removeLayer(marker);});
         markers = [];
-        a.forEach(function(c) {
-          const name = `${c.givenNames} ${c.familyName}`;
-          const fingerprint = CryptoJS.SHA1(c.signature).toString();
+        answer.forEach(function(citizen) {
+          const name = `${citizen.givenNames} ${citizen.familyName}`;
+          const fingerprint = CryptoJS.SHA1(citizen.signature).toString();
           const label = `<div style="text-align:center"><a target="_blank" href="/citizen.html?fingerprint=${fingerprint}"><img src="${c.picture}" width="60" height="80"><br>${name}</a></div>`;
-          markers.push(L.marker([c.latitude, c.longitude], {icon: greenIcon}).addTo(map).bindPopup(label));
+          markers.push(L.marker([citizen.latitude, citizen.longitude], {icon: greenIcon}).addTo(map).bindPopup(label));
         });
         document.getElementById('citizens-fieldset').removeAttribute('disabled');
         searchCitizen.classList.remove('is-loading');
-      }
-    }
-    let parameters = "latitude=" + latitude + "&longitude=" + longitude + "&range=" + range;
-    if (familyName) parameters += "&familyName=" + encodeURI(familyName);
-    if (givenNames) parameters += "&givenNames=" + encodeURI(givenNames);
-    xhttp.open("GET", "https://notary.directdemocracy.vote/api/search.php?" + parameters, true);
-    xhttp.send();
+      });
   });
 
   function getGeolocationPosition(position) {
@@ -98,16 +96,12 @@ window.onload = function() {
   function updatePosition() {
     marker.setLatLng([latitude, longitude]);
     circle.setLatLng([latitude, longitude]);
-    let xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        a = JSON.parse(this.responseText);
-        address = a.display_name;
+    fetch(`https://nominatim.openstreetmap.org/reverse.php?format=json&lat=${latitude}&lon=${longitude}&zoom=10`)
+      .then((response) => response.json())
+      .then((answer) => {
+        address = answer.display_name;
         updateLabel();
-      }
-    };
-    xhttp.open('GET', 'https://nominatim.openstreetmap.org/reverse.php?format=json&lat=' + latitude + '&lon=' + longitude + '&zoom=10', true);
-    xhttp.send();
+      });
   }
   
   function updateLabel() {
