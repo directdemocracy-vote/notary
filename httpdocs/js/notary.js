@@ -11,7 +11,7 @@ window.onload = function() {
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200 && geolocation == false) {
       coords = this.responseText.split(',');
-      getGeolocationPosition({coords: {latitude: coords[0], longitude: coords[1 }});
+      getGeolocationPosition({coords: {latitude: coords[0], longitude: coords[1]}});
     } else if (this.status == 429)  // quota exceeded
       console.log(this.responseText);
   };
