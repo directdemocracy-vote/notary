@@ -28,7 +28,7 @@ window.onload = function() {
       }
       const published = new Date(answer.citizen.published).toISOString().slice(0, 10);
       const givenNames = answer.citizen.givenNames;
-      const FamilyName = answer.citizen.FamilyName;
+      const familyName = answer.citizen.familyName;
       const latitude = answer.citizen.latitude;
       const longitude = answer.citizen.longitude;
       document.getElementById('given-names').innerHTML = givenNames;
