@@ -66,7 +66,6 @@ window.onload = function() {
   }
   
   function rangeChanged(e) {
-    console.log('range changed');
     slider = e.currentTarget.value;
     range = slider * slider * slider;
     circle.setRadius(range);
