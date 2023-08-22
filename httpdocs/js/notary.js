@@ -50,7 +50,7 @@ window.onload = function() {
   });
   map.on('contextmenu', function(event) { return false; });
   updatePosition();
-  document.getElementById('search-ciziten').addEventListener('click', function() {
+  document.getElementById('search-citizen').addEventListener('click', function() {
     const familyName = document.getElementById("family-name").value;
     const givenNames = document.getElementById("given-names").value;
     let xhttp = new XMLHttpRequest();
