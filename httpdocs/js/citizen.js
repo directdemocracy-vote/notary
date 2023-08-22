@@ -51,7 +51,7 @@ window.onload = function() {
       const longitude = answer.citizen.longitude;
       const familyName = answer.citizen.familyName;
       const givenNames = answer.citizen.givenNames;
-      p.innerHTML = `Given Name(s):</br><strong>${givenNames}</strong><br>Family Name:<br><strong>${familyName}<br>` +
+      p.innerHTML = `Given Name(s):</br><strong>${givenNames}</strong><br>Family Name:<br><strong>${familyName}</strong><br>` +
         `Latitude, longitude:<br><strong>${latitude}, ${longitude}</strong><br>Created: <strong>${published}</strong><br>`;
       let mapDiv = document.createElement('div');
       div.appendChild(mapDiv);
