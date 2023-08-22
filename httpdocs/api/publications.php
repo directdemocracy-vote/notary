@@ -1,5 +1,5 @@
 <?php
-require_once '../php/database.php';
+require_once '../../php/database.php';
 $version = '0.0.2';
 
 function error($message) {

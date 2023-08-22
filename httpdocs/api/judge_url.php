@@ -1,5 +1,5 @@
 <?php
-require_once '../php/database.php';
+require_once '../../php/database.php';
 
 $mysqli = new mysqli($database_host, $database_username, $database_password, $database_name);
 if ($mysqli->connect_errno)

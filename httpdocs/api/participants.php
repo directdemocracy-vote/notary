@@ -1,6 +1,6 @@
 <?php
 
-require_once '../php/database.php';
+require_once '../../php/database.php';
 
 function error($message) {
   if ($message[0] != '{')
