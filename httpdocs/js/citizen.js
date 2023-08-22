@@ -107,7 +107,7 @@ window.onload = function() {
       });
 
       function loadReputation() {
-        const url = judge + '/reputation.php?key=' + encodeURIComponent(answer.citizen.key);
+        const url = judge + '/api/reputation.php?key=' + encodeURIComponent(answer.citizen.key);
         xhttp = new XMLHttpRequest(); // get reputation from judge
         xhttp.open('GET', url, true);
         xhttp.send();
