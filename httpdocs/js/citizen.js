@@ -36,7 +36,7 @@ window.onload = function() {
       document.getElementById('family-name').innerHTML = familyName;
       document.getElementById('home').innerHTML = `${latitude}, ${longitude}`;
       document.getElementById('created').innerHTML = published;
-      let map = L.map('map', {dragging: false, scrollWheelZoom: false});
+      let map = L.map('map');
       map.whenReady(function() {setTimeout(() => {this.invalidateSize();}, 0);});
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>'
