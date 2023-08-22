@@ -52,6 +52,7 @@ window.onload = function() {
   updatePosition();
   document.getElementById('search-citizens').addEventListener('click', function(event) {
     document.getElementById('citizens-fieldset').setAttribute('disabled', '');
+    event.currentTarget.classList.add('is-loading');
     const familyName = document.getElementById("family-name").value;
     const givenNames = document.getElementById("given-names").value;
     let xhttp = new XMLHttpRequest();
@@ -67,6 +68,7 @@ window.onload = function() {
           markers.push(L.marker([c.latitude, c.longitude], {icon: greenIcon}).addTo(map).bindPopup(label));
         });
         document.getElementById('citizens-fieldset').removeAttribute('disabled');
+        event.currentTarget.classList.remove('is-loading');
       }
     }
     let parameters = "latitude=" + latitude + "&longitude=" + longitude + "&range=" + range;
