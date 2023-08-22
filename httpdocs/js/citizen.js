@@ -98,22 +98,30 @@ window.onload = function() {
 
       function addEndorsement(endorsement, name) {
         let parent = document.getElementById(name);        
-        let card = document.createElement('div');
-        parent.appendChild(card);
-        card.classList.add('card');
-        card.classList.add('mb-1');
+        let figure = document.createElement('figure');
+        parent.appendChild(figure);
+        figure.classList.add('media-left');
+        let p = document.createElement('p');
+        figure.appendChild(p);
+        p.classList.add('image');
+        let img = document.createElement('img');
+        p.appendChild(img);
+        img.src = endorsement.picture;
+        let div = document.createElement('div');
+        parent.appendChild(div);
+        div.classList.add('media-content');
+        let content = document.createElement('div');
+        div.appendChild(content);
+        content.classList.add('content');
         let label;
         if (endorsement.revoke) {
-          card.classList.add('revoked');
           label = "Revoked on";
         } else
           label = "Endorsed on";
         const published = new Date(endorsement.published).toISOString().slice(0, 10);
-        card.innerHTML =
-          `<div class="card-body"><div class="row"><div class="col-3"><img style="width:75px" ` +
-          `src="${endorsement.picture}"></div><div class="col-9">` +
+        content.innerHTML =
           `<a href="/citizen.html?fingerprint=${endorsement.fingerprint}"<b>${endorsement.familyName}</b> ` +
-          `${endorsement.givenNames}</a><br><small>${label} ${published}</small></div></div></div>`;
+          `${endorsement.givenNames}</a><br><small>${label} ${published}</small>`;
       }
       let count = 0;
       answer.citizen_endorsements.forEach(function(endorsement) {
