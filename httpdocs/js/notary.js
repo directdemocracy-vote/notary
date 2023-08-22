@@ -125,7 +125,7 @@ function openTab(event, name) {
   let contentTab = document.getElementsByClassName('content-tab');
   for (let i = 0; i < contentTab.length; i++)
     contentTab[i].style.display = 'none';
-  let tab = document.getElementsByClassName("tab");
+  let tab = document.getElementsByClassName('tab');
   for (let i = 0; i < tab.length; i++)
     tab[i].classList.remove('is-active');
   document.getElementById(name).style.display = 'block';
