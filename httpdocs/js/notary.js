@@ -24,7 +24,7 @@ window.onload = function() {
   xhttp.open("GET", "https://ipinfo.io/loc", true);
   xhttp.send();
 
-  let map = L.map('latlongmap').setView([latitude, longitude], 2);
+  let map = L.map('map').setView([latitude, longitude], 2);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
