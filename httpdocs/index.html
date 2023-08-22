@@ -39,7 +39,6 @@
           <li class="tab is-active" onclick="openTab(event,'citizens')"><a>Citizens</a></li>
           <li class="tab" onclick="openTab(event,'referendums')"><a>Referendums</a></li>
           <li class="tab" onclick="openTab(event,'petitions')"><a>Petitions</a></li>
-          <li class="tab" onclick="openTab(event,'judge')"><a>Judge</a></li>
         </ul>
       </div>
       <div style="height:300px">
@@ -65,19 +64,46 @@
           </div>
         </div>
         <div id="referendums" class="content-tab" style="display:none">
-          <p>
-            referendums<br>
-            Details Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-            It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-            It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-          </p>
+          <div class="field is-horizontal">
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <input id="referendum-title" class="input" type="text" placeholder="Title">
+                </div>
+              </div>
+              <div class="field">
+                <div class="control">
+                  <input id="referendum-description" class="input" type="text" placeholder="Description">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field has-addons">
+            <div class="control"><a class="button is-static">https://</a></div>
+            <div class="control is-expanded"><input class="input" type="text" placeholder="judge.directdemocracy.vote" value=""></div>
+            <div class="control"><a class="button is-info">Search</a></div>
+          </div>
         </div>
         <div id="petitions" class="content-tab" style="display:none">
-          <p>petitions </p> 
-        </div>
-        <div id="judge" class="content-tab" style="display:none">
-          <p>judge </p> 
+          <div class="field is-horizontal">
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <input id="petition-title" class="input" type="text" placeholder="Title">
+                </div>
+              </div>
+              <div class="field">
+                <div class="control">
+                  <input id="petition-description" class="input" type="text" placeholder="Description">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field has-addons">
+            <div class="control"><a class="button is-static">https://</a></div>
+            <div class="control is-expanded"><input class="input" type="text" placeholder="judge.directdemocracy.vote" value=""></div>
+            <div class="control"><a class="button is-info">Search</a></div>
+          </div>
         </div>
       </div>
     </div>
