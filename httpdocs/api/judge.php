@@ -25,7 +25,7 @@ $query = "SELECT "
         ."citizen_p.fingerprint "
         ."FROM publication AS endorsement_p "
         ."INNER JOIN endorsement ON endorsement.id = endorsement_p.id "
-        ."INNER JOIN publication AS citizen_p ON citizen_p.fingerprint = endorsement.publicationFingerprint "
+        ."INNER JOIN publication AS citizen_p ON citizen_p.fingerprint = endorsement.endorsedFingerprint "
         ."INNER JOIN citizen ON citizen.id = citizen_p.id "
         ."WHERE endorsement_p.`key`=\"$judge_key\" "
         ."ORDER BY endorsement_p.published DESC";
