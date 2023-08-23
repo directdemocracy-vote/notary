@@ -165,7 +165,7 @@ window.onload = function() {
       return;
     console.log(2);
     const type = document.querySelector('input[name="type"]:checked').value;
-    console.log(document.getElementById('title').innerHTML);
+    console.log('title = ' + document.getElementById('title').innerHTML);
     if (document.getElementById('title').innerHTML == '')
       return;
     console.log(3);
