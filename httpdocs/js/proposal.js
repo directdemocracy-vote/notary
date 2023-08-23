@@ -168,28 +168,6 @@ window.onload = function() {
   }
 
   document.getElementById('publish').addEventListener('click', function() {
-    publication = {};
-    publication.schema = `https://directdemocracy.vote/json-schema/${directdemocracy_version}/proposal.schema.json`;
-    publication.key = stripped_key(publication_crypt.getPublicKey());
-    publication.signature = '';
-    publication.published = new Date().getTime();
-    publication.judge = document.getElementById('judge').value;
-    publication.area = area.trim().split("\n");
-    publication.title = document.getElementById('title').value.trim();
-    publication.description = document.getElementById('description').value.trim();
-    const type = document.querySelector('input[name="type"]:checked').value;
-    if (type == 'referendum') {
-      publication.question = document.getElementById('question').value.trim();
-      publication.answers = document.getElementById('answers').value.trim().split("\n");
-    }
-    publication.secret = (type === 'referendum');
-    publication.deadline = Date.parse(document.getElementById('deadline').value);
-    const website = document.getElementById('website').value.trim();
-    if (website)
-      publication.website = website;
-    const str = JSON.stringify(publication);
-    publication.signature = publication_crypt.sign(str, CryptoJS.SHA256, 'sha256');
-    console.log(publication);
     const query = area.trim().replace(/(\r\n|\n|\r)/g, "&");
     fetch(`${publication.judge}/api/publish_area.php?${query}`)
       .then((response) => response.json())
@@ -197,6 +175,28 @@ window.onload = function() {
         if (answer.error)
           console.log(JSON.stringify(answer.error));
         else {
+          publication = {};
+          publication.schema = `https://directdemocracy.vote/json-schema/${directdemocracy_version}/proposal.schema.json`;
+          publication.key = stripped_key(publication_crypt.getPublicKey());
+          publication.signature = '';
+          publication.published = new Date().getTime();
+          publication.judge = document.getElementById('judge').value;
+          publication.area = answer.signature;
+          publication.title = document.getElementById('title').value.trim();
+          publication.description = document.getElementById('description').value.trim();
+          const type = document.querySelector('input[name="type"]:checked').value;
+          if (type == 'referendum') {
+            publication.question = document.getElementById('question').value.trim();
+            publication.answers = document.getElementById('answers').value.trim().split("\n");
+          }
+          publication.secret = (type === 'referendum');
+          publication.deadline = Date.parse(document.getElementById('deadline').value);
+          const website = document.getElementById('website').value.trim();
+          if (website)
+            publication.website = website;
+          const str = JSON.stringify(publication);
+          publication.signature = publication_crypt.sign(str, CryptoJS.SHA256, 'sha256');
+          console.log(publication);
           fetch(`/api/publish.php`, {'method': 'POST', 'body': JSON.stringify(publication)})
           .then((response) => response.json())
           .then((answer) => {
