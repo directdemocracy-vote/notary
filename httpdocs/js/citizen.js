@@ -114,7 +114,7 @@ window.onload = function() {
         let content = document.createElement('div');
         div.appendChild(content);
         content.style.minWidth = '250px';
-        const label = (endorsement.revoke) ? '<span style="font-weight:bold;color:red">Revoked<span>' : 'Endorsed';
+        const label = (endorsement.revoke) ? '<span style="font-weight:bold;color:red">Revoked</span>' : 'Endorsed';
         const published = new Date(endorsement.published).toISOString().slice(0, 10);
         content.innerHTML =
           `<a href="/citizen.html?fingerprint=${endorsement.fingerprint}"><b>${endorsement.givenNames}<br>` +
