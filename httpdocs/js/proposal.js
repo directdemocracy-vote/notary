@@ -95,6 +95,6 @@ window.onload = function() {
     else if (selected_type == 'world' && selected_name == 'Earth')
       place.href = 'https://en.wikipedia.org/wiki/Earth';
     else
-      place.href = 'https://nominatim.openstreetmap.org/search.php?' + query + '&polygon_geojson=1';
+      place.href = 'https://nominatim.openstreetmap.org/ui/search.php?' + query + '&polygon_geojson=1';
   }
 }
