@@ -32,10 +32,12 @@
         <p class="panel-heading">Citizen card</p>
         <div id="content" class="panel-block">
           <article class="media" style="width:100%">
-            <figure class="media-left"><p class="image"><img id="picture" src="/images/default-picture.png"></p></figure>
             <div class="media-content">
               <div class="content">
-                <div class="columns is-desktop">
+                <div class="columns is-multiline is-mobile">
+                  <div class="column is-one-quarter">
+                    <figure class="media-left"><p class="image"><img id="picture" src="/images/default-picture.png"></p></figure>
+                  </div>
                   <div class="column is-one-quarter">
                     <small>Given name(s):</small><br><strong id="given-names">...</strong><br>
                     <small>Family name:</small><br><strong id="family-name">...</strong><br>
@@ -43,7 +45,7 @@
                     <small>Created:</small> <strong id="created">...</strong><br>
                     <small>Reputation:</small> <strong id="reputation">...</strong><br>
                   </div>
-                  <div class="column">
+                  <div class="column is-half">
                     <div id="map" style="width:100%;height:100%"></div>
                   </div>
                 </div>
