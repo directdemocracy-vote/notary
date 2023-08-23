@@ -139,10 +139,11 @@ elseif ($type == 'endorsement') {
   if (!isset($proposal->question))  # optional
     $proposal->question = '';
   if (!isset($proposal->answers))  # optional
-    $proposal->answers = '';
+    $proposal->answers = array();
+  $answers = implode("\n", $proposal->answers);
   $query = "INSERT INTO proposal(id, judge, area, title, description, question, answers, deadline, website) "
           ."VALUES($id, \"$proposal->judge\", \"$proposal->area\", \"$proposal->title\", \"$proposal->description\", "
-          ."\"$proposal->question\", \"$proposal->answers\", $proposal->deadline, \"$proposal->website\")";
+          ."\"$proposal->question\", \"$answers\", $proposal->deadline, \"$proposal->website\")";
 } elseif ($type == 'registration')
   $query = "INSERT INTO registration(id, proposal, stationKey, stationSignature) "
           ."VALUES($id, \"$publication->proposal\", \"" . $publication->station->key
@@ -185,7 +186,8 @@ elseif ($type == 'ballot') {
     $polygons .= ')';
   }
   $polygons .= ')")';
-  $query = "INSERT INTO area(id, name, polygons) VALUES($id, \"$publication->name\", $polygons)";
+  $name = implode("\n", $publication->name);
+  $query = "INSERT INTO area(id, name, polygons) VALUES($id, \"$name\", $polygons)";
 } else
   error("Unknown publication type.");
 $mysqli->query($query) or error($mysqli->error . " => " . $query);
