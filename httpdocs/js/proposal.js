@@ -201,7 +201,7 @@ window.onload = function() {
       publication.answers = document.getElementById('answers').value.trim();
     }
     publication.secret = (type === 'referendum');
-    publication.deadline = document.getElementById('deadline').value;
+    publication.deadline = Date.parse(document.getElementById('deadline').value);
     let website = document.getElementById('website').value.trim();
     if (website)
       publication.website = website;
