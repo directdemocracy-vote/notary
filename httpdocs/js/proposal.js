@@ -159,27 +159,23 @@ window.onload = function() {
   }
 
   function validate() {
-    console.log(1);
     document.getElementById('publish').setAttribute('disabled', '');
     if (!document.querySelector('input[name="type"]:checked'))
       return;
-    console.log(2);
     const type = document.querySelector('input[name="type"]:checked').value;
-    console.log('title = ' + document.getElementById('title').innerHTML);
-    if (document.getElementById('title').innerHTML == '')
+    console.log('title = ' + document.getElementById('title').value);
+    if (document.getElementById('title').value == '')
       return;
-    console.log(3);
-    if (document.getElementById('description').innerHTML == '')
+    if (document.getElementById('description').value == '')
       return;
-    console.log(4);
     if (type == referendum) {
-      if (document.getElementById('question').innerHTML == '')
+      if (document.getElementById('question').value == '')
         return;
-      if (document.getElementById('answers').innerHTML == '')
+      if (document.getElementById('answers').value == '')
         return;
     }
-    console.log(5);
-    if (document.getElementById('deadline').innerHTML == '')
+    console.log(document.getElementById('deadline').value);
+    if (document.getElementById('deadline').value == '')
       return;
     console.log(6);
     document.getElementById('publish').removeAttribute('disabled');
