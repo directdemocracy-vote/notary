@@ -173,10 +173,7 @@ window.onload = function() {
     publication.key = stripped_key(publication_crypt.getPublicKey());
     publication.signature = '';
     publication.published = new Date().getTime();
-    let judge = document.getElementById('judge').value;
-    if (judge == '')
-      judge = 'https://judge.direcdemocracy.vote';
-    publication.judge = judge;
+    publication.judge = document.getElementById('judge').value;
     publication.area = area;
     publication.title = document.getElementById('title').value.trim();
     publication.description = document.getElementById('description').value.trim();
@@ -187,40 +184,29 @@ window.onload = function() {
     }
     publication.secret = (type === 'referendum');
     publication.deadline = Date.parse(document.getElementById('deadline').value);
-    let website = document.getElementById('website').value.trim();
+    const website = document.getElementById('website').value.trim();
     if (website)
       publication.website = website;
-    let str = JSON.stringify(publication);
+    const str = JSON.stringify(publication);
     publication.signature = publication_crypt.sign(str, CryptoJS.SHA256, 'sha256');
     console.log(publication);
-    /*
-    let xhttp = new XMLHttpRequest();
-    xhttp.onload = function() {
-      if (this.status == 200) {
-        const answer = JSON.parse(this.responseText);
+    const query = publication.area.trim().replace(/(\r\n|\n|\r)/g, "&");
+    fetch(`${publication.judge}/api/publish_area.php?${query}`)
+      .then((response) => response.json())
+      .then((answer)) => {
         if (answer.error)
-          showModal('Area publication error', JSON.stringify(answer.error));
+          console.log(JSON.stringify(answer.error));
         else {
-          let xhttp = new XMLHttpRequest();
-          xhttp.onload = function() {
-            if (this.status == 200) {
-              const answer = JSON.parse(this.responseText);
+          fetch(`${notary}/api/publish.php`, {'method': 'POST', 'body': JSON.stringify(publication)})
+          .then((response) => response.json())
+          .then((answer) => {
               if (answer.error)
-                showModal('Publication error', JSON.stringify(answer.error));
+                console.log('Publication error: ' + JSON.stringify(answer.error));
               else
-                showModal('Publication success',
-                  'Your ' + publication_type + ' was just published!<br>Check it <a target="_blank" href="' +
+                console.log('Publication success: Your ' + publication_type + ' was just published!<br>Check it <a target="_blank" href="' +
                   publisher + '/' + publication_type + '.html?fingerprint=' + answer.fingerprint + '">here</a>.<br>');
-            }
-          };
-          xhttp.open('POST', publisher + '/api/publish.php', true);
-          xhttp.send(JSON.stringify(publication));
+          });
         }
-      }
-    };
-    let query = publication.area.trim().replace(/(\r\n|\n|\r)/g, "&");
-    xhttp.open('GET', judge + '/api/publish_area.php?' + query, true);
-    xhttp.send();
-    */
-  });
+      });
+    });
 }
