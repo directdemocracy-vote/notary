@@ -37,7 +37,10 @@ window.onload = function() {
     updateArea();
 
   document.getElementById('area').addEventListener('change', areaChange);
-  
+  document.getElementById('referendum').addEventListener('change', updateProposalType);
+  document.getElementById('petition').addEventListener('change', updateProposalType);
+  generateKeyPair();
+
   function updateArea() {
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -102,9 +105,6 @@ window.onload = function() {
     else
       place.href = 'https://nominatim.openstreetmap.org/ui/search.html?' + query + '&polygon_geojson=1';
   }
-
-  document.getElementById('referendum').addEventListener('change', updateProposalType);
-  document.getElementById('petition').addEventListener('change', updateProposalType);
 
   function updateProposalType() {
     if (document.querySelector('input[name="type"]:checked').value == 'referendum') {
