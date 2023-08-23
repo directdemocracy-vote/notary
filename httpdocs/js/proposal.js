@@ -72,4 +72,29 @@ window.onload = function() {
       '&zoom=10', true);
     xhttp.send();
   }
+  function areaChange() {
+    let a = document.getElementById('area');
+    let selected_name = a.options[a.selectedIndex].innerHTML;
+    let selected_type = a.options[a.selectedIndex].value;
+    area = '';
+    let query = '';
+    for (let i = a.selectedIndex; i < a.length - 1; i++) {
+      let type = a.options[i].value;
+      if (['village', 'town', 'municipality'].includes(type))
+        type = 'city';
+      const name = a.options[i].innerHTML;
+      area += type + '=' + name + '\n';
+      if (type != 'union')
+        query += type + '=' + encodeURIComponent(name) + '&';
+    }
+    query = query.slice(0, -1);
+    let place = document.getElementById('place');
+    place.innerHTML = selected_name;
+    if (selected_type == 'union' && selected_name == 'European Union')
+      place.href = 'https://en.wikipedia.org/wiki/European_Union';
+    else if (selected_type == 'world' && selected_name == 'Earth')
+      place.href = 'https://en.wikipedia.org/wiki/Earth';
+    else
+      place.href = 'https://nominatim.openstreetmap.org/search.php?' + query + '&polygon_geojson=1';
+  }
 }
