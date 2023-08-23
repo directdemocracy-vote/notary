@@ -114,7 +114,7 @@ window.onload = function() {
         let content = document.createElement('div');
         div.appendChild(content);
         content.style.minWidth = '250px';
-        const label = (endorsement.revoke) ? '<span style="font-weight:bold;color:red">Revoked' : 'Endorsed';
+        const label = (endorsement.revoke) ? '<span style="font-weight:bold;color:red">Revoked<span>' : 'Endorsed';
         const published = new Date(endorsement.published).toISOString().slice(0, 10);
         content.innerHTML =
           `<a href="/citizen.html?fingerprint=${endorsement.fingerprint}"><b>${endorsement.givenNames}<br>` +
@@ -125,7 +125,7 @@ window.onload = function() {
         if (!endorsement.revoke)
           count++;
       });
-      document.getElementById('endorsed-by-header').innerHTML = count ? `Endorsed by ${count}:` : `Not endorsed by anyone.`;
+      document.getElementById('endorsed-by-header').innerHTML = count ? `Endorsed by ${count} / ${answer.citizen_endorsements.length}:` : `Not endorsed by anyone.`;
       answer.citizen_endorsements.forEach(function(endorsement) {
         addEndorsement(endorsement, 'endorsed-by');
       });
@@ -134,7 +134,7 @@ window.onload = function() {
         if (!endorsement.revoke)
           count++;
       });
-      document.getElementById('has-endorsed-header').innerHTML = count ? `Has endorsed ${count}:` : `Has not endorsed anyone.`;
+      document.getElementById('has-endorsed-header').innerHTML = count ? `Has endorsed ${count} / ${answer.endorsements.length}:` : `Has not endorsed anyone.`;
       answer.endorsements.forEach(function(endorsement) {
         addEndorsement(endorsement, 'has-endorsed');
       });
