@@ -105,6 +105,7 @@ window.onload = function() {
         img.src = endorsement.picture;
         img.style.float = 'left';
         img.style.marginRight = '10px';
+        img.style.width = '75px';
         let div = document.createElement('div');
         column.appendChild(div);
         div.classList.add('media-content');
