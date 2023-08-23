@@ -168,8 +168,9 @@ window.onload = function() {
   }
 
   document.getElementById('publish').addEventListener('click', function() {
+    const judge = document.getElementById('judge').value;
     const query = area.trim().replace(/(\r\n|\n|\r)/g, "&");
-    fetch(`${publication.judge}/api/publish_area.php?${query}`)
+    fetch(`${judge}/api/publish_area.php?${query}`)
       .then((response) => response.json())
       .then((answer) => {
         if (answer.error)
@@ -180,7 +181,7 @@ window.onload = function() {
           publication.key = stripped_key(publication_crypt.getPublicKey());
           publication.signature = '';
           publication.published = new Date().getTime();
-          publication.judge = document.getElementById('judge').value;
+          publication.judge = judge;
           publication.area = answer.signature;
           publication.title = document.getElementById('title').value.trim();
           publication.description = document.getElementById('description').value.trim();
