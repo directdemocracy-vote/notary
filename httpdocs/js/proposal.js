@@ -190,7 +190,7 @@ window.onload = function() {
     const str = JSON.stringify(publication);
     publication.signature = publication_crypt.sign(str, CryptoJS.SHA256, 'sha256');
     console.log(publication);
-    const query = publication.area.trim().replace(/(\r\n|\n|\r)/g, "&");
+    const query = area.trim().replace(/(\r\n|\n|\r)/g, "&");
     fetch(`${publication.judge}/api/publish_area.php?${query}`)
       .then((response) => response.json())
       .then((answer) => {
