@@ -71,19 +71,20 @@
         <div class="panel-block" style="display:block">
           <div class="field">
             <label class="label">Possible answers</label>
-            <textarea id="answers" class="textarea" placeholder="Enter the possible answers (one per line)<br>Yes<br>No"></textarea>
-
-            Please enter one possible answer per line. An abstention option will be added to this list.
+            <textarea id="answers" class="textarea" placeholder="Yes\nNo"></textarea>
+            <small>Please enter one possible answer per line. An abstention option will be added to this list.</small>
           </div>
         </div>
         <div class="panel-block" style="display:block">
           <div class="field">
             <label class="label">Web site (optional)</label>
+            <input id="web-site" class="input" type="text" placeholder="https://myreferendum.com">
           </div>
         </div>
         <div class="panel-block" style="display:block">
           <div class="field">
             <label class="label">Deadline</label>
+            <input class="input" type="datetime-local" id="deadline">
           </div>
         </div>
       </nav>
