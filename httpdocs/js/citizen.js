@@ -35,7 +35,7 @@ window.onload = function() {
       document.getElementById('picture').src = answer.citizen.picture;
       document.getElementById('given-names').innerHTML = givenNames;
       document.getElementById('family-name').innerHTML = familyName;
-      document.getElementById('home').innerHTML = `${latitude}, ${longitude}`;
+      document.getElementById('home').innerHTML = `<a href="https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}&zoom=12" target="_blank">${latitude}, ${longitude}</a>`;
       document.getElementById('created').innerHTML = published;
       let map = L.map('map');
       map.whenReady(function() {setTimeout(() => {this.invalidateSize();}, 0);});
