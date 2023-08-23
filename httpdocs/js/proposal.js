@@ -108,9 +108,9 @@ window.onload = function() {
   function updateProposalType() {
     if (document.querySelector('input[name="type"]:checked').value == 'referendum') {
       console.log('referendum');
-      document.getElementById('question-block').classList.remove('display-none');
+      document.getElementById('question-block').style.display = 'block';
     } else {
-      document.getElementById('question-block').classList.add('display-none');
+      document.getElementById('question-block').style.display = 'none';
       console.log('petition');
     }
   }
