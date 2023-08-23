@@ -159,7 +159,7 @@ window.onload = function() {
   }
 
   function validate() {
-    console.log('deadline = ' + document.getElementById('deadline').value);
+    document.getElementById('publish').addAttribute('disabled', '');
     if (!document.querySelector('input[name="type"]:checked'))
       return;
     const type = document.querySelector('input[name="type"]:checked').value;
@@ -173,7 +173,8 @@ window.onload = function() {
       if (document.getElementById('answers').innerHTML == '')
         return;
     }
-    console.log('deadline = ' + document.getElementById('deadline').value);
+    if (document.getElementById('deadline').innerHTML == '')
+      return;
     document.getElementById('publish').removeAttribute('disabled');
   }
 
