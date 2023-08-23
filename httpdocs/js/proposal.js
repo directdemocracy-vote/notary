@@ -193,7 +193,7 @@ window.onload = function() {
     const query = publication.area.trim().replace(/(\r\n|\n|\r)/g, "&");
     fetch(`${publication.judge}/api/publish_area.php?${query}`)
       .then((response) => response.json())
-      .then((answer)) => {
+      .then((answer) => {
         if (answer.error)
           console.log(JSON.stringify(answer.error));
         else {
