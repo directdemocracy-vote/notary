@@ -35,7 +35,7 @@ window.onload = function() {
   } else
     updateArea();
 
-  document.getElementById('area').addEventListener('change', updateArea);
+  document.getElementById('area').addEventListener('change', areaChange);
   
   function updateArea() {
     let xhttp = new XMLHttpRequest();
