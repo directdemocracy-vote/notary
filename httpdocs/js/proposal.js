@@ -152,7 +152,7 @@ window.onload = function() {
   }
 
   function validate() {
-    if (!document.querySelector('input[name="type"]:checked').value) {
+    if (!document.querySelector('input[name="type"]:checked')) {
       console.log('no type');
       return;
     }
