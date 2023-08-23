@@ -107,11 +107,11 @@ window.onload = function() {
 
   function updateProposalType() {
     if (document.querySelector('input[name="type"]:checked').value == 'referendum') {
-      console.log('referendum');
       document.getElementById('question-block').style.display = 'block';
+      document.getElementById('answers-block').style.display = 'block';
     } else {
       document.getElementById('question-block').style.display = 'none';
-      console.log('petition');
+      document.getElementById('answers-block').style.display = 'block';
     }
   }
 }
