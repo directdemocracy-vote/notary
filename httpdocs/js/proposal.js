@@ -111,7 +111,7 @@ window.onload = function() {
       document.getElementById('answers-block').style.display = 'block';
     } else {
       document.getElementById('question-block').style.display = 'none';
-      document.getElementById('answers-block').style.display = 'block';
+      document.getElementById('answers-block').style.display = 'none';
     }
   }
 }
