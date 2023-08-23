@@ -125,7 +125,7 @@ window.onload = function() {
         if (!endorsement.revoke)
           count++;
       });
-      document.getElementById('endorsed-by-header').innerHTML = count ? `Endorsed by ${count} / ${answer.citizen_endorsements.length}:` : `Not endorsed by anyone.`;
+      document.getElementById('endorsed-by-header').innerHTML = answer.citizen_endorsements.length ? `Endorsed by ${count} / ${answer.citizen_endorsements.length}:` : `Not endorsed by anyone.`;
       answer.citizen_endorsements.forEach(function(endorsement) {
         addEndorsement(endorsement, 'endorsed-by');
       });
@@ -134,7 +134,7 @@ window.onload = function() {
         if (!endorsement.revoke)
           count++;
       });
-      document.getElementById('has-endorsed-header').innerHTML = count ? `Has endorsed ${count} / ${answer.endorsements.length}:` : `Has not endorsed anyone.`;
+      document.getElementById('has-endorsed-header').innerHTML = answer.endorsements.length ? `Has endorsed ${count} / ${answer.endorsements.length}:` : `Has not endorsed anyone.`;
       answer.endorsements.forEach(function(endorsement) {
         addEndorsement(endorsement, 'has-endorsed');
       });
