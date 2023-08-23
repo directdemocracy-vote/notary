@@ -8,6 +8,7 @@ function findGetParameter(parameterName, result = null) {
 }
 
 window.onload = function() {
+  let publication_crypt = null;
   let latitude = parseFloat(findGetParameter('latitude', '-1'));
   let longitude = parseFloat(findGetParameter('longitude', '-1'));
   if (latitude == -1) {
@@ -119,6 +120,43 @@ window.onload = function() {
       document.getElementById('description').setAttribute('placeholder', 'Enter the description of your petition');
       document.getElementById('publish').innerHTML = 'Publish your petition';
     }
+    validate();
+  }
+
+  function generateNewKeyPair() {
+    document.getElementById('publish-message').innerHTML = 'Forging a cryptographic key, please wait...';
+    document.getElementById('publish').classList.add('is-loading');
+    let dt = new Date();
+    let time = -(dt.getTime());
+    publication_crypt = new JSEncrypt({
+      default_key_size: 2048
+    });
+    publication_crypt.getKey(function() {
+      dt = new Date();
+      time += (dt.getTime());
+      document.getElementById('publish-message').innerHTML = `A cryptographic key was just forged in ${Number(time / 1000).toFixed(2)} seconds.`;
+      document.getElementById('publish').classList.remove('is-loading')';        
+      validate();
+    });
+  }
+
+  function stripped_key(public_key) {
+    let stripped = '';
+    const header = '-----BEGIN PUBLIC KEY-----\n'.length;
+    const footer = '-----END PUBLIC KEY-----'.length;
+    const l = public_key.length - footer;
+    for (let i = header; i < l; i += 65)
+      stripped += public_key.substr(i, 64);
+    stripped = stripped.slice(0, -1 - footer);
+    return stripped;
+  }
+
+  function validate() {
+    if (!document.querySelector('input[name="type"]:checked').value) {
+      console.log('no type');
+      return;
+    }
+    document.getElementById('publish').removeAttribute('disabled');
   }
 
   document.getElementById('publish').addEventListener('click', function() {
