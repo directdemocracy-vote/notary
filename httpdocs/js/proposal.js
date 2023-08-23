@@ -113,5 +113,5 @@ window.onload = function() {
       document.getElementById('question-block').classList.add('display-none');
       console.log('petition');
     }
-  });
+  }
 }
