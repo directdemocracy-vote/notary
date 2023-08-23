@@ -43,7 +43,7 @@ window.onload = function() {
         attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
       marker = L.marker([latitude, longitude]).addTo(map);
-      marker.bindPopup(`<b>${familyName}</b> ${givenNames}<br>[${latitude}, ${longitude}]`);
+      marker.bindPopup(`${givenNames} ${familyName}<br>[${latitude}, ${longitude}]`);
       map.setView([latitude, longitude], 18);
       map.on('contextmenu', function(event) {return false;});
       let xhttp = new XMLHttpRequest();
