@@ -115,8 +115,8 @@ window.onload = function() {
         const label = (endorsement.revoke) ? "Revoked on" : "Endorsed on";
         const published = new Date(endorsement.published).toISOString().slice(0, 10);
         content.innerHTML =
-          `<a href="/citizen.html?fingerprint=${endorsement.fingerprint}"<b>${endorsement.givenNames} ` +
-          `${endorsement.familyName}</b></a><br><small>${label} ${published}</small>`;
+          `<a href="/citizen.html?fingerprint=${endorsement.fingerprint}"<b>${endorsement.givenNames}<br>` +
+          `${endorsement.familyName}</b></a><br><small>${label}<br>${published}</small>`;
       }
       let count = 0;
       answer.citizen_endorsements.forEach(function(endorsement) {
