@@ -112,6 +112,7 @@ window.onload = function() {
         let content = document.createElement('div');
         div.appendChild(content);
         content.style.minWidth = '250px';
+        content.style.margin = '10px';
         const label = (endorsement.revoke) ? "Revoked on" : "Endorsed on";
         const published = new Date(endorsement.published).toISOString().slice(0, 10);
         content.innerHTML =
