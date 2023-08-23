@@ -188,7 +188,10 @@ window.onload = function() {
     publication.key = stripped_key(publication_crypt.getPublicKey());
     publication.signature = '';
     publication.published = new Date().getTime();
-    publication.judge = judge_key;
+    let judge = document.getElementById('judge').value;
+    if (judge == '')
+      judge = 'https://judge.direcdemocracy.vote';
+    publication.judge = judge;
     publication.area = area;
     publication.title = document.getElementById('title').value.trim();
     publication.description = document.getElementById('description').value.trim();
