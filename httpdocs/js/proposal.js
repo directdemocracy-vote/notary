@@ -101,4 +101,14 @@ window.onload = function() {
     else
       place.href = 'https://nominatim.openstreetmap.org/ui/search.html?' + query + '&polygon_geojson=1';
   }
+
+  document.getElementById('type').addEventListener('change', function() {
+    if (document.querySelector('input[name="type"]:checked').value == 'referendum') {
+      console.log('referendum');
+      document.getElementById('question-section').classList.remove('display-none');
+    } else {
+      document.getElementById('question-section').classList.add('display-none');
+      console.log('petition');
+    }
+  });
 }
