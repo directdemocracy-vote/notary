@@ -135,7 +135,7 @@ window.onload = function() {
       dt = new Date();
       time += (dt.getTime());
       document.getElementById('publish-message').innerHTML = `A cryptographic key was just forged in ${Number(time / 1000).toFixed(2)} seconds.`;
-      document.getElementById('publish').classList.remove('is-loading')';        
+      document.getElementById('publish').classList.remove('is-loading');
       validate();
     });
   }
