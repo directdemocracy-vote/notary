@@ -41,40 +41,18 @@
           <li class="tab" onclick="openTab(event,'petitions')"><a>Petitions</a></li>
         </ul>
       </div>
-        <div id="citizens" class="content-tab">
-          <fieldset id="citizens-fieldset"> 
-            <div class="field is-horizontal">
-              <div class="field-body">
-                <div class="field">
-                  <div class="control">
-                    <input id="given-names" class="input" type="text" placeholder="Given name(s)">
-                  </div>
-                </div>
-                <div class="field">
-                  <div class="control">
-                    <input id="family-name" class="input" type="text" placeholder="Family name">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="field has-addons">
-              <div class="control"><a class="button is-static">https://</a></div>
-              <div class="control is-expanded"><input class="input" type="text" placeholder="judge.directdemocracy.vote" value=""></div>
-              <div class="control"><a id="search-citizens" class="button is-info">Search</a></div>
-            </div>
-          </fieldset>
-        </div>
-        <div id="referendums" class="content-tab" style="display:none">
+      <div id="citizens" class="content-tab">
+        <fieldset id="citizens-fieldset"> 
           <div class="field is-horizontal">
             <div class="field-body">
               <div class="field">
                 <div class="control">
-                  <input id="referendum-title" class="input" type="text" placeholder="Title">
+                  <input id="given-names" class="input" type="text" placeholder="Given name(s)">
                 </div>
               </div>
               <div class="field">
                 <div class="control">
-                  <input id="referendum-description" class="input" type="text" placeholder="Description">
+                  <input id="family-name" class="input" type="text" placeholder="Family name">
                 </div>
               </div>
             </div>
@@ -82,30 +60,52 @@
           <div class="field has-addons">
             <div class="control"><a class="button is-static">https://</a></div>
             <div class="control is-expanded"><input class="input" type="text" placeholder="judge.directdemocracy.vote" value=""></div>
-            <div class="control"><a class="button is-info">Search</a></div>
+            <div class="control"><a id="search-citizens" class="button is-info">Search</a></div>
           </div>
-        </div>
-        <div id="petitions" class="content-tab" style="display:none">
-          <div class="field is-horizontal">
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <input id="petition-title" class="input" type="text" placeholder="Title">
-                </div>
+        </fieldset>
+      </div>
+      <div id="referendums" class="content-tab" style="display:none">
+        <div class="field is-horizontal">
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <input id="referendum-title" class="input" type="text" placeholder="Title">
               </div>
-              <div class="field">
-                <div class="control">
-                  <input id="petition-description" class="input" type="text" placeholder="Description">
-                </div>
+            </div>
+            <div class="field">
+              <div class="control">
+                <input id="referendum-description" class="input" type="text" placeholder="Description">
               </div>
             </div>
           </div>
-          <div class="field has-addons">
-            <div class="control"><a class="button is-static">https://</a></div>
-            <div class="control is-expanded"><input class="input" type="text" placeholder="judge.directdemocracy.vote" value=""></div>
-            <div class="control"><a class="button is-info">Search</a></div>
+        </div>
+        <div class="field has-addons">
+          <div class="control"><a class="button is-static">https://</a></div>
+          <div class="control is-expanded"><input class="input" type="text" placeholder="judge.directdemocracy.vote" value=""></div>
+          <div class="control"><a class="button is-info">Search</a></div>
+        </div>
+      </div>
+      <div id="petitions" class="content-tab" style="display:none">
+        <div class="field is-horizontal">
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <input id="petition-title" class="input" type="text" placeholder="Title">
+              </div>
+            </div>
+            <div class="field">
+              <div class="control">
+                <input id="petition-description" class="input" type="text" placeholder="Description">
+              </div>
+            </div>
           </div>
         </div>
+        <div class="field has-addons">
+          <div class="control"><a class="button is-static">https://</a></div>
+          <div class="control is-expanded"><input class="input" type="text" placeholder="judge.directdemocracy.vote" value=""></div>
+          <div class="control"><a class="button is-info">Search</a></div>
+        </div>
+      </div>
     </section>
     <footer class="footer">
       <div class="content has-text-centered">
