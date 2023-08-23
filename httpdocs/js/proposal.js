@@ -50,7 +50,7 @@ window.onload = function() {
   generateCryptographicKey();
 
   function updateArea() {
-    fetch(`https://nominatim.openstreetmap.org/reverse.php?format=json&lat=${latitude}&lon={longitude}&zoom=10`)
+    fetch(`https://nominatim.openstreetmap.org/reverse.php?format=json&lat=${latitude}&lon=${longitude}&zoom=10`)
       .then((response) => response.json())
       .then((answer) => {
         let address = answer.address;
