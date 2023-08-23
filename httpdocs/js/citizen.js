@@ -16,13 +16,9 @@ window.onload = function() {
     return;
   }
   let content = document.getElementById('content');
-  let xhttp = new XMLHttpRequest();
-  xhttp.open('POST', '/api/citizen.php', true);
-  xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  xhttp.send('fingerprint=' + encodeURIComponent(fingerprint));
-  xhttp.onload = function() {
-    if (this.status == 200) {
-      let answer = JSON.parse(this.responseText);
+  fetch('api/citizen.php', {method: 'POST', headers: {"Content-Type": "application/x-www-form-urlencoded"}, body: `fingerprint=${encodeURIComponent(fingerprint)}`})
+    .then((response) => response.json())
+    .then((answer) => {
       if (answer.error) {
         console.log(answer.error);
         return;
@@ -46,18 +42,12 @@ window.onload = function() {
       marker.bindPopup(`<b>${givenNames} ${familyName}</b><br>[${latitude}, ${longitude}]`);
       map.setView([latitude, longitude], 18);
       map.on('contextmenu', function(event) {return false;});
-      let xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          const a = JSON.parse(this.responseText);
-          const address = a.display_name;
+      fetch(`https://nominatim.openstreetmap.org/reverse.php?format=json&lat=${latitude}&lon=${longitude}&zoom=20`)
+        .then((response) => response.json())
+        .then((answer) => {
+          const address = answer.display_name;
           marker.setPopupContent(`<b>${givenNames} ${familyName}</b><br>${address}`).openPopup();
-        }
-      };
-      xhttp.open('GET', 'https://nominatim.openstreetmap.org/reverse.php?format=json&lat=' + latitude + '&lon=' + longitude +
-        '&zoom=20', true);
-      xhttp.send();
-
+        });
       document.getElementById('reload').addEventListener('click', function(event) {
         event.currentTarget.setAttribute('disabled', '');
         event.currentTarget.classList.add('is-loading');
@@ -69,14 +59,9 @@ window.onload = function() {
       });
       
       function loadReputation() {
-        const url = judge + '/api/reputation.php?key=' + encodeURIComponent(answer.citizen.key);
-        xhttp = new XMLHttpRequest(); // get reputation from judge
-        xhttp.open('GET', url, true);
-        xhttp.send();
-        xhttp.onload = function() {
-          let reputation = document.getElementById('reputation');
-          if (this.status == 200) {
-            let answer = JSON.parse(this.responseText);
+        fetch(`${judge}/api/reputation.php?key=${encodeURIComponent(answer.citizen.key)}`)
+          .then((response) => response.json())
+          .then((answer) => {
             if (answer.error) {
               reputation.style.color = 'red';
               reputation.innerHTML = answer.error;
@@ -84,14 +69,10 @@ window.onload = function() {
               reputation.style.color = answer.endorsed ? 'green' : 'red';
               reputation.innerHTML = answer.reputation;
             }
-          } else {
-            reputation.style.color = 'red';
-            reputation.innerHTML = this.statusText + ' (' + this.status + ')';
-          }
-          let button = document.getElementById('reload');
-          button.removeAttribute('disabled');
-          button.classList.remove('is-loading');
-        };
+            let button = document.getElementById('reload');
+            button.removeAttribute('disabled');
+            button.classList.remove('is-loading');
+          });
       }
 
       loadReputation();
@@ -138,6 +119,5 @@ window.onload = function() {
       answer.endorsements.forEach(function(endorsement) {
         addEndorsement(endorsement, 'has-endorsed');
       });
-    }
-  };
-};
+    });
+}
