@@ -97,22 +97,20 @@ window.onload = function() {
       loadReputation();
 
       function addEndorsement(endorsement, name) {
-        let parent = document.getElementById(name);        
-        let figure = document.createElement('figure');
-        parent.appendChild(figure);
-        figure.classList.add('media-left');
-        let p = document.createElement('p');
-        figure.appendChild(p);
-        p.classList.add('image');
+        let columns = document.getElementById(name);        
+        let column = document.createElement('div');
+        columns.appendChild(column);
         let img = document.createElement('img');
-        p.appendChild(img);
+        column.appendChild(img);
         img.src = endorsement.picture;
+        img.style.float = 'left';
+        img.style.marginRight = '10px';
         let div = document.createElement('div');
-        parent.appendChild(div);
+        column.appendChild(div);
         div.classList.add('media-content');
         let content = document.createElement('div');
         div.appendChild(content);
-        content.classList.add('content');
+        // content.classList.add('content');
         let label;
         if (endorsement.revoke) {
           label = "Revoked on";
