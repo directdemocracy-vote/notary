@@ -81,7 +81,7 @@ window.onload = function() {
               reputation.style.color = 'red';
               reputation.innerHTML = answer.error;
             } else {
-              reputation.style.color = answer.endorsed ? 'blue' : 'red';
+              reputation.style.color = answer.endorsed ? 'green' : 'red';
               reputation.innerHTML = answer.reputation;
             }
           } else {
