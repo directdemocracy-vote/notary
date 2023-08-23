@@ -174,13 +174,13 @@ window.onload = function() {
     publication.signature = '';
     publication.published = new Date().getTime();
     publication.judge = document.getElementById('judge').value;
-    publication.area = area;
+    publication.area = area.split("\n");
     publication.title = document.getElementById('title').value.trim();
     publication.description = document.getElementById('description').value.trim();
     const type = document.querySelector('input[name="type"]:checked').value;
     if (type == 'referendum') {
       publication.question = document.getElementById('question').value.trim();
-      publication.answers = document.getElementById('answers').value.trim();
+      publication.answers = document.getElementById('answers').value.trim().split("\n");
     }
     publication.secret = (type === 'referendum');
     publication.deadline = Date.parse(document.getElementById('deadline').value);
