@@ -109,9 +109,19 @@ window.onload = function() {
     if (document.querySelector('input[name="type"]:checked').value == 'referendum') {
       document.getElementById('question-block').style.display = 'block';
       document.getElementById('answers-block').style.display = 'block';
+      document.getElementById('title').setAttribute('placeholder', 'Enter the title of your referendum');
+      document.getElementById('description').setAttribute('placeholder', 'Enter the description of your referendum');
+      document.getElementById('publish').setAttribute('placeholder', 'Publish your referendum');
     } else {
       document.getElementById('question-block').style.display = 'none';
       document.getElementById('answers-block').style.display = 'none';
+      document.getElementById('title').setAttribute('placeholder', 'Enter the title of your petition');
+      document.getElementById('description').setAttribute('placeholder', 'Enter the description of your petition');
+      document.getElementById('publish').setAttribute('placeholder', 'Publish your petition');
     }
   }
+
+  document.getElementById('publish').addEventListener('click', function() {
+    console.log('publishing');
+  });
 }
