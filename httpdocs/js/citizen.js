@@ -111,13 +111,8 @@ window.onload = function() {
         div.classList.add('media-content');
         let content = document.createElement('div');
         div.appendChild(content);
-        content.style.minWidth = '150px';
-        content.classList.add('content');
-        let label;
-        if (endorsement.revoke) {
-          label = "Revoked on";
-        } else
-          label = "Endorsed on";
+        content.style.minWidth = '250px';
+        const label = (endorsement.revoke) ? "Revoked on" : "Endorsed on";
         const published = new Date(endorsement.published).toISOString().slice(0, 10);
         content.innerHTML =
           `<a href="/citizen.html?fingerprint=${endorsement.fingerprint}"<b>${endorsement.givenNames} ` +
