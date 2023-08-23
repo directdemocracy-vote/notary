@@ -197,7 +197,7 @@ window.onload = function() {
         if (answer.error)
           console.log(JSON.stringify(answer.error));
         else {
-          fetch(`${notary}/api/publish.php`, {'method': 'POST', 'body': JSON.stringify(publication)})
+          fetch(`/api/publish.php`, {'method': 'POST', 'body': JSON.stringify(publication)})
           .then((response) => response.json())
           .then((answer) => {
               if (answer.error)
