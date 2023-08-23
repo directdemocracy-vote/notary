@@ -159,7 +159,7 @@ window.onload = function() {
   }
 
   function validate() {
-    document.getElementById('publish').addAttribute('disabled', '');
+    document.getElementById('publish').setAttribute('disabled', '');
     if (!document.querySelector('input[name="type"]:checked'))
       return;
     const type = document.querySelector('input[name="type"]:checked').value;
