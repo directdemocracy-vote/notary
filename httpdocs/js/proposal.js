@@ -102,7 +102,10 @@ window.onload = function() {
       place.href = 'https://nominatim.openstreetmap.org/ui/search.html?' + query + '&polygon_geojson=1';
   }
 
-  document.getElementById('type').addEventListener('change', function() {
+  document.getElementById('referendum').addEventListener('change', updateProposalType);
+  document.getElementById('petition').addEventListener('change', updateProposalType);
+
+  function updateProposalType() {
     if (document.querySelector('input[name="type"]:checked').value == 'referendum') {
       console.log('referendum');
       document.getElementById('question-block').classList.remove('display-none');
