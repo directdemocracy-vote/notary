@@ -39,7 +39,7 @@ window.onload = function() {
   document.getElementById('area').addEventListener('change', areaChange);
   document.getElementById('referendum').addEventListener('change', updateProposalType);
   document.getElementById('petition').addEventListener('change', updateProposalType);
-  generateKeyPair();
+  generateCryptographicKey();
 
   function updateArea() {
     let xhttp = new XMLHttpRequest();
@@ -123,7 +123,7 @@ window.onload = function() {
     validate();
   }
 
-  function generateNewKeyPair() {
+  function generateCryptographicKey() {
     document.getElementById('publish-message').innerHTML = 'Forging a cryptographic key, please wait...';
     document.getElementById('publish').classList.add('is-loading');
     let dt = new Date();
