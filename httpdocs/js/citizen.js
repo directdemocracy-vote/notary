@@ -43,7 +43,7 @@ window.onload = function() {
         attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
       marker = L.marker([latitude, longitude]).addTo(map);
-      marker.bindPopup(`${givenNames} ${familyName}<br>[${latitude}, ${longitude}]`);
+      marker.bindPopup(`<b>${givenNames} ${familyName}</b><br>[${latitude}, ${longitude}]`);
       map.setView([latitude, longitude], 18);
       map.on('contextmenu', function(event) {return false;});
       let xhttp = new XMLHttpRequest();
@@ -51,7 +51,7 @@ window.onload = function() {
         if (this.readyState == 4 && this.status == 200) {
           const a = JSON.parse(this.responseText);
           const address = a.display_name;
-          marker.setPopupContent(`<b>${familyName}</b> ${givenNames}<br>${address}`).openPopup();
+          marker.setPopupContent(`<b>${givenNames} ${familyName}</b><br>${address}`).openPopup();
         }
       };
       xhttp.open('GET', 'https://nominatim.openstreetmap.org/reverse.php?format=json&lat=' + latitude + '&lon=' + longitude +
@@ -120,8 +120,8 @@ window.onload = function() {
           label = "Endorsed on";
         const published = new Date(endorsement.published).toISOString().slice(0, 10);
         content.innerHTML =
-          `<a href="/citizen.html?fingerprint=${endorsement.fingerprint}"<b>${endorsement.familyName}</b> ` +
-          `${endorsement.givenNames}</a><br><small>${label} ${published}</small>`;
+          `<a href="/citizen.html?fingerprint=${endorsement.fingerprint}"<b>${endorsement.givenNames} ` +
+          `${endorsement.familyName}</b></a><br><small>${label} ${published}</small>`;
       }
       let count = 0;
       answer.citizen_endorsements.forEach(function(endorsement) {
