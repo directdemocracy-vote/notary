@@ -165,7 +165,6 @@ window.onload = function() {
     if (!document.querySelector('input[name="type"]:checked'))
       return;
     const type = document.querySelector('input[name="type"]:checked').value;
-    console.log('title = ' + document.getElementById('title').value);
     if (document.getElementById('title').value == '')
       return;
     if (document.getElementById('description').value == '')
@@ -176,10 +175,8 @@ window.onload = function() {
       if (document.getElementById('answers').value == '')
         return;
     }
-    console.log(document.getElementById('deadline').value);
     if (document.getElementById('deadline').value == '')
       return;
-    console.log(6);
     document.getElementById('publish').removeAttribute('disabled');
   }
 
