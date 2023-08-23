@@ -44,6 +44,7 @@ window.onload = function() {
   document.getElementById('description').addEventListener('input', validate);
   document.getElementById('question').addEventListener('input', validate);
   document.getElementById('answers').addEventListener('input', validate);
+  document.getElementById('deadline').addEventListener('input', validate);
 
   generateCryptographicKey();
 
