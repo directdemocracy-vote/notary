@@ -39,6 +39,11 @@ window.onload = function() {
   document.getElementById('area').addEventListener('change', areaChange);
   document.getElementById('referendum').addEventListener('change', updateProposalType);
   document.getElementById('petition').addEventListener('change', updateProposalType);
+  document.getElementById('title').addEventListener('change', validate);
+  document.getElementById('description').addEventListener('change', validate);
+  document.getElementById('question').addEventListener('change', validate);
+  document.getElementById('answers').addEventListener('change', validate);
+
   generateCryptographicKey();
 
   function updateArea() {
@@ -80,6 +85,7 @@ window.onload = function() {
       '&zoom=10', true);
     xhttp.send();
   }
+
   function areaChange() {
     let a = document.getElementById('area');
     let selected_name = a.options[a.selectedIndex].innerHTML;
@@ -104,6 +110,7 @@ window.onload = function() {
       place.href = 'https://en.wikipedia.org/wiki/Earth';
     else
       place.href = 'https://nominatim.openstreetmap.org/ui/search.html?' + query + '&polygon_geojson=1';
+    validate();
   }
 
   function updateProposalType() {
@@ -152,10 +159,21 @@ window.onload = function() {
   }
 
   function validate() {
-    if (!document.querySelector('input[name="type"]:checked')) {
-      console.log('no type');
+    console.log('deadline = ' + document.getElementById('deadline').value);
+    if (!document.querySelector('input[name="type"]:checked'))
       return;
+    const type = document.querySelector('input[name="type"]:checked.value;
+    if (document.getElementById('title').innerHTML == '')
+      return;
+    if (document.getElementById('description').innerHTML == '')
+      return;
+    if (type == referendum) {
+      if (document.getElementById('question').innerHTML == '')
+        return;
+      if (document.getElementById('answers').innerHTML == '')
+        return;
     }
+    console.log('deadline = ' + document.getElementById('deadline').value);
     document.getElementById('publish').removeAttribute('disabled');
   }
 
