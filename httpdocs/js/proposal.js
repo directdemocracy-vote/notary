@@ -45,6 +45,7 @@ window.onload = function() {
   document.getElementById('question').addEventListener('input', validate);
   document.getElementById('answers').addEventListener('input', validate);
   document.getElementById('deadline').addEventListener('input', validate);
+  document.getElementById('judge').addEventListener('input', validate);
 
   generateCryptographicKey();
 
@@ -176,6 +177,8 @@ window.onload = function() {
         return;
     }
     if (document.getElementById('deadline').value == '')
+      return;
+    if (document.getElementById('judge').value == '')
       return;
     document.getElementById('publish').removeAttribute('disabled');
   }
