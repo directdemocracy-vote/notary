@@ -111,7 +111,7 @@ window.onload = function() {
         div.classList.add('media-content');
         let content = document.createElement('div');
         div.appendChild(content);
-        // content.classList.add('content');
+        content.classList.add('content');
         let label;
         if (endorsement.revoke) {
           label = "Revoked on";
