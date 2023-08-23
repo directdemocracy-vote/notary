@@ -159,22 +159,28 @@ window.onload = function() {
   }
 
   function validate() {
+    console.log(1);
     document.getElementById('publish').setAttribute('disabled', '');
     if (!document.querySelector('input[name="type"]:checked'))
       return;
+    console.log(2);
     const type = document.querySelector('input[name="type"]:checked').value;
     if (document.getElementById('title').innerHTML == '')
       return;
+    console.log(3);
     if (document.getElementById('description').innerHTML == '')
       return;
+    console.log(4);
     if (type == referendum) {
       if (document.getElementById('question').innerHTML == '')
         return;
       if (document.getElementById('answers').innerHTML == '')
         return;
     }
+    console.log(5);
     if (document.getElementById('deadline').innerHTML == '')
       return;
+    console.log(6);
     document.getElementById('publish').removeAttribute('disabled');
   }
 
