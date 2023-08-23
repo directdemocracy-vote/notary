@@ -8,8 +8,8 @@ function findGetParameter(parameterName, result = null) {
 }
 
 window.onload = function() {
-  let latitude = floatval(findGetParameter('latitude', '-1'));
-  let longitude = floatval(findGetParameter('longitude', '-1'));
+  let latitude = parseFloat(findGetParameter('latitude', '-1'));
+  let longitude = parseFloat(findGetParameter('longitude', '-1'));
   if (latitude == -1) {
     if (navigator.geolocation)
       navigator.geolocation.getCurrentPosition(getGeolocationPosition);
