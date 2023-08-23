@@ -111,6 +111,7 @@ window.onload = function() {
         div.classList.add('media-content');
         let content = document.createElement('div');
         div.appendChild(content);
+        div.style.minWidth = '150px';
         content.classList.add('content');
         let label;
         if (endorsement.revoke) {
