@@ -25,6 +25,7 @@ window.onload = function() {
           getGeolocationPosition({coords: {latitude: coords[0], longitude: coords[1]}});
         }
       });
+
     function getGeolocationPosition(position) {
       geolocation = true;
       latitude = position.coords.latitude;
@@ -33,6 +34,9 @@ window.onload = function() {
     }
   } else
     updateArea();
+
+  document.getElementById('area').addEventListener('change', updateArea);
+  
   function updateArea() {
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
