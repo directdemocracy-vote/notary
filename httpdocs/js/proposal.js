@@ -162,7 +162,7 @@ window.onload = function() {
     console.log('deadline = ' + document.getElementById('deadline').value);
     if (!document.querySelector('input[name="type"]:checked'))
       return;
-    const type = document.querySelector('input[name="type"]:checked.value;
+    const type = document.querySelector('input[name="type"]:checked').value;
     if (document.getElementById('title').innerHTML == '')
       return;
     if (document.getElementById('description').innerHTML == '')
