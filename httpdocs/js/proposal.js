@@ -1,3 +1,5 @@
+const directdemocracy_version = '0.0.2';
+
 function findGetParameter(parameterName, result = null) {
   location.search.substr(1).split("&").forEach(function(item) {
     let tmp = item.split("=");
@@ -6,7 +8,6 @@ function findGetParameter(parameterName, result = null) {
   });
   return result;
 }
-
 window.onload = function() {
   let publication_crypt = null;
   let latitude = parseFloat(findGetParameter('latitude', '-1'));
@@ -39,10 +40,10 @@ window.onload = function() {
   document.getElementById('area').addEventListener('change', areaChange);
   document.getElementById('referendum').addEventListener('change', updateProposalType);
   document.getElementById('petition').addEventListener('change', updateProposalType);
-  document.getElementById('title').addEventListener('change', validate);
-  document.getElementById('description').addEventListener('change', validate);
-  document.getElementById('question').addEventListener('change', validate);
-  document.getElementById('answers').addEventListener('change', validate);
+  document.getElementById('title').addEventListener('input', validate);
+  document.getElementById('description').addEventListener('input', validate);
+  document.getElementById('question').addEventListener('input', validate);
+  document.getElementById('answers').addEventListener('input', validate);
 
   generateCryptographicKey();
 
@@ -182,6 +183,56 @@ window.onload = function() {
   }
 
   document.getElementById('publish').addEventListener('click', function() {
-    console.log('publishing');
+    publication = {};
+    publication.schema = `https://directdemocracy.vote/json-schema/${directdemocracy_version}/proposal.schema.json`;
+    publication.key = stripped_key(publication_crypt.getPublicKey());
+    publication.signature = '';
+    publication.published = new Date().getTime();
+    publication.judge = judge_key;
+    publication.area = area;
+    publication.title = document.getElementById('title').value.trim();
+    publication.description = document.getElementById('description').value.trim();
+    const type = document.querySelector('input[name="type"]:checked').value;
+    if (type == 'referendum') {
+      publication.question = document.getElementById('question').value.trim();
+      publication.answers = document.getElementById('answers').value.trim();
+    }
+    publication.secret = (type === 'referendum');
+    publication.deadline = document.getElementById('deadline').value;
+    let website = document.getElementById('website').value.trim();
+    if (website)
+      publication.website = website;
+    let str = JSON.stringify(publication);
+    publication.signature = publication_crypt.sign(str, CryptoJS.SHA256, 'sha256');
+    console.log(publication);
+    /*
+    let xhttp = new XMLHttpRequest();
+    xhttp.onload = function() {
+      if (this.status == 200) {
+        const answer = JSON.parse(this.responseText);
+        if (answer.error)
+          showModal('Area publication error', JSON.stringify(answer.error));
+        else {
+          let xhttp = new XMLHttpRequest();
+          xhttp.onload = function() {
+            if (this.status == 200) {
+              const answer = JSON.parse(this.responseText);
+              if (answer.error)
+                showModal('Publication error', JSON.stringify(answer.error));
+              else
+                showModal('Publication success',
+                  'Your ' + publication_type + ' was just published!<br>Check it <a target="_blank" href="' +
+                  publisher + '/' + publication_type + '.html?fingerprint=' + answer.fingerprint + '">here</a>.<br>');
+            }
+          };
+          xhttp.open('POST', publisher + '/api/publish.php', true);
+          xhttp.send(JSON.stringify(publication));
+        }
+      }
+    };
+    let query = publication.area.trim().replace(/(\r\n|\n|\r)/g, "&");
+    xhttp.open('GET', judge + '/api/publish_area.php?' + query, true);
+    xhttp.send();
+    */
   });
 }
