@@ -174,7 +174,7 @@ window.onload = function() {
     publication.signature = '';
     publication.published = new Date().getTime();
     publication.judge = document.getElementById('judge').value;
-    publication.area = area.split("\n");
+    publication.area = area.trim().split("\n");
     publication.title = document.getElementById('title').value.trim();
     publication.description = document.getElementById('description').value.trim();
     const type = document.querySelector('input[name="type"]:checked').value;
