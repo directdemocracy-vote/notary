@@ -100,6 +100,7 @@ window.onload = function() {
         let columns = document.getElementById(name);        
         let column = document.createElement('div');
         columns.appendChild(column);
+        column.style.overflow = 'hidden';
         let img = document.createElement('img');
         column.appendChild(img);
         img.src = endorsement.picture;
