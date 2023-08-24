@@ -53,7 +53,7 @@ function findGetParameter(parameterName) {
       a.innerHTML = 'Copy';
       let message = document.createElement('div');
       div.appendChild(message);
-      message.innerHTML = 'From the <i>directdemocracy</i> app, scan this QR code or copy its reference and paste it in the app.';
+      message.innerHTML = 'From the <i>directdemocracy</i> app, scan this QR code or copy and paste it.';
       a.addEventListener('click', function() {
         input.select();
         input.setSelectionRange(0, 99999);
