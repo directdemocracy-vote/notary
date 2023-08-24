@@ -70,18 +70,17 @@ DELETE FROM publication WHERE id NOT IN (
     SELECT id FROM endorsement UNION
     SELECT id FROM area UNION
     SELECT id FROM proposal UNION
-    SELECT id FROM participation UNION
     SELECT id FROM registration UNION
     SELECT id FROM ballot)
 EOT;
-// FIXME: we should add "vote" to the above list
+// FIXME: we should add "participation" and "vote" to the above list
 
 query($query);
 query("DELETE FROM citizen WHERE id not IN (SELECT id FROM publication)");
 query("DELETE FROM endorsement WHERE id not IN (SELECT id FROM publication)");
 query("DELETE FROM area WHERE id not IN (SELECT id FROM publication)");
 query("DELETE FROM proposal WHERE id not IN (SELECT id FROM publication)");
-query("DELETE FROM participation WHERE id not IN (SELECT id FROM publication)");
+// query("DELETE FROM participation WHERE id not IN (SELECT id FROM publication)");
 query("DELETE FROM registration WHERE id not IN (SELECT id FROM publication)");
 query("DELETE FROM ballot WHERE id not IN (SELECT id FROM publication)");
 // query("DELETE FROM vote WHERE id not IN (SELECT id FROM publication)");
