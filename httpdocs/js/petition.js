@@ -113,8 +113,11 @@ function findGetParameter(parameterName) {
     document.getElementById('modal-close-button').addEventListener('click', closeModal);
     document.getElementById('modal-ok-button').addEventListener('click', closeModal);
     document.getElementById('sign-button').addEventListener('click', function() {
+    let binaryFingerprint = '';
+      for(let i = 0; i < 40; i+=2)
+        binaryFingerprint += String.fromCharCode(parseInt(fingerprint.slice(i, i + 2), 16));  
       const qr = new QRious({
-        value: fingerprint,
+        value: binaryFingerprint,
         level: 'L',
         size: 512,
         padding: 0
