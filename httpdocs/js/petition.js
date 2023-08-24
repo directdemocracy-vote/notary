@@ -23,7 +23,7 @@ function findGetParameter(parameterName) {
           return;
         }
         document.getElementById('title').innerHTML = answer.title;
-        document.getElementById('description').innerHTML = answer.title;
+        document.getElementById('description').innerHTML = answer.description;
 
       });
 
