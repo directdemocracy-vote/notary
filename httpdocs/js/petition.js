@@ -29,14 +29,14 @@ function findGetParameter(parameterName) {
         padding: 0
       });
       let div = document.createElement('div');
-      div.classList.add('content', 'has-text-centered');
-      let input = document.createElement('input');
-      div.appendChild(input);
-      input.style.display = 'none';
-      input.value = fingerprint;
       let img = document.createElement('img');
       div.appendChild(img);
       img.src = qr.toDataURL();
+      div.classList.add('content', 'has-text-centered');
+      let input = document.createElement('input');
+      div.appendChild(input);
+      input.value = fingerprint;
+      input.classList.add('input');
       let message = document.createElement('div');
       div.appendChild(message);
       message.innerHTML = 'From the <i>directdemocracy</i> app, scan this QR code or click it and paste it in the app.';
