@@ -56,4 +56,3 @@ function findGetParameter(parameterName) {
       document.getElementById('modal').classList.add('is-active');
     });
 }
-  
