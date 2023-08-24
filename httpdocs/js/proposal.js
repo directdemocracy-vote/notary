@@ -205,7 +205,7 @@ window.onload = function() {
                 console.log(`Publication error: ${JSON.stringify(answer.error)}`);
               else
                 console.log(`Publication success: Your ${type} was just published!<br>Check it <a target="_blank" href="` +
-                  `${publisher}/${type}.html?fingerprint=${answer.fingerprint}">here</a>.<br>`);
+                  `/${type}.html?fingerprint=${answer.fingerprint}">here</a>.<br>`);
           });
         }
       });
