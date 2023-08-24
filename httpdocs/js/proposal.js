@@ -238,7 +238,7 @@ window.onload = function() {
                 showModal('Publication error', JSON.stringify(answer.error));
               else {
                 showModal('Publication success',
-                          `Your ${type} was just published!<br><br>You will be redirected to it.`, 'OK');
+                          `Your ${type} was just published!<br>You will be redirected to it.`, 'OK');
                 document.getElementById('modal-ok-button').addEventListener('click', function() {
                   window.location.href = `/${type}.html?fingerprint=${answer.fingerprint}`;
                 });
