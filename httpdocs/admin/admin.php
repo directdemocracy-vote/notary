@@ -9,7 +9,8 @@ function error($message) {
 
 function query($query) {
   global $mysqli;
-  return $mysqli->query($query) or error($mysqli->error);
+  $result = $mysqli->query($query) or error($mysqli->error);
+  return $result;
 }
 
 header("Content-Type: application/json");
