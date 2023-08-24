@@ -11,12 +11,12 @@ function findGetParameter(parameterName, result = null) {
 
 function showModal(title, content, ok, cancel) {
   if (ok === undefined && cancel === undefined)
-    document.getElementById('modal-footer').style.visibility = 'none';
+    document.getElementById('modal-footer').style.display = 'none';
   okButton = document.getElementById('modal-ok-button');
-  okButton.style.visibility = ok ? '' : 'none';
+  okButton.style.display = ok ? '' : 'none';
   okButton.innerHTML = ok ? ok : 'OK';
   cancelButton = document.getElementById('modal-cancel-button');
-  cancelButton.style.visibility = cancel ? '' : 'none';
+  cancelButton.style.display = cancel ? '' : 'none';
   cancelButton.innerHTML = cancel ? cancel : 'Cancel';
   document.getElementById('modal-title').innerHTML = title;
   document.getElementById('modal-content').innerHTML = content;
@@ -25,12 +25,12 @@ function showModal(title, content, ok, cancel) {
 
 function closeModal() {
   document.getElementById('modal').classList.remove('is-active');
-  document.getElementById('modal-ok-button').removeEventListener('click');
 }
 
 window.onload = function() {
   document.getElementById('modal-cancel-button').addEventListener('click', closeModal);
   document.getElementById('modal-close-button').addEventListener('click', closeModal);
+  document.getElementById('modal-ok-button').addEventListener('click', closeModal);
 
   let publication_crypt = null;
   let latitude = parseFloat(findGetParameter('latitude', '-1'));
