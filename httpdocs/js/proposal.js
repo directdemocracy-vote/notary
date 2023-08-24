@@ -8,7 +8,30 @@ function findGetParameter(parameterName, result = null) {
   });
   return result;
 }
+
+function showModal(title, content, ok, cancel) {
+  if (ok === undefined && cancel === undefined)
+    document.getElementById('modal-footer').style.visibility = 'none';
+  okButton = document.getElementById('modal-ok-button');
+  okButton.style.visibility = ok ? '' : 'none';
+  okButton.innerHTML = ok ? ok : 'OK';
+  cancelButton = document.getElementById('modal-cancel-button');
+  cancelButton.style.visibility = cancel ? '' : 'none';
+  cancelButton.innerHTML = cancel ? cancel : 'Cancel';
+  document.getElementById('modal-title').innerHTML = title;
+  document.getElementById('modal-content').innerHTML = content;
+  document.getElementById('modal').classList.add('is-active');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('is-active');
+  document.getElementById('modal-ok-button').removeEventListener('click');
+}
+
 window.onload = function() {
+  document.getElementById('modal-cancel-button').addEventListener('click', closeModal);
+  document.getElementById('modal-close-button').addEventListener('click', closeModal);
+
   let publication_crypt = null;
   let latitude = parseFloat(findGetParameter('latitude', '-1'));
   let longitude = parseFloat(findGetParameter('longitude', '-1'));
@@ -202,10 +225,12 @@ window.onload = function() {
           .then((response) => response.json())
           .then((answer) => {
               if (answer.error)
-                console.log(`Publication error: ${JSON.stringify(answer.error)}`);
-              else
-                console.log(`Publication success: Your ${type} was just published!<br>Check it <a target="_blank" href="` +
-                  `/${type}.html?fingerprint=${answer.fingerprint}">here</a>.<br>`);
+                ShowModal('Publication error', JSON.stringify(answer.error));
+              else {
+                showModal('Publication success',
+                          `Your ${type} was just published!<br>Check it <a target="_blank" href="` +
+                          `/${type}.html?fingerprint=${answer.fingerprint}">here</a>.<br>`);
+              }
           });
         }
       });
