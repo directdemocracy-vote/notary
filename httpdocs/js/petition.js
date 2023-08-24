@@ -14,6 +14,7 @@ function findGetParameter(parameterName) {
       console.log('Missing fingerprint GET argument');
       return;
     }
+
     document.getElementById('sign-button').addEventListener('click', function() {
       const qr = new QRious({
         value: fingerprint,
@@ -22,6 +23,7 @@ function findGetParameter(parameterName) {
         padding: 0
       });
       let div = document.createElement('div');
+      div.classList.add('content', 'has-text-centered');
       let input = document.createElement('input');
       div.appendChild(input);
       input.style.display = 'none';
@@ -39,10 +41,10 @@ function findGetParameter(parameterName) {
         input.setSelectionRange(0, 0);
         input.blur();
         message.innerHTML = 'Copied in clipboard! You can now paste in the <i>directdemocracy</i> app.';
-        setTimeout(function() { message.innerHTML = ''; }, 1000);    
       });
       document.getElementById('modal-title').innerHTML = 'Sign this petition';
       document.getElementById('modal-content').appendChild(div);
+      document.getElementById('modal-footer').style.display = 'none';
       document.getElementById('modal').classList.add('is-active');
     });
 }
