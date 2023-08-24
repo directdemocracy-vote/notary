@@ -33,7 +33,49 @@ function findGetParameter(parameterName) {
               console.log(`cannot get area: ${area.error}`);
               return;
             }
-            document.getElementById('area-name').innerHTML = 'Area: ' + area.name.split("\n")[0].split('=')[1];
+            areaName = document.getElementById('area-name');
+            const first_equal = area.name.indexOf('=');
+            const first_newline = area.name.indexOf('\n');
+            let area_name = area.name.substr(first_equal + 1, first_newline - first_equal);
+            let area_type = area.name.substr(0, first_equal);
+            const area_array = area.name.split('\n');
+            let area_query = '';
+            area_array.forEach(function(argument) {
+              const eq = argument.indexOf('=');
+              let type = argument.substr(0, eq);
+              if (['village', 'town', 'municipality'].includes(type))
+                type = 'city';
+              const name = argument.substr(eq + 1);
+              if (type)
+                area_query += type + '=' + encodeURIComponent(name) + '&';
+              if (areaName.innerHTML === '')
+                areaName.innerHTML = `Area: ${name}`;
+            });
+            area_query = area_query.slice(0, -1);
+            let area_url;
+            if (!area_type)
+              areaName.innerHTML = `Area: <a href="https://en.wikipedia.org/wiki/Earth" target="_blank">Earth</a>`;
+            else if (area_type == 'union')
+              areaName.innerHTML = `Area: <a href="https://en.wikipedia.org/wiki/European_Union" target="_blank">European Union</a>`;
+            else {
+              area_url = `https://nominatim.openstreetmap.org/search.php?${area_query}&polygon_geojson=1`;
+              fetch(`https://nominatim.openstreetmap.org/search.php?${area_query}&format=json&extratags=1`)
+                .then((response) => response.json())
+                .then((answer) => {
+                  if (answer.length) {
+                    const response = r[0];
+                    if (response.hasOwnProperty('osm_id')) {
+                      const url = 'https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=' + response.osm_id;
+                      if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population'))
+                        population = `<a target="_blank" href="${url}">${response.extratags.population}</a>`;
+                      else
+                        population = `<a target="_blank" href="${url}">N/A</a>`;
+                      areaName.innerHTML = `Area: ${name} (population: ${population})`;
+                    }
+                  }
+                });
+            }
+    
             let map = L.map('area');
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
               attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
