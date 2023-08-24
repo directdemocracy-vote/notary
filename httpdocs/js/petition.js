@@ -14,13 +14,26 @@ function findGetParameter(parameterName) {
       console.log('Missing fingerprint GET argument');
       return;
     }
+
+    fetch(`/api/publication.php?fingerprint=b43dc844ce9fab3a669a2c40875a9cee97ffdb76`)
+      .then((response) => response.json())
+      .then((answer) => {
+        if (answer.error) {
+          console.log(`Cannot get petition: ${answer.error}`);
+          return;
+        }
+        document.getElementById('title').innerHTML = answer.title;
+        document.getElementById('description').innerHTML = answer.title;
+
+      });
+
+
     function closeModal() {
       document.getElementById('modal').classList.remove('is-active');
     }
     document.getElementById('modal-cancel-button').addEventListener('click', closeModal);
     document.getElementById('modal-close-button').addEventListener('click', closeModal);
     document.getElementById('modal-ok-button').addEventListener('click', closeModal);
-
     document.getElementById('sign-button').addEventListener('click', function() {
       const qr = new QRious({
         value: fingerprint,
