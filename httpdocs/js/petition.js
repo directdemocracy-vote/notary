@@ -63,7 +63,7 @@ function findGetParameter(parameterName) {
                 .then((response) => response.json())
                 .then((answer) => {
                   if (answer.length) {
-                    const response = r[0];
+                    const response = answer[0];
                     if (response.hasOwnProperty('osm_id')) {
                       const url = 'https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=' + response.osm_id;
                       if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population'))
