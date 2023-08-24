@@ -89,7 +89,6 @@ query("DELETE FROM ballot WHERE id not IN (SELECT id FROM publication)");
 
 $result = query("SELECT MAX(id) AS `max` FROM publication");
 if ($result) {
-  die($result);
   $m = $result->fetch_assoc();
   $max = intval($m['max']) + 1;
   query("ALTER TABLE publication AUTO_INCREMENT=$max");
