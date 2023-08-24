@@ -35,6 +35,7 @@ window.onload = function() {
   let publication_crypt = null;
   let latitude = parseFloat(findGetParameter('latitude', '-1'));
   let longitude = parseFloat(findGetParameter('longitude', '-1'));
+  let geolocation = false;
   if (latitude == -1) {
     if (navigator.geolocation)
       navigator.geolocation.getCurrentPosition(getGeolocationPosition);
