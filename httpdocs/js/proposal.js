@@ -204,10 +204,9 @@ window.onload = function() {
       .then((answer) => {
         if (answer.error) {
           showModal('Area publication error', JSON.stringify(answer.error));
-          button.classList.add('is-loading');
+          button.classList.remove('is-loading');
           button.removeAttribute('disabled');
-        }
-        else {
+        } else {
           publication = {};
           publication.schema = `https://directdemocracy.vote/json-schema/${directdemocracy_version}/proposal.schema.json`;
           publication.key = stripped_key(publication_crypt.getPublicKey());
@@ -233,14 +232,16 @@ window.onload = function() {
           fetch(`/api/publish.php`, {'method': 'POST', 'body': JSON.stringify(publication)})
           .then((response) => response.json())
           .then((answer) => {
-            button.classList.add('is-loading');
+            button.classList.remove('is-loading');
             button.removeAttribute('disabled');
             if (answer.error)
                 showModal('Publication error', JSON.stringify(answer.error));
               else {
                 showModal('Publication success',
-                          `Your ${type} was just published!<br>Check it <a target="_blank" href="` +
-                          `/${type}.html?fingerprint=${answer.fingerprint}">here</a>.<br>`);
+                          `Your ${type} was just published!<br><br>You will be redirected to it.`, 'OK');
+                document.getElementById('modal-ok-button').addEventListener('click', function() {
+                  window.location.href = `/${type}.html?fingerprint=${answer.fingerprint}`;
+                });
               }
           });
         }
