@@ -35,8 +35,9 @@ function findGetParameter(parameterName) {
       div.classList.add('content', 'has-text-centered');
       let input = document.createElement('input');
       div.appendChild(input);
-      input.value = fingerprint;
       input.classList.add('input');
+      input.setAttribute('readonly', '');
+      input.setAttribute('value', fingerprint);
       let message = document.createElement('div');
       div.appendChild(message);
       message.innerHTML = 'From the <i>directdemocracy</i> app, scan this QR code or click it and paste it in the app.';
