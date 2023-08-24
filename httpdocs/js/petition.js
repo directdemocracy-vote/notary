@@ -48,9 +48,8 @@ function findGetParameter(parameterName) {
               const name = argument.substr(eq + 1);
               if (type)
                 area_query += type + '=' + encodeURIComponent(name) + '&';
-              if (areaName.innerHTML === '')
-                areaName.innerHTML = `Area: ${name}`;
             });
+            areaName.innerHTML = `Area: ${area_name}`;
             area_query = area_query.slice(0, -1);
             let area_url;
             if (!area_type)
@@ -70,7 +69,7 @@ function findGetParameter(parameterName) {
                         population = `<a target="_blank" href="${url}">${response.extratags.population}</a>`;
                       else
                         population = `<a target="_blank" href="${url}">N/A</a>`;
-                      areaName.innerHTML = `Area: ${name} (population: ${population})`;
+                      areaName.innerHTML = `Area: ${area_name} (population: ${population})`;
                     }
                   }
                 });
