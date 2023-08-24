@@ -67,7 +67,7 @@ CREATE TABLE `publication` (
 
 CREATE TABLE `proposal` (
   `id` int(11) NOT NULL,
-  `judge` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `judge` varchar(2048) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `area` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
   `title` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
