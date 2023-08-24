@@ -190,14 +190,20 @@ window.onload = function() {
     document.getElementById('publish').removeAttribute('disabled');
   }
 
-  document.getElementById('publish').addEventListener('click', function() {
+  document.getElementById('publish').addEventListener('click', function(event) {
+    let button = event.currentTarget;
+    button.classList.add('is-loading');
+    button.setAttribute('disabled', '');
     const judge = document.getElementById('judge').value;
     const query = area.trim().replace(/(\r\n|\n|\r)/g, "&");
     fetch(`${judge}/api/publish_area.php?${query}`)
       .then((response) => response.json())
       .then((answer) => {
-        if (answer.error)
-          console.log(JSON.stringify(answer.error));
+        if (answer.error) {
+          showModal('Area publication error', JSON.stringify(answer.error));
+          button.classList.add('is-loading');
+          button.removeAttribute('disabled');
+        }
         else {
           publication = {};
           publication.schema = `https://directdemocracy.vote/json-schema/${directdemocracy_version}/proposal.schema.json`;
@@ -224,8 +230,10 @@ window.onload = function() {
           fetch(`/api/publish.php`, {'method': 'POST', 'body': JSON.stringify(publication)})
           .then((response) => response.json())
           .then((answer) => {
-              if (answer.error)
-                ShowModal('Publication error', JSON.stringify(answer.error));
+            button.classList.add('is-loading');
+            button.removeAttribute('disabled');
+            if (answer.error)
+                showModal('Publication error', JSON.stringify(answer.error));
               else {
                 showModal('Publication success',
                           `Your ${type} was just published!<br>Check it <a target="_blank" href="` +
