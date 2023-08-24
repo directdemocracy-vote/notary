@@ -24,6 +24,8 @@ function findGetParameter(parameterName) {
         }
         document.getElementById('title').innerHTML = answer.title;
         document.getElementById('description').innerHTML = answer.description;
+        document.getElementById('deadline').innerHTML = new Date(answer.deadline).toLocaleString();
+        document.getElementById('judge').innerHTML = `<a href="${answer.judge}" target="_blank">${answer.judge}</a>`;
 
       });
 
