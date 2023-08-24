@@ -39,6 +39,7 @@ function findGetParameter(parameterName) {
       let control = document.createElement('div');
       field.appendChild(control);
       control.classList.add('control');
+      control.style.width = '100%';
       let input = document.createElement('input');
       control.appendChild(input);
       input.classList.add('input');
