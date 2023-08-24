@@ -7,6 +7,11 @@ function error($message) {
   die("{\"error\":$message}");
 }
 
+function query($query) {
+  global $mysqli;
+  return $mysqli->query($query) or error($mysqli->error);
+}
+
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
@@ -33,8 +38,7 @@ $results = $mysqli->escape_string($input->results);
 $query = "";
 
 function delete_publication($mysqli, $type) {
-  $query = "DELETE publication, $type FROM publication INNER JOIN $type ON $type.id=publication.id";
-  $mysqli->query($query) or error($mysqli->error);
+  query("DELETE publication, $type FROM publication INNER JOIN $type ON $type.id=publication.id");
   return $mysqli->affected_rows / 2;
 }
 
@@ -52,21 +56,44 @@ if ($registrations)
 if ($ballots)
   $n += delete_publication($mysqli, 'ballot');
 if ($results) {
-  $mysqli->query("DELETE FROM results") or error($mysqli->error);
-  $mysqli->query("DELETE FROM participation") or error($mysqli->error);
-  $mysqli->query("DELETE FROM corpus") or error($mysqli->error);
-  $mysqli->query("DELETE FROM ballots") or error($mysqli->error);
-  $mysqli->query("DELETE FROM registrations") or error($mysqli->error);
-  $mysqli->query("DELETE FROM stations") or error($mysqli->error);
+  query("DELETE FROM results");
+  query("DELETE FROM participation");
+  query("DELETE FROM corpus");
+  query("DELETE FROM ballots");
+  query("DELETE FROM registrations");
+  query("DELETE FROM stations");
 }
-$query = "SELECT MAX(id) AS `max` FROM publication";
-$result = $mysqli->query($query) or error($mysqli->error);
+# clean-up orphan publications
+$query = <<<EOT
+DELETE FROM publication WHERE id NOT IN (
+    SELECT id FROM citizen UNION
+    SELECT id FROM endorsement UNION
+    SELECT id FROM area UNION
+    SELECT id FROM proposal UNION
+    SELECT id FROM participation UNION
+    SELECT id FROM registration UNION
+    SELECT id FROM ballot)
+EOT;
+// FIXME: we should add "vote" to the above list
+
+query($query);
+query("DELETE FROM citizen WHERE id not IN (SELECT id FROM publication)");
+query("DELETE FROM endorsement WHERE id not IN (SELECT id FROM publication)");
+query("DELETE FROM area WHERE id not IN (SELECT id FROM publication)");
+query("DELETE FROM proposal WHERE id not IN (SELECT id FROM publication)");
+query("DELETE FROM participation WHERE id not IN (SELECT id FROM publication)");
+query("DELETE FROM registration WHERE id not IN (SELECT id FROM publication)");
+query("DELETE FROM ballot WHERE id not IN (SELECT id FROM publication)");
+// query("DELETE FROM vote WHERE id not IN (SELECT id FROM publication)");
+
+
+$result = query("SELECT MAX(id) AS `max` FROM publication");
 if ($result) {
   $m = $result->fetch_assoc();
   $max = intval($m['max']) + 1;
-  $mysqli->query("ALTER TABLE publication AUTO_INCREMENT=$max");
+  query("ALTER TABLE publication AUTO_INCREMENT=$max");
 } else
-  $mysqli->query("ALTER TABLE publication AUTO_INCREMENT=1");
+  query("ALTER TABLE publication AUTO_INCREMENT=1");
 
 die("{\"status\":\"Deleted $n publications.\"}");
  ?>
