@@ -49,7 +49,9 @@ function findGetParameter(parameterName) {
         message.innerHTML = 'Copied in clipboard! You can now paste in the <i>directdemocracy</i> app.';
       });
       document.getElementById('modal-title').innerHTML = 'Sign this petition';
-      document.getElementById('modal-content').appendChild(div);
+      let content = document.getElementById('modal-content');
+      content.innerHTML = '';
+      content.appendChild(div);
       document.getElementById('modal-footer').style.display = 'none';
       document.getElementById('modal').classList.add('is-active');
     });
