@@ -14,32 +14,36 @@ function findGetParameter(parameterName) {
       console.log('Missing fingerprint GET argument');
       return;
     }
-    /*
-    document.getElementById('fingerprint').value = fingerprint;
-    const rectangle = document.getElementById('fingerprint-group').getBoundingClientRect();
-    let size = rectangle.right - rectangle.left;
-    if (size > 512)
-      size = 512;
-    let qr = new QRious({
-      element: document.getElementById('qr-code'),
-      value: fingerprint,
-      level: 'M',
-      size,
-      padding: 0
+    document.getElementById('sign-button').addEventListener('click', function() {
+      const qr = new QRious({
+        value: fingerprint,
+        level: 'L',
+        size: 512,
+        padding: 0
+      });
+      let div = document.createElement('div');
+      let input = document.createElement('input');
+      div.appendChild(input);
+      input.style.display = 'none';
+      input.value = fingerprint;
+      let img = document.createElement('img');
+      div.appendChild(img);
+      img.src = qr.toDataURL();
+      let message = document.createElement('div');
+      div.appendChild(message);
+      message.innerHTML = 'From the <i>directdemocracy</i> app, scan this QR code or click it and paste it in the app.';
+      img.addEventListener('click', function() {
+        input.select();
+        input.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+        input.setSelectionRange(0, 0);
+        input.blur();
+        message.innerHTML = 'Copied in clipboard! You can now paste in the <i>directdemocracy</i> app.';
+        setTimeout(function() { message.innerHTML = ''; }, 1000);    
+      });
+      document.getElementById('modal-title').innerHTML = 'Sign this petition';
+      document.getElementById('modal-content').appendChild(div);
+      document.getElementById('modal').classList.add('is-active');
     });
-    document.getElementById('copy-button').addEventListener('click', function(event) {
-      let input = document.getElementById('fingerprint');
-      input.select();
-      input.setSelectionRange(0, 99999);
-      document.execCommand("copy");
-      input.setSelectionRange(0, 0);
-      input.blur();
-      message = document.getElementById('copy-message');
-      message.innerHTML = "copied!";
-      setTimeout(function() {
-        message.innerHTML = '';
-      }, 1000);
-    });
-    */
 }
   
