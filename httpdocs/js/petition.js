@@ -69,7 +69,7 @@ function findGetParameter(parameterName) {
                         population = `<a target="_blank" href="${url}">${response.extratags.population}</a>`;
                       else
                         population = `<a target="_blank" href="${url}">N/A</a>`;
-                      areaName.innerHTML = `Area: ${area_name} (population: ${population})`;
+                      areaName.innerHTML = `Area: ${area_name} (estimated population: ${population})`;
                     }
                   }
                 });
