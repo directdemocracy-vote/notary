@@ -142,7 +142,9 @@ window.onload = function() {
 
   function generateCryptographicKey() {
     document.getElementById('publish-message').innerHTML = 'Forging a cryptographic key, please wait...';
-    document.getElementById('publish').classList.add('is-loading');
+    let button = document.getElementById('publish');
+    button.classList.add('is-loading');
+    button.setAttribute('disabled', '');
     let dt = new Date();
     let time = -(dt.getTime());
     publication_crypt = new JSEncrypt({
@@ -152,7 +154,8 @@ window.onload = function() {
       dt = new Date();
       time += (dt.getTime());
       document.getElementById('publish-message').innerHTML = `A cryptographic key was just forged in ${Number(time / 1000).toFixed(2)} seconds.`;
-      document.getElementById('publish').classList.remove('is-loading');
+      button.classList.remove('is-loading');
+      button.removeAttribute('disabled');
       validate();
     });
   }
