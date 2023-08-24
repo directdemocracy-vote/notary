@@ -26,7 +26,41 @@ function findGetParameter(parameterName) {
         document.getElementById('description').innerHTML = answer.description;
         document.getElementById('deadline').innerHTML = new Date(answer.deadline).toLocaleString();
         document.getElementById('judge').innerHTML = `<a href="${answer.judge}" target="_blank">${answer.judge}</a>`;
+        fetch(`/api/publication.php?fingerprint=${CryptoJS.SHA1(answer.area).toString()}`)
+          .then((response) => response.json())
+          .then((area) => {
+            if (area.error) {
+              console.log(`cannot get area: ${area.error}`);
+              return;
+            }
+            let map = L.map('area');
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+            map.whenReady(function() {setTimeout(() => {this.invalidateSize();}, 0);});
+            map.on('contextmenu', function(event) { return false; });
+            L.geoJSON({type: 'MultiPolygon', coordinates: area.polygons}).addTo(map);      
+            let maxLon = -1000;
+            let minLon = 1000;
+            let maxLat = -1000;
+            let minLat = 1000;
+            area.polygons.forEach(function(polygons) {
+              polygons.forEach(function(polygon) {
+                polygon.forEach(function(point) {
+                  if (point[0] > maxLon)
+                    maxLon = point[0];
+                  else if (point[0] < minLon)
+                    minLon = point[0];
+                  if (point[1] > maxLat)
+                    maxLat = point[1];
+                  else if (point[1] < minLat)
+                    minLat = point[1];
+                });
+              });
+            });
+            map.fitBounds([[minLat, minLon], [maxLat, maxLon]]);
 
+          });
       });
 
 
