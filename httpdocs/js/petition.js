@@ -33,7 +33,7 @@ function findGetParameter(parameterName) {
               console.log(`cannot get area: ${area.error}`);
               return;
             }
-            document.getElementById('area-name').innerHTML = area.name;
+            document.getElementById('area-name').innerHTML = area.name.split("\n")[0];
             let map = L.map('area');
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
               attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
