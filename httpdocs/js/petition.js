@@ -14,6 +14,12 @@ function findGetParameter(parameterName) {
       console.log('Missing fingerprint GET argument');
       return;
     }
+    function closeModal() {
+      document.getElementById('modal').classList.remove('is-active');
+    }
+    document.getElementById('modal-cancel-button').addEventListener('click', closeModal);
+    document.getElementById('modal-close-button').addEventListener('click', closeModal);
+    document.getElementById('modal-ok-button').addEventListener('click', closeModal);
 
     document.getElementById('sign-button').addEventListener('click', function() {
       const qr = new QRious({
