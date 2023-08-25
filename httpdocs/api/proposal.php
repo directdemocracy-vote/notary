@@ -129,7 +129,7 @@ if (isset($fingerprint)) {
             ."WHERE publication.fingerprint=SHA1('$area') "
             ."AND ST_Contains(area.polygons, POINT($longitude, $latitude))";
     $result = $mysqli->query($query) or error($mysqli->error);
-    $proposal['inside'] = $result ? true : false;
+    $proposal['inside'] = $result->fetch_assoc();
   }
   $mysqli->close();
   $json = json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
