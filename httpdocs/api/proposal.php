@@ -130,6 +130,8 @@ if (isset($fingerprint)) {
             ."AND ST_Contains(area.polygons, POINT($longitude, $latitude))";
     $result = $mysqli->query($query) or error($mysqli->error);
     $proposal['inside'] = $result->fetch_assoc();
+    $proposal['query'] = $query;
+    $result->free();
   }
   $mysqli->close();
   $json = json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
