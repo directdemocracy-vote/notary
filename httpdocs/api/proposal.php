@@ -126,7 +126,7 @@ if (isset($fingerprint)) {
     $area = $proposal['area'];
     $query = "SELECT area.id FROM area "
             ."LEFT JOIN publication ON publication.id = area.id "
-            ."WHERE publication.fingerprint=SHA1($area) "
+            ."WHERE publication.fingerprint=SHA1('$area') "
             ."AND ST_Contains(area.polygons, POINT($longitude, $latitude))";
     $result = $mysqli->query($query) or error($mysqli->error);
     $found = $result->fetch_assoc();
