@@ -1,4 +1,19 @@
 <?php
+# This API entry returns a proposal or a list of proposals corresponding to the parameters of the request.
+# Each proposal contains the entries of the proposal message, plus two entries:
+# - participants: the current number of citizien who voted/signed the referendum/petition
+# - corpus: the total number of possible participants (based on the home location of citizens endoresed by the judge)
+# The input parameter sets are either:
+# 1. - secret: either false (for petitions) or true (for referendums)
+#    - latitude and longitude: the area of the proposal must include this position
+#    - limit: maximum number of proposals in the returned list
+#   In this case, the result is a list of proposals for which is deadline is not yet passed, ordered by
+#   participation = participants / corpus
+# 2. - fingerprint: return a single proposal corresponding to the specified fingerprint
+# 3. - fingerprints: returns a list of proposals corresponding to the specified coma separated fingerprints
+
+# TODO: implement participation and corpus
+
 require_once '../../php/database.php';
 
 function error($message) {
@@ -10,27 +25,40 @@ function error($message) {
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
+
 $mysqli = new mysqli($database_host, $database_username, $database_password, $database_name);
 if ($mysqli->connect_errno)
   die("{\"error\":\"Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)\"}");
 $mysqli->set_charset('utf8mb4');
-if (isset($_POST['area']))
-  $area = $mysqli->escape_string($_POST['area']);
-else
-  error("Unable to parse JSON post");
+if (isset($_POST['secret']))
+  $secret = ($_POST['secret'] === 'true') ? 1 : 0;
+if (isset($_POST['latitude']))
+  $latitude = floatval($_POST['latitude']);
+if (isset($_POST['longitude']))
+  $longitude = floatval($_POST['longitude']);
+if (isset($_POST['limit']))
+  $limit = intval($_POST['limit']);
 if (isset($_POST['fingerprint']))
   $fingerprint = $mysqli->escape_string($_POST['fingerprint']);
 if (isset($_POST['fingerprints']))
   $fingerprints = explode(',', $mysqli->escape_string($_POST['fingerprints']));
 
-$query_base = "SELECT "
-             ."publication.schema, publication.key, publication.signature, publication.published, "
-             ."proposal.judge, proposal.area, proposal.title, proposal.description, "
-             ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
-             ."participation.count AS participation, participation.corpus AS corpus "
-             ."FROM proposal "
-             ."LEFT JOIN publication ON publication.id = proposal.id "
-             ."LEFT JOIN participation ON participation.proposal = proposal.id ";
+# check the parameter sets
+if (isset($secret) || isset($latitude) || isset($longitude) || isset($limit)) {
+  if (isset($fingerprint) or isset($fingerprints))
+    error('The fingerprint or fingerprints parameter should not be set together with the secret, latitude, longitude and limit parameters.');
+  if (!isset($secret))
+    error('Missing secret parameter.');
+  if (!isset($latitude))
+    error('Missing latitude parameter.');
+  if (!isset($longitude))
+    error('Missing longitude parameter.');
+  if (!isset($limit))
+    error('Missing limit parameter.');
+} else if (isset($fingerprint) && isset($fingerprints))
+  error('You cannot set both fingerprint and fingerprints parameters.');
+else if (!isset($fingerprint) && !isset($fingerprints)))
+  error('Missing parameters.');
 
 function set_types(&$proposal) {
   settype($proposal['published'], 'int');
@@ -40,15 +68,39 @@ function set_types(&$proposal) {
   settype($proposal['corpus'], 'int');
 }
 
+function return_results($query) {
+  global $mysqli;
+  $result = $mysqli->query($query) or die($mysqli->error);
+  while ($proposal = $result->fetch_assoc()) {
+    $proposal['participation'] = 0;
+    $proposal['corpus'] = 0;
+    set_types($proposal);
+    $proposals[] = $proposal;
+  }
+  $result->free();
+  $mysqli->close();
+  die(json_encode($proposals, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+}
+
+$query_base = "SELECT "
+             ."publication.schema, publication.key, publication.signature, publication.published, "
+             ."proposal.judge, proposal.area, proposal.title, proposal.description, "
+             ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website "
+             ."FROM proposal "
+             ."LEFT JOIN publication ON publication.id = proposal.id ";
+
 if (isset($fingerprint)) {
-  $query = "$query_base WHERE publication.fingerprint = \"$fingerprint\" "
-          ."AND RIGHT(\"$area\", CHAR_LENGTH(proposal.area)) = proposal.area";
-  $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
+  $query = "$query_base WHERE publication.fingerprint = '$fingerprint'";
+  $result = $mysqli->query($query) or die($mysqli->error);
   $proposal = $result->fetch_assoc();
   $result->free();
   set_types($proposal);
+  $proposal['participation'] = 0;
+  $proposal['corpus'] = 0;
+  $mysqli->close();
   $json = json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-} else {
+  die($json);
+} elseif (isset($fingerprints)) {
   $proposals = array();
   if (isset($fingerprints)) {
     $list = '(';
@@ -56,34 +108,15 @@ if (isset($fingerprint)) {
       $list .= "\"$fingerprint\",";
     $list = substr($list, 0, -1).')';
   }
-  $areas = explode("\\n", rtrim($area));
-  $count = count($areas);
-  foreach($areas as $i => $area) {
-    $area_name = $area;
-    for($j = $i + 1; $j < $count; $j++)
-      $area_name .= "\n" . $areas[$j];
-    if (isset($fingerprints)) {
-      $query = "$query_base WHERE publication.fingerprint IN $list AND proposal.area=\"$area_name\" ORDER BY participation";
-      $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
-      while ($proposal = $result->fetch_assoc()) {
-        set_types($proposal);
-        $proposals[] = $proposal;
-      }
-      $result->free();
-    }
-    $query = "$query_base WHERE proposal.area = \"$area_name\" AND proposal.deadline > (1000 * UNIX_TIMESTAMP()) ";
-    if (isset($fingerprints))
-      $query.= "AND publication.fingerprint NOT IN $list ";
-    $query.= "ORDER BY participation DESC LIMIT 2";
-    $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
-    while ($proposal = $result->fetch_assoc()) {
-      set_types($proposal);
-      $proposals[] = $proposal;
-    }
-    $result->free();
-  }
-  $json = json_encode($proposals, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+  return_results("$query_base WHERE publication.fingerprint IN $list");
+} else {  # assuming secret/latitude/longitude/limit parameters
+  $now = intval(microtime(true) * 1000);
+  return_results($query_base
+    ."LEFT JOIN publication AS area_p ON area_p.fingerprint=SHA1(proposal.area) "
+    ."LEFT JOIN area ON area.id=area_p.id "
+    ."WHERE secret=$secret "
+    ."AND proposal.deadline > $now "
+    ."AND ST_Contains(area.polygons, POINT($longitude, $latitude)) "
+    ."LIMIT $limit");
 }
-$mysqli->close();
-die($json);
 ?>
