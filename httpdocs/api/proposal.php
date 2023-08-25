@@ -129,7 +129,7 @@ if (isset($fingerprint)) {
             ."INNER JOINT publication ON publication.id = area.id "
             ."WHERE publication.fingerprint=SHA1($area) "
             ."AND ST_Contains(area.polygons, POINT($longitude, $latitude))";
-    $result = $mysql->query($query) or error($mysqli->error);
+    $result = $mysqli->query($query) or error($mysqli->error);
     $found = $result->fetch_assoc();
     $proposal['inside'] = ($found) ? true : false;
   }
