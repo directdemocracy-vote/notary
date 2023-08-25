@@ -92,6 +92,9 @@ function set_types(&$proposal) {
   settype($proposal['deadline'], 'int');
   settype($proposal['participation'], 'int');
   settype($proposal['corpus'], 'int');
+  $name = $proposal['name'];
+  unset($proposal['name']);
+  $proposal['area'] = explode(',', $name);
 }
 
 function return_results($query) {
@@ -110,8 +113,9 @@ function return_results($query) {
 
 $query_base = "SELECT "
              ."publication.schema, publication.key, publication.signature, publication.published, "
-             ."proposal.judge, area.name AS area, proposal.title, proposal.description, "
+             ."proposal.judge, proposal.area, proposal.title, proposal.description, "
              ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website "
+             ."area.name "
              ."FROM proposal "
              ."LEFT JOIN publication ON publication.id = proposal.id "
              ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
