@@ -115,7 +115,7 @@ $query_base = "SELECT "
              ."FROM proposal "
              ."LEFT JOIN publication ON publication.id = proposal.id "
              ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
-             ."LEFT JOIN area ON area.id = area_p.id "
+             ."LEFT JOIN area ON area.id = area_p.id ";
 
 if (isset($fingerprint)) {
   $query = "$query_base WHERE publication.fingerprint = '$fingerprint'";
