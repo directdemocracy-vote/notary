@@ -72,7 +72,7 @@ if (isset($secret) || isset($latitude) || isset($longitude) || isset($limit)) {
   if (!isset($longitude))
     error('Missing longitude parameter.');
   if (isset($fingerprint)) {
-    if (isset($secret) || isset($limit)))
+    if (isset($secret) || isset($limit))
       error('The fingerprint parameter should not be set together with the secret or limit parameters.');
   } else {
     if (!isset($secret))
