@@ -56,7 +56,7 @@ $secret = parameter('secret', 'bool');
 if (isset($secret))
   $secret = $secret ? 1 : 0;
 $latitude = parameter('latitude', 'float');
-$longitude = parameter('latitude', 'float');
+$longitude = parameter('longitude', 'float');
 $limit = parameter('limit', 'int');
 $fingerprint = parameter('fingerprint');
 $fingerprints = parameter('fingerprints');
