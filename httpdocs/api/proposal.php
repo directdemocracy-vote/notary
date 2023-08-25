@@ -10,6 +10,9 @@
 #   In this case, the result is a list of proposals for which is deadline is not yet passed, ordered by
 #   participation = participants / corpus
 # 2. - fingerprint: return a single proposal corresponding to the specified fingerprint
+#    - latitude and longitude (optional): the area of the proposal must include this position
+#   In case latitude and longitude are provided the answer contains an extra boolean field named inside
+#   which is true only if the point given by latitude and longitude is inside the proposal area
 # 3. - fingerprints: returns a list of proposals corresponding to the specified coma separated fingerprints
 
 # TODO: implement participation and corpus
@@ -62,19 +65,21 @@ if (isset($fingerprints))
 
 # check the parameter sets
 if (isset($secret) || isset($latitude) || isset($longitude) || isset($limit)) {
-  if (isset($fingerprint) or isset($fingerprints))
-    error('The fingerprint or fingerprints parameter should not be set together with the secret, latitude, longitude and limit parameters.');
-  if (!isset($secret))
-    error('Missing secret parameter.');
+  if (isset($fingerprints))
+    error('The fingerprints parameter should not be set together with the secret, latitude, longitude or limit parameters.');
   if (!isset($latitude))
     error('Missing latitude parameter.');
   if (!isset($longitude))
     error('Missing longitude parameter.');
+  if (isset($fingerprint) && (isset($secret) || isset($limit)))
+    error('The fingerprint parameter should not be set together with the secret or limit parameters.');
+  if (!isset($secret))
+    error('Missing secret parameter.');
   if (!isset($limit))
     error('Missing limit parameter.');
-} else if (isset($fingerprint) && isset($fingerprints))
+} elseif (isset($fingerprint) && isset($fingerprints))
   error('You cannot set both fingerprint and fingerprints parameters.');
-else if (!isset($fingerprint) && !isset($fingerprints))
+elseif (!isset($fingerprint) && !isset($fingerprints))
   error('Missing parameters.');
 
 function set_types(&$proposal) {
@@ -115,6 +120,16 @@ if (isset($fingerprint)) {
   $proposal['participation'] = 0;
   $proposal['corpus'] = 0;
   $mysqli->close();
+  if (isset($latitude)) {
+    $area = $proposal['area'];
+    $query = "SELECT area.id "
+            ."INNER JOINT publication ON publication.id = area.id "
+            ."WHERE publication.fingerprint=SHA1($area) "
+            ."AND ST_Contains(area.polygons, POINT($longitude, $latitude))";
+    $result = $mysql->query($query) or error($mysqli->error);
+    $found = $result->fetch_assoc();
+    $proposal['inside'] = ($found) ? true : false;
+  }
   $json = json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
   die($json);
 } elseif (isset($fingerprints)) {
