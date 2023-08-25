@@ -22,6 +22,25 @@ function error($message) {
   die("{\"error\":$message}");
 }
 
+function parameter($parameter, $type='') {
+  global $mysqli;
+
+  if (isset($_POST[$parameter]))
+    $value = $_POST[$parameter];
+  elseif (isset($_GET[$parameter]))
+    $value = $_GET[$parameter];
+  else
+    return null;
+  if ($type === 'float')
+    return floatval($value);
+  elseif ($type === 'int')
+    return intval($value);
+  elseif ($type === 'bool')
+    return (strcasecmp($value, 'true') === 0);
+  else
+    return $mysqli->escape_string($value);
+}
+
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
@@ -30,18 +49,16 @@ $mysqli = new mysqli($database_host, $database_username, $database_password, $da
 if ($mysqli->connect_errno)
   die("{\"error\":\"Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)\"}");
 $mysqli->set_charset('utf8mb4');
-if (isset($_POST['secret']))
-  $secret = ($_POST['secret'] === 'true') ? 1 : 0;
-if (isset($_POST['latitude']))
-  $latitude = floatval($_POST['latitude']);
-if (isset($_POST['longitude']))
-  $longitude = floatval($_POST['longitude']);
-if (isset($_POST['limit']))
-  $limit = intval($_POST['limit']);
-if (isset($_POST['fingerprint']))
-  $fingerprint = $mysqli->escape_string($_POST['fingerprint']);
-if (isset($_POST['fingerprints']))
-  $fingerprints = explode(',', $mysqli->escape_string($_POST['fingerprints']));
+$secret = parameter('secret', 'bool');
+if (isset($secret))
+  $secret = $secret ? 1 : 0;
+$latitude = parameter('latitude', 'float');
+$longitude = parameter('latitude', 'float');
+$limit = parameter('limit', 'int');
+$fingerprint = parameter('fingerprint');
+$fingerprints = parameter('fingerprints');
+if (isset($fingerprints))
+  $fingerprints = explode(',', $fingerprints);
 
 # check the parameter sets
 if (isset($secret) || isset($latitude) || isset($longitude) || isset($limit)) {
