@@ -57,7 +57,7 @@ if (isset($secret) || isset($latitude) || isset($longitude) || isset($limit)) {
     error('Missing limit parameter.');
 } else if (isset($fingerprint) && isset($fingerprints))
   error('You cannot set both fingerprint and fingerprints parameters.');
-else if (!isset($fingerprint) && !isset($fingerprints)))
+else if (!isset($fingerprint) && !isset($fingerprints))
   error('Missing parameters.');
 
 function set_types(&$proposal) {
