@@ -15,7 +15,7 @@ function findGetParameter(parameterName) {
       return;
     }
 
-    fetch(`/api/publication.php?fingerprint=b43dc844ce9fab3a669a2c40875a9cee97ffdb76`)
+    fetch(`/api/publication.php?fingerprint=${fingerprint}`)
       .then((response) => response.json())
       .then((answer) => {
         if (answer.error) {
