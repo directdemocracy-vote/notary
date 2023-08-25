@@ -126,9 +126,6 @@ if (isset($fingerprint)) {
   $result = $mysqli->query($query) or die($mysqli->error);
   $proposal = $result->fetch_assoc();
   $result->free();
-  set_types($proposal);
-  $proposal['participation'] = 0;
-  $proposal['corpus'] = 0;
   if (isset($latitude)) {
     $area = $proposal['area'];
     $query = "SELECT area.id FROM area "
@@ -140,6 +137,9 @@ if (isset($fingerprint)) {
     $result->free();
   }
   $mysqli->close();
+  set_types($proposal);
+  $proposal['participation'] = 0;
+  $proposal['corpus'] = 0;
   $json = json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
   die($json);
 } elseif (isset($fingerprints)) {
