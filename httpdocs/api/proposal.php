@@ -94,7 +94,7 @@ function set_types(&$proposal) {
   settype($proposal['corpus'], 'int');
   $name = $proposal['name'];
   unset($proposal['name']);
-  $proposal['area'] = explode(',', $name);
+  $proposal['area'] = explode("\n", $name);
 }
 
 function return_results($query) {
