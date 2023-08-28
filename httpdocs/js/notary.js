@@ -31,7 +31,8 @@ window.onload = function() {
   if (judge) {
     if (judge.startsWith('https://'))
       judge = judge.substring(8);
-    document.getElementById('judge').setAttribute('value', judge);
+    if (judge.includes('.'))
+      document.getElementById('judge').setAttribute('value', judge);
   }
   latitude = parseFloat(findGetParameter('latitude'));
   longitude = parseFloat(findGetParameter('longitude'));
