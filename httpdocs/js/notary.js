@@ -28,7 +28,7 @@ window.onload = function() {
     document.getElementById(tab).style.display = 'block';
   }
   latitude = parseFloat(findGetParameter('latitude'));
-  longitude = parseFloat(fingGetParameter('longitude'));
+  longitude = parseFloat(findGetParameter('longitude'));
   console.log(latitude);
   if (latitude === null || longitude === null) {
     if (navigator.geolocation)
