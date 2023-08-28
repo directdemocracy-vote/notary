@@ -6,11 +6,27 @@ let range = slider * slider * slider;
 let address = '';
 let markers = [];
 
+function findGetParameter(parameterName) {
+  let result = null;
+  let tmp = [];
+  location.search.substr(1).split("&").forEach(function(item) {
+    tmp = item.split("=");
+    if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+  });
+  return result;
+}
+
 window.onload = function() {
   document.getElementById('proposal').addEventListener('click', function() {
     window.open(`proposal.html?latitude=${latitude}&longitude=${longitude}`, '_blank');
   });
-
+  let tab = findGetParameter('tab');
+  if (tab) {
+    document.getElementById('tab-citizens').classList.remove('is-active');
+    document.getElementById('citizens').style.display = 'none';
+    document.getElementById(`tab-${tab}`).classList.add('is-active');
+    document.getElementById(tab).style.display = 'block';
+  }
   if (navigator.geolocation) navigator.geolocation.getCurrentPosition(getGeolocationPosition);
   fetch('https://ipinfo.io/loc')
     .then((response) => {
