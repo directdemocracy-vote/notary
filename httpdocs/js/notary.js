@@ -22,9 +22,9 @@ window.onload = function() {
   });
   let tab = findGetParameter('tab');
   if (tab) {
-    document.getElementById('tab-citizens').classList.remove('is-active');
+    document.getElementById('citizens-tab').classList.remove('is-active');
     document.getElementById('citizens').style.display = 'none';
-    document.getElementById(`tab-${tab}`).classList.add('is-active');
+    document.getElementById(`${tab}-tab`).classList.add('is-active');
     document.getElementById(tab).style.display = 'block';
   }
   if (navigator.geolocation) navigator.geolocation.getCurrentPosition(getGeolocationPosition);
