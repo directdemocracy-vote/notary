@@ -29,9 +29,11 @@ window.onload = function() {
   }
   latitude = parseFloat(findGetParameter('latitude'));
   longitude = parseFloat(findGetParameter('longitude'));
+  let zoom;
   if (isNaN(latitude) || isNaN(longitude)) {
     latitude = 0;
     longitude = 0;
+    zoom = 2;
     if (navigator.geolocation)
       navigator.geolocation.getCurrentPosition(getGeolocationPosition);
     fetch('https://ipinfo.io/loc')
@@ -46,8 +48,9 @@ window.onload = function() {
           getGeolocationPosition({coords: {latitude: coords[0], longitude: coords[1]}});
         }
       });
-  }
-  let map = L.map('map').setView([latitude, longitude], 2);
+  } else
+    zoom = 12;
+  let map = L.map('map').setView([latitude, longitude], zoom);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
