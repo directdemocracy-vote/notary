@@ -31,6 +31,8 @@ window.onload = function() {
   longitude = parseFloat(findGetParameter('longitude'));
   console.log(latitude);
   if (isNaN(latitude) || isNaN(longitude)) {
+    latitude = 0;
+    longitude = 0;
     if (navigator.geolocation)
       navigator.geolocation.getCurrentPosition(getGeolocationPosition);
     fetch('https://ipinfo.io/loc')
