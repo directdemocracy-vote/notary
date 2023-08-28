@@ -27,6 +27,8 @@ window.onload = function() {
     document.getElementById(`${tab}-tab`).classList.add('is-active');
     document.getElementById(tab).style.display = 'block';
   }
+  let judge = findGetParameter('judge');
+  
   latitude = parseFloat(findGetParameter('latitude'));
   longitude = parseFloat(findGetParameter('longitude'));
   let zoom;
