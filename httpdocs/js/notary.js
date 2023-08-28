@@ -7,6 +7,10 @@ let address = '';
 let markers = [];
 
 window.onload = function() {
+  document.getElementById('proposal').addEventListener('click', function() {
+    window.open(`proposal.html?latitude=${latitude}&longitude=${longitude}`, '_blank');
+  });
+
   if (navigator.geolocation) navigator.geolocation.getCurrentPosition(getGeolocationPosition);
   fetch('https://ipinfo.io/loc')
     .then((response) => {

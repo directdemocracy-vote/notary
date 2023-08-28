@@ -5,13 +5,15 @@
 # - participants: the current number of citizien who voted/signed the referendum/petition
 # - corpus: the total number of possible participants (based on the home location of citizens endoresed by the judge)
 # The input parameter sets are either:
-# 1. - secret: either false (for petitions) or true (for referendums)
-#    - latitude and longitude: the area of the proposal must include this position
-#    - limit: maximum number of proposals in the returned list
+# 1. - search: text to be searched in area, title and description
+#    - secret: either false (for petitions) or true (for referendums)
+#    - citizen: signature of the citizen (to check judge endorsement, latitude and longitude)
+#    - limit (optional, default to 1): maximum number of proposals in the returned list
+#    - fingerprints (optional): excludes results from this list of proposal fingerprints
 #   In this case, the result is a list of proposals for which is deadline is not yet passed, ordered by
 #   participation = participants / corpus
 # 2. - fingerprint: return a single proposal corresponding to the specified fingerprint
-#    - latitude and longitude (optional): the area of the proposal must include this position
+#    - citizen (optional): signature of the citizen (to check judge endorsement, latitude and longitude)
 #   In case latitude and longitude are provided the answer contains an extra boolean field named inside
 #   which is true only if the point given by latitude and longitude is inside the proposal area
 # 3. - fingerprints: returns a list of proposals corresponding to the specified coma separated fingerprints
