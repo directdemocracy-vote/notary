@@ -28,8 +28,11 @@ window.onload = function() {
     document.getElementById(tab).style.display = 'block';
   }
   let judge = findGetParameter('judge');
-  if (judge)
+  if (judge) {
+    if (judge.startsWith('https://'))
+      judge = judge.substring(8);
     document.getElementById('judge').setAttribute('value', judge);
+  }
   latitude = parseFloat(findGetParameter('latitude'));
   longitude = parseFloat(findGetParameter('longitude'));
   let zoom;
