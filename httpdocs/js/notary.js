@@ -30,7 +30,7 @@ window.onload = function() {
   latitude = parseFloat(findGetParameter('latitude'));
   longitude = parseFloat(findGetParameter('longitude'));
   console.log(latitude);
-  if (latitude === null || longitude === null) {
+  if (isNaN(latitude) || isNaN(longitude)) {
     if (navigator.geolocation)
       navigator.geolocation.getCurrentPosition(getGeolocationPosition);
     fetch('https://ipinfo.io/loc')
