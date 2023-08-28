@@ -29,7 +29,6 @@ window.onload = function() {
   }
   latitude = parseFloat(findGetParameter('latitude'));
   longitude = parseFloat(findGetParameter('longitude'));
-  console.log(latitude);
   if (isNaN(latitude) || isNaN(longitude)) {
     latitude = 0;
     longitude = 0;
