@@ -27,19 +27,25 @@ window.onload = function() {
     document.getElementById(`${tab}-tab`).classList.add('is-active');
     document.getElementById(tab).style.display = 'block';
   }
-  if (navigator.geolocation) navigator.geolocation.getCurrentPosition(getGeolocationPosition);
-  fetch('https://ipinfo.io/loc')
-    .then((response) => {
-      if (response.status == 429)
-        console.log("quota exceeded");
-      response.text();
-    })
-    .then((answer) => {
-      if (!geolocation) {
-        coords = answer.split(',');
-        getGeolocationPosition({coords: {latitude: coords[0], longitude: coords[1]}});
-      }
-    });
+  latitude = parseFloat(findGetParameter('latitude'));
+  longitude = parseFloat(fingGetParameter('longitude'));
+  console.log(latitude);
+  if (latitude === null || longitude === null) {
+    if (navigator.geolocation)
+      navigator.geolocation.getCurrentPosition(getGeolocationPosition);
+    fetch('https://ipinfo.io/loc')
+      .then((response) => {
+        if (response.status == 429)
+          console.log("quota exceeded");
+        response.text();
+      })
+      .then((answer) => {
+        if (!geolocation) {
+          coords = answer.split(',');
+          getGeolocationPosition({coords: {latitude: coords[0], longitude: coords[1]}});
+        }
+      });
+  }
   let map = L.map('map').setView([latitude, longitude], 2);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
