@@ -141,10 +141,7 @@ if (isset($fingerprint)) {
   $proposal['corpus'] = 0;
   $json = json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
   die($json);
-}
-
-/*
-elseif (isset($fingerprints)) {
+} elseif (isset($fingerprints)) {
   $proposals = array();
   if (isset($fingerprints)) {
     $list = '(';
@@ -153,7 +150,10 @@ elseif (isset($fingerprints)) {
     $list = substr($list, 0, -1).')';
   }
   return_results("$query_base WHERE publication.fingerprint IN $list");
-} else {  # assuming search/type/latitude/longitude parameters
+}
+
+/*
+else {  # assuming search/type/latitude/longitude parameters
   if (!isset($limit))
     $limit = 1;
   if (!isset($year))
