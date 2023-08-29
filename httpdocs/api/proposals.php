@@ -120,7 +120,7 @@ if (isset($fingerprint)) {
           ."FROM proposal "
           ."LEFT JOIN publication ON publication.id = proposal.id "
           ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
-          ."LEFT JOIN area ON area.id = area_p.id ";
+          ."LEFT JOIN area ON area.id = area_p.id "
           ."WHERE publication.fingerprint = '$fingerprint'";
   $result = $mysqli->query($query) or die($mysqli->error);
   $proposal = $result->fetch_assoc();
