@@ -172,6 +172,9 @@ window.onload = function() {
           tr = document.createElement('tr');
           tbody.appendChild(tr);
           let td = document.createElement('td');
+          console.log(proposal);
+          console.log(proposal.area);
+          console.log(proposal.area[0]);
           td.innerHTML = proposal.area[0].split('=')[1];
           tr.appendChild(td);
           td = document.createElement('td');
