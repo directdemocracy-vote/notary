@@ -45,7 +45,7 @@ $query = "SELECT citizen.id, citizen.familyName, citizen.givenNames, citizen.pic
 if ($range)  # Unfortunately, ST_Distance_Sphere is not available in MySQL 5.6, so we need to revert to this complex formula
   $query .= ", (6371 * acos(cos(radians($latitude)) * cos(radians(ST_Y(citizen.home))) * cos(radians(ST_X(citizen.home)) - radians($longitude)) "
            ."+ sin(radians($latitude)) * sin(radians(ST_Y(citizen.home))))) AS distance";
-$query .= ", publication.`schema`, publication.`key`, publication.signature, publication.published"
+$query .= ", publication.`schema`, publication.`key`, publication.signature, publication.published";
 $query .= " FROM citizen";
 $query .= " INNER JOIN publication ON publication.id = citizen.id"
 /*
