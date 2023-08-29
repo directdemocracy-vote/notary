@@ -145,6 +145,7 @@ window.onload = function() {
         searchProposal.classList.remove('is-loading');
         let section = document.getElementById('proposal-results');
         section.style.display = '';
+        section.innerHTML = '';
         if (answer.length == 0) {
           let div = document.createElement('div');
           div.innerHTML = 'No result found, try to refine your search.'
