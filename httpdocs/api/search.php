@@ -44,7 +44,6 @@ $judge = $mysqli->escape_string(get_string_parameter('judge'));
 
 $key = '';
 if ($judge) {
-  $caca = "SELECT `key` FROM judge WHERE url='$judge'";
   $result = $mysqli->query("SELECT `key` FROM judge WHERE url='$judge'") or error($mysqli->error);
   if ($j = $result->fetch_assoc())
     $key = $j['key'];
@@ -80,7 +79,7 @@ while ($citizen = $result->fetch_assoc()) {
   $citizen['latitude'] = floatval($citizen['latitude']);
   $citizen['longitude'] = floatval($citizen['longitude']);
   $citizen['published'] = floatval($citizen['published']);
-  $citizen['caca'] = $caca;
+  $citizen['k'] = $key;
   $citizens[] = $citizen;
 }
 $result->free();
