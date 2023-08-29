@@ -92,7 +92,8 @@ window.onload = function() {
   map.on('contextmenu', function(event) { return false; });
   updatePosition();
   document.getElementById('search-citizens').addEventListener('click', function(event) {
-    document.getElementById('citizens-fieldset').setAttribute('disabled', '');
+    let fieldset = document.getElementById('citizens-fieldset');
+    fieldset.setAttribute('disabled', '');
     let searchCitizen = event.currentTarget;
     searchCitizen.classList.add('is-loading');
     const familyName = document.getElementById('family-name').value;
@@ -114,9 +115,28 @@ window.onload = function() {
           const label = `<div style="text-align:center"><a target="_blank" href="/citizen.html?fingerprint=${fingerprint}"><img src="${citizen.picture}" width="60" height="80"><br>${name}</a></div>`;
           markers.push(L.marker([citizen.latitude, citizen.longitude], {icon: greenIcon}).addTo(map).bindPopup(label));
         });
-        document.getElementById('citizens-fieldset').removeAttribute('disabled');
+        fieldset.removeAttribute('disabled');
         searchCitizen.classList.remove('is-loading');
       });
+  });
+
+  document.getElementById('proposal-referendum').addEventListener('change', function(event) {
+    if (!event.currentTarget.checked)
+      document.getElementById('proposal-petition').setAttribute('checked', '');
+  });
+
+  document.getElementById('proposal-petition').addEventListener('change', function(event) {
+    if (!event.currentTarget.checked)
+      document.getElementById('proposal-referendum').setAttribute('checked', '');
+  });
+
+  document.getElementById('search-proposals').addEventListener('click', function(event) {
+    let fieldset = document.getElementById('proposals-fieldset');
+    fieldset.setAttribute('disabled', '');
+    let searchProposal = event.currentTarget;
+    searchProposal.classList.add('is-loading');
+    const query = document.getElementById('proposal-query').value;
+    let type = (document.getElementById('proposal-referendum').checked ? 2 : 0) + (document.getElementById('proposal-petition').checked ? 1 : 0);
   });
 
   function getGeolocationPosition(position) {

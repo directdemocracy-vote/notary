@@ -64,38 +64,40 @@
         </fieldset>
       </div>
       <div id="proposals" class="content-tab" style="display:none">
-        <div class="field is-horizontal">
-          <div class="field-body" style="align-items:center">
-            <div class="field is-narrow">
-              <div class="control">
-                <label class="checkbox">
-                  <input type="checkbox" checked>
-                  Referendum
-                </label>
+        <fieldset id="proposals-fieldset"> 
+          <div class="field is-horizontal">
+            <div class="field-body" style="align-items:center">
+              <div class="field is-narrow">
+                <div class="control">
+                  <label class="checkbox">
+                    <input type="checkbox" id="proposal-referendum" checked>
+                    Referendum
+                  </label>
+                </div>
               </div>
-            </div>
-            <div class="field is-narrow">
-              <div class="control">
-                <label class="checkbox">
-                  <input type="checkbox" checked>
-                  Petition
-                </label>
+              <div class="field is-narrow">
+                <div class="control">
+                  <label class="checkbox">
+                    <input type="checkbox" id="proposal-petition" checked>
+                    Petition
+                  </label>
+                </div>
               </div>
-            </div>
-            <div class="field-label" style="padding-top:0">
-              <label class="label">Deadline Year:</label>
-            </div>
-            <div class="field is-narrow">
-              <div class="control">
-                <input id="proposal-year" class="input" type="number" min="2023" size="4" maxlength="4" placeholder="Not specified">
+              <div class="field-label" style="padding-top:0">
+                <label class="label">Deadline Year:</label>
+              </div>
+              <div class="field is-narrow">
+                <div class="control">
+                  <input id="proposal-year" class="input" type="number" min="2023" size="4" maxlength="4" placeholder="Not specified">
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="field has-addons">
-          <div class="control is-expanded"><input id="proposal-search" class="input" type="text" placeholder="Search referendums and/or petitions" value=""></div>
-          <div class="control"><a id="search-proposal" class="button is-info">Search</a></div>
-        </div>
+          <div class="field has-addons">
+            <div class="control is-expanded"><input id="proposal-query" class="input" type="text" placeholder="Search referendums and/or petitions" value=""></div>
+            <div class="control"><a id="search-proposal" class="button is-info">Search</a></div>
+          </div>
+        </fieldset>
       </div>
     </section>
     <section>
