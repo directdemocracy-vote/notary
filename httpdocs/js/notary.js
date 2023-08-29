@@ -177,7 +177,7 @@ window.onload = function() {
           tr = document.createElement('tr');
           tbody.appendChild(tr);
           let td = document.createElement('td');
-          td.innerHTML = `<b title=${proposal.secret ? 'referendum' : 'petition'}>${proposal.secret ? 'R' : 'P'}</b>`;
+          td.innerHTML = `<i>${proposal.secret ? 'Referendum' : 'Petition'}</i>`;
           tr.appendChild(td);
           td = document.createElement('td');
           td.innerHTML = proposal.area[0].split('=')[1];
