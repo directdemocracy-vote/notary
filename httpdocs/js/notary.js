@@ -103,7 +103,7 @@ window.onload = function() {
       parameters += `&familyName=${encodeURI(familyName)}`;
     if (givenNames)
       parameters += `&givenNames=${encodeURI(givenNames)}`;
-    fetch(`https://notary.directdemocracy.vote/api/search.php?${parameters}`)
+    fetch(`https://notary.directdemocracy.vote/api/citizens.php?${parameters}`)
       .then((response) => response.json())
       .then((answer) => {
         markers.forEach(function(marker) {map.removeLayer(marker);});
