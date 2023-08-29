@@ -143,6 +143,7 @@ window.onload = function() {
         console.log(answer);
         fieldset.removeAttribute('disabled');
         searchProposal.classList.remove('is-loading');
+        section.style.display = '';
         let section = document.getElementById('proposal-results');
         if (answer.length == 0) {
           let div = document.createElement('div');
@@ -150,6 +151,7 @@ window.onload = function() {
           section.appendChild(div);
           setTimeout(function() {
             section.innerHTML = '';
+            section.style.display = 'none';
           }, 3000)
           return;
         }
