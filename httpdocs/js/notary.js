@@ -150,10 +150,6 @@ window.onload = function() {
           let div = document.createElement('div');
           div.innerHTML = 'No result found, try to refine your search.'
           section.appendChild(div);
-          setTimeout(function() {
-            section.innerHTML = '';
-            section.style.display = 'none';
-          }, 3000)
           return;
         }
         let table = document.createElement('table');
@@ -165,23 +161,32 @@ window.onload = function() {
         thead.appendChild(tr);
         let th = document.createElement('th');
         tr.appendChild(th);
+        th.innerHTML = 'Type';
+        th = document.createElement('th');
+        tr.appendChild(th);
         th.innerHTML = 'Area';
         th = document.createElement('th');
         tr.appendChild(th);
         th.innerHTML = 'Title';
+        th = document.createElement('th');
+        tr.appendChild(th);
+        th.innerHTML = 'Deadline';
         let tbody = document.createElement('tbody');
         table.appendChild(tbody);
         answer.forEach(function(proposal) {
           tr = document.createElement('tr');
           tbody.appendChild(tr);
           let td = document.createElement('td');
-          console.log(proposal);
-          console.log(proposal.area);
-          console.log(proposal.area[0]);
+          td.innerHTML = `<b title=${proposal.secret ? 'referendum' : 'petition'}>${proposal.secret ? 'R' : 'P'}</b>`;
+          tr.appendChild(td);
+          td = document.createElement('td');
           td.innerHTML = proposal.area[0].split('=')[1];
           tr.appendChild(td);
           td = document.createElement('td');
           td.innerHTML = proposal.title;
+          tr.appendChild(td);
+          td = document.createElement('td');
+          td.innerHTML = new Date(proposal.deadline).toLocaleString();
           tr.appendChild(td);
         });
       });
