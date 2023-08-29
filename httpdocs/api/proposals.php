@@ -88,7 +88,7 @@ function set_types(&$proposal) {
 
 function return_results($query) {
   global $mysqli;
-  $result = $mysqli->query($query) or die($mysqli->error);
+  $result = $mysqli->query($query) or die($mysqli->error . " => ". $query);
   while ($proposal = $result->fetch_assoc()) {
     $proposal['participation'] = 0;
     $proposal['corpus'] = 0;
