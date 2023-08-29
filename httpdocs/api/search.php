@@ -58,7 +58,8 @@ $query .= ", publication.`schema`, publication.`key`, publication.signature, pub
 $query .= " FROM citizen";
 $query .= " INNER JOIN publication ON publication.id = citizen.id";
 if ($key)
-  $query .= " INNER JOIN endorsement ON endorsement.endorsedFingerprint = publication.fingerprint AND publication.`key` = '$key' AND endorsement.`revoke` = 0 AND endorsement.latest = 1";
+  $query .= " INNER JOIN endorsement ON endorsement.endorsedFingerprint = publication.fingerprint AND endorsement.`revoke` = 0 AND endorsement.latest = 1"
+           ." INNER JOIN publication AS pe ON pe.id=endorsement.id AND pe.`key` = '$key' ";
 if ($familyName or $givenNames) {
   $query .= " WHERE";
   if ($familyName) {
