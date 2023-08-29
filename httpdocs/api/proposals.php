@@ -112,7 +112,16 @@ $query_base = "SELECT "
              ."LEFT JOIN area ON area.id = area_p.id ";
 
 if (isset($fingerprint)) {
-  $query = "$query_base WHERE publication.fingerprint = '$fingerprint'";
+  $query = "SELECT "
+          ."publication.schema, publication.key, publication.signature, publication.published, "
+          ."proposal.judge, proposal.area, proposal.title, proposal.description, "
+          ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
+          ."area.name "
+          ."FROM proposal "
+          ."LEFT JOIN publication ON publication.id = proposal.id "
+          ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
+          ."LEFT JOIN area ON area.id = area_p.id ";
+          ."WHERE publication.fingerprint = '$fingerprint'";
   $result = $mysqli->query($query) or die($mysqli->error);
   $proposal = $result->fetch_assoc();
   $result->free();
@@ -155,10 +164,19 @@ if (isset($fingerprint)) {
   if ($search !== '')
     $search = '(title LIKE "%$search%" OR description LIKE "%$search%") AND ';
   $now = intval(microtime(true) * 1000);
-  return_results($query_base
-    ."WHERE $secret$search"
-    ."YEAR(FROM_UNIXTIME(proposal.deadline / 1000)) = $year "
-    ."AND ST_Contains(area.polygons, POINT($longitude, $latitude)) "
-    ."LIMIT $limit");
+  $query = "SELECT "
+          ."publication.schema, publication.key, publication.signature, publication.published, "
+          ."proposal.judge, proposal.area, proposal.title, proposal.description, "
+          ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
+          ."area.name "
+          ."FROM proposal "
+          ."LEFT JOIN publication ON publication.id = proposal.id "
+          ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
+          ."LEFT JOIN area ON area.id = area_p.id ";
+          ."WHERE $secret$search"
+          ."YEAR(FROM_UNIXTIME(proposal.deadline / 1000)) = $year "
+          ."AND ST_Contains(area.polygons, POINT($longitude, $latitude)) "
+          ."LIMIT $limit");
+    return_results($query);
 }
 ?>
