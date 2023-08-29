@@ -21,10 +21,7 @@ window.onload = function() {
     window.open(`proposal.html?latitude=${latitude}&longitude=${longitude}`, '_blank');
   });
 
-  const currentYear = new Date().getFullYear();
-  let proposalYear = document.getElementById('proposal-year');
-  proposalYear.setAttribute('placeholder', currentYear);
-  proposalYear.setAttribute('value', currentYear);
+  document.getElementById('proposal-year').setAttribute('value', new Date().getFullYear());
 
   let tab = findGetParameter('tab');
   if (tab) {
