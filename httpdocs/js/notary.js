@@ -170,7 +170,7 @@ window.onload = function() {
           tr = document.createElement('tr');
           tbody.appendChild(tr);
           let td = document.createElement('td');
-          td.innerHTML = proposal.area.split('\n')[0].split('=')[1];
+          td.innerHTML = proposal.area[0].split('=')[1];
           tr.appendChild(td);
           td = document.createElement('td');
           td.innerHTML = proposal.title;
