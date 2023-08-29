@@ -141,6 +141,41 @@ window.onload = function() {
       .then((response) => response.json())
       .then((answer) => {
         console.log(answer);
+        let section = document.getElementById('proposal-results');
+        if (answer.length == 0) {
+          let div = document.createElement('div');
+          div.innerHTML = 'No result found, try to refine your search.'
+          section.appendChild(div);
+          setTimeout(function() {
+            section.innerHTML = '';
+          }, 3000)
+          return;
+        }
+        let table = document.createElement('table');
+        section.appendChild(table);
+        table.classList.add('table');
+        let thead = document.createElement('thead');
+        table.appendChild(thead);
+        let tr = document.createElement('tr');
+        thead.appendChild(tr);
+        let th = document.createElement('th');
+        tr.appendChild(th);
+        th.innerHTML = 'Area';
+        th = document.createElement('th');
+        tr.appendChild(th);
+        th.innerHTML = 'Title';
+        let tbody = document.createElement('tbody');
+        table.appendChild(tbody);
+        for(proposal in answer) {
+          tr = document.createElement('tr');
+          tbody.appendChild(tr);
+          let td = document.createElement('td');
+          td.innerHTML = proposal.area.split('\n')[0].split('=')[1];
+          tr.appendChild(td);
+          td = document.createElement('td');
+          td.innerHTML = proposal.title;
+          tr.appendChild(td);
+        }
       });
   });
 
