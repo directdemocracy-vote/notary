@@ -121,11 +121,13 @@ window.onload = function() {
   });
 
   document.getElementById('proposal-referendum').addEventListener('change', function(event) {
+    console.log(event.currentTarget.checked);
     if (!event.currentTarget.checked)
       document.getElementById('proposal-petition').setAttribute('checked', '');
   });
 
   document.getElementById('proposal-petition').addEventListener('change', function(event) {
+    console.log(event.currentTarget.checked);
     if (!event.currentTarget.checked)
       document.getElementById('proposal-referendum').setAttribute('checked', '');
   });
