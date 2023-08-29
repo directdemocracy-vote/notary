@@ -130,7 +130,7 @@ elseif ($type == 'endorsement') {
   if ($endorsed['signature'] != $endorsement->endorsedSignature)
     error("Endorsed signature mismatch.");
   # mark other endorsements of the same participant by the same endorser as not the latest
-  $myqsli->query("UPDATE endorsement INNER JOIN publication WHERE publication.id = endorsement.id"
+  $mysqli->query("UPDATE endorsement INNER JOIN publication WHERE publication.id = endorsement.id"
                 ." SET endorsement.latest = 0"
                 ." WHERE endorsement.endorsedFingerprint=SHA1('$endorsement->endorsedSignature')"
                 ." AND publication.`key`='$publication->key'") or error($mysli->error);
