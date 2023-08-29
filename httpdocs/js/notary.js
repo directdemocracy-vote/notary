@@ -20,6 +20,12 @@ window.onload = function() {
   document.getElementById('proposal').addEventListener('click', function() {
     window.open(`proposal.html?latitude=${latitude}&longitude=${longitude}`, '_blank');
   });
+
+  const currentYear = new Date().getFullYear();
+  let proposalYear = document.getElementById('proposal-year');
+  proposalYear.setAttribute('placeholder', currentYear);
+  proposalYear.setAttribute('value', currentYear);
+
   let tab = findGetParameter('tab');
   if (tab) {
     document.getElementById('citizens-tab').classList.remove('is-active');
