@@ -143,8 +143,8 @@ window.onload = function() {
         console.log(answer);
         fieldset.removeAttribute('disabled');
         searchProposal.classList.remove('is-loading');
-        section.style.display = '';
         let section = document.getElementById('proposal-results');
+        section.style.display = '';
         if (answer.length == 0) {
           let div = document.createElement('div');
           div.innerHTML = 'No result found, try to refine your search.'
