@@ -168,7 +168,7 @@ window.onload = function() {
         th.innerHTML = 'Title';
         let tbody = document.createElement('tbody');
         table.appendChild(tbody);
-        for(proposal in answer) {
+        answer.forEach(function(proposal) {
           tr = document.createElement('tr');
           tbody.appendChild(tr);
           let td = document.createElement('td');
@@ -180,7 +180,7 @@ window.onload = function() {
           td = document.createElement('td');
           td.innerHTML = proposal.title;
           tr.appendChild(td);
-        }
+        });
       });
   });
 
