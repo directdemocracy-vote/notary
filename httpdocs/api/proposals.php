@@ -141,7 +141,10 @@ if (isset($fingerprint)) {
   $proposal['corpus'] = 0;
   $json = json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
   die($json);
-} elseif (isset($fingerprints)) {
+}
+
+/*
+elseif (isset($fingerprints)) {
   $proposals = array();
   if (isset($fingerprints)) {
     $list = '(';
@@ -179,4 +182,5 @@ if (isset($fingerprint)) {
           ."LIMIT $limit");
     return_results($query);
 }
+*/
 ?>
