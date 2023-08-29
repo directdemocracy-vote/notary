@@ -150,10 +150,7 @@ if (isset($fingerprint)) {
     $list = substr($list, 0, -1).')';
   }
   return_results("$query_base WHERE publication.fingerprint IN $list");
-}
-
-/*
-else {  # assuming search/type/latitude/longitude parameters
+} else {  # assuming search/type/latitude/longitude parameters
   if (!isset($limit))
     $limit = 1;
   if (!isset($year))
@@ -179,8 +176,8 @@ else {  # assuming search/type/latitude/longitude parameters
           ."WHERE $secret$search"
           ."YEAR(FROM_UNIXTIME(proposal.deadline / 1000)) = $year "
           ."AND ST_Contains(area.polygons, POINT($longitude, $latitude)) "
-          ."LIMIT $limit");
-    return_results($query);
+          ."LIMIT $limit";
+  return_results($query);
 }
 */
 ?>
