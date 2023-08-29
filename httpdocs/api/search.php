@@ -80,7 +80,6 @@ while ($citizen = $result->fetch_assoc()) {
   $citizen['latitude'] = floatval($citizen['latitude']);
   $citizen['longitude'] = floatval($citizen['longitude']);
   $citizen['published'] = floatval($citizen['published']);
-  $citizen['k'] = $key;
   $citizens[] = $citizen;
 }
 $result->free();
