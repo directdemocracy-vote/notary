@@ -188,6 +188,10 @@ window.onload = function() {
           td = document.createElement('td');
           td.innerHTML = new Date(proposal.deadline).toLocaleString();
           tr.appendChild(td);
+          tr.addEventListener('click', function() {
+            url = `/proposal.html?fingerprint=${CryptoJS.sha1(proposal.signature)}`;
+            window.open(url, '_blank').focus();
+          });
         });
       });
   });
