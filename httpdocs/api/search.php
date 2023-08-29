@@ -47,7 +47,7 @@ if ($range)  # Unfortunately, ST_Distance_Sphere is not available in MySQL 5.6, 
            ."+ sin(radians($latitude)) * sin(radians(ST_Y(citizen.home))))) AS distance";
 $query .= ", publication.`schema`, publication.`key`, publication.signature, publication.published";
 $query .= " FROM citizen";
-$query .= " INNER JOIN publication ON publication.id = citizen.id"
+$query .= " INNER JOIN publication ON publication.id = citizen.id";
 /*
 if ($(judge)) {
   $query .= " INNER JOIN endorsement ON endorsement.endorsedFingerprint = publication.fingerprint AND "
