@@ -104,7 +104,7 @@ window.onload = function() {
       parameters += `&familyName=${encodeURI(familyName)}`;
     if (givenNames)
       parameters += `&givenNames=${encodeURI(givenNames)}`;
-    fetch(`https://notary.directdemocracy.vote/api/citizens.php?${parameters}`)
+    fetch(`/api/citizens.php?${parameters}`)
       .then((response) => response.json())
       .then((answer) => {
         markers.forEach(function(marker) {map.removeLayer(marker);});
@@ -121,13 +121,11 @@ window.onload = function() {
   });
 
   document.getElementById('proposal-referendum').addEventListener('change', function(event) {
-    console.log(event.currentTarget.checked);
     if (!event.currentTarget.checked)
       document.getElementById('proposal-petition').checked = true;
   });
 
   document.getElementById('proposal-petition').addEventListener('change', function(event) {
-    console.log(event.currentTarget.checked);
     if (!event.currentTarget.checked)
       document.getElementById('proposal-referendum').checked = true;
   });
@@ -139,6 +137,11 @@ window.onload = function() {
     searchProposal.classList.add('is-loading');
     const query = document.getElementById('proposal-query').value;
     let type = (document.getElementById('proposal-referendum').checked ? 2 : 0) + (document.getElementById('proposal-petition').checked ? 1 : 0);
+    fetch(`/api/proposals.php?type=${type}&search=${encodeURIComponent(query)}&latitude=${latitude}&longitude=${longitude}&year=2023&limit=10`)
+      .then((response) => response.json())
+      .then((answer) => {
+        console.log(answer);
+      });
   });
 
   function getGeolocationPosition(position) {

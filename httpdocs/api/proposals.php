@@ -151,11 +151,13 @@ if (isset($fingerprint)) {
     $secret == 'secret = 1 AND ';
   else # assuming 3
     $secret = '';
+  if ($search !== '')
+    $search = '(title LIKE "%$search%" OR description LIKE "%$search%") AND ';
   $now = intval(microtime(true) * 1000);
   return_results($query_base
     ."LEFT JOIN publication AS area_p ON area_p.fingerprint=SHA1(proposal.area) "
     ."LEFT JOIN area ON area.id=area_p.id "
-    ."WHERE $secret"
+    ."WHERE $secret$search"
     ."YEAR(FROM_UNIXTIME(proposal.deadline / 1000)) = $year "
     ."AND ST_Contains(area.polygons, POINT($longitude, $latitude)) "
     ."LIMIT $limit");
