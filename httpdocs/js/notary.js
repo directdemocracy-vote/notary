@@ -189,7 +189,7 @@ window.onload = function() {
           td.innerHTML = new Date(proposal.deadline).toLocaleString();
           tr.appendChild(td);
           tr.addEventListener('click', function() {
-            url = `/proposal.html?fingerprint=${CryptoJS.sha1(proposal.signature)}`;
+            url = `/proposal.html?fingerprint=${CryptoJS.SHA1(proposal.signature).toString()}`;
             window.open(url, '_blank').focus();
           });
         });
