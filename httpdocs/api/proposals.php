@@ -1,7 +1,7 @@
 <?php
 # This API entry returns a proposal or a list of proposals corresponding to the parameters of the request.
 # Each proposal contains the entries of the proposal message, plus three entries:
-# - area: instead of being the area signature, this field contains the area name as an array of strings.
+# - areas: this field contains the area name as an array of strings.
 # - participants: the current number of citizien who voted/signed the referendum/petition
 # - corpus: the total number of possible participants (based on the home location of citizens endoresed by the judge)
 # The input parameter sets are either:
@@ -81,9 +81,6 @@ function set_types(&$proposal) {
   settype($proposal['deadline'], 'int');
   settype($proposal['participation'], 'int');
   settype($proposal['corpus'], 'int');
-  $name = $proposal['name'];
-  unset($proposal['name']);
-  $proposal['area'] = explode("\n", $name);
 }
 
 function return_results($query) {
@@ -105,7 +102,7 @@ $query_base = "SELECT "
              ."publication.schema, publication.key, publication.signature, publication.published, "
              ."proposal.judge, proposal.area, proposal.title, proposal.description, "
              ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
-             ."area.name "
+             ."area.name AS areas "
              ."FROM proposal "
              ."LEFT JOIN publication ON publication.id = proposal.id "
              ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
@@ -168,7 +165,7 @@ if (isset($fingerprint)) {
           ."publication.schema, publication.key, publication.signature, publication.published, "
           ."proposal.judge, proposal.area, proposal.title, proposal.description, "
           ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
-          ."area.name "
+          ."area.name AS areas "
           ."FROM proposal "
           ."LEFT JOIN publication ON publication.id = proposal.id "
           ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "

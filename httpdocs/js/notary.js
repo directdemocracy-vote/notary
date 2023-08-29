@@ -180,7 +180,7 @@ window.onload = function() {
           td.innerHTML = `<i>${proposal.secret ? 'Referendum' : 'Petition'}</i>`;
           tr.appendChild(td);
           td = document.createElement('td');
-          td.innerHTML = proposal.area[0].split('=')[1];
+          td.innerHTML = proposal.areas[0].split('=')[1];
           tr.appendChild(td);
           td = document.createElement('td');
           td.innerHTML = proposal.title;
