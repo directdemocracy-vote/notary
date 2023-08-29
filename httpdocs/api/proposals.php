@@ -172,7 +172,7 @@ if (isset($fingerprint)) {
           ."FROM proposal "
           ."LEFT JOIN publication ON publication.id = proposal.id "
           ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
-          ."LEFT JOIN area ON area.id = area_p.id ";
+          ."LEFT JOIN area ON area.id = area_p.id "
           ."WHERE $secret$search"
           ."YEAR(FROM_UNIXTIME(proposal.deadline / 1000)) = $year "
           ."AND ST_Contains(area.polygons, POINT($longitude, $latitude)) "
