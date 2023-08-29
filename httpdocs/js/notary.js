@@ -154,7 +154,7 @@ window.onload = function() {
         }
         let table = document.createElement('table');
         section.appendChild(table);
-        table.classList.add('table');
+        table.classList.add('table', 'is-bordered', 'is-striped', 'is-narrow', 'is-hoverable', 'is-fullwidth');
         let thead = document.createElement('thead');
         table.appendChild(thead);
         let tr = document.createElement('tr');
