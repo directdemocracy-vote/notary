@@ -81,6 +81,7 @@ function set_types(&$proposal) {
   settype($proposal['deadline'], 'int');
   settype($proposal['participation'], 'int');
   settype($proposal['corpus'], 'int');
+  $proposal['areas'] = explode("\n", $proposal['areas']);
 }
 
 function return_results($query) {
