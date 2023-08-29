@@ -113,7 +113,7 @@ if (isset($fingerprint)) {
           ."publication.schema, publication.key, publication.signature, publication.published, "
           ."proposal.judge, proposal.area, proposal.title, proposal.description, "
           ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
-          ."area.name "
+          ."area.name AS areas "
           ."FROM proposal "
           ."LEFT JOIN publication ON publication.id = proposal.id "
           ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
