@@ -95,9 +95,10 @@ window.onload = function() {
     document.getElementById('citizens-fieldset').setAttribute('disabled', '');
     let searchCitizen = event.currentTarget;
     searchCitizen.classList.add('is-loading');
-    const familyName = document.getElementById("family-name").value;
-    const givenNames = document.getElementById("given-names").value;
-    let parameters = `latitude=${latitude}&longitude=${longitude}&range=${range}`;
+    const familyName = document.getElementById('family-name').value;
+    const givenNames = document.getElementById('given-names').value;
+    judge = document.getElementById('judge').value;
+    let parameters = `latitude=${latitude}&longitude=${longitude}&range=${range}&judge=https://${judge}`;
     if (familyName)
       parameters += `&familyName=${encodeURI(familyName)}`;
     if (givenNames)
