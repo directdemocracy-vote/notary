@@ -179,5 +179,4 @@ if (isset($fingerprint)) {
           ."LIMIT $limit";
   return_results($query);
 }
-*/
 ?>
