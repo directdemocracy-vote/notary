@@ -47,7 +47,7 @@ if ($judge) {
   $result = $mysqli->query("SELECT `key` FROM judge WHERE url='https://$judge'") or error($mysqli->error);
   if ($j = $result->fetch_assoc())
     $key = $j['key'];
-  free($result);
+  $result->free();
 }
 
 $query = "SELECT citizen.familyName, citizen.givenNames, citizen.picture, ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude";
