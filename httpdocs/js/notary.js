@@ -141,6 +141,8 @@ window.onload = function() {
       .then((response) => response.json())
       .then((answer) => {
         console.log(answer);
+        fieldset.removeAttribute('disabled');
+        searchProposal.classList.remove('is-loading');
         let section = document.getElementById('proposal-results');
         if (answer.length == 0) {
           let div = document.createElement('div');
