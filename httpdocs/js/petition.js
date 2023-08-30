@@ -28,11 +28,11 @@ function findGetParameter(parameterName) {
         const now = new Date();
         document.getElementById('deadline').innerHTML = `<span style="color:#${ deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
         document.getElementById('judge').innerHTML = `<a href="${answer.judge}" target="_blank">${answer.judge}</a>`;
-        if (deadline < now) {
-          let signButton = document.getElementById('sign-button');
-          signButton.setAttribute('disabled', '');
+        let signButton = document.getElementById('sign-button');
+        if (deadline < now)
           signButton.innerHTML = 'Closed';
-        }
+        else
+          signButton.removeAttribute('disabled');
         fetch(`/api/publication.php?fingerprint=${CryptoJS.SHA1(answer.area).toString()}`)
           .then((response) => response.json())
           .then((area) => {
