@@ -24,8 +24,12 @@ function findGetParameter(parameterName) {
         }
         document.getElementById('title').innerHTML = answer.title;
         document.getElementById('description').innerHTML = answer.description;
-        document.getElementById('deadline').innerHTML = new Date(answer.deadline).toLocaleString();
+        const deadline = new Date(answer.deadline);
+        const now = new Date();
+        document.getElementById('deadline').innerHTML.innerHTML = `<span style="color:#${ deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
         document.getElementById('judge').innerHTML = `<a href="${answer.judge}" target="_blank">${answer.judge}</a>`;
+        if (deadline < now)
+          document.getElementById('sign-button').attAttribute('disabled', '');
         fetch(`/api/publication.php?fingerprint=${CryptoJS.SHA1(answer.area).toString()}`)
           .then((response) => response.json())
           .then((area) => {
