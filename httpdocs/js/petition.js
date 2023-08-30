@@ -33,8 +33,8 @@ function findGetParameter(parameterName) {
           signButton.innerHTML = 'Closed';
         else
           signButton.removeAttribute('disabled');
-        const participation = Math.round(100 * answer.participants / answer.corpus) / 100;
-        document.getElementById('result').innerHTML = `Corpus: ${answer.corpus} &mdash Participants: ${answer.participants} &mdash Participation: ${participation}%`; 
+        const participation = Math.round(10000 * answer.participants / answer.corpus) / 100;
+        document.getElementById('result').innerHTML = `Corpus: ${answer.corpus} &mdash; Participants: ${answer.participants} &mdash; Participation: ${participation}%`; 
         areaName = document.getElementById('area-name');
         let areaArray = answer.name[0].split('=');
         let areaQuery = '';
