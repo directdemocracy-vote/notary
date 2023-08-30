@@ -7,7 +7,7 @@
 # The input parameter sets are either:
 # 1. - search: text to be searched in area, title and description
 #    - type: either 1 for petitions or 2 for referendums or 3 for both.
-#    - latitude and longitude: point inside the referendum area.
+#    - latitude, longitude and radius: circle intersecting with the area of the referendum.
 #    - limit (optional, default to 1): maximum number of proposals in the returned list
 #    - year (optional): year of the deadline of the proposal
 #   In this case, the result is a list of proposals for which is deadline is not yet passed, ordered by
@@ -59,6 +59,7 @@ $search = parameter('search');
 $type = parameter('type', 'int');
 $latitude = parameter('latitude', 'float');
 $longitude = parameter('longitude', 'float');
+$radius = parameter('radius', 'float');
 $limit = parameter('limit', 'int');
 $year = parameter('year', 'int');
 $fingerprint = parameter('fingerprint');
@@ -67,9 +68,9 @@ if (isset($fingerprints))
   $fingerprints = explode(',', $fingerprints);
 
 # check the parameter sets
-if (isset($search) && isset($type) && isset($latitude) && isset($longitude)) {
+if (isset($search) && isset($type) && isset($latitude) && isset($longitude) && isset($radius)) {
   if (isset($fingerprints) || isset($fingerprint))
-    error('The fingerprint or fingerprints parameter should not be set together with the search, type, latitude and longitude parameters.');
+    error('The fingerprint or fingerprints parameter should not be set together with the search, type, latitude, longitude and radius parameters.');
 } elseif (isset($fingerprint) && isset($fingerprints))
   error('You cannot set both fingerprint and fingerprints parameters.');
 elseif (!isset($fingerprint) && !isset($fingerprints))
@@ -128,7 +129,8 @@ if (isset($fingerprint)) {
     $query = "SELECT area.id FROM area "
             ."LEFT JOIN publication ON publication.id = area.id "
             ."WHERE publication.fingerprint=SHA1('$area') "
-            ."AND ST_Contains(area.polygons, POINT($longitude, $latitude))";
+            ."AND ST_Intersects(area.polygons, ST_Buffer(ST_MakePoint($longitude, $latitude)::geography, $radius))";
+#            ."AND ST_Contains(area.polygons, POINT($longitude, $latitude))";
     $result = $mysqli->query($query) or error($mysqli->error);
     $proposal['inside'] = $result->fetch_assoc() ? true : false;
     $result->free();

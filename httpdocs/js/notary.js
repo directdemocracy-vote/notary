@@ -2,7 +2,7 @@ let geolocation = false;
 let latitude = 0;
 let longitude = 0;
 let slider = 10;
-let range = slider * slider * slider;
+let radius = slider * slider * slider;
 let address = '';
 let markers = [];
 
@@ -74,10 +74,15 @@ window.onload = function() {
     shadowSize: [41, 41]
   });
   let marker = L.marker([latitude, longitude]).addTo(map).bindPopup(latitude + ',' + longitude).on('click', updateLabel);
-  let circle = L.circle([latitude, longitude], { color: 'red', opacity: 0.4, fillColor: '#f03', fillOpacity: 0.2, radius: range}).addTo(map);
+  let circle = L.circle([latitude, longitude], { color: 'red', opacity: 0.4, fillColor: '#f03', fillOpacity: 0.2, radius: radius}).addTo(map);
   marker.setPopupContent(`<div style="text-align:center" id="address">${address}</div><div><input type="range" min="5" max="100" value="${slider}" class="slider" id="range"></div>` +
-    `<div style="text-align:center;color:#999" id="position">(${latitude}, ${longitude} &plusmn; ${Math.round(range / 100) / 10} km</div></center>`).openPopup();
-  document.getElementById('range').addEventListener('input', rangeChanged);
+    `<div style="text-align:center;color:#999" id="position">(${latitude}, ${longitude} &plusmn; ${Math.round(radius / 100) / 10} km</div></center>`).openPopup();
+  document.getElementById('range').addEventListener('input', function(event) {
+    slider = event.currentTarget.value;
+    radius = slider * slider * slider;
+    circle.setRadius(radius);
+    updateLabel(); 
+  });
   map.on('click', function(event) {
     marker.setLatLng(event.latlng).openPopup();
     circle.setLatLng(event.latlng);
@@ -99,7 +104,7 @@ window.onload = function() {
     const familyName = document.getElementById('family-name').value;
     const givenNames = document.getElementById('given-names').value;
     judge = document.getElementById('judge').value;
-    let parameters = `latitude=${latitude}&longitude=${longitude}&range=${range}&judge=https://${judge}`;
+    let parameters = `latitude=${latitude}&longitude=${longitude}&radius=${radius}&judge=https://${judge}`;
     if (familyName)
       parameters += `&familyName=${encodeURI(familyName)}`;
     if (givenNames)
@@ -137,7 +142,7 @@ window.onload = function() {
     searchProposal.classList.add('is-loading');
     const query = document.getElementById('proposal-query').value;
     let type = (document.getElementById('proposal-referendum').checked ? 2 : 0) + (document.getElementById('proposal-petition').checked ? 1 : 0);
-    fetch(`/api/proposals.php?type=${type}&search=${encodeURIComponent(query)}&latitude=${latitude}&longitude=${longitude}&year=2023&limit=10`)
+    fetch(`/api/proposals.php?type=${type}&search=${encodeURIComponent(query)}&latitude=${latitude}&longitude=${longitude}&radius=${radius}&year=2023&limit=10`)
       .then((response) => response.json())
       .then((answer) => {
         console.log(answer);
@@ -204,13 +209,6 @@ window.onload = function() {
     setTimeout(updatePosition, 500);
   }
   
-  function rangeChanged(event) {
-    slider = event.currentTarget.value;
-    range = slider * slider * slider;
-    circle.setRadius(range);
-    updateLabel();
-  }
-  
   function updatePosition() {
     marker.setLatLng([latitude, longitude]);
     circle.setLatLng([latitude, longitude]);
@@ -224,7 +222,7 @@ window.onload = function() {
   
   function updateLabel() {
     document.getElementById("address").innerHTML = address;
-    document.getElementById("position").innerHTML = '(' + latitude + ', ' + longitude + ') &plusmn; ' + Math.round(range / 100) / 10 + ' km';
+    document.getElementById("position").innerHTML = '(' + latitude + ', ' + longitude + ') &plusmn; ' + Math.round(radius / 100) / 10 + ' km';
   }
 }
 

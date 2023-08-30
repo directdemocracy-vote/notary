@@ -32,9 +32,9 @@ if ($mysqli->connect_errno)
   error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
 $mysqli->set_charset('utf8mb4');
 
-$range = get_float_parameter('range');
-if ($range) {
-  $range = $range / 1000;
+$radius = get_float_parameter('radius');
+if ($radius) {
+  $radius = $radius / 1000;
   $latitude = get_float_parameter('latitude');
   $longitude = get_float_parameter('longitude');
 }
@@ -51,7 +51,7 @@ if ($judge) {
 }
 
 $query = "SELECT citizen.familyName, citizen.givenNames, citizen.picture, ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude";
-if ($range)  # Unfortunately, ST_Distance_Sphere is not available in MySQL 5.6, so we need to revert to this complex formula
+if ($radius)  # Unfortunately, ST_Distance_Sphere is not available in MySQL 5.6, so we need to revert to this complex formula
   $query .= ", (6371 * acos(cos(radians($latitude)) * cos(radians(ST_Y(citizen.home))) * cos(radians(ST_X(citizen.home)) - radians($longitude)) "
            ."+ sin(radians($latitude)) * sin(radians(ST_Y(citizen.home))))) AS distance";
 $query .= ", publication.`schema`, publication.`key`, publication.signature, publication.published";
@@ -70,8 +70,8 @@ if ($familyName or $givenNames) {
   if ($givenNames)
     $query .= " givenNames LIKE \"%$givenNames%\"";
 }
-if ($range)
-  $query .= " HAVING distance < $range ORDER BY distance";
+if ($radius)
+  $query .= " HAVING distance < $radius ORDER BY distance";
 $query .= " LIMIT 0, 20;";
 $result = $mysqli->query($query) or error($mysqli->error);
 $citizens = array();
