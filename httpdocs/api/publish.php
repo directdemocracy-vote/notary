@@ -140,7 +140,7 @@ elseif ($type == 'endorsement') {
           ."VALUES($id, SHA1(\"$endorsement->endorsedSignature\"), $revoke, \"$endorsement->message\", \"$endorsement->comment\", \"$endorsement->endorsedSignature\")";
   if (str_ends_with($endorsed['schema'], '/proposal.schema.json')) {  # signing a petition
     $endorsed_id = $endorsed['id'];
-    $query = "UPDATE proposal WHERE id=$endorsed_id AND `secret`=0 SET participation=participation+1"; 
+    $mysqli->query("UPDATE proposal WHERE id=$endorsed_id AND `secret`=0 SET participation=participation+1") or error($msqli->error); 
   }
 } elseif ($type == 'proposal') {
   $proposal =&$publication;
@@ -201,8 +201,11 @@ elseif ($type == 'ballot') {
 } else
   error("Unknown publication type.");
 $mysqli->query($query) or error($mysqli->error);
-if ($type == 'proposal')
-  update_corpus($mysqli, $mysqli->insert_id);
+if ($type == 'proposal') {
+  $id = $mysqli->insert_id;
+  die("$id    =>    $query");
+  update_corpus($mysqli, $id);
+}
 if ($type == 'endorsement')
   echo json_encode(endorsements($mysqli, $publication->key), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 else {
