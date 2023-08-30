@@ -123,27 +123,33 @@ window.onload = function() {
   document.getElementById('proposal-referendum').addEventListener('change', function(event) {
     if (!event.currentTarget.checked)
       document.getElementById('proposal-petition').checked = true;
+    searchProposals();
   });
 
   document.getElementById('proposal-petition').addEventListener('change', function(event) {
     if (!event.currentTarget.checked)
       document.getElementById('proposal-referendum').checked = true;
+    searchProposals();
   });
 
   document.getElementById('proposal-open').addEventListener('change', function(event) {
     if (!event.currentTarget.checked)
       document.getElementById('proposal-closed').checked = true;
+    searchProposals();
   });
 
   document.getElementById('proposal-closed').addEventListener('change', function(event) {
     if (!event.currentTarget.checked)
       document.getElementById('proposal-open').checked = true;
+    searchProposals();
   });
 
-  document.getElementById('search-proposals').addEventListener('click', function(event) {
+  document.getElementById('search-proposals').addEventListener('click', searchProposals);
+  
+  function searchProposals() {
     let fieldset = document.getElementById('proposals-fieldset');
     fieldset.setAttribute('disabled', '');
-    let searchProposal = event.currentTarget;
+    let searchProposal = document.getElementById('search-proposals');
     searchProposal.classList.add('is-loading');
     const query = document.getElementById('proposal-query').value;
     const r = document.getElementById('proposal-referendum').checked;
@@ -210,7 +216,7 @@ window.onload = function() {
           });
         });
       });
-  });
+  }
 
   function getGeolocationPosition(position) {
     geolocation = true;
