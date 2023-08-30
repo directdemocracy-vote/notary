@@ -34,7 +34,7 @@ function findGetParameter(parameterName) {
         else
           signButton.removeAttribute('disabled');
         const participation = Math.round(100 * answer.participants / answer.corpus) / 100;
-        document.getElementById('results').innerHTML = `Corpus: ${answer.corpus} &mdash Participants: ${answer.participants} &mdash Participation: ${participation}%`; 
+        document.getElementById('result').innerHTML = `Corpus: ${answer.corpus} &mdash Participants: ${answer.participants} &mdash Participation: ${participation}%`; 
         areaName = document.getElementById('area-name');
         let areaArray = answer.name[0].split('=');
         let areaQuery = '';
