@@ -37,6 +37,7 @@ function findGetParameter(parameterName) {
         areaName = document.getElementById('area-name');
         let areaArray = answer.name[0].split('=');
         let areaQuery = '';
+        console.log(JSON.stringify(answer.name));
         answer.name.forEach(function(line) {
           const eq = line.indexOf('=');
           let type = line.substr(0, eq);
