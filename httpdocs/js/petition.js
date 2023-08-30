@@ -35,11 +35,8 @@ function findGetParameter(parameterName) {
           signButton.removeAttribute('disabled');
 
         areaName = document.getElementById('area-name');
-        const first_equal = answer.name.indexOf('=');
-        const first_newline = answer.name.indexOf('\n');
-        let area_name = answer.name.substr(first_equal + 1, first_newline - first_equal);
-        let area_type = answer.name.substr(0, first_equal);
-        let area_query = '';
+        let areaArray = answer.name[0].split('=');
+        let areaQuery = '';
         answer.name.forEach(function(line) {
           const eq = line.indexOf('=');
           let type = line.substr(0, eq);
@@ -47,18 +44,16 @@ function findGetParameter(parameterName) {
             type = 'city';
           const name = line.substr(eq + 1);
           if (type)
-            area_query += type + '=' + encodeURIComponent(name) + '&';
+            areaQuery += type + '=' + encodeURIComponent(name) + '&';
         });
-        areaName.innerHTML = `Area: ${area_name}`;
-        area_query = area_query.slice(0, -1);
-        let area_url;
-        if (!area_type)
+        areaName.innerHTML = `Area: ${areaArray[1]}`;
+        areaQuery = areaQuery.slice(0, -1);
+        if (!areaArray[0])
           areaName.innerHTML = `Area: <a href="https://en.wikipedia.org/wiki/Earth" target="_blank">Earth</a>`;
-        else if (area_type == 'union')
+        else if (areaArray[0] == 'union')
           areaName.innerHTML = `Area: <a href="https://en.wikipedia.org/wiki/European_Union" target="_blank">European Union</a>`;
         else {
-          area_url = `https://nominatim.openstreetmap.org/search.php?${area_query}&polygon_geojson=1`;
-          fetch(`https://nominatim.openstreetmap.org/search.php?${area_query}&format=json&extratags=1`)
+          fetch(`https://nominatim.openstreetmap.org/search.php?${areaQuery}&format=json&extratags=1`)
             .then((response) => response.json())
             .then((answer) => {
               if (answer.length) {
@@ -69,7 +64,7 @@ function findGetParameter(parameterName) {
                     population = `<a target="_blank" href="${url}">${response.extratags.population}</a>`;
                   else
                     population = `<a target="_blank" href="${url}">N/A</a>`;
-                  areaName.innerHTML = `Area: ${area_name} (estimated population: ${population})`;
+                  areaName.innerHTML = `Area: ${areaArray[1]} (estimated population: ${population})`;
                 }
               }
             });
