@@ -130,14 +130,29 @@ window.onload = function() {
       document.getElementById('proposal-referendum').checked = true;
   });
 
+  document.getElementById('proposal-open').addEventListener('change', function(event) {
+    if (!event.currentTarget.checked)
+      document.getElementById('proposal-closed').checked = true;
+  });
+
+  document.getElementById('proposal-closed').addEventListener('change', function(event) {
+    if (!event.currentTarget.checked)
+      document.getElementById('proposal-open').checked = true;
+  });
+
   document.getElementById('search-proposals').addEventListener('click', function(event) {
     let fieldset = document.getElementById('proposals-fieldset');
     fieldset.setAttribute('disabled', '');
     let searchProposal = event.currentTarget;
     searchProposal.classList.add('is-loading');
     const query = document.getElementById('proposal-query').value;
-    let type = (document.getElementById('proposal-referendum').checked ? 2 : 0) + (document.getElementById('proposal-petition').checked ? 1 : 0);
-    fetch(`/api/proposals.php?type=${type}&search=${encodeURIComponent(query)}&latitude=${latitude}&longitude=${longitude}&radius=${radius}&year=2023&limit=10`)
+    const r = document.getElementById('proposal-referendum').checked;
+    const p = document.getElementById('proposal-petition').checked;
+    let secret = (r && p) ? 2 : (r ? 1 : 0);
+    const o = document.getElementById('proposal-open').checked;
+    const c = document.getElementById('proposal-closed').checked;
+    const open = (c && o) ? 2 : (o ? 1 : 0);
+    fetch(`/api/proposals.php?secret=${secret}&open=${open}&search=${encodeURIComponent(query)}&latitude=${latitude}&longitude=${longitude}&radius=${radius}&year=2023&limit=10`)
       .then((response) => response.json())
       .then((answer) => {
         fieldset.removeAttribute('disabled');

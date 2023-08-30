@@ -6,7 +6,8 @@
 # - corpus: the total number of possible participants (based on the home location of citizens endoresed by the judge)
 # The input parameter sets are either:
 # 1. - search: text to be searched in area, title and description
-#    - type: either 1 for petitions or 2 for referendums or 3 for both.
+#    - secret: either 0 for petitions, 1 for referendums or 2 for both.
+#    - open: either 0 for closed, 1 for open or 2 for both
 #    - latitude, longitude and radius: circle intersecting with the area of the referendum.
 #    - limit (optional, default to 1): maximum number of proposals in the returned list
 #    - year (optional): year of the deadline of the proposal
@@ -56,7 +57,8 @@ if ($mysqli->connect_errno)
   die("{\"error\":\"Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)\"}");
 $mysqli->set_charset('utf8mb4');
 $search = parameter('search');
-$type = parameter('type', 'int');
+$secret = parameter('secret', 'int');
+$open = parameter('open', 'int');
 $latitude = parameter('latitude', 'float');
 $longitude = parameter('longitude', 'float');
 $radius = parameter('radius', 'float') / 100000;
@@ -68,9 +70,9 @@ if (isset($fingerprints))
   $fingerprints = explode(',', $fingerprints);
 
 # check the parameter sets
-if (isset($search) && isset($type) && isset($latitude) && isset($longitude) && isset($radius)) {
+if (isset($search) && isset($secret) && isset($open) && isset($latitude) && isset($longitude) && isset($radius)) {
   if (isset($fingerprints) || isset($fingerprint))
-    error('The fingerprint or fingerprints parameter should not be set together with the search, type, latitude, longitude and radius parameters.');
+    error('The fingerprint or fingerprints parameter should not be set together with the search, secret, open, latitude, longitude and radius parameters.');
 } elseif (isset($fingerprint) && isset($fingerprints))
   error('You cannot set both fingerprint and fingerprints parameters.');
 elseif (!isset($fingerprint) && !isset($fingerprints))
@@ -149,20 +151,24 @@ if (isset($fingerprint)) {
     $list = substr($list, 0, -1).')';
   }
   return_results("$query_base WHERE publication.fingerprint IN $list");
-} else {  # assuming search/type/latitude/longitude/radius parameters
+} else {  # assuming search/secret/latitude/longitude/radius parameters
   if (!isset($limit))
     $limit = 1;
   if (!isset($year))
      $year = date("Y");
-  if ($type == 1)
-    $secret = 'secret = 0 AND ';
-  elseif ($type == 2)
-    $secret == 'secret = 1 AND ';
-  else # assuming 3
+  if ($secret == 2)
     $secret = '';
+  else # assuming 0 or 1
+    $secret = 'secret = $type AND ';
+  $now = intval(microtime(true) * 1000);
+    if ($open == 2)
+    $open = '';
+  elseif ($open == 0)
+    $open = 'proposal.deadline <= $now AND ';
+  else # assuming 1
+    $open = 'proposal.deadline > $now AND '
   if ($search !== '')
     $search = '(title LIKE "%$search%" OR description LIKE "%$search%") AND ';
-  $now = intval(microtime(true) * 1000);
   $query = "SELECT "
           ."publication.schema, publication.key, publication.signature, publication.published, "
           ."proposal.judge, proposal.area, proposal.title, proposal.description, "
