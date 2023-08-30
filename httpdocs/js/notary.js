@@ -140,7 +140,6 @@ window.onload = function() {
     fetch(`/api/proposals.php?type=${type}&search=${encodeURIComponent(query)}&latitude=${latitude}&longitude=${longitude}&radius=${radius}&year=2023&limit=10`)
       .then((response) => response.json())
       .then((answer) => {
-        console.log(answer);
         fieldset.removeAttribute('disabled');
         searchProposal.classList.remove('is-loading');
         let section = document.getElementById('proposal-results');
