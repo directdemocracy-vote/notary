@@ -201,11 +201,8 @@ elseif ($type == 'ballot') {
 } else
   error("Unknown publication type.");
 $mysqli->query($query) or error($mysqli->error);
-if ($type == 'proposal') {
-  $id = $mysqli->insert_id;
-  die("$id    =>    $query");
+if ($type == 'proposal')
   update_corpus($mysqli, $id);
-}
 if ($type == 'endorsement')
   echo json_encode(endorsements($mysqli, $publication->key), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 else {
