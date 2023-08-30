@@ -39,14 +39,13 @@ function findGetParameter(parameterName) {
         const first_newline = answer.name.indexOf('\n');
         let area_name = answer.name.substr(first_equal + 1, first_newline - first_equal);
         let area_type = answer.name.substr(0, first_equal);
-        const area_array = answer.name.split('\n');
         let area_query = '';
-        area_array.forEach(function(argument) {
-          const eq = argument.indexOf('=');
-          let type = argument.substr(0, eq);
+        answer.name.forEach(function(line) {
+          const eq = line.indexOf('=');
+          let type = line.substr(0, eq);
           if (['village', 'town', 'municipality'].includes(type))
             type = 'city';
-          const name = argument.substr(eq + 1);
+          const name = line.substr(eq + 1);
           if (type)
             area_query += type + '=' + encodeURIComponent(name) + '&';
         });
