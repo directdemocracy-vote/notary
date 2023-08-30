@@ -33,8 +33,9 @@ function findGetParameter(parameterName) {
           signButton.innerHTML = 'Closed';
         else
           signButton.removeAttribute('disabled');
-        const participation = Math.round(10000 * answer.participants / answer.corpus) / 100;
-        document.getElementById('result').innerHTML = `Corpus: ${answer.corpus} &mdash; Participants: ${answer.participants} &mdash; Participation: ${participation}%`; 
+        const corpus = answer.corpus;
+        const participation = Math.round(10000 * answer.participants / corpus) / 100;
+        document.getElementById('result').innerHTML = `Corpus: ${corpus} &mdash; Participants: ${answer.participants} &mdash; Participation: ${participation}%`; 
         areaName = document.getElementById('area-name');
         let areaArray = answer.name[0].split('=');
         let areaQuery = '';
@@ -62,7 +63,7 @@ function findGetParameter(parameterName) {
                 if (response.hasOwnProperty('osm_id')) {
                   const url = 'https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=' + response.osm_id;
                   if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population')) {
-                    const corpus_percent = Math.round(10000 * answer.corpus / parseFloat(response.extratags.population)) / 100;
+                    const corpus_percent = Math.round(10000 * corpus / parseFloat(response.extratags.population)) / 100;
                     population = `<a target="_blank" href="${url}">${response.extratags.population}</a> with a corpus of ${corpus_percent}%`;
                   } else
                     population = `<a target="_blank" href="${url}">N/A</a>`;
