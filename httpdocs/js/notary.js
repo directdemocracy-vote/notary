@@ -188,6 +188,8 @@ window.onload = function() {
           td = document.createElement('td');
           let deadline = new Date(proposal.deadline);
           let now = new Date();
+          console.log('now = ' + now);
+          console.log('deadline = ' + deadline);
           td.innerHTML = `<span${ deadline < now ? ' style="font-color:red"' : ''}>${deadline.toLocaleString()}</span>`;
           tr.appendChild(td);
           tr.addEventListener('click', function() {
