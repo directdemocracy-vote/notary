@@ -190,7 +190,7 @@ window.onload = function() {
           let now = new Date();
           console.log('now = ' + now);
           console.log('deadline = ' + deadline);
-          td.innerHTML = `<span${ deadline < now ? ' style="font-color:red"' : ''}>${deadline.toLocaleString()}</span>`;
+          td.innerHTML = `<span${ deadline < now ? ' style="color:red"' : ''}>${deadline.toLocaleString()}</span>`;
           tr.appendChild(td);
           tr.addEventListener('click', function() {
             url = `/petition.html?fingerprint=${CryptoJS.SHA1(proposal.signature).toString()}`;
