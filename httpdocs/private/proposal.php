@@ -34,7 +34,7 @@ $polygons = json_decode($proposal['polygons']);
 if ($polygons->type !== 'MultiPolygon')
   die("Area without MultiPolygon: $polygons->type");
 $proposal['polygons'] = &$polygons->coordinates;
-$proposal['name'] = explode("\n", $proposal['areas']);
+$proposal['name'] = explode("\n", $proposal['name']);
 settype($proposal['published'], 'int');
 settype($proposal['secret'], 'bool');
 settype($proposal['deadline'], 'int');
