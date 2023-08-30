@@ -61,9 +61,10 @@ function findGetParameter(parameterName) {
                 const response = answer[0];
                 if (response.hasOwnProperty('osm_id')) {
                   const url = 'https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=' + response.osm_id;
-                  if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population'))
-                    population = `<a target="_blank" href="${url}">${response.extratags.population}</a>`;
-                  else
+                  if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population')) {
+                    const corpus_percent = Math.round(10000 * answer.corpus / parseFloat(response.extratags.population)) / 100;
+                    population = `<a target="_blank" href="${url}">${response.extratags.population}</a> with a corpus of ${corpus_percent}%`;
+                  } else
                     population = `<a target="_blank" href="${url}">N/A</a>`;
                   areaName.innerHTML = `Area: ${areaArray[1]} (estimated population: ${population})`;
                 }
