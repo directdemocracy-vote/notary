@@ -6,7 +6,7 @@ function update_corpus($mysqli, $id) {
           ."INNER JOIN endorsement ON endorsement.endorsedFingerprint=pc.fingerprint "
           ."INNER JOIN publication AS pe ON pe.id=endorsement.id "
           ."INNER JOIN proposal ON proposal.id=$id "
-          ."INNER JOIN publication AS pa ON pa.`key`=proposal.area "
+          ."INNER JOIN publication AS pa ON pa.`signature`=proposal.area "
           ."INNER JOIN area ON area.id=pa.id "
           ."INNER JOIN judge ON judge.url = proposal.judge "
           ."WHERE endorsement.latest=1 AND endorsement.`revoke`=0 AND pe.`key`=judge.`key` "
