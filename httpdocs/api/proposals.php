@@ -59,7 +59,7 @@ $search = parameter('search');
 $type = parameter('type', 'int');
 $latitude = parameter('latitude', 'float');
 $longitude = parameter('longitude', 'float');
-$radius = parameter('radius', 'float') * 1000;
+$radius = parameter('radius', 'float');
 $limit = parameter('limit', 'int');
 $year = parameter('year', 'int');
 $fingerprint = parameter('fingerprint');
@@ -129,8 +129,7 @@ if (isset($fingerprint)) {
     $query = "SELECT area.id FROM area "
             ."LEFT JOIN publication ON publication.id = area.id "
             ."WHERE publication.fingerprint=SHA1('$area') "
-            ."AND ST_Intersects(area.polygons, ST_Buffer(ST_MakePoint($longitude, $latitude)::geography, $radius))";
-#            ."AND ST_Contains(area.polygons, POINT($longitude, $latitude))";
+            ."AND ST_Contains(area.polygons, POINT($longitude, $latitude))";
     $result = $mysqli->query($query) or error($mysqli->error);
     $proposal['inside'] = $result->fetch_assoc() ? true : false;
     $result->free();
@@ -175,7 +174,8 @@ if (isset($fingerprint)) {
           ."LEFT JOIN area ON area.id = area_p.id "
           ."WHERE $secret$search"
           ."YEAR(FROM_UNIXTIME(proposal.deadline / 1000)) = $year "
-          ."AND ST_Contains(area.polygons, POINT($longitude, $latitude)) "
+          ."AND ST_Intersects(area.polygons, ST_Buffer(ST_MakePoint($longitude, $latitude)::geography, $radius)) ";
+#          ."AND ST_Contains(area.polygons, POINT($longitude, $latitude)) "
           ."LIMIT $limit";
   return_results($query);
 }
