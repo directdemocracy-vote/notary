@@ -26,7 +26,7 @@ function findGetParameter(parameterName) {
         document.getElementById('description').innerHTML = answer.description;
         const deadline = new Date(answer.deadline);
         const now = new Date();
-        document.getElementById('deadline').innerHTML.innerHTML = `<span style="color:#${ deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
+        document.getElementById('deadline').innerHTML = `<span style="color:#${ deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
         document.getElementById('judge').innerHTML = `<a href="${answer.judge}" target="_blank">${answer.judge}</a>`;
         if (deadline < now)
           document.getElementById('sign-button').attAttribute('disabled', '');
