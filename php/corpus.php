@@ -1,7 +1,7 @@
 <?php
 function update_corpus($mysqli, $id) {
   $query = "UPDATE proposal SET corpus = "
-          "(SELECT COUNT(citizen.id) FROM citizen "
+          ."(SELECT COUNT(citizen.id) FROM citizen "
           ."INNER JOIN publication AS pc ON pc.id=citizen.id "
           ."INNER JOIN endorsement ON endorsement.endorsedFingerprint=pc.fingerprint "
           ."INNER JOIN publication AS pe ON pe.id=endorsement.id "
