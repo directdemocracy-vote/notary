@@ -168,7 +168,7 @@ if (isset($fingerprint)) {
   else # assuming 1
     $open = "proposal.deadline > $now AND ";
   if ($search !== '')
-    $search = '(title LIKE "%$search%" OR description LIKE "%$search%") AND ';
+    $search = "(title LIKE "%$search%" OR description LIKE "%$search%") AND ";
   $query = "SELECT "
           ."publication.schema, publication.key, publication.signature, publication.published, "
           ."proposal.judge, proposal.area, proposal.title, proposal.description, "
