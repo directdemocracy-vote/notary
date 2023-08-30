@@ -10,7 +10,7 @@ function update_corpus($mysqli, $id) {
           ."INNER JOIN area ON area.id=pa.id "
           ."INNER JOIN judge ON judge.url = proposal.judge "
           ."WHERE endorsement.latest=1 AND endorsement.`revoke`=0 AND pe.`key`=judge.`key` "
-          ."AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home))))";
+          ."AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home)))) WHERE proposal.id=$id";
   $mysqli->query($query) or die($mysqli->error);
   return;
 }
