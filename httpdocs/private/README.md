@@ -1,0 +1,1 @@
+This folder contains private restful API entries to be called only by this notary.

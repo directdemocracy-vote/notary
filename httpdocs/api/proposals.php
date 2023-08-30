@@ -19,7 +19,7 @@
 #   which is true only if the point given by latitude and longitude is inside the proposal area
 # 3. - fingerprints: returns a list of proposals corresponding to the specified coma separated fingerprints
 
-# TODO: implement participation and corpus
+# TODO: implement participants and corpus
 
 require_once '../../php/database.php';
 

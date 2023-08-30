@@ -15,7 +15,7 @@ function findGetParameter(parameterName) {
       return;
     }
 
-    fetch(`/api/publication.php?fingerprint=${fingerprint}`)
+    fetch(`/private/proposal.php?fingerprint=${fingerprint}`)
       .then((response) => response.json())
       .then((answer) => {
         if (answer.error) {
@@ -33,83 +33,76 @@ function findGetParameter(parameterName) {
           signButton.innerHTML = 'Closed';
         else
           signButton.removeAttribute('disabled');
-        fetch(`/api/publication.php?fingerprint=${CryptoJS.SHA1(answer.area).toString()}`)
-          .then((response) => response.json())
-          .then((area) => {
-            if (area.error) {
-              console.log(`cannot get area: ${area.error}`);
-              return;
-            }
-            areaName = document.getElementById('area-name');
-            const first_equal = area.name.indexOf('=');
-            const first_newline = area.name.indexOf('\n');
-            let area_name = area.name.substr(first_equal + 1, first_newline - first_equal);
-            let area_type = area.name.substr(0, first_equal);
-            const area_array = area.name.split('\n');
-            let area_query = '';
-            area_array.forEach(function(argument) {
-              const eq = argument.indexOf('=');
-              let type = argument.substr(0, eq);
-              if (['village', 'town', 'municipality'].includes(type))
-                type = 'city';
-              const name = argument.substr(eq + 1);
-              if (type)
-                area_query += type + '=' + encodeURIComponent(name) + '&';
-            });
-            areaName.innerHTML = `Area: ${area_name}`;
-            area_query = area_query.slice(0, -1);
-            let area_url;
-            if (!area_type)
-              areaName.innerHTML = `Area: <a href="https://en.wikipedia.org/wiki/Earth" target="_blank">Earth</a>`;
-            else if (area_type == 'union')
-              areaName.innerHTML = `Area: <a href="https://en.wikipedia.org/wiki/European_Union" target="_blank">European Union</a>`;
-            else {
-              area_url = `https://nominatim.openstreetmap.org/search.php?${area_query}&polygon_geojson=1`;
-              fetch(`https://nominatim.openstreetmap.org/search.php?${area_query}&format=json&extratags=1`)
-                .then((response) => response.json())
-                .then((answer) => {
-                  if (answer.length) {
-                    const response = answer[0];
-                    if (response.hasOwnProperty('osm_id')) {
-                      const url = 'https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=' + response.osm_id;
-                      if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population'))
-                        population = `<a target="_blank" href="${url}">${response.extratags.population}</a>`;
-                      else
-                        population = `<a target="_blank" href="${url}">N/A</a>`;
-                      areaName.innerHTML = `Area: ${area_name} (estimated population: ${population})`;
-                    }
-                  }
-                });
-            }
-    
-            let map = L.map('area');
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-              attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(map);
-            map.whenReady(function() {setTimeout(() => {this.invalidateSize();}, 0);});
-            map.on('contextmenu', function(event) { return false; });
-            L.geoJSON({type: 'MultiPolygon', coordinates: area.polygons}).addTo(map);      
-            let maxLon = -1000;
-            let minLon = 1000;
-            let maxLat = -1000;
-            let minLat = 1000;
-            area.polygons.forEach(function(polygons) {
-              polygons.forEach(function(polygon) {
-                polygon.forEach(function(point) {
-                  if (point[0] > maxLon)
-                    maxLon = point[0];
-                  else if (point[0] < minLon)
-                    minLon = point[0];
-                  if (point[1] > maxLat)
-                    maxLat = point[1];
-                  else if (point[1] < minLat)
-                    minLat = point[1];
-                });
-              });
-            });
-            map.fitBounds([[minLat, minLon], [maxLat, maxLon]]);
 
+        areaName = document.getElementById('area-name');
+        const first_equal = answer.name.indexOf('=');
+        const first_newline = answer.name.indexOf('\n');
+        let area_name = answer.name.substr(first_equal + 1, first_newline - first_equal);
+        let area_type = answer.name.substr(0, first_equal);
+        const area_array = answer.name.split('\n');
+        let area_query = '';
+        area_array.forEach(function(argument) {
+          const eq = argument.indexOf('=');
+          let type = argument.substr(0, eq);
+          if (['village', 'town', 'municipality'].includes(type))
+            type = 'city';
+          const name = argument.substr(eq + 1);
+          if (type)
+            area_query += type + '=' + encodeURIComponent(name) + '&';
+        });
+        areaName.innerHTML = `Area: ${area_name}`;
+        area_query = area_query.slice(0, -1);
+        let area_url;
+        if (!area_type)
+          areaName.innerHTML = `Area: <a href="https://en.wikipedia.org/wiki/Earth" target="_blank">Earth</a>`;
+        else if (area_type == 'union')
+          areaName.innerHTML = `Area: <a href="https://en.wikipedia.org/wiki/European_Union" target="_blank">European Union</a>`;
+        else {
+          area_url = `https://nominatim.openstreetmap.org/search.php?${area_query}&polygon_geojson=1`;
+          fetch(`https://nominatim.openstreetmap.org/search.php?${area_query}&format=json&extratags=1`)
+            .then((response) => response.json())
+            .then((answer) => {
+              if (answer.length) {
+                const response = answer[0];
+                if (response.hasOwnProperty('osm_id')) {
+                  const url = 'https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=' + response.osm_id;
+                  if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population'))
+                    population = `<a target="_blank" href="${url}">${response.extratags.population}</a>`;
+                  else
+                    population = `<a target="_blank" href="${url}">N/A</a>`;
+                  areaName.innerHTML = `Area: ${area_name} (estimated population: ${population})`;
+                }
+              }
+            });
+        }
+
+        let map = L.map('area');
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+        map.whenReady(function() {setTimeout(() => {this.invalidateSize();}, 0);});
+        map.on('contextmenu', function(event) { return false; });
+        L.geoJSON({type: 'MultiPolygon', coordinates: answer.polygons}).addTo(map);      
+        let maxLon = -1000;
+        let minLon = 1000;
+        let maxLat = -1000;
+        let minLat = 1000;
+        answer.polygons.forEach(function(polygons) {
+          polygons.forEach(function(polygon) {
+            polygon.forEach(function(point) {
+              if (point[0] > maxLon)
+                maxLon = point[0];
+              else if (point[0] < minLon)
+                minLon = point[0];
+              if (point[1] > maxLat)
+                maxLat = point[1];
+              else if (point[1] < minLat)
+                minLat = point[1];
+            });
           });
+        });
+        map.fitBounds([[minLat, minLon], [maxLat, maxLon]]);
+
       });
 
 
