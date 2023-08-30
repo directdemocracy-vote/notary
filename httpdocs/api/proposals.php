@@ -174,7 +174,7 @@ if (isset($fingerprint)) {
           ."LEFT JOIN area ON area.id = area_p.id "
           ."WHERE $secret$search"
           ."YEAR(FROM_UNIXTIME(proposal.deadline / 1000)) = $year "
-          ."AND ST_Intersects(area.polygons, ST_Buffer(ST_MakePoint($longitude, $latitude)::geography, $radius)) ";
+          ."AND ST_Intersects(area.polygons, ST_Buffer(ST_MakePoint($longitude, $latitude)::geography, $radius)) "
 #          ."AND ST_Contains(area.polygons, POINT($longitude, $latitude)) "
           ."LIMIT $limit";
   return_results($query);
