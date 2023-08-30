@@ -175,7 +175,6 @@ if (isset($fingerprint)) {
           ."WHERE $secret$search"
           ."YEAR(FROM_UNIXTIME(proposal.deadline / 1000)) = $year "
           ."AND ST_Intersects(area.polygons, ST_Buffer(POINT($longitude, $latitude), $radius)) "
-#          ."AND ST_Contains(area.polygons, POINT($longitude, $latitude)) "
           ."LIMIT $limit";
   return_results($query);
 }
