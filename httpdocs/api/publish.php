@@ -3,6 +3,7 @@
 require_once '../../vendor/autoload.php';
 require_once '../../php/database.php';
 require_once '../../php/endorsements.php';
+require_once '../../php/corpus.php';
 
 use Opis\JsonSchema\{
   Validator, Errors\ErrorFormatter
@@ -103,7 +104,7 @@ $mysqli = new mysqli($database_host, $database_username, $database_password, $da
 if ($mysqli->connect_errno)
   error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
 $mysqli->set_charset('utf8mb4');
-$query = "INSERT INTO publication(`schema`, `key`, signature, fingerprint, published) "
+$query = "INSERT INTO publication(`schema`, `key`, `signature`, fingerprint, published) "
         ."VALUES(\"$publication->schema\", \"$publication->key\", \"$publication->signature\", "
         ."SHA1(\"$publication->signature\"), $publication->published)";
 $mysqli->query($query) or error($mysqli->error);
@@ -121,7 +122,7 @@ elseif ($type == 'endorsement') {
     $endorsement->message = '';
   if (!property_exists($endorsement, 'comment'))
     $endorsement->comment = '';
-  $query = "SELECT signature FROM publication WHERE fingerprint=SHA1(\"$endorsement->endorsedSignature\")";
+  $query = "SELECT id, `schema`, `signature` FROM publication WHERE fingerprint=SHA1(\"$endorsement->endorsedSignature\")";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsed = $result->fetch_assoc();
   $result->free();
@@ -137,6 +138,10 @@ elseif ($type == 'endorsement') {
   $revoke = $endorsement->revoke ? 1 : 0;
   $query = "INSERT INTO endorsement(id, endorsedFingerprint, `revoke`, message, comment, endorsedSignature) "
           ."VALUES($id, SHA1(\"$endorsement->endorsedSignature\"), $revoke, \"$endorsement->message\", \"$endorsement->comment\", \"$endorsement->endorsedSignature\")";
+  if (str_ends_with($endorsed['schema'], '/proposal.schema.json')) {  # signing a petition
+    $endorsed_id = $endorsed['id'];
+    $query = "UPDATE proposal WHERE id=$endorsed_id AND `secret`=0 SET participation=participation+1"; 
+  }
 } elseif ($type == 'proposal') {
   $proposal =&$publication;
   if (!isset($proposal->website))  # optional
@@ -146,9 +151,9 @@ elseif ($type == 'endorsement') {
   if (!isset($proposal->answers))  # optional
     $proposal->answers = array();
   $answers = implode("\n", $proposal->answers);
-  $query = "INSERT INTO proposal(id, judge, area, title, description, question, answers, deadline, website) "
+  $query = "INSERT INTO proposal(id, judge, area, title, description, question, answers, deadline, website, participants, corpus) "
           ."VALUES($id, \"$proposal->judge\", \"$proposal->area\", \"$proposal->title\", \"$proposal->description\", "
-          ."\"$proposal->question\", \"$answers\", $proposal->deadline, \"$proposal->website\")";
+          ."\"$proposal->question\", \"$answers\", $proposal->deadline, \"$proposal->website\", 0, 0)";
 } elseif ($type == 'registration')
   $query = "INSERT INTO registration(id, proposal, stationKey, stationSignature) "
           ."VALUES($id, \"$publication->proposal\", \"" . $publication->station->key
@@ -196,6 +201,8 @@ elseif ($type == 'ballot') {
 } else
   error("Unknown publication type.");
 $mysqli->query($query) or error($mysqli->error);
+if ($type == 'proposal')
+  update_corpus($mysqli, $mysqli->insert_id);
 if ($type == 'endorsement')
   echo json_encode(endorsements($mysqli, $publication->key), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 else {
