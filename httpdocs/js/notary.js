@@ -188,9 +188,7 @@ window.onload = function() {
           td = document.createElement('td');
           let deadline = new Date(proposal.deadline);
           let now = new Date();
-          console.log('now = ' + now);
-          console.log('deadline = ' + deadline);
-          td.innerHTML = `<span${ deadline < now ? ' style="color:grey"' : ''}>${deadline.toLocaleString()}</span>`;
+          td.innerHTML = `<span style="color:#${ deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
           tr.appendChild(td);
           tr.addEventListener('click', function() {
             url = `/petition.html?fingerprint=${CryptoJS.SHA1(proposal.signature).toString()}`;
