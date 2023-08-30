@@ -77,12 +77,7 @@ window.onload = function() {
   let circle = L.circle([latitude, longitude], { color: 'red', opacity: 0.4, fillColor: '#f03', fillOpacity: 0.2, radius: radius}).addTo(map);
   marker.setPopupContent(`<div style="text-align:center" id="address">${address}</div><div><input type="range" min="5" max="100" value="${slider}" class="slider" id="range"></div>` +
     `<div style="text-align:center;color:#999" id="position">(${latitude}, ${longitude} &plusmn; ${Math.round(radius / 100) / 10} km</div></center>`).openPopup();
-  document.getElementById('range').addEventListener('input', function(event) {
-    slider = event.currentTarget.value;
-    radius = slider * slider * slider;
-    circle.setRadius(radius);
-    updateLabel(); 
-  });
+  document.getElementById('range').addEventListener('input', rangeChanged);
   map.on('click', function(event) {
     marker.setLatLng(event.latlng).openPopup();
     circle.setLatLng(event.latlng);
@@ -219,7 +214,14 @@ window.onload = function() {
         updateLabel();
       });
   }
-  
+
+  function rangeChanged(event) {
+    slider = event.currentTarget.value;
+    radius = slider * slider * slider;
+    circle.setRadius(radius);
+    updateLabel(); 
+  }
+
   function updateLabel() {
     document.getElementById("address").innerHTML = address;
     document.getElementById("position").innerHTML = '(' + latitude + ', ' + longitude + ') &plusmn; ' + Math.round(radius / 100) / 10 + ' km';
