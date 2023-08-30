@@ -159,7 +159,7 @@ if (isset($fingerprint)) {
   if ($secret == 2)
     $secret = '';
   else # assuming 0 or 1
-    $secret = "secret = $secret AND ";
+    $secret = "proposal.secret = $secret AND ";
   $now = intval(microtime(true) * 1000);
     if ($open == 2)
     $open = '';
@@ -178,7 +178,7 @@ if (isset($fingerprint)) {
           ."LEFT JOIN publication ON publication.id = proposal.id "
           ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
           ."LEFT JOIN area ON area.id = area_p.id "
-          ."WHERE $secret$search"
+          ."WHERE $secret$open$search"
           ."YEAR(FROM_UNIXTIME(proposal.deadline / 1000)) = $year "
           ."AND ST_Intersects(area.polygons, ST_Buffer(POINT($longitude, $latitude), $radius)) "
           ."LIMIT $limit";
