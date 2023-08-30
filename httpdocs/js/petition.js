@@ -33,11 +33,11 @@ function findGetParameter(parameterName) {
           signButton.innerHTML = 'Closed';
         else
           signButton.removeAttribute('disabled');
-
+        const participation = Math.round(100 * answer.participants / answer.corpus) / 100;
+        document.getElementById('results').innerHTML = `Corpus: ${answer.corpus} &mdash Participants: ${answer.participants} &mdash Participation: ${participation}%`; 
         areaName = document.getElementById('area-name');
         let areaArray = answer.name[0].split('=');
         let areaQuery = '';
-        console.log(JSON.stringify(answer.name));
         answer.name.forEach(function(line) {
           const eq = line.indexOf('=');
           let type = line.substr(0, eq);
@@ -70,7 +70,6 @@ function findGetParameter(parameterName) {
               }
             });
         }
-
         let map = L.map('area');
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -97,9 +96,7 @@ function findGetParameter(parameterName) {
           });
         });
         map.fitBounds([[minLat, minLon], [maxLat, maxLon]]);
-
       });
-
 
     function closeModal() {
       document.getElementById('modal').classList.remove('is-active');
