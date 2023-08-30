@@ -140,7 +140,7 @@ elseif ($type == 'endorsement') {
           ."VALUES($id, SHA1(\"$endorsement->endorsedSignature\"), $revoke, \"$endorsement->message\", \"$endorsement->comment\", \"$endorsement->endorsedSignature\")";
   if (str_ends_with($endorsed['schema'], '/proposal.schema.json')) {  # signing a petition
     $endorsed_id = $endorsed['id'];
-    $mysqli->query("UPDATE proposal WHERE id=$endorsed_id AND `secret`=0 SET participation=participation+1") or error($msqli->error); 
+    $mysqli->query("UPDATE proposal SET participation=participation+1 WHERE id=$endorsed_id AND `secret`=0") or error($msqli->error); 
   }
 } elseif ($type == 'proposal') {
   $proposal =&$publication;
