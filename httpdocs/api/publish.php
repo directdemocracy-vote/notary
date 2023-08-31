@@ -141,7 +141,7 @@ elseif ($type == 'endorsement') {
   if (str_ends_with($endorsed['schema'], '/proposal.schema.json')) {  # signing a petition
     # increment the number of participants in a petition if the citizen is located inside the petition area and is endorsed by the petition judge
     $endorsed_id = $endorsed['id'];
-    $key = endorsement->key;
+    $key = $endorsement->key;
     $query = "UPDATE proposal SET participants=participants+1 "
             ."INNER JOIN publication AS pc ON pc.`key`='$key' "
             ."INNER JOIN citizen ON citizen.id=pc.id "
