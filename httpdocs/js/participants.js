@@ -26,8 +26,11 @@ window.onload = function() {
       panel.appendChild(title);
       title.classList.add('panel-heading');
       title.innerHTML = `<a href="petition.html?fingerprint=${fingerprint}">${answer.title}</a>`;
-      for(participant of answer.participants) {
-        console.log(participant.givenNames);
+      for(const participant of answer.participants) {
+        let block = document.createElement('div');
+        block.classList.add('panel-block');
+        panel.appendChild(block);
+        block.innerHTML = `<img src="${participant.picture}" style="width:75px"> ${participant.givenNames} <b>${participant.familyName}`;
       }
     });
 };
