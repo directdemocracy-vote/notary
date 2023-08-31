@@ -41,7 +41,8 @@ $query = "SELECT pc.fingerprint, citizen.givenNames, citizen.familyName, citizen
         ."INNER JOIN publication AS pa ON proposal.area=pa.`signature` "
         ."INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home))) "
         ."INNER JOIN endorsement AS signature ON signature.endorsedFingerprint='$fingerprint' "
-        ."INNER JOIN publication AS ps ON ps.id=signature.id AND ps.`key`=pc.`key`";
+        ."INNER JOIN publication AS ps ON ps.id=signature.id AND ps.`key`=pc.`key` "
+        ."ORDER BY citizen.familyName, citizen.givenNames";
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
 $participants = array();
 while ($participant = $result->fetch_assoc())
