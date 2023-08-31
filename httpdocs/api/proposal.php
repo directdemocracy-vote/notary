@@ -41,7 +41,6 @@ $query = "SELECT "
 $result = $mysqli->query($query) or die($mysqli->error);
 $proposal = $result->fetch_assoc();
 $result->free();
-$proposal['name'] = explode("\n", $proposal['name']);
 settype($proposal['published'], 'int');
 settype($proposal['secret'], 'bool');
 settype($proposal['deadline'], 'int');
