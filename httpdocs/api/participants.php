@@ -22,7 +22,7 @@ $mysqli->set_charset('utf8mb4');
 
 $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
 $query = "SELECT title FROM proposal "
-        ."INNER JOIN publication ON publication.id=proposal.id AND publication.fingerprint=${fingerprint}";
+        ."INNER JOIN publication ON publication.id=proposal.id AND publication.fingerprint='${fingerprint}'";
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
 $title = $result->fetch_assoc();
 $result->free();
