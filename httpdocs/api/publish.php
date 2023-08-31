@@ -150,7 +150,7 @@ elseif ($type == 'endorsement') {
             ."INNER JOIN judge ON judge.url=proposal.judge "
             ."INNER JOIN publication AS pe ON pe.`key`=judge.`key` "
             ."INNER JOIN endorsement ON endorsement.id = pe.id AND endorsement.`revoke`=0 AND endorsement.latest=1 AND endorsement.endorsedFingerprint=pc.fingerprint "
-            ."WHERE proposal.id=$endorsed_id AND proposal.`secret`=0 ";
+            ."WHERE proposal.id=$endorsed_id AND proposal.`secret`=0";
     $mysqli->query($query) or error($msqli->error); 
   }
 } elseif ($type == 'proposal') {
