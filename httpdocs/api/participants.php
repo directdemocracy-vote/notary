@@ -46,6 +46,6 @@ while ($participant = $result->fetch_assoc())
   $participants[] = $participant;
 $result->free();
 $answer['participants'] = $participants;
-echo json_encode($citizens, JSON_UNESCAPED_SLASHES);
+echo json_encode($answer, JSON_UNESCAPED_SLASHES);
 $mysqli->close();
 ?>
