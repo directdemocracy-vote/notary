@@ -30,7 +30,9 @@ window.onload = function() {
         let block = document.createElement('div');
         block.classList.add('panel-block');
         panel.appendChild(block);
-        block.innerHTML = `<p><img src="${participant.picture}" style="width:50px;vertical-align:middle;"> ${participant.givenNames} <b>${participant.familyName}</p>`;
+        block.innerHTML = `<p><a href="citizen.html?fingerprint=${participant.fingerprint}" target="_blank">` +
+                          `<img src="${participant.picture}" style="width:50px;vertical-align:middle;"></img> ` +
+                          `${participant.givenNames} <b>${participant.familyName}</a></p>`;
       }
     });
 };
