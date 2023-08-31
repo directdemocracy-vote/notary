@@ -52,7 +52,7 @@ if (!isset($latitude)) {
     die("Area without MultiPolygon: $polygons->type");
   $proposal['polygons'] = &$polygons->coordinates;
 } else {
-  $query = "SELECT id FROM area WHERE id=$proposal['area_id'] AND ST_Contains(polygons, POINT($longitude, $latitude))";
+  $query = "SELECT id FROM area WHERE id=$proposal[area_id] AND ST_Contains(polygons, POINT($longitude, $latitude))";
   $mysqli->query($query) or die($mysli->error);
   $proposal['inside'] = $mysqli->fetch_assoc() ? true : false;
   unset($proposal['area_id']);
