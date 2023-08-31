@@ -15,11 +15,12 @@ $mysqli = new mysqli($database_host, $database_username, $database_password, $da
 if ($mysqli->connect_errno)
   die("{\"error\":\"Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)\"}");
 $mysqli->set_charset('utf8mb4');
+
 $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
 if (!isset($fingerprint))
   die('Missing fingerprint parameter.');
 
-if (isset($_GET['latitude']) && isset($_GET['longiture'])) {
+if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
   $latitude = floatval($_GET['latitude']);
   $longitude = floatval($_GET['longitude']);
   $extra = 'area.id AS area_id';
