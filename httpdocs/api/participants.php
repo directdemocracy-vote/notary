@@ -39,7 +39,7 @@ $query = "SELECT pc.fingerprint, citizen.firstName, citizen.lastName, citizen.pi
         ."INNER JOIN pe ON pe.`key`=judge.`key` "
         ."INNER JOIN endorsement ON endorsement.id=pe.id AND endorsement.latest=1 AND endorsement.`revoke`=0 AND endorsement.endorsedFingerprint=pc.fingerprint "
         ."INNER JOIN publication AS pa ON proposal.area=pa.`key` "
-        ."INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home)))) ";
+        ."INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home))) ";
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
 $participants = array();
 while ($participant = $result->fetch_assoc())
