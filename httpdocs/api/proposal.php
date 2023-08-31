@@ -54,8 +54,8 @@ if (!isset($latitude)) {
   $proposal['polygons'] = &$polygons->coordinates;
 } else {
   $query = "SELECT id FROM area WHERE id=$proposal[area_id] AND ST_Contains(polygons, POINT($longitude, $latitude))";
-  $mysqli->query($query) or die($mysli->error);
-  $proposal['inside'] = $mysqli->fetch_assoc() ? true : false;
+  $result = $mysqli->query($query) or die($mysli->error);
+  $proposal['inside'] = $result->fetch_assoc() ? true : false;
   unset($proposal['area_id']);
 }
 $mysqli->close();
