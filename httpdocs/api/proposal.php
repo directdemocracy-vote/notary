@@ -32,7 +32,7 @@ $query = "SELECT "
         ."proposal.judge, proposal.area, proposal.title, proposal.description, "
         ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
         ."proposal.participants, proposal.corpus, "
-        ."area.name AS area_name, $extra "
+        ."area.name AS areas, $extra "
         ."FROM proposal "
         ."LEFT JOIN publication ON publication.id = proposal.id "
         ."LEFT JOIN publication AS pa ON pa.signature = proposal.area "
@@ -47,7 +47,7 @@ settype($proposal['secret'], 'bool');
 settype($proposal['deadline'], 'int');
 settype($proposal['participation'], 'int');
 settype($proposal['corpus'], 'int');
-$proposal['area'] = explode("\n", $proposal['area_name']);
+$proposal['areas'] = explode("\n", $proposal['areas']);
 if (!isset($latitude)) {
   $polygons = json_decode($proposal['polygons']);
   if ($polygons->type !== 'MultiPolygon')
