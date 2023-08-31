@@ -140,7 +140,17 @@ elseif ($type == 'endorsement') {
           ."VALUES($id, SHA1(\"$endorsement->endorsedSignature\"), $revoke, \"$endorsement->message\", \"$endorsement->comment\", \"$endorsement->endorsedSignature\")";
   if (str_ends_with($endorsed['schema'], '/proposal.schema.json')) {  # signing a petition
     $endorsed_id = $endorsed['id'];
-    $mysqli->query("UPDATE proposal SET participants=participants+1 WHERE id=$endorsed_id AND `secret`=0") or error($msqli->error); 
+    $key = endorsement->key;
+    $query = "UPDATE proposal SET participants=participants+1 "
+            ."INNER JOIN publication AS pp ON pp.id = proposal.id "
+            ."INNER JOIN publication AS PC ON pc.`key`='$key' "
+            ."INNER JOIN citizen ON citizen.id=pc.id "
+            ."INNER JOIN publication AS pa ON pa.`signature`=proposal.area "
+            ."INNER JOIN area ON on area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home))) "
+            ."INNER JOIN publication AS pe ON pe.`key`=pp.`key` "
+            ."INNER JOIN endorsement ON endorsement.id = pe.id AND endorsement.`revoke`=0 AND endorsement.latest=1 AND endorsement.endorsedFingerprint=pc.fingerprint "
+            ."WHERE proposal.id=$endorsed_id AND proposal.`secret`=0 ";
+    $mysqli->query($query) or error($msqli->error); 
   }
 } elseif ($type == 'proposal') {
   $proposal =&$publication;
