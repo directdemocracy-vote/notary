@@ -30,7 +30,7 @@ if (!$title)
   error("Proposal not found");
 $answer = array();
 $answer['title'] = $title['title'];
-$query = "SELECT pc.fingerprint, citizen.firstName, citizen.lastName, citizen.picture "
+$query = "SELECT pc.fingerprint, citizen.givenNames, citizen.familyName, citizen.picture "
         ."FROM citizen "
         ."INNER JOIN publication AS pc ON pc.id=citizen.id "
         ."INNER JOIN publication AS pp ON pp.fingerprint='$fingerprint' "
