@@ -139,6 +139,7 @@ elseif ($type == 'endorsement') {
   $query = "INSERT INTO endorsement(id, endorsedFingerprint, `revoke`, message, comment, endorsedSignature) "
           ."VALUES($id, SHA1(\"$endorsement->endorsedSignature\"), $revoke, \"$endorsement->message\", \"$endorsement->comment\", \"$endorsement->endorsedSignature\")";
   if (str_ends_with($endorsed['schema'], '/proposal.schema.json')) {  # signing a petition
+    # increment the number of participants in a petition if the citizen is located inside the petition area and is endorsed by the petition judge
     $endorsed_id = $endorsed['id'];
     $key = endorsement->key;
     $query = "UPDATE proposal SET participants=participants+1 "
