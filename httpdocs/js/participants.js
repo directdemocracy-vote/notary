@@ -30,7 +30,7 @@ window.onload = function() {
         let block = document.createElement('div');
         block.classList.add('panel-block');
         panel.appendChild(block);
-        block.innerHTML = `<p><img src="${participant.picture}" style="width:75px"> ${participant.givenNames} <b>${participant.familyName}</p>`;
+        block.innerHTML = `<p><img src="${participant.picture}" style="width:50px;vertical-align:middle;"> ${participant.givenNames} <b>${participant.familyName}</p>`;
       }
     });
 };
