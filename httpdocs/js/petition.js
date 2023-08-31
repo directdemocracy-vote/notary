@@ -37,25 +37,25 @@ function findGetParameter(parameterName) {
         const participation = Math.round(10000 * answer.participants / corpus) / 100;
         document.getElementById('result').innerHTML = `Corpus: ${corpus} &mdash; Participants: ${answer.participants} &mdash; Participation: ${participation}%`; 
         areaName = document.getElementById('area-name');
-        let areaArray = answer.name[0].split('=');
-        let areaQuery = '';
-        answer.name.forEach(function(line) {
+        let areas = answer.areas[0].split('=');
+        let query = '';
+        answer.areas.forEach(function(line) {
           const eq = line.indexOf('=');
           let type = line.substr(0, eq);
           if (['village', 'town', 'municipality'].includes(type))
             type = 'city';
           const name = line.substr(eq + 1);
           if (type)
-            areaQuery += type + '=' + encodeURIComponent(name) + '&';
+            query += type + '=' + encodeURIComponent(name) + '&';
         });
-        areaName.innerHTML = `Area: ${areaArray[1]}`;
-        areaQuery = areaQuery.slice(0, -1);
-        if (!areaArray[0])
+        areaName.innerHTML = `Area: ${areas[1]}`;
+        query = query.slice(0, -1);
+        if (!areas[0])
           areaName.innerHTML = `Area: <a href="https://en.wikipedia.org/wiki/Earth" target="_blank">Earth</a>`;
-        else if (areaArray[0] == 'union')
+        else if (areas[0] == 'union')
           areaName.innerHTML = `Area: <a href="https://en.wikipedia.org/wiki/European_Union" target="_blank">European Union</a>`;
         else {
-          fetch(`https://nominatim.openstreetmap.org/search.php?${areaQuery}&format=json&extratags=1`)
+          fetch(`https://nominatim.openstreetmap.org/search.php?${query}&format=json&extratags=1`)
             .then((response) => response.json())
             .then((answer) => {
               if (answer.length) {
@@ -67,7 +67,7 @@ function findGetParameter(parameterName) {
                     population = `<a target="_blank" href="${url}">${response.extratags.population}</a> with a corpus of ${corpus_percent}%`;
                   } else
                     population = `<a target="_blank" href="${url}">N/A</a>`;
-                  areaName.innerHTML = `Area: ${areaArray[1]} (estimated population: ${population})`;
+                  areaName.innerHTML = `Area: ${areas[1]} (estimated population: ${population})`;
                 }
               }
             });
