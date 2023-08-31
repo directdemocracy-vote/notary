@@ -21,7 +21,15 @@ if ($mysqli->connect_errno)
 $mysqli->set_charset('utf8mb4');
 
 $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
-
+$query = "SELECT title FROM proposal "
+        ."INNER JOIN publication ON publication.id=proposal.id AND publication.fingerprint=${fingerprint}";
+$result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
+$title = $result->fetch_assoc();
+$result->free();
+if (!$title)
+  error("Proposal not found");
+$answer = array();
+$answer['title'] = $title['title'];
 $query = "SELECT pc.fingerprint, citizen.firstName, citizen.lastName, citizen.picture "
         ."FROM citizen"
         ."INNER JOIN publication AS pc ON pc.id=citizen.id "
@@ -31,19 +39,13 @@ $query = "SELECT pc.fingerprint, citizen.firstName, citizen.lastName, citizen.pi
         ."INNER JOIN pe ON pe.`key`=judge.`key` "
         ."INNER JOIN endorsement ON endorsement.id=pe.id AND endorsement.latest=1 AND endorsement.`revoke`=0 AND endorsement.endorsedFingerprint=pc.fingerprint "
         ."INNER JOIN publication AS pa ON proposal.area=pa.`key` "
-        ."INNER JOIN area ON area.id=pa.id AND ST_"
-
+        ."INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home)))) ";
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
-$citizens = array();
-while ($citizen = $result->fetch_assoc()) {
-  $citizen['id'] = intval($citizen['id']);
-  $citizen['published'] = intval($citizen['published']);
-  $citizen['voted'] = intval($citizen['voted']);
-  $citizen['latitude'] = floatval($citizen['latitude']);
-  $citizen['longitude'] = floatval($citizen['longitude']);
-  $citizens[] = $citizen;
-}
+$participants = array();
+while ($participant = $result->fetch_assoc())
+  $participants[] = $participant;
 $result->free();
+$answer['participants'] = $participants;
 echo json_encode($citizens, JSON_UNESCAPED_SLASHES);
 $mysqli->close();
 ?>
