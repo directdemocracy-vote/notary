@@ -142,7 +142,7 @@ elseif ($type == 'endorsement') {
     # increment the number of participants in a petition if the citizen is located inside the petition area and is endorsed by the petition judge
     $endorsed_id = $endorsed['id'];
     $key = $endorsement->key;
-    $query = "UPDATE proposal SET participants=participants+1 "
+    $query = "UPDATE proposal "
             ."INNER JOIN publication AS pc ON pc.`key`='$key' "
             ."INNER JOIN citizen ON citizen.id=pc.id "
             ."INNER JOIN publication AS pa ON pa.`signature`=proposal.area "
@@ -150,6 +150,7 @@ elseif ($type == 'endorsement') {
             ."INNER JOIN judge ON judge.url=proposal.judge "
             ."INNER JOIN publication AS pe ON pe.`key`=judge.`key` "
             ."INNER JOIN endorsement ON endorsement.id = pe.id AND endorsement.`revoke`=0 AND endorsement.latest=1 AND endorsement.endorsedFingerprint=pc.fingerprint "
+            ."SET participants=participants+1 "
             ."WHERE proposal.id=$endorsed_id AND proposal.`secret`=0";
     $mysqli->query($query) or error($msqli->error); 
   }
