@@ -64,6 +64,10 @@ if ($results) {
   query("DELETE FROM registrations");
   query("DELETE FROM stations");
 }
+
+# clean-up orphan endorsements
+query("DELETE FROM endorsement WHERE endorsement.endorsedFingerprint NOT IN (SELECT fingerprint FROM publication)");
+
 # clean-up orphan publications
 $query = <<<EOT
 DELETE FROM publication WHERE id NOT IN (
@@ -77,14 +81,14 @@ EOT;
 // FIXME: we should add "participation" and "vote" to the above list
 
 query($query);
-query("DELETE FROM citizen WHERE id not IN (SELECT id FROM publication)");
-query("DELETE FROM endorsement WHERE id not IN (SELECT id FROM publication)");
-query("DELETE FROM area WHERE id not IN (SELECT id FROM publication)");
-query("DELETE FROM proposal WHERE id not IN (SELECT id FROM publication)");
-// query("DELETE FROM participation WHERE id not IN (SELECT id FROM publication)");
-query("DELETE FROM registration WHERE id not IN (SELECT id FROM publication)");
-query("DELETE FROM ballot WHERE id not IN (SELECT id FROM publication)");
-// query("DELETE FROM vote WHERE id not IN (SELECT id FROM publication)");
+query("DELETE FROM citizen WHERE id NOT IN (SELECT id FROM publication)");
+query("DELETE FROM endorsement WHERE id NOT IN (SELECT id FROM publication)");
+query("DELETE FROM area WHERE id NOT IN (SELECT id FROM publication)");
+query("DELETE FROM proposal WHERE id NOT IN (SELECT id FROM publication)");
+// query("DELETE FROM participation WHERE id NOT IN (SELECT id FROM publication)");
+query("DELETE FROM registration WHERE id NOT IN (SELECT id FROM publication)");
+query("DELETE FROM ballot WHERE id NOT IN (SELECT id FROM publication)");
+// query("DELETE FROM vote WHERE id NOT IN (SELECT id FROM publication)");
 
 
 $result = query("SELECT MAX(id) AS `max` FROM publication");
