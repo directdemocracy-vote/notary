@@ -15,7 +15,7 @@ function findGetParameter(parameterName) {
       return;
     }
 
-    fetch(`/private/proposal.php?fingerprint=${fingerprint}`)
+    fetch(`/api/proposal.php?fingerprint=${fingerprint}`)
       .then((response) => response.json())
       .then((answer) => {
         if (answer.error) {
