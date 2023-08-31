@@ -31,7 +31,7 @@ if (!$title)
 $answer = array();
 $answer['title'] = $title['title'];
 $query = "SELECT pc.fingerprint, citizen.firstName, citizen.lastName, citizen.picture "
-        ."FROM citizen"
+        ."FROM citizen "
         ."INNER JOIN publication AS pc ON pc.id=citizen.id "
         ."INNER JOIN publication AS pp ON pp.fingerprint='$fingerprint' "
         ."INNER JOIN proposal ON proposal.id=pp.id "
