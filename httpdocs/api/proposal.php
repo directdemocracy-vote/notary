@@ -47,6 +47,7 @@ settype($proposal['secret'], 'bool');
 settype($proposal['deadline'], 'int');
 settype($proposal['participation'], 'int');
 settype($proposal['corpus'], 'int');
+$proposal['areas'] = explode("\n", $proposal['areas']);
 if (!isset($latitude)) {
   $polygons = json_decode($proposal['polygons']);
   if ($polygons->type !== 'MultiPolygon')
