@@ -26,5 +26,8 @@ window.onload = function() {
       panel.appendChild(title);
       title.classList.add('panel-heading');
       title.innerHTML = `<a href="petition.html?fingerprint=${fingerprint}">${answer.title}</a>`;
+      for(participant in answer.participants) {
+        console.log(participant.givenNames);
+      }
     });
 };
