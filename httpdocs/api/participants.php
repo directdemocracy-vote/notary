@@ -47,9 +47,11 @@ if ($corpus)
          ." INNER JOIN publication AS pe ON pe.`key`=judge.`key`"
          ." INNER JOIN endorsement ON endorsement.id=pe.id AND endorsement.latest=1 AND endorsement.endorsedFingerprint=pc.fingerprint"
          ." INNER JOIN publication AS pa ON proposal.area=pa.`signature`"
-         ." INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home)))";
-         ." WHERE (endorsement.`revoke`=1 AND EXISTS "
-         ." (SELECT pep.id FROM publication AS pep INNER JOIN endorsement AS e ON e.id=pep.id WHERE pc.`key`=pep.`key` AND e.endorsedFingerprint='$fingerprint' AND e.accepted=1))"
+         ." INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home)))"
+         ." WHERE (endorsement.`revoke`=1 AND EXISTS"
+         ." (SELECT pep.id FROM publication AS pep"
+         ." INNER JOIN endorsement AS e ON e.id=pep.id"
+         ." WHERE pc.`key`=pep.`key` AND e.endorsedFingerprint='$fingerprint' AND e.accepted=1))"
          ." OR endorsement.`revoke`=0";
 else
   $query .= " INNER JOIN endorsement AS signature ON signature.endorsedFingerprint='$fingerprint' AND signature.accepted=1"
