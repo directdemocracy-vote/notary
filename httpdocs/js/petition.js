@@ -35,7 +35,12 @@ function findGetParameter(parameterName) {
           signButton.removeAttribute('disabled');
         const corpus = answer.corpus;
         const participation = Math.round(10000 * answer.participants / corpus) / 100;
-        document.getElementById('result').innerHTML = `Corpus: ${corpus} &mdash; Participants: <a href="participants.html?fingerprint=${fingerprint}" target="_blank">${answer.participants}</a> &mdash; Participation: ${participation}%`; 
+        const line = `Corpus: <a href="participants.html?fingerprint=${fingerpring}&corpus=1" target="_blank">` +
+                     `${corpus}</a> &mdash; ` +
+                     `Participants: <a href="participants.html?fingerprint=${fingerprint}" target="_blank">` +
+                     `${answer.participants}</a> &mdash; ` +
+                     `Participation: ${participation}%`; 
+        document.getElementById('result').innerHTML = line;
         areaName = document.getElementById('area-name');
         let areas = answer.areas[0].split('=');
         let query = '';

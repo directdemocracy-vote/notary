@@ -15,6 +15,11 @@ header("Access-Control-Allow-Headers: content-type");
 if (!isset($_GET['fingerprint']))
   error("Missing fingerprint parameter");
 
+if (isset($_GET['corpus']))
+  $corpus = ($_GET['corpus'] === '1');
+else
+  $corpus = false;
+
 $mysqli = new mysqli($database_host, $database_username, $database_password, $database_name);
 if ($mysqli->connect_errno)
   error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
@@ -39,10 +44,12 @@ $query = "SELECT pc.fingerprint, citizen.givenNames, citizen.familyName, citizen
         ."INNER JOIN publication AS pe ON pe.`key`=judge.`key` "
         ."INNER JOIN endorsement ON endorsement.id=pe.id AND endorsement.latest=1 AND endorsement.`revoke`=0 AND endorsement.endorsedFingerprint=pc.fingerprint "
         ."INNER JOIN publication AS pa ON proposal.area=pa.`signature` "
-        ."INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home))) "
-        ."INNER JOIN endorsement AS signature ON signature.endorsedFingerprint='$fingerprint' "
-        ."INNER JOIN publication AS ps ON ps.id=signature.id AND ps.`key`=pc.`key` "
-        ."ORDER BY citizen.familyName, citizen.givenNames";
+        ."INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home))) ";
+if (!$corpus)
+  $query .= "INNER JOIN endorsement AS signature ON signature.endorsedFingerprint='$fingerprint' "
+           ."INNER JOIN publication AS ps ON ps.id=signature.id AND ps.`key`=pc.`key` "
+$query .= "ORDER BY citizen.familyName, citizen.givenNames";
+
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
 $participants = array();
 while ($participant = $result->fetch_assoc())

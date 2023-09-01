@@ -3,7 +3,8 @@ function findGetParameter(parameterName) {
   let tmp = [];
   location.search.substr(1).split("&").forEach(function(item) {
     tmp = item.split("=");
-    if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+    if (tmp[0] === parameterName)
+      result = decodeURIComponent(tmp[1]);
   });
   return result;
 }
@@ -14,13 +15,25 @@ window.onload = function() {
     console.log('Missing fingerprint GET argument.');
     return;
   }
-  fetch(`/api/participants.php?fingerprint=${fingerprint}`)
+  let request = `/api/participants.php?fingerprint=${fingerprint}`;
+  let corpus;
+  if (findGetParameter('corpus') === '1') {
+    corpus = true;
+    request += '&corpus=1';
+  } else
+    corpus = false;
+  fetch(request)
     .then((response) => response.json())
     .then((answer) => {
       if (answer.error) {
         console.error(answer.error);
         return;
       }
+      let subtitle = document.getElementById('subtitle');
+      if (corpus)
+        subtitle.innerHTML = 'Petition corpus';
+      else
+        subtitle.innerHTML = 'Petition participants';
       let panel = document.getElementById('panel');
       let title = document.createElement('p');
       panel.appendChild(title);
