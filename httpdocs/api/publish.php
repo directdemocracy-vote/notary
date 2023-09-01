@@ -10,7 +10,7 @@ use Opis\JsonSchema\{
 };
 
 function error($message) {
-  die("{\"error\":\"$message\"}");
+  die("{\"error\":$message}");
 }
 
 function get_type($schema) {
