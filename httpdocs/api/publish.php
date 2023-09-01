@@ -135,9 +135,6 @@ elseif ($type == 'endorsement') {
                 ." SET endorsement.latest = 0"
                 ." WHERE endorsement.endorsedFingerprint=SHA1('$endorsement->endorsedSignature')"
                 ." AND publication.`key`='$publication->key'") or error($mysli->error);
-  $revoke = $endorsement->revoke ? 1 : 0;
-  $query = "INSERT INTO endorsement(id, endorsedFingerprint, `revoke`, message, comment, endorsedSignature) "
-          ."VALUES($id, SHA1(\"$endorsement->endorsedSignature\"), $revoke, \"$endorsement->message\", \"$endorsement->comment\", \"$endorsement->endorsedSignature\")";
   if (str_ends_with($endorsed['schema'], '/proposal.schema.json')) {  # signing a petition
     # increment the number of participants in a petition if the citizen is located inside the petition area and is endorsed by the petition judge
     $endorsed_id = $endorsed['id'];
@@ -152,8 +149,11 @@ elseif ($type == 'endorsement') {
             ."INNER JOIN endorsement ON endorsement.id = pe.id AND endorsement.`revoke`=0 AND endorsement.latest=1 AND endorsement.endorsedFingerprint=pc.fingerprint "
             ."SET participants=participants+1 "
             ."WHERE proposal.id=$endorsed_id AND proposal.`secret`=0";
-    $mysqli->query($query) or error($msqli->error); 
+    $mysqli->query($query) or error($msqli->error);
   }
+  $revoke = $endorsement->revoke ? 1 : 0;
+  $query = "INSERT INTO endorsement(id, endorsedFingerprint, `revoke`, `message`, comment, endorsedSignature) "
+          ."VALUES($id, SHA1(\"$endorsement->endorsedSignature\"), $revoke, \"$endorsement->message\", \"$endorsement->comment\", \"$endorsement->endorsedSignature\")";
 } elseif ($type == 'proposal') {
   $proposal =&$publication;
   if (!isset($proposal->website))  # optional
