@@ -127,7 +127,7 @@ elseif ($type == 'endorsement') {
   $endorsed = $result->fetch_assoc();
   $result->free();
   if (!$endorsed)
-    error("Endorsed signature not found: " . $endorsement->endorsedSignature);
+    error("Endorsed signature not found: $endorsement->endorsedSignature");
   if ($endorsed['signature'] != $endorsement->endorsedSignature)
     error("Endorsed signature mismatch.");
   # mark other endorsements of the same participant by the same endorser as not the latest
