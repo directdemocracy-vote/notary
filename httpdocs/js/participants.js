@@ -45,7 +45,7 @@ window.onload = function() {
         panel.appendChild(block);
         let line = `<p><a href="citizen.html?fingerprint=${participant.fingerprint}" target="_blank">` +
                    `<img src="${participant.picture}" style="width:50px;float:left;"></img> ` +
-                   `${participant.givenNames} <b>${participant.familyName}</a>`;
+                   `${participant.givenNames} <b>${participant.familyName}</b></a>`;
         if (!corpus) {
           const date = new Date(participant.published);
           line += `<br>Signed on: ${date.toLocaleString()}`;
