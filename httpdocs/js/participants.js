@@ -43,9 +43,15 @@ window.onload = function() {
         let block = document.createElement('div');
         block.classList.add('panel-block');
         panel.appendChild(block);
-        block.innerHTML = `<p><a href="citizen.html?fingerprint=${participant.fingerprint}" target="_blank">` +
-                          `<img src="${participant.picture}" style="width:50px;vertical-align:middle;"></img> ` +
-                          `${participant.givenNames} <b>${participant.familyName}</a></p>`;
+        let line = `<p><a href="citizen.html?fingerprint=${participant.fingerprint}" target="_blank">` +
+                   `<img src="${participant.picture}" style="width:50px;float:left;"></img> ` +
+                   `${participant.givenNames} <b>${participant.familyName}</a>`;
+        if (!corpus) {
+          const date = new Date(participant.published);
+          line += `<br>Signed on: ${date.toLocaleString()}`;
+        }
+        line += '</p>';
+        block.innerHTML = line;
       }
     });
 };
