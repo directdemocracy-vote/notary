@@ -37,8 +37,10 @@ window.onload = function() {
         block.classList.add('panel-block');
         panel.appendChild(block);
         const d = new Date(parseInt(endorsement.published));
-        const action = answer.revoked ? 'Revoked on: ' : 'Endorsed on: ';
-        const latest = parseInt(answer.latest) === 1;
+        const action = endorsement.revoked ? 'Revoked on: ' : 'Endorsed on: ';
+        const latest = parseInt(endorsement.latest) === 1;
+        console.log(latest);
+        console.log(endorsement.latest);
         block.innerHTML = `<p style="width:100%">${latest ? '<b>' : ''}${action} ${d.toLocaleString()}${latest ? '</b>' : ''}</p>`;
       }
     });
