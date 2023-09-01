@@ -67,7 +67,8 @@ window.onload = function() {
               reputation.innerHTML = answer.error;
             } else {
               reputation.style.color = answer.endorsed ? 'green' : 'red';
-              reputation.innerHTML = `<i class="icon f7-icons margin-right" style="font-size:110%">checkmark_seal_fill</i> <a target="_blank" href="endorsements.html?fingerprint=${fingerprint}&judge=${judge}">${answer.reputation}</a>`;
+              const icon = answer.endorsed ? 'checkmark_seal_fill' : 'xmark_seal_fill';
+              reputation.innerHTML = `<i class="icon f7-icons margin-right" style="font-size:110%">${icon}</i> <a target="_blank" href="endorsements.html?fingerprint=${fingerprint}&judge=${judge}">${answer.reputation}</a>`;
             }
             let button = document.getElementById('reload');
             button.removeAttribute('disabled');
