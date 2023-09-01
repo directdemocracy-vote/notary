@@ -34,7 +34,7 @@ $answer['familyName'] = $citizen['familyName'];
 $query = "SELECT publication.published, endorsement.`revoke`, endorsement.latest FROM publication"
         ." INNER JOIN judge ON judge.`key`=publication.`key` AND judge.url='$judge'"
         ." INNER JOIN endorsement ON endorsement.id=publication.id AND endorsement.endorsedFingerprint='$fingerprint'"
-        ." ORDER BY publication.published";
+        ." ORDER BY publication.published DESC";
 $result = $mysqli->query($query) or error($mysqli->error);
 $endorsements = array();
 while ($endorsement = $result->fetch_assoc()) {
