@@ -44,11 +44,11 @@ window.onload = function() {
         block.classList.add('panel-block');
         panel.appendChild(block);
         let line = `<p><a href="citizen.html?fingerprint=${participant.fingerprint}" target="_blank">` +
-                   `<img src="${participant.picture}" style="width:50px;float:left;"></img> ` +
+                   `<img src="${participant.picture}" style="width:50px;float:left;margin-right:10px"></img> ` +
                    `${participant.givenNames} <b>${participant.familyName}</b></a>`;
         if (!corpus) {
-          const date = new Date(participant.published);
-          line += `<br>Signed on: ${date.toLocaleString()}`;
+          const d = new Date(participant.published);
+          line += `<br>Signed on: ${d.toLocaleString()}`;
         }
         line += '</p>';
         block.innerHTML = line;

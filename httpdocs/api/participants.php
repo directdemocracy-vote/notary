@@ -54,8 +54,11 @@ $query .= " ORDER BY citizen.familyName, citizen.givenNames";
 
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
 $participants = array();
-while ($participant = $result->fetch_assoc())
+while ($participant = $result->fetch_assoc()) {
+  if ($corpus)
+    $participant['published'] = intval($participant['published']);
   $participants[] = $participant;
+}
 $result->free();
 $answer['participants'] = $participants;
 echo json_encode($answer, JSON_UNESCAPED_SLASHES);
