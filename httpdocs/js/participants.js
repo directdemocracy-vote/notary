@@ -47,7 +47,7 @@ window.onload = function() {
                    `<img src="${participant.picture}" style="width:50px;float:left;margin-right:10px"></img> ` +
                    `${participant.givenNames} <b>${participant.familyName}</b></a>`;
         if (!corpus) {
-          const d = new Date(participant.published);
+          const d = new Date(parseInt(participant.published));
           line += `<br>Signed on: ${d.toLocaleString()}`;
         }
         line += '</p>';
