@@ -67,7 +67,7 @@ window.onload = function() {
               reputation.innerHTML = answer.error;
             } else {
               reputation.style.color = answer.endorsed ? 'green' : 'red';
-              reputation.innerHTML = `&#x25cf; <a target="_blank" href="endorsements.html?fingerprint=${fingerprint}&judge=${judge}">${answer.reputation}</a>`;
+              reputation.innerHTML = `<span style="font-size:200%">&#x25cf;</span> <a target="_blank" href="endorsements.html?fingerprint=${fingerprint}&judge=${judge}">${answer.reputation}</a>`;
             }
             let button = document.getElementById('reload');
             button.removeAttribute('disabled');
