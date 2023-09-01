@@ -56,7 +56,7 @@ $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
 $participants = array();
 while ($participant = $result->fetch_assoc()) {
   if ($corpus)
-    $participant['published'] = intval($participant['published']);
+    settype($participant['published'], 'int');
   $participants[] = $participant;
 }
 $result->free();
