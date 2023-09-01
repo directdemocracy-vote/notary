@@ -43,7 +43,7 @@ window.onload = function() {
       .then((response) => {
         if (response.status == 429)
           console.log("quota exceeded");
-        response.text();
+        return response.text();
       })
       .then((answer) => {
         if (!geolocation) {
