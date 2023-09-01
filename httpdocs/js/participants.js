@@ -43,12 +43,12 @@ window.onload = function() {
         let block = document.createElement('div');
         block.classList.add('panel-block');
         panel.appendChild(block);
-        let line = `<p><a href="citizen.html?fingerprint=${participant.fingerprint}" target="_blank">` +
+        let line = `<p style="Width:100%"><a href="citizen.html?fingerprint=${participant.fingerprint}" target="_blank">` +
                    `<img src="${participant.picture}" style="width:50px;float:left;margin-right:10px"></img> ` +
                    `${participant.givenNames} <b>${participant.familyName}</b></a>`;
         if (!corpus) {
           const d = new Date(parseInt(participant.published));
-          line += `<br>Signed on: ${d.toLocaleString()}`;
+          line += `<br><small>Signed on: ${d.toLocaleString()}</small>`;
         }
         line += '</p>';
         block.innerHTML = line;
