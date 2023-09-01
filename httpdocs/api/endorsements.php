@@ -25,7 +25,7 @@ $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
 $judge = $mysqli->escape_string($_GET['judge']);
 
 $query = "SELECT citizen.givenNames, citizen.familyName FROM citizen INNER JOIN publication ON publication.id=citizen.id AND publication.fingerprint='$fingerprint'";
-$result-> $mysqli->query($query) or error($mysqli->error);
+$result = $mysqli->query($query) or error($mysqli->error);
 $citizen = $result->fetch_assoc();
 $result->free();
 $answer = array();
