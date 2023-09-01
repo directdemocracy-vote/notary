@@ -44,7 +44,8 @@ CREATE TABLE `endorsement` (
   `message` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
   `comment` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
   `endorsedSignature` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  `latest` tinyint(1) NOT NULL
+  `latest` tinyint(1) NOT NULL,
+  `accepted` tinyint(1) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `participation` (

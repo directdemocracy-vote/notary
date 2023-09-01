@@ -42,17 +42,21 @@ $query .= " FROM citizen"
          ." INNER JOIN publication AS pc ON pc.id=citizen.id"
          ." INNER JOIN publication AS pp ON pp.fingerprint='$fingerprint'"
          ." INNER JOIN proposal ON proposal.id=pp.id"
-         ." INNER JOIN judge ON judge.url=proposal.judge"
+if ($corpus)
+$query .= " INNER JOIN judge ON judge.url=proposal.judge"
          ." INNER JOIN publication AS pe ON pe.`key`=judge.`key`"
-         ." INNER JOIN endorsement ON endorsement.id=pe.id AND endorsement.latest=1 AND endorsement.`revoke`=0 AND endorsement.endorsedFingerprint=pc.fingerprint"
+         ." INNER JOIN endorsement ON endorsement.id=pe.id AND endorsement.latest=1 AND endorsement.endorsedFingerprint=pc.fingerprint"
          ." INNER JOIN publication AS pa ON proposal.area=pa.`signature`"
          ." INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home)))";
-if (!$corpus)
-  $query .= " INNER JOIN endorsement AS signature ON signature.endorsedFingerprint='$fingerprint'"
+         ." WHERE (endorsement.`revoke`=1 AND EXISTS "
+         ." (SELECT pep.id FROM publication AS pep INNER JOIN endorsement AS e ON e.id=pep.id WHERE pc.`key`=pep.`key` AND e.endorsedFingerprint='$fingerprint' AND e.accepted=1))"
+         ." OR endorsement.`revoke`=0";
+else
+  $query .= " INNER JOIN endorsement AS signature ON signature.endorsedFingerprint='$fingerprint' AND signature.accepted=1"
            ." INNER JOIN publication AS ps ON ps.id=signature.id AND ps.`key`=pc.`key`";
 $query .= " ORDER BY citizen.familyName, citizen.givenNames";
 
-$result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
+$result = $mysqli->query($query) or error($query);
 $participants = array();
 while ($participant = $result->fetch_assoc()) {
   if ($corpus)

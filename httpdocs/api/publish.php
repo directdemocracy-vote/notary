@@ -150,10 +150,13 @@ elseif ($type == 'endorsement') {
             ."SET participants=participants+1 "
             ."WHERE proposal.id=$endorsed_id AND proposal.`secret`=0";
     $mysqli->query($query) or error($msqli->error);
-  }
+    $accepted = $mysqli->affected_rows;
+  } else
+    $accepted = 0;
   $revoke = $endorsement->revoke ? 1 : 0;
-  $query = "INSERT INTO endorsement(id, endorsedFingerprint, `revoke`, `message`, comment, endorsedSignature) "
-          ."VALUES($id, SHA1(\"$endorsement->endorsedSignature\"), $revoke, \"$endorsement->message\", \"$endorsement->comment\", \"$endorsement->endorsedSignature\")";
+  $query = "INSERT INTO endorsement(id, endorsedFingerprint, `revoke`, `message`, comment, endorsedSignature, latest, accepted) "
+          ."VALUES($id, SHA1(\"$endorsement->endorsedSignature\"), $revoke, \"$endorsement->message\", \"$endorsement->comment\", "
+          ."\"$endorsement->endorsedSignature\", 1, $accepted)";
 } elseif ($type == 'proposal') {
   $proposal =&$publication;
   if (!isset($proposal->website))  # optional
