@@ -31,7 +31,8 @@ window.onload = function() {
       let title = document.createElement('p');
       panel.appendChild(title);
       title.classList.add('panel-heading');
-      title.innerHTML = `<a href="citizen.html?fingerprint=${fingerprint}">${answer.givenNames} <b>${answer.familyName}</b></a>`;
+      title.innerHTML = `<a href="citizen.html?fingerprint=${fingerprint}">${answer.givenNames} <b>${answer.familyName}</b></a> ` +
+                        `endorsements from <a target="_blank" href="${judge}">${judge}</a>`;
       for(const endorsement of answer.endorsements) {
         let block = document.createElement('div');
         block.classList.add('panel-block');
