@@ -36,7 +36,7 @@ window.onload = function() {
         let block = document.createElement('div');
         block.classList.add('panel-block');
         panel.appendChild(block);
-        const d = new Date(parseInt(participant.published));
+        const d = new Date(parseInt(endorsement.published));
         const action = answer.revoked ? 'Revoked on: ' : 'Endorsed on: ';
         const latest = answer.latest === true;
         block.innerHTML = `<p style="width:100%">${latest ? '<b>' : ''}${action} ${d.toLocaleString()}${latest ? '</b>' : ''}</p>`;
