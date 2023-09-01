@@ -47,7 +47,7 @@ $query = "SELECT pc.fingerprint, citizen.givenNames, citizen.familyName, citizen
         ."INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home))) ";
 if (!$corpus)
   $query .= "INNER JOIN endorsement AS signature ON signature.endorsedFingerprint='$fingerprint' "
-           ."INNER JOIN publication AS ps ON ps.id=signature.id AND ps.`key`=pc.`key` "
+           ."INNER JOIN publication AS ps ON ps.id=signature.id AND ps.`key`=pc.`key` ";
 $query .= "ORDER BY citizen.familyName, citizen.givenNames";
 
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
