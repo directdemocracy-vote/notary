@@ -45,6 +45,7 @@ while ($endorsement = $result->fetch_assoc()) {
 }
 $result->free();
 $answer['endorsements'] = $endorsements;
+$answer['query'] = $query;
 echo json_encode($answer, JSON_UNESCAPED_SLASHES);
 $mysqli->close();
 ?>
