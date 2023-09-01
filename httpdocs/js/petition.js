@@ -27,7 +27,7 @@ function findGetParameter(parameterName) {
         const deadline = new Date(answer.deadline);
         const now = new Date();
         document.getElementById('deadline').innerHTML = `<span style="color:#${ deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
-        document.getElementById('judge').innerHTML = `<a href="${answer.judge}" target="_blank">${answer.judge}</a>`;
+        document.getElementById('judge').innerHTML = `<a target="_blank" href="${answer.judge}">${answer.judge}</a>`;
         let signButton = document.getElementById('sign-button');
         if (deadline < now)
           signButton.innerHTML = 'Closed';
@@ -35,9 +35,9 @@ function findGetParameter(parameterName) {
           signButton.removeAttribute('disabled');
         const corpus = answer.corpus;
         const participation = Math.round(10000 * answer.participants / corpus) / 100;
-        const line = `Corpus: <a href="participants.html?fingerprint=${fingerprint}&corpus=1" target="_blank">` +
+        const line = `Corpus: <a target="_blank" href="participants.html?fingerprint=${fingerprint}&corpus=1">` +
                      `${corpus}</a> &mdash; ` +
-                     `Participants: <a href="participants.html?fingerprint=${fingerprint}" target="_blank">` +
+                     `Participants: <a target="_blank" href="participants.html?fingerprint=${fingerprint}">` +
                      `${answer.participants}</a> &mdash; ` +
                      `Participation: ${participation}%`; 
         document.getElementById('result').innerHTML = line;
@@ -56,9 +56,9 @@ function findGetParameter(parameterName) {
         areaName.innerHTML = `Area: ${areas[1]}`;
         query = query.slice(0, -1);
         if (!areas[0])
-          areaName.innerHTML = `Area: <a href="https://en.wikipedia.org/wiki/Earth" target="_blank">Earth</a>`;
+          areaName.innerHTML = `Area: <a target="_blank" href="https://en.wikipedia.org/wiki/Earth">Earth</a>`;
         else if (areas[0] == 'union')
-          areaName.innerHTML = `Area: <a href="https://en.wikipedia.org/wiki/European_Union" target="_blank">European Union</a>`;
+          areaName.innerHTML = `Area: <a target="_blank" href="https://en.wikipedia.org/wiki/European_Union">European Union</a>`;
         else {
           fetch(`https://nominatim.openstreetmap.org/search.php?${query}&format=json&extratags=1`)
             .then((response) => response.json())
@@ -69,7 +69,9 @@ function findGetParameter(parameterName) {
                   const url = 'https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=' + response.osm_id;
                   if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population')) {
                     const corpus_percent = Math.round(10000 * corpus / parseFloat(response.extratags.population)) / 100;
-                    population = `<a target="_blank" href="${url}">${response.extratags.population}</a> with a corpus of ${corpus_percent}%`;
+                    population = `<a target="_blank" href="${url}">${response.extratags.population}</a> with a ` +
+                                 `<a target="_blank" href="participants.html?fingerprint=${fingerprint}&corpus=1">` +
+                                 `corpus</a> of ${corpus_percent}%`;
                   } else
                     population = `<a target="_blank" href="${url}">N/A</a>`;
                   areaName.innerHTML = `Area: ${areas[1]} (estimated population: ${population})`;
