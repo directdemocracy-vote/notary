@@ -54,7 +54,6 @@ window.onload = function() {
       })
       .then((answer) => {
         if (!geolocation) {
-          console.log('answer = ' + answer);
           coords = answer.split(',');
           getGeolocationPosition({coords: {latitude: coords[0], longitude: coords[1]}});
         }
