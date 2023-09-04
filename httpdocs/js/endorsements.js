@@ -38,7 +38,7 @@ window.onload = function() {
         block.classList.add('panel-block');
         panel.appendChild(block);
         const d = new Date(parseInt(endorsement.published));
-        const action = endorsement.revoked ? 'Revoked on: ' : 'Endorsed on: ';
+        const action = endorsement.revoke ? 'Revoked on: ' : 'Endorsed on: ';
         const latest = parseInt(endorsement.latest) === 1;
         console.log(latest);
         console.log(endorsement.latest);
