@@ -56,6 +56,7 @@ window.onload = function() {
         reputation.innerHTML = '...';
         reputation.style.color = 'black';
         loadReputation();
+        updateJudgeEndorsements();
       });
       
       function loadReputation() {
@@ -68,7 +69,7 @@ window.onload = function() {
             } else {
               reputation.style.color = answer.endorsed ? 'green' : 'red';
               const icon = answer.endorsed ? 'checkmark_seal_fill' : 'xmark_seal_fill';
-              reputation.innerHTML = `<i class="icon f7-icons margin-right" style="font-size:110%">${icon}</i> <a target="_blank" href="endorsements.html?fingerprint=${fingerprint}&judge=${judge}">${answer.reputation}</a>`;
+              reputation.innerHTML = `<i class="icon f7-icons margin-right" style="font-size:110%">${icon}</i> ${answer.reputation}`;
             }
             let button = document.getElementById('reload');
             button.removeAttribute('disabled');
@@ -79,23 +80,24 @@ window.onload = function() {
       loadReputation();
 
       function updateJudgeEndorsements() {
+        let div = document.getElementById('judge-endorsements');
+        div.innerHTML = '...';
         fetch(`/api/endorsements.php?fingerprint=${fingerprint}&judge=${judge}`)
-        .then((response) => response.json())
-        .then((answer) => {
-          if (answer.error) {
-            console.error(answer.error);
-            return;
-          }
-          let div = document.getElementById('judge-endorsements');
-          for(const endorsement of answer.endorsements) {
-            let block = document.createElement('div');
-            div.appendChild(block);
-            const d = new Date(parseInt(endorsement.published));
-            const action = endorsement.revoke ? 'Revoked on: ' : 'Endorsed on: ';
-            const latest = parseInt(endorsement.latest) === 1;
-            block.innerHTML = `<p style="width:100%">${latest ? '<b>' : ''}${action} ${d.toLocaleString()}${latest ? '</b>' : ''}</p>`;
-          }
-        });    
+          .then((response) => response.json())
+          .then((answer) => {
+            if (answer.error) {
+              console.error(answer.error);
+              return;
+            }
+            for(const endorsement of answer.endorsements) {
+              let block = document.createElement('div');
+              div.appendChild(block);
+              const d = new Date(parseInt(endorsement.published));
+              const action = endorsement.revoke ? 'Revoked on: ' : 'Endorsed on: ';
+              const latest = parseInt(endorsement.latest) === 1;
+              block.innerHTML = `<p style="width:100%">${latest ? '<b>' : ''}${action} ${d.toLocaleString()}${latest ? '</b>' : ''}</p>`;
+            }
+          });    
       }
 
       updateJudgeEndorsements();
