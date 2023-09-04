@@ -89,7 +89,6 @@ window.onload = function() {
           let div = document.getElementById('judge-endorsements');
           for(const endorsement of answer.endorsements) {
             let block = document.createElement('div');
-            block.classList.add('panel-block');
             div.appendChild(block);
             const d = new Date(parseInt(endorsement.published));
             const action = endorsement.revoke ? 'Revoked on: ' : 'Endorsed on: ';
