@@ -78,6 +78,29 @@ window.onload = function() {
 
       loadReputation();
 
+      function updateJudgeEndorsements() {
+        fetch(`/api/endorsements.php?fingerprint=${fingerprint}&judge=${judge}`)
+        .then((response) => response.json())
+        .then((answer) => {
+          if (answer.error) {
+            console.error(answer.error);
+            return;
+          }
+          let div = document.getElementById('judge-endorsements');
+          for(const endorsement of answer.endorsements) {
+            let block = document.createElement('div');
+            block.classList.add('panel-block');
+            div.appendChild(block);
+            const d = new Date(parseInt(endorsement.published));
+            const action = endorsement.revoke ? 'Revoked on: ' : 'Endorsed on: ';
+            const latest = parseInt(endorsement.latest) === 1;
+            block.innerHTML = `<p style="width:100%">${latest ? '<b>' : ''}${action} ${d.toLocaleString()}${latest ? '</b>' : ''}</p>`;
+          }
+        });    
+      }
+
+      updateJudgeEndorsements();
+
       function addEndorsement(endorsement, name) {
         let columns = document.getElementById(name);        
         let column = document.createElement('div');
