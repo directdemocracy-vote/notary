@@ -61,7 +61,11 @@ window.onload = function() {
       
       function loadReputation() {
         fetch(`${judge}/api/reputation.php?key=${encodeURIComponent(answer.citizen.key)}`)
-          .then((response) => response.json())
+          .then((response) => {
+            if (document.getElementById('judge-endorsements').innerHTML != '<b>...</b>')
+              enableJudgeReloadButton();
+            return response.json()
+          })
           .then((answer) => {
             if (answer.error) {
               reputation.style.color = 'red';
@@ -70,9 +74,6 @@ window.onload = function() {
               reputation.style.color = answer.endorsed ? 'green' : 'red';
               reputation.innerHTML = `${answer.reputation}`;
             }
-            let button = document.getElementById('reload');
-            button.removeAttribute('disabled');
-            button.classList.remove('is-loading');
           });
       }
 
@@ -82,7 +83,11 @@ window.onload = function() {
         let div = document.getElementById('judge-endorsements');
         div.innerHTML = '<b>...</b>';
         fetch(`/api/endorsements.php?fingerprint=${fingerprint}&judge=${judge}`)
-          .then((response) => response.json())
+          .then((response) => {
+            if (reputation.innerHTML != '..')
+              enableJudgeReloadButton();
+            return response.json()
+          })
           .then((answer) => {
             if (answer.error) {
               console.error(answer.error);
@@ -104,6 +109,12 @@ window.onload = function() {
       }
 
       updateJudgeEndorsements();
+
+      function enableJudgeReloadButton() {
+        let button = document.getElementById('reload');
+        button.removeAttribute('disabled');
+        button.classList.remove('is-loading');
+      }
 
       function addEndorsement(endorsement, name) {
         let columns = document.getElementById(name);        
