@@ -89,13 +89,17 @@ window.onload = function() {
               console.error(answer.error);
               return;
             }
+            div.innerHTML = '';
             for(const endorsement of answer.endorsements) {
               let block = document.createElement('div');
               div.appendChild(block);
               const d = new Date(parseInt(endorsement.published));
               const action = endorsement.revoke ? 'Revoked on: ' : 'Endorsed on: ';
               const latest = parseInt(endorsement.latest) === 1;
-              block.innerHTML = `<p style="width:100%">${latest ? '<b>' : ''}${action} ${d.toLocaleString()}${latest ? '</b>' : ''}</p>`;
+              const color = endorsement.revoke ? 'red' : 'green';
+              const icon = endorsement.revoke ? 'xmark_seal_fill' : 'checkmark_seal_fill';
+              block.innerHTML = `<p style="width:100%"><i class="icon f7-icons margin-right" style="color:${color};font-size:110%">${icon}</i>`
+                              + `${latest ? '<b>' : ''}${action} ${d.toLocaleString()}${latest ? '</b>' : ''}</p>`;
             }
           });    
       }
