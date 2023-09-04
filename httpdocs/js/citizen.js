@@ -93,12 +93,12 @@ window.onload = function() {
               let block = document.createElement('div');
               div.appendChild(block);
               const d = new Date(parseInt(endorsement.published));
-              const action = endorsement.revoke ? 'Revoked on: ' : 'Endorsed on: ';
+              const action = endorsement.revoke ? 'Revoked' : 'Endorsed';
               const latest = parseInt(endorsement.latest) === 1;
               const color = endorsement.revoke ? 'red' : 'green';
               const icon = endorsement.revoke ? 'xmark_seal_fill' : 'checkmark_seal_fill';
               block.innerHTML = `<p style="width:100%"><i class="icon f7-icons margin-right" style="color:${color};font-size:110%">${icon}</i>`
-                              + `${latest ? '<b>' : ''}${action} ${d.toLocaleString()}${latest ? '</b>' : ''}</p>`;
+                              + `${latest ? '<b>' : ''}${action}${latest ? '</b>' : ''} on: ${d.toLocaleString()}</p>`;
             }
           });    
       }
