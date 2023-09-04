@@ -40,8 +40,6 @@ window.onload = function() {
         const d = new Date(parseInt(endorsement.published));
         const action = endorsement.revoke ? 'Revoked on: ' : 'Endorsed on: ';
         const latest = parseInt(endorsement.latest) === 1;
-        console.log(latest);
-        console.log(endorsement.latest);
         block.innerHTML = `<p style="width:100%">${latest ? '<b>' : ''}${action} ${d.toLocaleString()}${latest ? '</b>' : ''}</p>`;
       }
     });
