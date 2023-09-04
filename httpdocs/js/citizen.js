@@ -100,7 +100,7 @@ window.onload = function() {
               block.innerHTML = `<p style="width:100%"><i class="icon f7-icons margin-right" style="color:${color};font-size:110%">${icon}</i>`
                               + `${latest ? '<b>' : ''}${action}${latest ? '</b>' : ''} on: ${d.toLocaleString()}</p>`;
             }
-          });    
+          });
       }
 
       updateJudgeEndorsements();
