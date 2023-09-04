@@ -68,8 +68,7 @@ window.onload = function() {
               reputation.innerHTML = answer.error;
             } else {
               reputation.style.color = answer.endorsed ? 'green' : 'red';
-              const icon = answer.endorsed ? 'checkmark_seal_fill' : 'xmark_seal_fill';
-              reputation.innerHTML = `<i class="icon f7-icons margin-right" style="font-size:110%">${icon}</i> ${answer.reputation}`;
+              reputation.innerHTML = `${answer.reputation}`;
             }
             let button = document.getElementById('reload');
             button.removeAttribute('disabled');
@@ -81,7 +80,7 @@ window.onload = function() {
 
       function updateJudgeEndorsements() {
         let div = document.getElementById('judge-endorsements');
-        div.innerHTML = '...';
+        div.innerHTML = '<b>...</b>';
         fetch(`/api/endorsements.php?fingerprint=${fingerprint}&judge=${judge}`)
           .then((response) => response.json())
           .then((answer) => {
