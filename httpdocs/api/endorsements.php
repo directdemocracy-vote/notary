@@ -39,7 +39,7 @@ $result = $mysqli->query($query) or error($mysqli->error);
 $endorsements = array();
 while ($endorsement = $result->fetch_assoc()) {
   settype($endorsement['published'], 'int');
-  settype($endorsement['revoked'], 'int');
+  settype($endorsement['revoke'], 'int');
   settype($endorsement['latest'], 'int');
   $endorsements[] = $endorsement;
 }
