@@ -32,7 +32,7 @@ $answer = array();
 $answer['givenNames'] = $citizen['givenNames'];
 $answer['familyName'] = $citizen['familyName'];
 $query = "SELECT publication.published, endorsement.`revoke`, endorsement.latest FROM publication"
-        ." INNER JOIN judge ON judge.`key`=publication.`key` AND judge.url='$judge'"
+        ." INNER JOIN webservice AS judge ON judge.`type`='judge' AND judge.`key`=publication.`key` AND judge.url='$judge'"
         ." INNER JOIN endorsement ON endorsement.id=publication.id AND endorsement.endorsedFingerprint='$fingerprint'"
         ." ORDER BY publication.published DESC";
 $result = $mysqli->query($query) or error($mysqli->error);

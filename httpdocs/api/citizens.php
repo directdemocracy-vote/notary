@@ -44,7 +44,7 @@ $judge = $mysqli->escape_string(get_string_parameter('judge'));
 
 $key = '';
 if ($judge) {
-  $result = $mysqli->query("SELECT `key` FROM judge WHERE url='$judge'") or error($mysqli->error);
+  $result = $mysqli->query("SELECT `key` FROM webservice WHERE `type`='judge' AND url='$judge'") or error($mysqli->error);
   if ($j = $result->fetch_assoc())
     $key = $j['key'];
   $result->free();

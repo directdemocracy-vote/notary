@@ -43,7 +43,7 @@ $query .= " FROM citizen"
          ." INNER JOIN publication AS pp ON pp.fingerprint='$fingerprint'"
          ." INNER JOIN proposal ON proposal.id=pp.id";
 if ($corpus)
-  $query .= " INNER JOIN judge ON judge.url=proposal.judge"
+  $query .= " INNER JOIN webservice AS judge ON judge.`type`='judge' AND judge.url=proposal.judge"
          ." INNER JOIN publication AS pe ON pe.`key`=judge.`key`"
          ." INNER JOIN endorsement ON endorsement.id=pe.id AND endorsement.latest=1 AND endorsement.endorsedFingerprint=pc.fingerprint"
          ." INNER JOIN publication AS pa ON proposal.area=pa.`signature`"

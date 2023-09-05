@@ -147,7 +147,7 @@ elseif ($type == 'endorsement') {
             ."INNER JOIN citizen ON citizen.id=pc.id "
             ."INNER JOIN publication AS pa ON pa.`signature`=proposal.area "
             ."INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home))) "
-            ."INNER JOIN judge ON judge.url=proposal.judge "
+            ."INNER JOIN webservice AS judge ON judge.`type`='judge' AND judge.url=proposal.judge "
             ."INNER JOIN publication AS pe ON pe.`key`=judge.`key` "
             ."INNER JOIN endorsement ON endorsement.id = pe.id AND endorsement.`revoke`=0 AND endorsement.latest=1 AND endorsement.endorsedFingerprint=pc.fingerprint "
             ."SET participants=participants+1 "

@@ -103,12 +103,6 @@ CREATE TABLE `results` (
   `count` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `station` (
-  `id` int(11) NOT NULL,
-  `key` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 CREATE TABLE `stations` (
   `id` int(11) NOT NULL,
   `proposal` int(11) NOT NULL,
@@ -116,8 +110,9 @@ CREATE TABLE `stations` (
   `ballots_count` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `judge` (
+CREATE TABLE `webservice` (
   `id` int(11) NOT NULL,
+  `type` enum('judge', 'notary', 'station') NOT NULL,
   `key` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `url` varchar(2048) CHARACTER SET ascii COLLATE ascii_bin NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -164,15 +159,15 @@ ALTER TABLE `registrations`
 ALTER TABLE `results`
   ADD KEY `proposal` (`proposal`);
 
-ALTER TABLE `station`
-  ADD PRIMARY KEY (`id`);
-
 ALTER TABLE `stations`
   ADD KEY `id` (`id`),
   ADD KEY `proposal` (`proposal`);
 
-ALTER TABLE `judge`
+ALTER TABLE `webservice`
   ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `webservice`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `area`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
@@ -180,9 +175,4 @@ ALTER TABLE `area`
 ALTER TABLE `publication`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `station`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `judge`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;

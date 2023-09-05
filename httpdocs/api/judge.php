@@ -14,7 +14,7 @@ if (isset($_POST['judge']))
 else
   $judge = 'https://judge.directdemocracy.vote';
 
-$query = "SELECT `key` FROM judge WHERE url=\"$judge\"";
+$query = "SELECT `key` FROM webservice WHERE `type`='judge' AND url=\"$judge\"";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $assoc = $result->fetch_assoc() or die("{\"error\":\"judge not found: $judge\"}");
 $result->free();
