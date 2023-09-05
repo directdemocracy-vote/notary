@@ -58,7 +58,7 @@ else
            ." INNER JOIN publication AS ps ON ps.id=signature.id AND ps.`key`=pc.`key`";
 $query .= " ORDER BY citizen.familyName, citizen.givenNames";
 
-$result = $mysqli->query($query) or error($query);
+$result = $mysqli->query($query) or error($mysqli->error);
 $participants = array();
 while ($participant = $result->fetch_assoc()) {
   if ($corpus)
@@ -66,6 +66,12 @@ while ($participant = $result->fetch_assoc()) {
   $participants[] = $participant;
 }
 $result->free();
+if ($corpus) {
+  $count = sizeof($participants);
+  $query = "UPDATE proposal SET corpus=$count"
+         ." INNER JOIN publication ON publication.id=proposal.id AND publication.fingerprint='$fingerprint'";
+  $mysqli->query($query) or error($mysqli->error);
+}
 $answer['participants'] = $participants;
 echo json_encode($answer, JSON_UNESCAPED_SLASHES);
 $mysqli->close();
