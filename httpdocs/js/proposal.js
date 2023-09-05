@@ -28,7 +28,7 @@ window.onload = function() {
         document.getElementById('question-block').style.display = '';
         document.getElementById('question').innerHTML = answer.question;
         document.getElementById('answers-block').style.display = '';
-        for(let a in answers) {
+        for(let a in answer.answers) {
           console.log(a);
         }
         document.getElementById('answers').innerHTML = 'answer.answers';
