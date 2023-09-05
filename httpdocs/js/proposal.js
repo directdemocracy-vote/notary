@@ -25,7 +25,7 @@ window.onload = function() {
       document.getElementById('title').innerHTML = answer.title;
       document.getElementById('description').innerHTML = answer.description;
       if (answer.secret) {
-        document.getElementById('question').innerHTML = answer.question;
+        // document.getElementById('question').innerHTML = answer.question;
         // document.getElementById('answers').innerHTML = 
       }
       const deadline = new Date(answer.deadline);
