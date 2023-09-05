@@ -28,11 +28,7 @@ window.onload = function() {
         document.getElementById('question-block').style.display = '';
         document.getElementById('question').innerHTML = answer.question;
         document.getElementById('answers-block').style.display = '';
-        console.log(answer.answers);
-        for(let a of answer.answers) {
-          console.log(a);
-        }
-        document.getElementById('answers').innerHTML = 'answer.answers';
+        document.getElementById('answers').innerHTML = answer.answers.joint(' / ');
       }
       const deadline = new Date(answer.deadline);
       const now = new Date();
