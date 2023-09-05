@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>notary.directdemocracy.vote</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/framework7-icons@5.0.5/css/framework7-icons.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="//directdemocracy.vote/css/directdemocracy.css">
+    <link rel="stylesheet" href="//directdemocracy.vote/css/corner-ribbon.css">
+    <script src="//cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="//directdemocracy.vote/js/qrious.min.js"></script>
+    <script src="//directdemocracy.vote/js/crypto-js.js"></script>
+    <script src="/js/proposal.js"></script>
+  </head>
+  <body>
+    <div class="corner-ribbon" title="This web site is in beta quality: it may have bugs and change without notice. Please, report any problem to info@directdemocracy.vote.">Beta</div>
+    <section class="hero">
+      <div class="hero-body">
+        <div class="columns is-mobile">
+          <div class="column is-narrow"><i class="f7-icons">book</i></div>
+          <div class="column">
+            <p class="title">direct<b>democracy</b></p>
+            <p class="subtitle">proposal results</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <nav class="panel">
+        <p id="title" class="panel-heading">...</p>
+        <div class="panel-block">
+          <p id="description"></p>
+        </div>
+        <div class="panel-block">
+          <div class="mr-1">Deadline:</div>
+          <div id="deadline"></div>
+        </div>
+        <div class="panel-block">
+          <div class="mr-1">Judge:</div>
+          <div id="judge"></div>
+        </div>
+        <div class="panel-block" style="display:block">
+          <div id="area-name" class="mb-2"></div>
+          <div id="area" style="width:100%;height:400px"></div>
+        </div>
+        <div class="panel-block">
+          <div id="result"></div>
+        </div>
+        <div class="panel-block">
+          <div><button id="action-button" class="button is-info" disabled>Sign or Vote</button></div>
+        </div>
+      </nav>
+    </section>
+    <footer class="footer">
+      <div class="content has-text-centered">
+        More information is available from our <a href="https://github.com/directdemocracy-vote/notary" target="_blank">GitHub repository</a>.
+      </div>
+    </footer>
+    <div id="modal" class="modal" style="z-index:1000">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p id="modal-title" class="modal-card-title"></p>
+          <button id="modal-close-button" class="delete" aria-label="close"></button>
+        </header>
+        <section id="modal-content" class="modal-card-body">
+        </section>
+        <footer id="modal-footer" class="modal-card-foot">
+          <button id="modal-ok-button" class="button is-success"></button>
+          <button id="modal-cancel-button" class="button">Cancel</button>
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>
