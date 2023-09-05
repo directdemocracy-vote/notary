@@ -28,7 +28,7 @@ window.onload = function() {
       const now = new Date();
       document.getElementById('deadline').innerHTML = `<span style="color:#${ deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
       document.getElementById('judge').innerHTML = `<a target="_blank" href="${answer.judge}">${answer.judge}</a>`;
-      document.querySelector('.subtitle').innerHTML = (answer.secret) ? 'Referendum results' : 'Petition results';
+      document.querySelector('.subtitle').innerHTML = (answer.secret) ? 'referendum results' : 'petition results';
       document.getElementById('modal-title').innerHTML = (answer.secret) ? 'Vote at this referendum' : 'Sign this petition';
       let actionButton = document.getElementById('action-button');
       actionButton.innerHTML = (answer.secret) ? 'Vote' : 'Sign';
