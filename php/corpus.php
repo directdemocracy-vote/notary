@@ -18,7 +18,6 @@ function update_corpus($mysqli, $id) {
   WHERE endorsement.`revoke`=0 OR (endorsement.`revoke`=1 AND EXISTS($accepted))
   EOT;
   $query = "UPDATE proposal SET corpus = ($count) WHERE proposal.id=$id";
-  die($query);
   $mysqli->query($query) or die($mysqli->error);
   return;
 }
