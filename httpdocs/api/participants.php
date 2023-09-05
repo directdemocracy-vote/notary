@@ -68,8 +68,9 @@ while ($participant = $result->fetch_assoc()) {
 $result->free();
 if ($corpus) {
   $count = sizeof($participants);
-  $query = "UPDATE proposal SET corpus=$count"
-         ." INNER JOIN publication ON publication.id=proposal.id AND publication.fingerprint='$fingerprint'";
+  $query = "UPDATE proposal "
+         ." INNER JOIN publication ON publication.id=proposal.id AND publication.fingerprint='$fingerprint'"
+         ." SET corpus=$count";
   $mysqli->query($query) or error($mysqli->error);
 }
 $answer['participants'] = $participants;
