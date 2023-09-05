@@ -18,7 +18,7 @@ function findGetParameter(parameterName) {
 
 window.onload = function() {
   document.getElementById('proposal').addEventListener('click', function() {
-    window.open(`proposal.html?latitude=${latitude}&longitude=${longitude}`, '_blank');
+    window.open(`propose.html?latitude=${latitude}&longitude=${longitude}`, '_blank');
   });
 
   document.getElementById('proposal-year').setAttribute('value', new Date().getFullYear());
