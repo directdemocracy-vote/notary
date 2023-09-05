@@ -41,10 +41,11 @@ window.onload = function() {
       else
         actionButton.removeAttribute('disabled');
       const corpus = answer.corpus;
+      const participants = answer.secret ? 'Voters' : 'Signatures'; 
       const participation = Math.round(10000 * answer.participants / corpus) / 100;
       const line = `Corpus: <a target="_blank" href="participants.html?fingerprint=${fingerprint}&corpus=1">` +
                    `${corpus}</a> &mdash; ` +
-                   `Participants: <a target="_blank" href="participants.html?fingerprint=${fingerprint}">` +
+                   `${participants}: <a target="_blank" href="participants.html?fingerprint=${fingerprint}">` +
                    `${answer.participants}</a> &mdash; ` +
                    `Participation: ${participation}%`; 
       document.getElementById('result').innerHTML = line;
