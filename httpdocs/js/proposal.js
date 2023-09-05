@@ -29,7 +29,7 @@ window.onload = function() {
         document.getElementById('question').innerHTML = answer.question;
         document.getElementById('answers-block').style.display = '';
         console.log(answer.answers);
-        for(let a in answer.answers) {
+        for(let a of answer.answers) {
           console.log(a);
         }
         document.getElementById('answers').innerHTML = 'answer.answers';
