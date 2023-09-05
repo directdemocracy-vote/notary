@@ -21,7 +21,7 @@ $result->free();
 $judge_key = $assoc['key'];
 
 $query = "SELECT "
-        ."endorsement_p.published, endorsement.revoke, citizen.familyName, citizen.givenNames, "
+        ."endorsement_p.published, endorsement.revoke, endorsement.latest, citizen.familyName, citizen.givenNames, "
         ."citizen_p.fingerprint "
         ."FROM publication AS endorsement_p "
         ."INNER JOIN endorsement ON endorsement.id = endorsement_p.id "
@@ -34,6 +34,7 @@ $endorsements = array();
 while ($endorsement = $result->fetch_assoc()) {
   settype($endorsement['published'], 'int');
   settype($endorsement['revoke'], 'bool');
+  settype($endorsement['latest'], 'bool');
   $endorsements[] = $endorsement;
 }
 $result->free();
