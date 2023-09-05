@@ -218,11 +218,12 @@ window.onload = function() {
           publication.title = document.getElementById('title').value.trim();
           publication.description = document.getElementById('description').value.trim();
           const type = document.querySelector('input[name="type"]:checked').value;
-          if (type == 'referendum') {
+          if (type === 'referendum') {
             publication.question = document.getElementById('question').value.trim();
             publication.answers = document.getElementById('answers').value.trim().split("\n");
-          }
-          publication.secret = (type === 'referendum');
+            publication.secret = true;
+          } else
+            publication.secret = false;
           publication.deadline = Date.parse(document.getElementById('deadline').value);
           const website = document.getElementById('website').value.trim();
           if (website)

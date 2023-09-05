@@ -169,9 +169,10 @@ elseif ($type == 'endorsement') {
   if (!isset($proposal->answers))  # optional
     $proposal->answers = array();
   $answers = implode("\n", $proposal->answers);
-  $query = "INSERT INTO proposal(id, judge, area, title, description, question, answers, deadline, website, participants, corpus) "
+  $secret = ($proposal->secret) ? 1 : 0;
+  $query = "INSERT INTO proposal(id, judge, area, title, description, question, answers, secret, deadline, website, participants, corpus) "
           ."VALUES($id, \"$proposal->judge\", \"$proposal->area\", \"$proposal->title\", \"$proposal->description\", "
-          ."\"$proposal->question\", \"$answers\", $proposal->deadline, \"$proposal->website\", 0, 0)";
+          ."\"$proposal->question\", \"$answers\", $secret, $proposal->deadline, \"$proposal->website\", 0, 0)";
 } elseif ($type == 'registration')
   $query = "INSERT INTO registration(id, proposal, stationKey, stationSignature) "
           ."VALUES($id, \"$publication->proposal\", \"" . $publication->station->key
