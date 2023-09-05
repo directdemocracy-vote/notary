@@ -24,6 +24,10 @@ window.onload = function() {
       }
       document.getElementById('title').innerHTML = answer.title;
       document.getElementById('description').innerHTML = answer.description;
+      if (answer.secret) {
+        document.getElementById('question').innerHTML = answer.question;
+        // document.getElementById('answers').innerHTML = 
+      }
       const deadline = new Date(answer.deadline);
       const now = new Date();
       document.getElementById('deadline').innerHTML = `<span style="color:#${ deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
