@@ -3,7 +3,7 @@ function update_corpus($mysqli, $id) {
   $accepted = <<<EOT
   SELECT pep.id FROM publication AS pep
   INNER JOIN endorsement AS e ON e.id=pep.id AND e.accepted=1
-  WHERE pep.`key`=pc.`key` AND e.endorsedFingerprint=pp.fingerprint)
+  WHERE pep.`key`=pc.`key` AND e.endorsedFingerprint=pp.fingerprint
   EOT;
   $count = <<<EOT
   SELECT COUNT(citizen.id) FROM citizen
