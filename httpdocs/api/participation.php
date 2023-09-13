@@ -59,7 +59,7 @@ $result = $mysqli->query($query) or error($mysqli->error);
 $publication = $result->fetch_assoc();
 $result->free();
 if (!$publication) {
-  $answer = file_get_contents("$station/api/participation.php?referendum=$referendumKey");
+  $answer = file_get_contents("$station/api/participation.php?referendum=" + urlencode($referendumKey));
   $publication = json_decode($answer,true);
   $signature = $publication['signature'];
   $publication['signature'] = '';
@@ -70,7 +70,7 @@ if (!$publication) {
   $publication['signature'] = $signature;
   $key = $publication['key'];
   if ($publication['referendum'] != $referendumKey)
-    error("Referendum key mismatch: $publication[referendum]   !==   $referendumKey");
+    error("Referendum key mismatch");
   $participation = $publication['participation'];
   $query = "SELECT id, `key` FROM webservice WHERE url='$station' AND `type`='station'";
   $result = $mysqli->query($query) or error($mysqli->error);
