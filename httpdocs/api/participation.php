@@ -71,15 +71,15 @@ if (!$result) {
     $result->free()
     if ($webservice['key'] != $key)
       error("Changed key for $station");
-    $id = $webservice['id'];
+    $id = intval($webservice['id']);
   }
   $query = "INSERT INTO publication(`schema`, `key`, `signature`, fingerprint, published) "
           ."VALUES('$publication->schema', '$publication->key', '$publication->signature', "
           ."SHA1('$publication->signature'), $publication->published)";
   $mysqli->query($query) or error($mysqli->error);
-  $id = $mysqli->insert_id;
+  $publicationId = $mysqli->insert_id;
   $query = "INSERT INTO participation(id, referendum, participation, station, referendumFingerprint) "
-          ."VALUES($id, '$referendumKey', '$participation', $id, '$referendumFingerprint'";
+          ."VALUES($publicationId, '$referendumKey', '$participation', $id, '$referendumFingerprint'";
   $mysqli->query($query) or error($mysqli->error);
 } else {
   $publication = $result->fetch_assoc();
