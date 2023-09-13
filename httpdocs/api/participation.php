@@ -47,7 +47,9 @@ $query = "SELECT publication.`schema`, publication.`key`, publication.`signature
         ."INNER JOIN webservice AS station ON station.url='$station' "
         ."WHERE participation.referendumFingerprint='$referendumFingerprint' AND participation.station=station.id";
 $result = $mysqli->query($query) or error($mysqli->error);
-if (!$result) {
+$publication = $result->fetch_assoc();
+$result->free();
+if (!$publication) {
   $answer = file_get_contents("$station/api/participation.php?referendum=$referendumKey");
   $publication = json_decode($answer,true);
   $signature = $publication->signature;
@@ -82,8 +84,6 @@ if (!$result) {
           ."VALUES($publicationId, '$referendumKey', '$participation', $id, '$referendumFingerprint'";
   $mysqli->query($query) or error($mysqli->error);
 } else {
-  $publication = $result->fetch_assoc();
-  $result->free();
   settype($publication['published'], 'int');  
   $answer = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 }
