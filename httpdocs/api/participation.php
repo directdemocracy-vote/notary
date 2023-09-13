@@ -45,12 +45,18 @@ $query = "SELECT participation FROM participation WHERE referendumFingerprint='$
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result) {
   $answer = file_get_contents("$station/api/participation.php?referendum=$referendumKey");
-  $data = json_decode($answer,true);
-  $key = $data['key'];
-  if ($data['referendum'] != $referendumKey)
+  $publication = json_decode($answer,true);
+  $signature = $publication->signature;
+  $publication->signature = '';
+  $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+  $verify = openssl_verify($data, base64_decode($signature), public_key($publication->key), OPENSSL_ALGO_SHA256);
+  if ($verify != 1)
+    error("Wrong signature for participation");
+  $publication->signature = $signature;
+  $key = $publication->key;
+  if ($publication->referendum != $referendumKey)
     error("Referendum key mismatch");
-  $participation = $data['participation'];
-  # FIXME: here we should verify $data['signature']
+  $participation = $publication->participation;
   $query = "SELECT id, `key` FROM webservice WHERE url='$station' AND `type`='station'";
   $result = $mysqli->query($query) or error($mysqli->error);
   if (!$result) {
@@ -63,7 +69,13 @@ if (!$result) {
       error("Changed key for $station");
     $id = $webservice['id'];
   }
-  $query = "INSERT INTO participation(referendum, participation, station, referendumFingerprint) VALUES('$referendumKey', '$participation', $id, '$referendumFingerprint'";
+  $query = "INSERT INTO publication(`schema`, `key`, `signature`, fingerprint, published) "
+          ."VALUES('$publication->schema', '$publication->key', '$publication->signature', "
+          ."SHA1('$publication->signature'), $publication->published)";
+  $mysqli->query($query) or error($mysqli->error);
+  $id = $mysqli->insert_id;
+  $query = "INSERT INTO participation(id, referendum, participation, station, referendumFingerprint) "
+          ."VALUES($id, '$referendumKey', '$participation', $id, '$referendumFingerprint'";
   $mysqli->query($query) or error($mysqli->error);
 } else {
   $p = $result->fetch_assoc();
