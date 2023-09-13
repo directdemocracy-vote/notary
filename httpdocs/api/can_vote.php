@@ -20,7 +20,7 @@ $citizen_key = $mysqli->escape_string(get_string_parameter('citizen'));
 if (!$citizen_key)
   die("Missing citizen argument.");
 
-$query = "SELECT judge, area FROM referendum LEFT JOIN publication ON publication.id=referendum.id "
+$query = "SELECT judge FROM referendum LEFT JOIN publication ON publication.id=referendum.id "
         ."WHERE publication.`key`=\"$referendum\"";
 $result = $mysqli->query($query) or die($mysqli->error);
 $r = $result->fetch_assoc();
@@ -28,46 +28,20 @@ $result->free();
 if (!$r)
   die('Referendum not found.');
 $judge = $r['judge'];
-$area = $r['area'];
 
-# check if citizen's home is inside the referendum area
-$query = "SELECT ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen "
-        ."LEFT JOIN publication ON publication.id=citizen.id WHERE publication.`key`=\"$citizen_key\"";
-$result = $mysqli->query($query) or die($mysqli->error);
-$citizen = $result->fetch_assoc();
-$result->free();
-if (!$citizen)
-  die('Citizen not found.');
-$latitude = $citizen['latitude'];
-$longitude = $citizen['longitude'];
-
-$query = "SELECT area.id FROM area LEFT JOIN publication ON publication.id=area.id "
-        ." WHERE publication.`key`=\"$judge\" AND area.name=\"$area\"";
-$result = $mysqli->query($query) or die($mysqli->error);
-$a = $result->fetch_assoc();
-$result->free();
-if (!$a)
-  die('Area not found.');
-$area = $a['id'];
-
-$query = "SELECT area.id FROM area WHERE area.id=$area AND ST_Contains(polygons, POINT($longitude, $latitude))";
-$result = $mysqli->query($query) or die($mysqli->error);
-$a = $result->fetch_assoc();
-$result->free();
-if (!$a)
-  die("Home of citizen not in referendum area.");
-
-# check if citizen is currently endorsed by judge
-$query = "SELECT revoke "
-        ."FROM endorsement LEFT JOIN publication ON publication.id=endorsement.id "
-        ."WHERE publication.`key`=\"$judge\" AND endorsement.publicationKey=\"$citizen_key\" "
-        ."ORDER BY publication.published DESC LIMIT 1";
+# check if citizen is endorsed by an app
+$query = "SELECT publication.`key` FROM publication "
+        ."INNER JOIN endorsement ON endorsement.id=publication.id "
+        ."INNER JOIN webservice ON webservice.type='app' AND webservice.`key`=publication.`key` "
+        ."INNER JOIN publication AS pc ON pc.`key`='$citizen_key' AND pc.`signature`=endorsement.endorsedSignature";
 $result = $mysqli->query($query) or die($mysqli->error);
 $endorsement = $result->fetch_assoc();
 $result->free();
-$now = intval(microtime(true) * 1000);  # milliseconds
-if (!$endorsement || $endorsement['revoke'] == 1)
-  die("Citizen not endorsed by judge");
+if (!$endorsement)
+  die("Citizen not endorsed by any app");
+# check if this app is endorsed by the judge
+
+FIXME...
 
 die("yes");
 ?>

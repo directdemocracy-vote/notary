@@ -59,34 +59,6 @@ if ($type == 'citizen') {
   } catch(Exception $e) {
     error("Cannot determine picture size");
   }
-} elseif ($type == 'registration') {
-  if (isset($publication->station->signature)) {
-    $station_signature = $publication->station->signature;
-    $publication->station->signature = '';
-    $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-    if (openssl_verify($data, base64_decode($station_signature), public_key($publication->station->key), OPENSSL_ALGO_SHA256) == -1)
-      error("Wrong station signature for registration");
-    unset($publication->station->signature);
-  }
-} elseif ($type == 'ballot') {
-  $signature = $publication->signature;
-  if ($signature !== '') {
-    $publication->signature = '';
-    $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-    if (openssl_verify($data, base64_decode($signature), public_key($publication->key), OPENSSL_ALGO_SHA256) == -1)
-      error("Wrong signature for ballot");
-  }
-  if (isset($publication->station)) {
-    if (!isset($publication->station->signature))
-      error("Missing station signature for ballot");
-    $station_signature = $publication->station->signature;
-    $publication->station->signature = '';
-    $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-    if (openssl_verify($data, base64_decode($station_signature), public_key($publication->station->key), OPENSSL_ALGO_SHA256) == -1)
-      error("Wrong station signature for ballot");
-    $publication->station->signature = $station_signature;
-  }
-  $publication->signature = $signature;
 }
 if ($type != 'ballot') {
   $signature = $publication->signature;
