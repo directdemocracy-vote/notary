@@ -52,17 +52,17 @@ $result->free();
 if (!$publication) {
   $answer = file_get_contents("$station/api/participation.php?referendum=$referendumKey");
   $publication = json_decode($answer,true);
-  $signature = $publication->signature;
-  $publication->signature = '';
+  $signature = $publication['signature'];
+  $publication['signature'] = '';
   $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-  $verify = openssl_verify($data, base64_decode($signature), public_key($publication->key), OPENSSL_ALGO_SHA256);
+  $verify = openssl_verify($data, base64_decode($signature), public_key($publication['key']), OPENSSL_ALGO_SHA256);
   if ($verify != 1)
     error("Wrong signature for participation");
-  $publication->signature = $signature;
-  $key = $publication->key;
-  if ($publication->referendum != $referendumKey)
+  $publication['signature'] = $signature;
+  $key = $publication['key'];
+  if ($publication['referendum'] != $referendumKey)
     error("Referendum key mismatch");
-  $participation = $publication->participation;
+  $participation = $publication['participation'];
   $query = "SELECT id, `key` FROM webservice WHERE url='$station' AND `type`='station'";
   $result = $mysqli->query($query) or error($mysqli->error);
   if (!$result) {
@@ -76,8 +76,8 @@ if (!$publication) {
     $id = intval($webservice['id']);
   }
   $query = "INSERT INTO publication(`schema`, `key`, `signature`, fingerprint, published) "
-          ."VALUES('$publication->schema', '$publication->key', '$publication->signature', "
-          ."SHA1('$publication->signature'), $publication->published)";
+          ."VALUES('$publication[schema]', '$publication[key]', '$publication[signature]', "
+          ."SHA1('$publication[signature]'), $publication[published])";
   $mysqli->query($query) or error($mysqli->error);
   $publicationId = $mysqli->insert_id;
   $query = "INSERT INTO participation(id, referendum, participation, station, referendumFingerprint) "
