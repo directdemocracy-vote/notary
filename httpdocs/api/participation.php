@@ -37,7 +37,7 @@ $query = "SELECT publication.`key` FROM publication "
         ."INNER JOIN proposal ON proposal.id=publication.id AND proposal.secret=1 "
         ."WHERE publication.fingerprint='$referendumFingerprint'";
 $result = $mysqli->query($query) or error($mysqli->error);
-if (!$result) {
+if (!$result)
   error("Specified referendum not found");
 $referendum = $result->fetch_assoc();
 $referendumKey = $referendum['key'];
