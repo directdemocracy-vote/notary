@@ -90,7 +90,7 @@ if (!$publication) {
   $mysqli->query($query) or error($mysqli->error);
   $publicationId = $mysqli->insert_id;
   $query = "INSERT INTO participation(id, referendum, participation, station, referendumFingerprint) "
-          ."VALUES($publicationId, '$referendumKey', '$participation', $id, '$referendumFingerprint'";
+          ."VALUES($publicationId, '$referendumKey', '$participation', $id, '$referendumFingerprint')";
   $mysqli->query($query) or error($mysqli->error);
 } else {
   settype($publication['published'], 'int');  
