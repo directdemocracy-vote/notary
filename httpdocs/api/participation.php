@@ -68,7 +68,7 @@ if (!$result) {
     $id = mysqli->insert_id;
   } else {
     $webservice = $result->fetch_assoc();
-    $result->free()
+    $result->free();
     if ($webservice['key'] != $key)
       error("Changed key for $station");
     $id = intval($webservice['id']);
