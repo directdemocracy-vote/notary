@@ -44,7 +44,7 @@ $referendumKey = $referendum['key'];
 $query = "SELECT participation FROM participation WHERE referendumFingerprint='$referendumFingerprint' AND station='$station'";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result) {
-  $answer = file_get_contents("$station/api/participation.php?key=$referendumKey");
+  $answer = file_get_contents("$station/api/participation.php?referendum=$referendumKey");
   $data = json_decode($answer,true);
   $key = $data['key'];
   if ($data['referendum'] != $referendumKey)
