@@ -41,7 +41,11 @@ if (!$result) {
   error("Specified referendum not found");
 $referendum = $result->fetch_assoc();
 $referendumKey = $referendum['key'];
-$query = "SELECT participation FROM participation WHERE referendumFingerprint='$referendumFingerprint' AND station='$station'";
+$query = "SELECT publication.`schema`, publication.`key`, publication.`signature`, publication.`published`, "
+        ."participation.referendum, participation.participation FROM participation "
+        ."INNER JOIN publication ON publication.id=participation.id "
+        ."INNER JOIN webservice AS station ON station.url='$station' "
+        ."WHERE participation.referendumFingerprint='$referendumFingerprint' AND participation.station=station.id";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result) {
   $answer = file_get_contents("$station/api/participation.php?referendum=$referendumKey");
@@ -78,11 +82,11 @@ if (!$result) {
           ."VALUES($id, '$referendumKey', '$participation', $id, '$referendumFingerprint'";
   $mysqli->query($query) or error($mysqli->error);
 } else {
-  $p = $result->fetch_assoc();
+  $publication = $result->fetch_assoc();
   $result->free();
-  $participation = $p['participation'];
+  settype($publication['published'], 'int');  
+  $answer = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 }
 $mysqli->close();
-$response = array('participation' => $participation);
-echo json_encode($response, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+echo $answer;
 ?>
