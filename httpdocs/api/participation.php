@@ -70,7 +70,7 @@ if (!$publication) {
   $publication['signature'] = $signature;
   $key = $publication['key'];
   if ($publication['referendum'] != $referendumKey)
-    error("Referendum key mismatch");
+    error("Referendum key mismatch: $publication[referendum]   !==   $referendumKey");
   $participation = $publication['participation'];
   $query = "SELECT id, `key` FROM webservice WHERE url='$station' AND `type`='station'";
   $result = $mysqli->query($query) or error($mysqli->error);
