@@ -146,9 +146,8 @@ elseif ($type == 'endorsement') {
           ."VALUES($id, \"$proposal->judge\", \"$proposal->area\", \"$proposal->title\", \"$proposal->description\", "
           ."\"$proposal->question\", \"$answers\", $secret, $proposal->deadline, \"$proposal->website\", 0, 0)";
 } elseif ($type == 'registration')
-  $query = "INSERT INTO registration(id, proposal, stationKey, stationSignature) "
-          ."VALUES($id, \"$publication->proposal\", \"" . $publication->station->key
-          ."\", \"" . $publication->station->signature . "\")";
+  $query = "INSERT INTO registration(id, participation, encryptedVote) "
+          ."VALUES($id, \"$publication->participation\", \"" . $publication->encryptedVote . "\")";
 elseif ($type == 'ballot') {
   if (!isset($publication->answer)) # optional
     $publication->answer = '';

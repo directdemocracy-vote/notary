@@ -80,11 +80,10 @@ CREATE TABLE `participation` (
   `referendumFingerprint` varchar(40) CHARACTER SET ascii COLLATE ascii_bin NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `registrations` (
-  `proposal` int(11) NOT NULL,
-  `station` int(11) NOT NULL,
-  `citizen` int(11) NOT NULL,
-  `published` bigint(15) NOT NULL
+CREATE TABLE `registration` (
+  `id` int(11) NOT NULL,
+  `participation` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `encryptedVote` varchar(1024) CHARACTER SET ascii COLLATE ascii_bin NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `results` (
@@ -142,11 +141,6 @@ ALTER TABLE `proposal`
 
 ALTER TABLE `registration`
   ADD PRIMARY KEY (`id`);
-
-ALTER TABLE `registrations`
-  ADD KEY `proposal` (`proposal`),
-  ADD KEY `station` (`station`),
-  ADD KEY `citizen` (`citizen`);
 
 ALTER TABLE `results`
   ADD KEY `proposal` (`proposal`);
