@@ -242,7 +242,7 @@ window.onload = function() {
                 showModal('Publication success',
                           `Your ${type} was just published!<br>You will be redirected to it.`, 'OK');
                 document.getElementById('modal-ok-button').addEventListener('click', function() {
-                  window.location.href = `/${type}.html?fingerprint=${answer.fingerprint}`;
+                  window.location.href = `/proposal.html?fingerprint=${answer.fingerprint}`;
                 });
               }
           });
