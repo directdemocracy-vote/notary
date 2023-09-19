@@ -51,7 +51,7 @@ if (!$result)
 $referendum = $result->fetch_assoc();
 $referendumKey = $referendum['key'];
 $query = "SELECT publication.`schema`, publication.`key`, publication.`signature`, publication.`published`, "
-        ."participation.referendum, participation.participation FROM participation "
+        ."participation.referendum, participation.blindKey FROM participation "
         ."INNER JOIN publication ON publication.id=participation.id "
         ."INNER JOIN webservice AS station ON station.url='$station' "
         ."WHERE participation.referendumFingerprint='$referendumFingerprint' AND participation.station=station.id";
@@ -71,7 +71,7 @@ if (!$publication) {
   $key = $publication['key'];
   if ($publication['referendum'] != $referendumKey)
     error("Referendum key mismatch");
-  $participation = $publication['participation'];
+  $blindKey = $publication['blindKey'];
   $query = "SELECT id, `key` FROM webservice WHERE url='$station' AND `type`='station'";
   $result = $mysqli->query($query) or error($mysqli->error);
   if (!$result) {
@@ -89,8 +89,8 @@ if (!$publication) {
           ."SHA1('$publication[signature]'), $publication[published])";
   $mysqli->query($query) or error($mysqli->error);
   $publicationId = $mysqli->insert_id;
-  $query = "INSERT INTO participation(id, referendum, participation, station, referendumFingerprint) "
-          ."VALUES($publicationId, '$referendumKey', '$participation', $id, '$referendumFingerprint')";
+  $query = "INSERT INTO participation(id, referendum, blindKey, station, referendumFingerprint) "
+          ."VALUES($publicationId, '$referendumKey', '$blindKey', $id, '$referendumFingerprint')";
   $mysqli->query($query) or error($mysqli->error);
 } else {
   settype($publication['published'], 'int');  
