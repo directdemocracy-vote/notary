@@ -59,6 +59,7 @@ $result = $mysqli->query($query) or error($mysqli->error);
 $publication = $result->fetch_assoc();
 $result->free();
 if (!$publication) {
+  die("$station/api/participation.php?referendum=" . urlencode($referendumKey));
   $answer = file_get_contents("$station/api/participation.php?referendum=" . urlencode($referendumKey));
   $publication = json_decode($answer,true);
   $signature = $publication['signature'];
