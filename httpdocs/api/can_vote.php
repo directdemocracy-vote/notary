@@ -35,7 +35,7 @@ $query = "SELECT endorsement.`revoke` FROM endorsement "
         ."INNER JOIN publication ON publication.id=endorsement.id "
         ."INNER JOIN webservice ON webservice.`key`=publication.`key` AND webservice.url='$judge' AND webservice.type='judge' "
         ."INNER JOIN publication AS pc ON pc.fingerprint='$citizen' AND pc.`signature`=endorsement.endorsedSignature "
-        ."WHERE endorsement.latest=1"
+        ."WHERE endorsement.latest=1";
 $result = $mysqli->query($query) or die($mysqli->error);
 $endorsement = $result->fetch_assoc();
 $result->free();
