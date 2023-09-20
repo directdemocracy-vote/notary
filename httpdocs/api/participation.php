@@ -93,7 +93,7 @@ if (!$publication) {
           ."VALUES($publicationId, '$referendumKey', '$blindKey', $id, '$referendumFingerprint')";
   $mysqli->query($query) or error($mysqli->error);
 } else {
-  settype($publication['published'], 'int');  
+  settype($publication['published'], 'int');
   $answer = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 }
 $mysqli->close();
