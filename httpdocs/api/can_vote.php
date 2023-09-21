@@ -40,7 +40,7 @@ $result = $mysqli->query($query) or die($mysqli->error);
 $endorsement = $result->fetch_assoc();
 $result->free();
 if (!$endorsement)
-  die("Citizen not endorsed by the judge of the referendum");
+  die("Citizen $citizen not endorsed by the judge of the referendum");
 if ($endorsement['revoke'] !== '0')
   die("Citizen revoked by the judge of the referendum");
 # otherwise we are all good
