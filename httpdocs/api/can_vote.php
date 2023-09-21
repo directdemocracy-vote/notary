@@ -1,27 +1,22 @@
 <?php
 require_once '../../php/database.php';
 
-function get_string_parameter($name) {
-  if (isset($_GET[$name]))
-    return $_GET[$name];
-  if (isset($_POST[$name]))
-    return $_POST[$name];
-  return FALSE;
-}
+$registration = json_decode(file_get_contents("php://input"));
+
 $mysqli = new mysqli($database_host, $database_username, $database_password, $database_name);
 if ($mysqli->connect_errno)
   die("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
 $mysqli->set_charset('utf8mb4');
 
-$referendum = $mysqli->escape_string(get_string_parameter('referendum'));
+$referendum = $mysqli->escape_string($registration->referendum));
 if (!$referendum)
   die("Missing referendum argument");
-$citizen = $mysqli->escape_string(get_string_parameter('citizen'));
+$citizen = $mysqli->escape_string($registration->citizen));
 if (!$citizen)
   die("Missing citizen argument");
 
 $query = "SELECT judge FROM proposal "
-        ."LEFT JOIN publication ON publication.id=proposal.id AND publication.fingerprint='$referendum' "
+        ."LEFT JOIN publication ON publication.id=proposal.id AND publication.`key`='$referendum' "
         ."WHERE proposal.secret=1";
 $result = $mysqli->query($query) or die($mysqli->error);
 $r = $result->fetch_assoc();
@@ -34,13 +29,13 @@ $judge = $r['judge'];
 $query = "SELECT endorsement.`revoke` FROM endorsement "
         ."INNER JOIN publication ON publication.id=endorsement.id "
         ."INNER JOIN webservice ON webservice.`key`=publication.`key` AND webservice.url='$judge' AND webservice.type='judge' "
-        ."INNER JOIN publication AS pc ON pc.fingerprint='$citizen' AND pc.`signature`=endorsement.endorsedSignature "
+        ."INNER JOIN publication AS pc ON pc.`key`='$citizen' AND pc.`signature`=endorsement.endorsedSignature "
         ."WHERE endorsement.latest=1";
 $result = $mysqli->query($query) or die($mysqli->error);
 $endorsement = $result->fetch_assoc();
 $result->free();
 if (!$endorsement)
-  die("Citizen $citizen not endorsed by the judge of the referendum");
+  die("Citizen not endorsed by the judge of the referendum");
 if ($endorsement['revoke'] !== '0')
   die("Citizen revoked by the judge of the referendum");
 # otherwise we are all good
