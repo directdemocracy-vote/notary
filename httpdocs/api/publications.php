@@ -36,7 +36,8 @@ if (!$type)
 if ($type == 'endorsement')
   $fields = 'endorsement.endorsedSignature, endorsement.revoke, endorsement.message, endorsement.comment';
 elseif ($type == 'citizen')
-  $fields = 'citizen.familyName, citizen.givenNames, citizen.picture, ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude';
+  $fields = 'citizen.familyName, citizen.givenNames, CONCAT("data:image/jpeg;base64,", TO_BASE64(citizen.picture)), '
+           .'ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude';
 elseif ($type == 'proposal')
   $fields = 'proposal.judge, proposal.area, proposal.title, proposal.description, proposal.question, proposal.answers, proposal.deadline, proposal.website';
 else

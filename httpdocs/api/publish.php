@@ -49,7 +49,8 @@ if ($type != 'ballot' && $publication->published > $now + 60000)  # allowing a 1
   error("Publication date in the future for $type: $publication->published > $now");
 if ($type == 'citizen') {
   $citizen = &$publication;
-  $data = base64_decode(substr($citizen->picture, strlen('data:image/jpeg;base64,')));
+  $citizen_picture = substr($citizen->picture, strlen('data:image/jpeg;base64,'));
+  $data = base64_decode($citizen_picture);
   try {
     $size = @getimagesizefromstring($data);
     if ($size['mime'] != 'image/jpeg')
@@ -88,7 +89,7 @@ $id = $mysqli->insert_id;
 if ($type == 'citizen')
   $query = "INSERT INTO citizen(id, familyName, givenNames, picture, home) "
           ."VALUES($id, \"$citizen->familyName\", \"$citizen->givenNames\", "
-          ."\"$citizen->picture\", POINT($citizen->longitude, $citizen->latitude))";
+          ."FROM_BASE64(\"$citizen_picture\"), POINT($citizen->longitude, $citizen->latitude))";
 elseif ($type == 'endorsement') {
   $endorsement = &$publication;
   if (!property_exists($endorsement, 'revoke'))

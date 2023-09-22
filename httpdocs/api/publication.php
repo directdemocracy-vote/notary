@@ -42,12 +42,13 @@ unset($publication['id']);
 $publication['published'] = intval($publication['published']);
 $type = $publication['type'];
 if ($type == 'citizen') {
-  $query = "SELECT givenNames, familyName, picture, ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen WHERE id=$publication_id";
+  $query = "SELECT givenNames, familyName, TO_BASE64(picture), ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $citizen = $result->fetch_assoc();
   $result->free();
   $citizen['latitude'] = floatval($citizen['latitude']);
   $citizen['longitude'] = floatval($citizen['longitude']);
+  $citizen['picture'] = 'data:image/jpeg;base64,' . citizen['picture'];
   $citizen = $publication + $citizen;
   echo json_encode($citizen, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'endorsement') {

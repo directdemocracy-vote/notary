@@ -50,7 +50,8 @@ if ($judge) {
   $result->free();
 }
 
-$query = "SELECT citizen.familyName, citizen.givenNames, citizen.picture, ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude";
+$query = "SELECT citizen.familyName, citizen.givenNames, CONCAT('data:image/jpeg;base64,', TO_BASE64(citizen.picture)) AS picture, "
+        ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude";
 if ($radius)  # Unfortunately, ST_Distance_Sphere is not available in MySQL 5.6, so we need to revert to this complex formula
   $query .= ", (6371 * acos(cos(radians($latitude)) * cos(radians(ST_Y(citizen.home))) * cos(radians(ST_X(citizen.home)) - radians($longitude)) "
            ."+ sin(radians($latitude)) * sin(radians(ST_Y(citizen.home))))) AS distance";

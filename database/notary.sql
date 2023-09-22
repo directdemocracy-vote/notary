@@ -28,7 +28,7 @@ CREATE TABLE `citizen` (
   `id` int(11) NOT NULL,
   `givenNames` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `familyName` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `picture` text CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `picture` blob NOT NULL,
   `home` point NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

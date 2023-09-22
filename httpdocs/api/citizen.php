@@ -16,7 +16,7 @@ else if (isset($_POST['fingerprint']))
 else
   die("{\"error\":\"missing key or fingerprint POST argument\"}");
 $query = "SELECT publication.`key`, publication.published, publication.signature, "
-        ."citizen.familyName, citizen.givenNames, citizen.picture, "
+        ."citizen.familyName, citizen.givenNames, CONCAT('data:image/jpeg;base64,', TO_BASE64(citizen.picture)) AS picture, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude "
         ."FROM publication INNER JOIN citizen ON publication.id = citizen.id "
         ."WHERE $condition";
@@ -28,7 +28,7 @@ settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
 $endorsements = endorsements($mysqli, $citizen['key']);
 $query = "SELECT pc.signature, pe.published, e.`revoke`, "
-        ."c.familyName, c.givenNames, c.picture "
+        ."c.familyName, c.givenNames, CONCAT('data:image/jpeg;base64,', TO_BASE64(c.picture)) AS picture "
         ."FROM publication pe "
         ."INNER JOIN endorsement e ON e.id = pe.id "
         ."INNER JOIN publication pc ON pc.`key` = pe.`key` "
