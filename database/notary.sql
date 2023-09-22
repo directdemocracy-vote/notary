@@ -52,7 +52,7 @@ CREATE TABLE `publication` (
   `type` enum('citizen', 'endorsement', 'area', 'proposal', 'participation', 'registration', 'ballot', 'vote') NOT NULL,
   `key` blob NOT NULL,
   `signature` blob NOT NULL,
-  `published` bigint(15) NOT NULL,
+  `published` datetime NOT NULL,
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `proposal` (
