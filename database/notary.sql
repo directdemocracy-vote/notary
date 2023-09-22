@@ -11,16 +11,15 @@ CREATE TABLE `area` (
 
 CREATE TABLE `ballot` (
   `id` int(11) NOT NULL,
-  `referendum` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  `stationKey` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  `stationSignature` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `stationKey` blob NOT NULL,
+  `stationSignature` blob NOT NULL,
   `revoke` tinyint(1) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `ballots` (
   `referendum` int(11) NOT NULL,
   `station` int(11) NOT NULL,
-  `key` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `key` blob NOT NULL,
   `revoke` tinyint(1) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -42,7 +41,7 @@ CREATE TABLE `endorsement` (
   `revoke` tinyint(1) NOT NULL,
   `message` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
   `comment` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `endorsedSignature` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `endorsedSignature` blob NOT NULL,
   `latest` tinyint(1) NOT NULL,
   `accepted` tinyint(1) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -51,15 +50,15 @@ CREATE TABLE `publication` (
   `id` int(11) NOT NULL,
   `version` smallint(6) NOT NULL,
   `type` enum('citizen', 'endorsement', 'area', 'proposal', 'participation', 'registration', 'ballot', 'vote') NOT NULL,
-  `key` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  `signature` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `key` blob NOT NULL,
+  `signature` blob NOT NULL,
   `published` bigint(15) NOT NULL,
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `proposal` (
   `id` int(11) NOT NULL,
   `judge` varchar(2048) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  `area` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `area` blob NOT NULL,
   `title` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `question` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -73,15 +72,15 @@ CREATE TABLE `proposal` (
 
 CREATE TABLE `participation` (
   `id` int(11) NOT NULL,
-  `referendum` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  `blindKey` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `referendum` blob NOT NULL,
+  `blindKey` blob NOT NULL,
   `station` int(11) NOT NULL,
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `registration` (
   `id` int(11) NOT NULL,
-  `blindKey` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  `encryptedVote` varchar(1024) CHARACTER SET ascii COLLATE ascii_bin NOT NULL
+  `blindKey` blob NOT NULL,
+  `encryptedVote` blob NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `results` (
@@ -100,7 +99,7 @@ CREATE TABLE `stations` (
 CREATE TABLE `webservice` (
   `id` int(11) NOT NULL,
   `type` enum('app', 'judge', 'notary', 'station') NOT NULL,
-  `key` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `key` blob NOT NULL,
   `url` varchar(2048) CHARACTER SET ascii COLLATE ascii_bin NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

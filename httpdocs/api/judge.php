@@ -14,7 +14,7 @@ if (isset($_POST['judge']))
 else
   $judge = 'https://judge.directdemocracy.vote';
 
-$query = "SELECT `key` FROM webservice WHERE `type`='judge' AND url=\"$judge\"";
+$query = "SELECT TO_BASE64(`key`) AS `key` FROM webservice WHERE `type`='judge' AND url=\"$judge\"";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $assoc = $result->fetch_assoc() or die("{\"error\":\"judge not found: $judge\"}");
 $result->free();
@@ -22,12 +22,12 @@ $judge_key = $assoc['key'];
 
 $query = "SELECT "
         ."endorsement_p.published, endorsement.revoke, endorsement.latest, citizen.familyName, citizen.givenNames, "
-        ."citizen_p.signature "
+        ."TO_BASE64(citizen_p.signature) AS signature "
         ."FROM publication AS endorsement_p "
         ."INNER JOIN endorsement ON endorsement.id = endorsement_p.id "
         ."INNER JOIN publication AS citizen_p ON citizen_p.signature = endorsement.endorsedSignature "
         ."INNER JOIN citizen ON citizen.id = citizen_p.id "
-        ."WHERE endorsement_p.`key`=\"$judge_key\" "
+        ."WHERE endorsement_p.`key` = FROM_BASE64('$judge_key') "
         ."ORDER BY endorsement_p.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $endorsements = array();

@@ -82,7 +82,7 @@ if ($mysqli->connect_errno)
 $mysqli->set_charset('utf8mb4');
 $version = intval(explode('/', $publication->schema)[4]);
 $query = "INSERT INTO publication(`version`, `type`, `key`, `signature`, published) "
-        ."VALUES($version, \"$type\", \"$publication->key\", \"$publication->signature\", $publication->published)";
+        ."VALUES($version, '$type', FROM_BASE64('$publication->key'), FROM_BASE64('$publication->signature'), $publication->published)";
 $mysqli->query($query) or error($mysqli->error);
 $id = $mysqli->insert_id;
 
@@ -98,7 +98,7 @@ elseif ($type == 'endorsement') {
     $endorsement->message = '';
   if (!property_exists($endorsement, 'comment'))
     $endorsement->comment = '';
-  $query = "SELECT id, `type`, `signature` FROM publication WHERE `signature`='$endorsement->endorsedSignature'";
+  $query = "SELECT id, `type`, TO_BASE64(`signature`) FROM publication WHERE `signature` = FROM_BASE64('$endorsement->endorsedSignature')";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsed = $result->fetch_assoc();
   $result->free();
@@ -109,8 +109,8 @@ elseif ($type == 'endorsement') {
   # mark other endorsements of the same participant by the same endorser as not the latest
   $mysqli->query("UPDATE endorsement INNER JOIN publication ON publication.id = endorsement.id"
                 ." SET endorsement.latest = 0"
-                ." WHERE endorsement.endorsedSignature='$endorsement->endorsedSignature'"
-                ." AND publication.`key`='$publication->key'") or error($mysli->error);
+                ." WHERE endorsement.endorsedSignature = FROM_BASE64('$endorsement->endorsedSignature')"
+                ." AND publication.`key` = FROM_BASE64('$publication->key')") or error($mysli->error);
   if ($endorsed['type'] == 'proposal') {  # signing a petition
     # increment the number of participants in a petition if the citizen is located inside the petition area and is endorsed by the petition judge
     $endorsed_id = $endorsed['id'];
@@ -131,7 +131,7 @@ elseif ($type == 'endorsement') {
     $accepted = 0;
   $revoke = $endorsement->revoke ? 1 : 0;
   $query = "INSERT INTO endorsement(id, `revoke`, `message`, comment, endorsedSignature, latest, accepted) "
-          ."VALUES($id, $revoke, \"$endorsement->message\", \"$endorsement->comment\", '$endorsement->endorsedSignature', 1, $accepted)";
+          ."VALUES($id, $revoke, \"$endorsement->message\", \"$endorsement->comment\", FROM_BASE64('$endorsement->endorsedSignature'), 1, $accepted)";
 } elseif ($type == 'proposal') {
   $proposal =&$publication;
   if (!isset($proposal->website))  # optional
@@ -143,23 +143,23 @@ elseif ($type == 'endorsement') {
   $answers = implode("\n", $proposal->answers);
   $secret = ($proposal->secret) ? 1 : 0;
   $query = "INSERT INTO proposal(id, judge, area, title, description, question, answers, secret, deadline, website, participants, corpus) "
-          ."VALUES($id, \"$proposal->judge\", \"$proposal->area\", \"$proposal->title\", \"$proposal->description\", "
+          ."VALUES($id, \"$proposal->judge\", FROM_BASE64('$proposal->area'), \"$proposal->title\", \"$proposal->description\", "
           ."\"$proposal->question\", \"$answers\", $secret, $proposal->deadline, \"$proposal->website\", 0, 0)";
 } elseif ($type == 'registration')
   $query = "INSERT INTO registration(id, blindKey, encryptedVote) "
-          ."VALUES($id, \"$publication->blindKey\", \"" . $publication->encryptedVote . "\")";
+          ."VALUES($id, FROM_BASE64('$publication->blindKey'), FROM_BASE64('$publication->encryptedVote'))";
 elseif ($type == 'ballot') {
   if (!isset($publication->answer)) # optional
     $publication->answer = '';
   if (isset($publication->station)) {
     $station_names = " stationKey, stationSignature,";
-    $station_values = ' "'.$publication->station->key.'", "'.$publication->station->signature.'",';
+    $station_values = " FROM_BASE64('$publication->station->key'), FROM_BASE64('$publication->station->signature'),";
   } else {
     $station_names = "";
     $station_values = "";
   }
   $query = "INSERT INTO ballot(id, proposal,$station_names answer) "
-          ."VALUES($id, \"$publication->proposal\",$station_values \"$publication->answer\")";
+          ."VALUES($id, FROM_BASE64('$publication->proposal'),$station_values \"$publication->answer\")";
 } elseif ($type == 'area') {
   $polygons = 'ST_GeomFromText("MULTIPOLYGON(';
   $t1 = false;

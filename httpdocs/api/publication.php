@@ -25,9 +25,9 @@ $fingerprint = $mysqli->escape_string(get_string_parameter('fingerprint'));
 $key = $mysqli->escape_string(get_string_parameter('key'));
 
 $now = intval(microtime(true) * 1000);  # milliseconds
-$query = "SELECT id, `type`, `key`, signature, published FROM publication WHERE published <= $now AND ";
+$query = "SELECT id, `type`, TO_BASE64(`key`), TO_BASE64(signature), published FROM publication WHERE published <= $now AND ";
 if ($key)
-  $query .= "`key`='$key' ORDER BY published ASC";  # take the first publication from the key, e.g., the citizen publication
+  $query .= "`key` = FROM_BASE64('$key') ORDER BY published ASC";  # take the first publication from the key, e.g., the citizen publication
 elseif ($fingerprint)
   $query .= "SHA1(signature)='$fingerprint'";
 else
@@ -71,7 +71,7 @@ if ($type == 'citizen') {
   $proposal = $publication + $proposal;
   echo json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'ballot') {
-  $query = "SELECT proposal, stationKey, stationSignature, answer from ballot WHERE id=$publication_id";
+  $query = "SELECT TO_BASE64(stationKey), TO_BASE64(stationSignature), answer from ballot WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $ballot = $result->fetch_assoc();
   $result->free();

@@ -28,10 +28,10 @@ if (!$proposal)
   die("Missing proposal argument");
 
 $now = intval(microtime(true) * 1000);  # milliseconds
-$query = "SELECT publication.`version`, publication.`key`, publication.signature, publication.published, "
-        ."registration.proposal, registration.stationKey, registration.stationSignature "
+$query = "SELECT publication.`version`, TO_BASE64(publication.`key`) AS `key`, TO_BASE64(publication.signature) AS signature, publication.published, "
+        ."registration.proposal, TO_BASE64(registration.stationKey) AS stationKey, TO_BASE64(registration.stationSignature) AS stationSignature "
         ."FROM registration LEFT JOIN publication ON publication.id=registration.id "
-        ."WHERE registration.proposal='$proposal' AND published <= $now";
+        ."WHERE registration.proposal = FROM_BASE64('$proposal') AND published <= $now";
 $result = $mysqli->query($query) or error($mysqli->error);
 $registrations = [];
 if ($result) {
@@ -48,10 +48,10 @@ if ($result) {
   }
   $result->free();
 }
-$query = "SELECT publication.`version`, publication.`key`, publication.signature, publication.published, "
-        ."ballot.proposal, ballot.stationKey, ballot.stationSignature "
+$query = "SELECT publication.`version`, TO_BASE64(publication.`key`) AS `key`, TO_BASE64(publication.signature) AS signature, publication.published, "
+        ."TO_BASE64(ballot.proposal) AS proposal, TO_BASE64(ballot.stationKey) AS stationKey, TO_BASE64(ballot.stationSignature) AS stationSignature "
         ."FROM ballot LEFT JOIN publication ON publication.id=ballot.id "
-        ."WHERE ballot.proposal='$proposal'"; // AND published <= $now"; FIXME
+        ."WHERE ballot.proposal = FROM_BASE64('$proposal')"; // AND published <= $now"; FIXME
 $result = $mysqli->query($query) or error($mysqli->error);
 $ballots = [];
 if ($result) {

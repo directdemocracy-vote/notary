@@ -34,7 +34,7 @@ if ($v)
 if (!$type)
   error("No type argument provided.");
 if ($type == 'endorsement')
-  $fields = 'endorsement.endorsedSignature, endorsement.revoke, endorsement.message, endorsement.comment';
+  $fields = 'TO_BASE64(endorsement.endorsedSignature) AS endorsedSignature, endorsement.revoke, endorsement.message, endorsement.comment';
 elseif ($type == 'citizen')
   $fields = 'citizen.familyName, citizen.givenNames, CONCAT("data:image/jpeg;base64,", TO_BASE64(citizen.picture)), '
            .'ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude';
@@ -50,7 +50,7 @@ if ($published_to)
   $condition .="p.published <= $published_to AND ";
 $condition .= "p.version=$version AND p.type = '$type'";
 
-$query = "SELECT p.`version`, p.`type`, p.`key`, p.signature, p.published, $fields FROM $type "
+$query = "SELECT p.`version`, p.`type`, TO_BASE64(p.`key`), TO_BASE64(p.signature), p.published, $fields FROM $type "
         ."LEFT JOIN publication AS p ON p.id=$type.id AND $condition WHERE p.id IS NOT NULL";
 
 $result = $mysqli->query($query) or error($mysqli->error);
