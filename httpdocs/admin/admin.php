@@ -66,7 +66,7 @@ if ($results) {
 }
 
 # clean-up orphan endorsements
-query("DELETE FROM endorsement WHERE endorsement.endorsedFingerprint NOT IN (SELECT fingerprint FROM publication)");
+query("DELETE FROM endorsement WHERE endorsement.endorsedSignature NOT IN (SELECT signature FROM publication)");
 
 # clean-up orphan publications
 $query = <<<EOT
