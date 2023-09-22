@@ -79,6 +79,9 @@ elseif (!isset($fingerprint) && !isset($fingerprints))
   error('Missing parameters.');
 
 function set_types(&$proposal) {
+  $proposal['schema'] = 'https://directdemocracy.vote/json-schema/' . $proposal['version'] . '/' . $proposal['type'] . '.schema.json';
+  unset($proposal['version']);
+  unset($proposal['type']);
   settype($proposal['published'], 'int');
   settype($proposal['secret'], 'bool');
   settype($proposal['deadline'], 'int');
@@ -103,7 +106,7 @@ function return_results($query) {
 }
 
 $query_base = "SELECT "
-             ."publication.schema, publication.key, publication.signature, publication.published, "
+             ."publication.`version`, publication.`type`, publication.key, publication.signature, publication.published, "
              ."proposal.judge, proposal.area, proposal.title, proposal.description, "
              ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
              ."area.name AS areas "
@@ -114,7 +117,7 @@ $query_base = "SELECT "
 
 if (isset($fingerprint)) {
   $query = "SELECT "
-          ."publication.schema, publication.key, publication.signature, publication.published, "
+          ."publication.`version`, publication.`type`, publication.key, publication.signature, publication.published, "
           ."proposal.judge, proposal.area, proposal.title, proposal.description, "
           ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
           ."area.name AS areas "
@@ -170,7 +173,7 @@ if (isset($fingerprint)) {
   if ($search !== '')
     $search = "(title LIKE \"%$search%\" OR description LIKE \"%$search%\") AND ";
   $query = "SELECT "
-          ."publication.schema, publication.key, publication.signature, publication.published, "
+          ."publication.`version`, publication.`type`, publication.key, publication.signature, publication.published, "
           ."proposal.judge, proposal.area, proposal.title, proposal.description, "
           ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
           ."area.name AS areas "

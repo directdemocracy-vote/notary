@@ -54,7 +54,7 @@ $query = "SELECT citizen.familyName, citizen.givenNames, citizen.picture, ST_Y(c
 if ($radius)  # Unfortunately, ST_Distance_Sphere is not available in MySQL 5.6, so we need to revert to this complex formula
   $query .= ", (6371 * acos(cos(radians($latitude)) * cos(radians(ST_Y(citizen.home))) * cos(radians(ST_X(citizen.home)) - radians($longitude)) "
            ."+ sin(radians($latitude)) * sin(radians(ST_Y(citizen.home))))) AS distance";
-$query .= ", publication.`schema`, publication.`key`, publication.signature, publication.published";
+$query .= ", publication.`version`, publication.`type`, publication.`key`, publication.signature, publication.published";
 $query .= " FROM citizen";
 $query .= " INNER JOIN publication ON publication.id = citizen.id";
 if ($key)
@@ -80,6 +80,8 @@ while ($citizen = $result->fetch_assoc()) {
   $citizen['latitude'] = floatval($citizen['latitude']);
   $citizen['longitude'] = floatval($citizen['longitude']);
   $citizen['published'] = floatval($citizen['published']);
+  $citizen['schema'] = 'https://directdemocracy.vote/json-schema/' . $citizen['version'] . '/' . $citizen['type'] . 'schema.json';
+  unset($citizen['type']);
   $citizens[] = $citizen;
 }
 $result->free();

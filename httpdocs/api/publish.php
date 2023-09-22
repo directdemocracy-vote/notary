@@ -79,8 +79,9 @@ $mysqli = new mysqli($database_host, $database_username, $database_password, $da
 if ($mysqli->connect_errno)
   error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
 $mysqli->set_charset('utf8mb4');
-$query = "INSERT INTO publication(`schema`, `key`, `signature`, published) "
-        ."VALUES(\"$publication->schema\", \"$publication->key\", \"$publication->signature\", $publication->published)";
+$version = intval(explode('/', $publication->schema)[4]);
+$query = "INSERT INTO publication(`version`, `type`, `key`, `signature`, published) "
+        ."VALUES($version, \"$type\", \"$publication->key\", \"$publication->signature\", $publication->published)";
 $mysqli->query($query) or error($mysqli->error);
 $id = $mysqli->insert_id;
 
@@ -96,7 +97,7 @@ elseif ($type == 'endorsement') {
     $endorsement->message = '';
   if (!property_exists($endorsement, 'comment'))
     $endorsement->comment = '';
-  $query = "SELECT id, `schema`, `signature` FROM publication WHERE `signature`='$endorsement->endorsedSignature'";
+  $query = "SELECT id, `type`, `signature` FROM publication WHERE `signature`='$endorsement->endorsedSignature'";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsed = $result->fetch_assoc();
   $result->free();
@@ -109,7 +110,7 @@ elseif ($type == 'endorsement') {
                 ." SET endorsement.latest = 0"
                 ." WHERE endorsement.endorsedSignature='$endorsement->endorsedSignature'"
                 ." AND publication.`key`='$publication->key'") or error($mysli->error);
-  if (str_ends_with($endorsed['schema'], '/proposal.schema.json')) {  # signing a petition
+  if ($endorsed['type'] == 'proposal') {  # signing a petition
     # increment the number of participants in a petition if the citizen is located inside the petition area and is endorsed by the petition judge
     $endorsed_id = $endorsed['id'];
     $key = $endorsement->key;

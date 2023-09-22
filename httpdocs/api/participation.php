@@ -50,7 +50,7 @@ if (!$result)
   error("Specified referendum not found");
 $referendum = $result->fetch_assoc();
 $referendumSignature = $referendum['signature'];
-$query = "SELECT publication.`schema`, publication.`key`, publication.`signature`, publication.`published`, "
+$query = "SELECT publication.`version`, publication.`type`, publication.`key`, publication.`signature`, publication.`published`, "
         ."participation.referendum, participation.blindKey FROM participation "
         ."INNER JOIN publication ON publication.id=participation.id "
         ."INNER JOIN webservice AS station ON station.url='$station' "
@@ -84,8 +84,10 @@ if (!$publication) {
       error("Changed key for $station");
     $id = intval($webservice['id']);
   }
-  $query = "INSERT INTO publication(`schema`, `key`, `signature`, published) "
-          ."VALUES('$publication[schema]', '$publication[key]', '$publication[signature]', $publication[published])";
+  # $publication['schema'] looks like this: 'https://directdemocracy.vote/json-schema/2/participation.json'
+  $version = intval(explode('/', $publication['schema'])[4]);
+  $query = "INSERT INTO publication(`version`, `type`, `key`, `signature`, published) "
+          ."VALUES($version, 'participation', '$publication[key]', '$publication[signature]', $publication[published])";
   $mysqli->query($query) or error($mysqli->error);
   $publicationId = $mysqli->insert_id;
   $query = "INSERT INTO participation(id, referendum, blindKey, station) "
@@ -93,6 +95,9 @@ if (!$publication) {
   $mysqli->query($query) or error($mysqli->error);
 } else {
   settype($publication['published'], 'int');
+  $publication['schema'] = 'https://directdemocracy.vote/json-schema/' . $publication['version'] . '/' . $publication['type'] . '.schema.json';
+  unset($publication['version']);
+  unset($publication['type']);
   $answer = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 }
 $mysqli->close();

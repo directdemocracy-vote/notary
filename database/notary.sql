@@ -49,7 +49,8 @@ CREATE TABLE `endorsement` (
 
 CREATE TABLE `publication` (
   `id` int(11) NOT NULL,
-  `schema` varchar(256) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `version` smallint(6) NOT NULL,
+  `type` enum('citizen', 'endorsement', 'area', 'proposal', 'participation', 'registration', 'ballot', 'vote') NOT NULL,
   `key` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `signature` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `published` bigint(15) NOT NULL,

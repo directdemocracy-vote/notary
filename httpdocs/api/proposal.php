@@ -28,7 +28,7 @@ if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
   $extra = 'ST_AsGeoJSON(area.polygons) AS polygons';
 
 $query = "SELECT "
-        ."publication.schema, publication.key, publication.signature, publication.published, "
+        ."publication.`version`, publication.`type`, publication.key, publication.signature, publication.published, "
         ."proposal.judge, proposal.area, proposal.title, proposal.description, "
         ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
         ."proposal.participants, proposal.corpus, "
@@ -41,6 +41,9 @@ $query = "SELECT "
 $result = $mysqli->query($query) or die($mysqli->error);
 $proposal = $result->fetch_assoc();
 $result->free();
+$proposal['schema'] = 'https://directdemocracy.vote/json-schema/' . $proposal['version'] . '/' . $proposal['type'] . '.schema.json';
+unset($proposal['version']);
+unset($proposal['type']);
 settype($proposal['published'], 'int');
 settype($proposal['secret'], 'bool');
 settype($proposal['deadline'], 'int');
