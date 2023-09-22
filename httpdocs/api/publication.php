@@ -34,7 +34,7 @@ $query = "SELECT id, `schema`, `key`, signature, published FROM publication WHER
 if ($key)
   $query .= "`key`='$key' ORDER BY published ASC";  # take the first publication from the key, e.g., the citizen publication
 elseif ($fingerprint)
-  $query .= "fingerprint='$fingerprint'";
+  $query .= "SHA1(signature)='$fingerprint'";
 else
   error("No fingerprint or key argument provided.");
 $result = $mysqli->query($query) or error($mysqli->error);

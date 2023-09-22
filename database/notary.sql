@@ -39,7 +39,6 @@ CREATE TABLE `corpus` (
 
 CREATE TABLE `endorsement` (
   `id` int(11) NOT NULL,
-  `endorsedFingerprint` varchar(40) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `revoke` tinyint(1) NOT NULL,
   `message` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
   `comment` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -53,7 +52,6 @@ CREATE TABLE `publication` (
   `schema` varchar(256) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `key` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `signature` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  `fingerprint` varchar(40) CHARACTER SET ascii COLLATE ascii_bin NOT NULL COMMENT 'sha1 of signature',
   `published` bigint(15) NOT NULL,
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -77,7 +75,6 @@ CREATE TABLE `participation` (
   `referendum` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `blindKey` varchar(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `station` int(11) NOT NULL,
-  `referendumFingerprint` varchar(40) CHARACTER SET ascii COLLATE ascii_bin NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `registration` (
@@ -125,16 +122,17 @@ ALTER TABLE `corpus`
 
 ALTER TABLE `endorsement`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `endorsedFingerprint` (`endorsedFingerprint`);
+  ADD KEY `endorsedSignature` (`endorsedSignature`);
 
 ALTER TABLE `participation`
   ADD PRIMARY KEY `id`,
   ADD KEY `station` (`station`),
-  ADD KEY `referendumFingerprint` (`referendumFingerprint`);
+  ADD KEY `referendum` (`referendum`);
 
 ALTER TABLE `publication`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `fingerprint` (`fingerprint`);
+  ADD UNIQUE KEY `signature` (`signature`);
+  ADD KEY `key` (`key`);
 
 ALTER TABLE `proposal`
   ADD PRIMARY KEY (`id`);

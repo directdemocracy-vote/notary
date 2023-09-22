@@ -122,7 +122,7 @@ if (isset($fingerprint)) {
           ."LEFT JOIN publication ON publication.id = proposal.id "
           ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
           ."LEFT JOIN area ON area.id = area_p.id "
-          ."WHERE publication.fingerprint = '$fingerprint'";
+          ."WHERE SHA1(publication.signature) = '$fingerprint'";
   $result = $mysqli->query($query) or die($mysqli->error);
   $proposal = $result->fetch_assoc();
   $result->free();
@@ -130,7 +130,7 @@ if (isset($fingerprint)) {
     $area = $proposal['area'];
     $query = "SELECT area.id FROM area "
             ."LEFT JOIN publication ON publication.id = area.id "
-            ."WHERE publication.fingerprint=SHA1('$area') "
+            ."WHERE publication.signature='$area' "
             ."AND ST_Contains(area.polygons, POINT($longitude, $latitude))";
     $result = $mysqli->query($query) or error($mysqli->error);
     $proposal['inside'] = $result->fetch_assoc() ? true : false;
@@ -150,7 +150,7 @@ if (isset($fingerprint)) {
       $list .= "\"$fingerprint\",";
     $list = substr($list, 0, -1).')';
   }
-  return_results("$query_base WHERE publication.fingerprint IN $list");
+  return_results("$query_base WHERE SHA1(publication.signature) IN $list");
 } else {  # assuming search/secret/latitude/longitude/radius parameters
   if (!isset($limit))
     $limit = 1;

@@ -79,9 +79,8 @@ $mysqli = new mysqli($database_host, $database_username, $database_password, $da
 if ($mysqli->connect_errno)
   error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
 $mysqli->set_charset('utf8mb4');
-$query = "INSERT INTO publication(`schema`, `key`, `signature`, fingerprint, published) "
-        ."VALUES(\"$publication->schema\", \"$publication->key\", \"$publication->signature\", "
-        ."SHA1(\"$publication->signature\"), $publication->published)";
+$query = "INSERT INTO publication(`schema`, `key`, `signature`, published) "
+        ."VALUES(\"$publication->schema\", \"$publication->key\", \"$publication->signature\", $publication->published)";
 $mysqli->query($query) or error($mysqli->error);
 $id = $mysqli->insert_id;
 
@@ -97,7 +96,7 @@ elseif ($type == 'endorsement') {
     $endorsement->message = '';
   if (!property_exists($endorsement, 'comment'))
     $endorsement->comment = '';
-  $query = "SELECT id, `schema`, `signature` FROM publication WHERE fingerprint=SHA1(\"$endorsement->endorsedSignature\")";
+  $query = "SELECT id, `schema`, `signature` FROM publication WHERE `signature`='$endorsement->endorsedSignature'";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsed = $result->fetch_assoc();
   $result->free();
@@ -108,7 +107,7 @@ elseif ($type == 'endorsement') {
   # mark other endorsements of the same participant by the same endorser as not the latest
   $mysqli->query("UPDATE endorsement INNER JOIN publication ON publication.id = endorsement.id"
                 ." SET endorsement.latest = 0"
-                ." WHERE endorsement.endorsedFingerprint=SHA1('$endorsement->endorsedSignature')"
+                ." WHERE endorsement.endorsedSignature='$endorsement->endorsedSignature'"
                 ." AND publication.`key`='$publication->key'") or error($mysli->error);
   if (str_ends_with($endorsed['schema'], '/proposal.schema.json')) {  # signing a petition
     # increment the number of participants in a petition if the citizen is located inside the petition area and is endorsed by the petition judge
@@ -121,7 +120,7 @@ elseif ($type == 'endorsement') {
             ."INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home))) "
             ."INNER JOIN webservice AS judge ON judge.`type`='judge' AND judge.url=proposal.judge "
             ."INNER JOIN publication AS pe ON pe.`key`=judge.`key` "
-            ."INNER JOIN endorsement ON endorsement.id = pe.id AND endorsement.`revoke`=0 AND endorsement.latest=1 AND endorsement.endorsedFingerprint=pc.fingerprint "
+            ."INNER JOIN endorsement ON endorsement.id = pe.id AND endorsement.`revoke`=0 AND endorsement.latest=1 AND endorsement.endorsedSignature=pc.signature "
             ."SET participants=participants+1 "
             ."WHERE proposal.id=$endorsed_id AND proposal.`secret`=0";
     $mysqli->query($query) or error($msqli->error);
@@ -129,9 +128,8 @@ elseif ($type == 'endorsement') {
   } else
     $accepted = 0;
   $revoke = $endorsement->revoke ? 1 : 0;
-  $query = "INSERT INTO endorsement(id, endorsedFingerprint, `revoke`, `message`, comment, endorsedSignature, latest, accepted) "
-          ."VALUES($id, SHA1(\"$endorsement->endorsedSignature\"), $revoke, \"$endorsement->message\", \"$endorsement->comment\", "
-          ."\"$endorsement->endorsedSignature\", 1, $accepted)";
+  $query = "INSERT INTO endorsement(id, `revoke`, `message`, comment, endorsedSignature, latest, accepted) "
+          ."VALUES($id, $revoke, \"$endorsement->message\", \"$endorsement->comment\", '$endorsement->endorsedSignature', 1, $accepted)";
 } elseif ($type == 'proposal') {
   $proposal =&$publication;
   if (!isset($proposal->website))  # optional

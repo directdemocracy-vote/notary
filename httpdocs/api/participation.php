@@ -42,24 +42,24 @@ if (!$station)
 if (!str_starts_with($station, 'https://'))
   error("The station argument should start with 'https://'");
 
-$query = "SELECT publication.`key` FROM publication "
+$query = "SELECT publication.`signature` FROM publication "
         ."INNER JOIN proposal ON proposal.id=publication.id AND proposal.secret=1 "
-        ."WHERE publication.fingerprint='$referendumFingerprint'";
+        ."WHERE SHA1(publication.signature)='$referendumFingerprint'";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
   error("Specified referendum not found");
 $referendum = $result->fetch_assoc();
-$referendumKey = $referendum['key'];
+$referendumSignature = $referendum['signature'];
 $query = "SELECT publication.`schema`, publication.`key`, publication.`signature`, publication.`published`, "
         ."participation.referendum, participation.blindKey FROM participation "
         ."INNER JOIN publication ON publication.id=participation.id "
         ."INNER JOIN webservice AS station ON station.url='$station' "
-        ."WHERE participation.referendumFingerprint='$referendumFingerprint' AND participation.station=station.id";
+        ."WHERE SHA1(participation.referendum)='$referendumFingerprint' AND participation.station=station.id";
 $result = $mysqli->query($query) or error($mysqli->error);
 $publication = $result->fetch_assoc();
 $result->free();
 if (!$publication) {
-  $answer = file_get_contents("$station/api/participation.php?referendum=" . urlencode($referendumKey));
+  $answer = file_get_contents("$station/api/participation.php?referendum=" . urlencode($referendumSignature));
   $publication = json_decode($answer,true);
   $signature = $publication['signature'];
   $publication['signature'] = '';
@@ -69,8 +69,8 @@ if (!$publication) {
     error("Wrong signature for participation");
   $publication['signature'] = $signature;
   $key = $publication['key'];
-  if ($publication['referendum'] != $referendumKey)
-    error("Referendum key mismatch");
+  if ($publication['referendum'] != $referendumSignature)
+    error("Referendum signature mismatch");
   $blindKey = $publication['blindKey'];
   $query = "SELECT id, `key` FROM webservice WHERE url='$station' AND `type`='station'";
   $result = $mysqli->query($query) or error($mysqli->error);
@@ -84,13 +84,12 @@ if (!$publication) {
       error("Changed key for $station");
     $id = intval($webservice['id']);
   }
-  $query = "INSERT INTO publication(`schema`, `key`, `signature`, fingerprint, published) "
-          ."VALUES('$publication[schema]', '$publication[key]', '$publication[signature]', "
-          ."SHA1('$publication[signature]'), $publication[published])";
+  $query = "INSERT INTO publication(`schema`, `key`, `signature`, published) "
+          ."VALUES('$publication[schema]', '$publication[key]', '$publication[signature]', $publication[published])";
   $mysqli->query($query) or error($mysqli->error);
   $publicationId = $mysqli->insert_id;
-  $query = "INSERT INTO participation(id, referendum, blindKey, station, referendumFingerprint) "
-          ."VALUES($publicationId, '$referendumKey', '$blindKey', $id, '$referendumFingerprint')";
+  $query = "INSERT INTO participation(id, referendum, blindKey, station) "
+          ."VALUES($publicationId, '$referendumSignature', '$blindKey', $id)";
   $mysqli->query($query) or error($mysqli->error);
 } else {
   settype($publication['published'], 'int');

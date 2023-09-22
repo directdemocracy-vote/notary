@@ -24,7 +24,7 @@ $mysqli->set_charset('utf8mb4');
 $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
 $judge = $mysqli->escape_string($_GET['judge']);
 
-$query = "SELECT citizen.givenNames, citizen.familyName FROM citizen INNER JOIN publication ON publication.id=citizen.id AND publication.fingerprint='$fingerprint'";
+$query = "SELECT citizen.givenNames, citizen.familyName FROM citizen INNER JOIN publication ON publication.id=citizen.id AND SHA1(publication.signature)='$fingerprint'";
 $result = $mysqli->query($query) or error($mysqli->error);
 $citizen = $result->fetch_assoc();
 $result->free();
@@ -33,7 +33,7 @@ $answer['givenNames'] = $citizen['givenNames'];
 $answer['familyName'] = $citizen['familyName'];
 $query = "SELECT publication.published, endorsement.`revoke`, endorsement.latest FROM publication"
         ." INNER JOIN webservice AS judge ON judge.`type`='judge' AND judge.`key`=publication.`key` AND judge.url='$judge'"
-        ." INNER JOIN endorsement ON endorsement.id=publication.id AND endorsement.endorsedFingerprint='$fingerprint'"
+        ." INNER JOIN endorsement ON endorsement.id=publication.id AND SHA1(endorsement.endorsedSignature)='$fingerprint'"
         ." ORDER BY publication.published DESC";
 $result = $mysqli->query($query) or error($mysqli->error);
 $endorsements = array();
