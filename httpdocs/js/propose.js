@@ -1,4 +1,4 @@
-const directdemocracy_version = '0.0.2';
+const directdemocracy_version = '2';
 
 function findGetParameter(parameterName, result = null) {
   location.search.substr(1).split("&").forEach(function(item) {
