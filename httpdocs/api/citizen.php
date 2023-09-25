@@ -15,7 +15,7 @@ else if (isset($_POST['fingerprint']))
   $condition = "SHA1(publication.signature)='" . $mysqli->escape_string($_POST['fingerprint']) . "'";
 else
   die("{\"error\":\"missing key or fingerprint POST argument\"}");
-$query = "SELECT TO_BASE64(publication.`key`), UNIX_TIMESTAMP(publication.published), TO_BASE64(publication.signature), "
+$query = "SELECT TO_BASE64(publication.`key`) AS `key`, UNIX_TIMESTAMP(publication.published), TO_BASE64(publication.signature), "
         ."citizen.familyName, citizen.givenNames, CONCAT('data:image/jpeg;base64,', TO_BASE64(citizen.picture)) AS picture, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude "
         ."FROM publication INNER JOIN citizen ON publication.id = citizen.id "
