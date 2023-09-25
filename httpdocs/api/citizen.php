@@ -10,7 +10,7 @@ if ($mysqli->connect_errno)
   die("{\"error\":\"Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)\"}");
 $mysqli->set_charset('utf8mb4');
 if (isset($_POST['key']))
-  $condition = "publication.`key`='" . $mysqli->escape_string($_POST['key']) . "'";
+  $condition = "publication.`key`=FROM_BASE64('" . $mysqli->escape_string($_POST['key']) . "')";
 else if (isset($_POST['fingerprint']))
   $condition = "SHA1(publication.signature)='" . $mysqli->escape_string($_POST['fingerprint']) . "'";
 else
