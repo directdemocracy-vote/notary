@@ -24,8 +24,7 @@ $mysqli->set_charset('utf8mb4');
 $fingerprint = $mysqli->escape_string(get_string_parameter('fingerprint'));
 $key = $mysqli->escape_string(get_string_parameter('key'));
 
-$now = intval(microtime(true) * 1000);  # milliseconds
-$query = "SELECT id, `type`, TO_BASE64(`key`), TO_BASE64(signature), published FROM publication WHERE published <= $now AND ";
+$query = "SELECT id, `type`, TO_BASE64(`key`), TO_BASE64(signature), UNIX_TIMESTAMP(published) FROM publication WHERE published <= NOW() AND ";
 if ($key)
   $query .= "`key` = FROM_BASE64('$key') ORDER BY published ASC";  # take the first publication from the key, e.g., the citizen publication
 elseif ($fingerprint)

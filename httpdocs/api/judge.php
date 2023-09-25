@@ -21,7 +21,7 @@ $result->free();
 $judge_key = $assoc['key'];
 
 $query = "SELECT "
-        ."endorsement_p.published, endorsement.revoke, endorsement.latest, citizen.familyName, citizen.givenNames, "
+        ."UNIX_TIMESTAMP(endorsement_p.published), endorsement.revoke, endorsement.latest, citizen.familyName, citizen.givenNames, "
         ."TO_BASE64(citizen_p.signature) AS signature "
         ."FROM publication AS endorsement_p "
         ."INNER JOIN endorsement ON endorsement.id = endorsement_p.id "

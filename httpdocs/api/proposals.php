@@ -106,7 +106,7 @@ function return_results($query) {
 }
 
 $query_base = "SELECT "
-             ."publication.`version`, publication.`type`, TO_BASE64(publication.key), TO_BASE64(publication.signature), publication.published, "
+             ."publication.`version`, publication.`type`, TO_BASE64(publication.key), TO_BASE64(publication.signature), UNIX_TIMESTAMP(publication.published), "
              ."proposal.judge, proposal.area, proposal.title, proposal.description, "
              ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
              ."area.name AS areas "
@@ -117,7 +117,7 @@ $query_base = "SELECT "
 
 if (isset($fingerprint)) {
   $query = "SELECT "
-          ."publication.`version`, publication.`type`, TO_BASE64(publication.key), TO_BASE64(publication.signature), publication.published, "
+          ."publication.`version`, publication.`type`, TO_BASE64(publication.key), TO_BASE64(publication.signature), UNIX_TIMESTAMP(publication.published), "
           ."proposal.judge, proposal.area, proposal.title, proposal.description, "
           ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
           ."area.name AS areas "
@@ -173,7 +173,7 @@ if (isset($fingerprint)) {
   if ($search !== '')
     $search = "(title LIKE \"%$search%\" OR description LIKE \"%$search%\") AND ";
   $query = "SELECT "
-          ."publication.`version`, publication.`type`, TO_BASE64(publication.key), to_BASE64(publication.signature), publication.published, "
+          ."publication.`version`, publication.`type`, TO_BASE64(publication.key), to_BASE64(publication.signature), UNIX_TIMESTAMP(publication.published), "
           ."proposal.judge, proposal.area, proposal.title, proposal.description, "
           ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
           ."area.name AS areas "

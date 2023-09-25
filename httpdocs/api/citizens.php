@@ -55,9 +55,10 @@ $query = "SELECT citizen.familyName, citizen.givenNames, CONCAT('data:image/jpeg
 if ($radius)  # Unfortunately, ST_Distance_Sphere is not available in MySQL 5.6, so we need to revert to this complex formula
   $query .= ", (6371 * acos(cos(radians($latitude)) * cos(radians(ST_Y(citizen.home))) * cos(radians(ST_X(citizen.home)) - radians($longitude)) "
            ."+ sin(radians($latitude)) * sin(radians(ST_Y(citizen.home))))) AS distance";
-$query .= ", publication.`version`, publication.`type`, TO_BASE64(publication.`key`) AS `key`, TO_BASE64(publication.signature) AS signature, publication.published";
-$query .= " FROM citizen";
-$query .= " INNER JOIN publication ON publication.id = citizen.id";
+$query .= ", publication.`version`, publication.`type`, TO_BASE64(publication.`key`) AS `key`, TO_BASE64(publication.signature) AS signature,"
+         ." UNIX_TIMESTAMP(publication.published)";
+         ." FROM citizen";
+         ." INNER JOIN publication ON publication.id = citizen.id";
 if ($key)
   $query .= " INNER JOIN endorsement ON endorsement.endorsedSignature = publication.signature AND endorsement.`revoke` = 0 AND endorsement.latest = 1"
            ." INNER JOIN publication AS pe ON pe.id=endorsement.id AND pe.`key` = '$key' ";
@@ -80,7 +81,7 @@ while ($citizen = $result->fetch_assoc()) {
   unset($citizen['distance']);
   $citizen['latitude'] = floatval($citizen['latitude']);
   $citizen['longitude'] = floatval($citizen['longitude']);
-  $citizen['published'] = floatval($citizen['published']);
+  $citizen['published'] = intval($citizen['published']);
   $citizen['schema'] = 'https://directdemocracy.vote/json-schema/' . $citizen['version'] . '/' . $citizen['type'] . 'schema.json';
   unset($citizen['type']);
   $citizens[] = $citizen;

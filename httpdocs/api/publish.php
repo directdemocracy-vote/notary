@@ -43,9 +43,9 @@ if (!$result->isValid()) {
   $formatter = new ErrorFormatter();
   error(implode(". ", $formatter->formatFlat($error)) . ".");
 }
-$now = intval(microtime(true) * 1000);  # milliseconds
+$now = time();  # UNIX time stamp (seconds)
 $type = get_type($publication->schema);
-if ($type != 'ballot' && $publication->published > $now + 60000)  # allowing a 1 minute error
+if ($type != 'ballot' && $publication->published > $now + 60)  # allowing a 1 minute (60 seconds) error
   error("Publication date in the future for $type: $publication->published > $now");
 if ($type == 'citizen') {
   $citizen = &$publication;
@@ -82,7 +82,7 @@ if ($mysqli->connect_errno)
 $mysqli->set_charset('utf8mb4');
 $version = intval(explode('/', $publication->schema)[4]);
 $query = "INSERT INTO publication(`version`, `type`, `key`, `signature`, published) "
-        ."VALUES($version, '$type', FROM_BASE64('$publication->key'), FROM_BASE64('$publication->signature'), $publication->published)";
+        ."VALUES($version, '$type', FROM_BASE64('$publication->key'), FROM_BASE64('$publication->signature'), FROM_UNIXTIME($publication->published))";
 $mysqli->query($query) or error($mysqli->error);
 $id = $mysqli->insert_id;
 

@@ -28,17 +28,17 @@ if (!$proposal)
   die("Missing proposal argument");
 
 $now = intval(microtime(true) * 1000);  # milliseconds
-$query = "SELECT publication.`version`, TO_BASE64(publication.`key`) AS `key`, TO_BASE64(publication.signature) AS signature, publication.published, "
+$query = "SELECT publication.`version`, TO_BASE64(publication.`key`) AS `key`, TO_BASE64(publication.signature) AS signature, UNIX_TIMESTAMP(publication.published), "
         ."registration.proposal, TO_BASE64(registration.stationKey) AS stationKey, TO_BASE64(registration.stationSignature) AS stationSignature "
         ."FROM registration LEFT JOIN publication ON publication.id=registration.id "
-        ."WHERE registration.proposal = FROM_BASE64('$proposal') AND published <= $now";
+        ."WHERE registration.proposal = FROM_BASE64('$proposal') AND published <= NOW()";
 $result = $mysqli->query($query) or error($mysqli->error);
 $registrations = [];
 if ($result) {
   while ($registration = $result->fetch_assoc()) {
     $registration['schema'] = 'https://directdemocracy.vote/json-schema/' . $registration['version'] . '/registration.schema.json';
     unset($registration['version']);
-    $registration['published'] = floatval($registration['published']);
+    $registration['published'] = intval($registration['published']);
     $station_key = $registration['stationKey'];
     $station_signature = $registration['stationSignature'];
     unset($registration['stationKey']);
@@ -48,17 +48,17 @@ if ($result) {
   }
   $result->free();
 }
-$query = "SELECT publication.`version`, TO_BASE64(publication.`key`) AS `key`, TO_BASE64(publication.signature) AS signature, publication.published, "
+$query = "SELECT publication.`version`, TO_BASE64(publication.`key`) AS `key`, TO_BASE64(publication.signature) AS signature, UNIX_TIMESTAMP(publication.published), "
         ."TO_BASE64(ballot.proposal) AS proposal, TO_BASE64(ballot.stationKey) AS stationKey, TO_BASE64(ballot.stationSignature) AS stationSignature "
         ."FROM ballot LEFT JOIN publication ON publication.id=ballot.id "
-        ."WHERE ballot.proposal = FROM_BASE64('$proposal')"; // AND published <= $now"; FIXME
+        ."WHERE ballot.proposal = FROM_BASE64('$proposal')"; // AND published <= NOW()"; FIXME
 $result = $mysqli->query($query) or error($mysqli->error);
 $ballots = [];
 if ($result) {
   while ($ballot = $result->fetch_assoc()) {
     $ballot['schema'] = 'https://directdemocracy.vote/json-schema/' . $ballot['version'] . '/ballot.schema.json';
     unset($registration['version']);
-    $ballot['published'] = floatval($ballot['published']);
+    $ballot['published'] = intval($ballot['published']);
     $station_key = $ballot['stationKey'];
     $station_signature = $ballot['stationSignature'];
     unset($ballot['stationKey']);

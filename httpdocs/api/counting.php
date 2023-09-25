@@ -33,8 +33,8 @@ if ($fingerprint)
 else
   $condition = "publication.`key`=\"$proposal_key\"";
 
-$query = "SELECT proposal.id, `key`, published, "
-        ."judge, area, title, description, question, answers, `secret`, deadline, website "
+$query = "SELECT proposal.id, `key`, UNIX_TIMESTAMP(published), "
+        ."judge, area, title, description, question, answers, `secret`, UNIX_TIMESTAMP(deadline), website "
         ."FROM proposal LEFT JOIN publication ON publication.id=proposal.id "
         ."WHERE $condition";
 $result = $mysqli->query($query) or error($mysqli->error);
@@ -124,7 +124,7 @@ $query = "INSERT INTO corpus(citizen, proposal) "
         ."INNER JOIN endorsement ON endorsement.publicationKey=citizen_p.`key` "
         ."INNER JOIN publication AS endorsement_p ON endorsement_p.id=endorsement.id "
         ."WHERE area.id=$area_id "
-        ."AND endorsement_p.published < $proposal_deadline "
+        ."AND UNIX_TIMESTAMP(endorsement_p.published) < $proposal_deadline "
         ."AND endorsement.revoke = 0 "
         ."AND endorsement_p.`key` = \"$judge\"";
 $mysqli->query($query) or error($mysqli->error);

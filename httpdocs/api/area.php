@@ -22,10 +22,9 @@ if (!$judge)
 if (!$area)
   error("Missing area argument");
 
-$now = intval(microtime(true) * 1000);  # milliseconds
-$date_condition = "publication.published <= $now";
-$query = "SELECT publication.published FROM area LEFT JOIN publication ON publication.id=area.id "
-        ."WHERE publication.key='$judge' AND area.name='$area' AND $date_condition";
+$query = "SELECT UNIX_TIMESTAMP(publication.published) FROM area "
+        ."LEFT JOIN publication ON publication.id=area.id "
+        ."WHERE publication.`key`='$judge' AND area.name='$area' AND publication.published <= NOW()";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
   die("{\"status\":\"area not found\"}");
