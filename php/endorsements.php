@@ -1,6 +1,6 @@
 <?php
 function endorsements($mysqli, $key) {
-  $query = "SELECT pe.published, e.`revoke`, TO_BASE64(pc.`signature`), "
+  $query = "SELECT UNIX_TIMESTAMP(pe.published), e.`revoke`, TO_BASE64(pc.`signature`), "
           ."c.familyName, c.givenNames, TO_BASE64(c.picture) "
           ."FROM publication pe "
           ."INNER JOIN endorsement e ON e.id = pe.id "
