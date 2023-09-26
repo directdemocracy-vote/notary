@@ -24,7 +24,7 @@ $query = "SELECT id, `type`, TO_BASE64(`key`), TO_BASE64(signature), UNIX_TIMEST
 if ($key)
   $query .= "`key` = FROM_BASE64('$key') ORDER BY published ASC";  # take the first publication from the key, e.g., the citizen publication
 elseif ($fingerprint)
-  $query .= "SHA1(signature)='$fingerprint'";
+  $query .= "SHA1(TO_BASE64(signature))='$fingerprint'";
 else
   error("No fingerprint or key argument provided.");
 $result = $mysqli->query($query) or error($mysqli->error);

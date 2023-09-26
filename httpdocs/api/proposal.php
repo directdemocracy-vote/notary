@@ -23,7 +23,8 @@ if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
   $extra = 'ST_AsGeoJSON(area.polygons) AS polygons';
 
 $query = "SELECT "
-        ."publication.`version`, publication.`type`, TO_BASE64(publication.key), TO_BASE64(publication.signature), UNIX_TIMESTAMP(publication.published), "
+        ."publication.`version`, publication.`type`, TO_BASE64(publication.`key`) AS `key`, TO_BASE64(publication.signature) AS signature, "
+        ."UNIX_TIMESTAMP(publication.published) AS published, "
         ."proposal.judge, proposal.area, proposal.title, proposal.description, "
         ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
         ."proposal.participants, proposal.corpus, "

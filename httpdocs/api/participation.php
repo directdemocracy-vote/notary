@@ -46,8 +46,9 @@ if (!$result)
   error("Specified referendum not found");
 $referendum = $result->fetch_assoc();
 $referendumSignature = $referendum['signature'];
-$query = "SELECT publication.`version`, publication.`type`, TO_BASE64(publication.`key`), TO_BASE64(publication.`signature`), UNIX_TIMESTAMP(publication.published), "
-        ."TO_BASE64(participation.referendum), TO_BASE64(participation.blindKey) FROM participation "
+$query = "SELECT publication.`version`, publication.`type`, TO_BASE64(publication.`key`) AS `key`, TO_BASE64(publication.signature) AS signature, "
+        ."UNIX_TIMESTAMP(publication.published) AS published, "
+        ."TO_BASE64(participation.referendum) AS referendum, TO_BASE64(participation.blindKey) AS blindKey FROM participation "
         ."INNER JOIN publication ON publication.id=participation.id "
         ."INNER JOIN webservice AS station ON station.url='$station' "
         ."WHERE SHA1(participation.referendum)='$referendumFingerprint' AND participation.station=station.id";
@@ -68,7 +69,7 @@ if (!$publication) {
   if ($publication['referendum'] != $referendumSignature)
     error("Referendum signature mismatch");
   $blindKey = $publication['blindKey'];
-  $query = "SELECT id, TO_BASE64(`key`) FROM webservice WHERE url='$station' AND `type`='station'";
+  $query = "SELECT id, TO_BASE64(`key`) AS `key` FROM webservice WHERE url='$station' AND `type`='station'";
   $result = $mysqli->query($query) or error($mysqli->error);
   if (!$result) {
     $mysqli->query("INSERT INTO webservice(`type`, `key`, url) VALUES('station', FROM_BASE64('$key'), '$station')") or error($mysqli->error);
