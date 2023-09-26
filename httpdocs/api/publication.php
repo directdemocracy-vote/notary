@@ -21,12 +21,12 @@ $fingerprint = $mysqli->escape_string(get_string_parameter('fingerprint'));
 $key = $mysqli->escape_string(get_string_parameter('key'));
 
 $query = "SELECT id, CONCAT('https://directdemocracy.vote/json-schema/', `version`, '/', `type`, '.schema.json') AS `schema`, `type`, "
-        ."TO_BASE64(`key`) AS `key`, TO_BASE64(signature) AS signature, UNIX_TIMESTAMP(published) AS published "
+        ."REPLACE(TO_BASE64(`key`), '\n', '') AS `key`, REPLACE(TO_BASE64(signature), '\n', '') AS signature, UNIX_TIMESTAMP(published) AS published "
         ."FROM publication WHERE published <= NOW() AND ";
 if ($key)
   $query .= "`key` = FROM_BASE64('$key') ORDER BY published ASC";  # take the first publication from the key, e.g., the citizen publication
 elseif ($fingerprint)
-  $query .= "SHA1(TO_BASE64(signature))='$fingerprint'";
+  $query .= "SHA1(REPLACE(TO_BASE64(signature), '\n', ''))='$fingerprint'";
 else
   error("No fingerprint or key argument provided.");
 $result = $mysqli->query($query) or error($mysqli->error);
@@ -40,7 +40,7 @@ $publication['published'] = intval($publication['published']);
 $type = $publication['type'];
 unset($publication['type']);
 if ($type == 'citizen') {
-  $query = "SELECT givenNames, familyName, CONCAT('data:image/jpeg;base64,', TO_BASE64(picture)) AS picture, ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen WHERE id=$publication_id";
+  $query = "SELECT givenNames, familyName, CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(picture), '\n', '') AS picture, ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $citizen = $result->fetch_assoc();
   $result->free();
@@ -68,7 +68,7 @@ if ($type == 'citizen') {
   $proposal = $publication + $proposal;
   echo json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'ballot') {
-  $query = "SELECT TO_BASE64(stationKey), TO_BASE64(stationSignature), answer from ballot WHERE id=$publication_id";
+  $query = "SELECT REPLACE(TO_BASE64(stationKey), '\n', ''), REPLACE(TO_BASE64(stationSignature), '\n', ''), answer from ballot WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $ballot = $result->fetch_assoc();
   $result->free();
