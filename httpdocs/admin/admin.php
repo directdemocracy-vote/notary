@@ -20,7 +20,7 @@ header("Access-Control-Allow-Headers: content-type");
 $input = json_decode(file_get_contents("php://input"));
 
 $password = $input->password;
-if ($password !== $database_password)
+if ($password !== 'D6d9.vote')
   error('Wrong password.');
 
 $citizens = $mysqli->escape_string($input->citizens);
