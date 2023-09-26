@@ -47,9 +47,9 @@ if ($published_to)
 $condition .= "p.version=$version AND p.type = '$type'";
 
 $query = "SELECT p.`version`, p.`type`, "
-        ."REPLACE(TO_BASE64(p.`key`), '\\n', ''), "
-        ."REPLACE(TO_BASE64(p.signature), '\\n', ''), "
-        ."UNIX_TIMESTAMP(p.published), $fields "
+        ."REPLACE(TO_BASE64(p.`key`), '\\n', '') AS `key`, "
+        ."REPLACE(TO_BASE64(p.signature), '\\n', '') AS signature, "
+        ."UNIX_TIMESTAMP(p.published) AS published, $fields "
         ."FROM $type "
         ."LEFT JOIN publication AS p ON p.id=$type.id AND $condition WHERE p.id IS NOT NULL";
 

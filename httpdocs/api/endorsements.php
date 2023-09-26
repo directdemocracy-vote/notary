@@ -26,7 +26,7 @@ $result->free();
 $answer = array();
 $answer['givenNames'] = $citizen['givenNames'];
 $answer['familyName'] = $citizen['familyName'];
-$query = "SELECT UNIX_TIMESTAMP(publication.published), endorsement.`revoke`, endorsement.latest FROM publication"
+$query = "SELECT UNIX_TIMESTAMP(publication.published) AS published, endorsement.`revoke`, endorsement.latest FROM publication"
         ." INNER JOIN webservice AS judge ON judge.`type`='judge' AND judge.`key`=publication.`key` AND judge.url='$judge'"
         ." INNER JOIN endorsement ON endorsement.id=publication.id AND SHA1(endorsement.endorsedSignature)='$fingerprint'"
         ." ORDER BY publication.published DESC";

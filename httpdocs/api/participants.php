@@ -32,7 +32,7 @@ $answer = array();
 $answer['title'] = $title['title'];
 $query = "SELECT pc.signature, citizen.givenNames, citizen.familyName, CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture";
 if (!$corpus)
-  $query .= ", UNIX_TIMESTAMP(ps.published)";
+  $query .= ", UNIX_TIMESTAMP(ps.published) AS published";
 $query .= " FROM citizen"
          ." INNER JOIN publication AS pc ON pc.id=citizen.id"
          ." INNER JOIN publication AS pp ON SHA1(pp.signature)='$fingerprint'"

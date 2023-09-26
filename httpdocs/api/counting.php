@@ -29,8 +29,8 @@ if ($fingerprint)
 else
   $condition = "publication.`key`=\"$proposal_key\"";
 
-$query = "SELECT proposal.id, `key`, UNIX_TIMESTAMP(published), "
-        ."judge, area, title, description, question, answers, `secret`, UNIX_TIMESTAMP(deadline), website "
+$query = "SELECT proposal.id, `key`, UNIX_TIMESTAMP(published) AS published, "
+        ."judge, area, title, description, question, answers, `secret`, UNIX_TIMESTAMP(deadline) AS deadline, website "
         ."FROM proposal LEFT JOIN publication ON publication.id=proposal.id "
         ."WHERE $condition";
 $result = $mysqli->query($query) or error($mysqli->error);
