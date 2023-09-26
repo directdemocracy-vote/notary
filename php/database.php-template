@@ -1,5 +1,5 @@
 <?php
-$mysqli = new mysqli('localhost', 'notary, '********', 'notary');
+$mysqli = new mysqli('localhost', 'notary', '********', 'notary');
 if ($mysqli->connect_errno)
   die("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
 $mysqli->set_charset('utf8mb4');
