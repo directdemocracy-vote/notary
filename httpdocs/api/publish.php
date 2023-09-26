@@ -81,7 +81,6 @@ $query = "INSERT INTO publication(`version`, `type`, `key`, signature, published
         ."VALUES($version, '$type', FROM_BASE64('$publication->key'), FROM_BASE64('$publication->signature'), FROM_UNIXTIME($publication->published))";
 $mysqli->query($query) or error($mysqli->error);
 $id = $mysqli->insert_id;
-echo("{\"query\":\"$query\"}");
 
 if ($type == 'citizen')
   $query = "INSERT INTO citizen(id, familyName, givenNames, picture, home) "
