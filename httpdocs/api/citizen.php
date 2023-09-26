@@ -27,7 +27,8 @@ settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
 $endorsements = endorsements($mysqli, $citizen['key']);
 $query = "SELECT REPLACE(TO_BASE64(pc.signature), '\\n', '') AS signature, UNIX_TIMESTAMP(pe.published) AS published, e.`revoke`, "
-        ."c.familyName, c.givenNames, CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(c.picture), '\\n', '') AS picture "
+        ."c.familyName, c.givenNames, "
+        ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(c.picture), '\\n', '')) AS picture "
         ."FROM publication pe "
         ."INNER JOIN endorsement e ON e.id = pe.id "
         ."INNER JOIN publication pc ON pc.`key` = pe.`key` "
