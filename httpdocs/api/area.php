@@ -8,10 +8,6 @@ function error($message) {
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
-$mysqli = new mysqli($database_host, $database_username, $database_password, $database_name);
-if ($mysqli->connect_errno)
-  error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
-$mysqli->set_charset('utf8mb4');
 
 $input = json_decode(file_get_contents("php://input"));
 $judge = $mysqli->escape_string($input->judge);

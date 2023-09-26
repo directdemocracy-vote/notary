@@ -16,11 +16,6 @@ if (!isset($_GET['fingerprint']))
 if (!isset($_GET['judge']))
   error("Missing judge parameter");
 
-$mysqli = new mysqli($database_host, $database_username, $database_password, $database_name);
-if ($mysqli->connect_errno)
-  error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
-$mysqli->set_charset('utf8mb4');
-
 $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
 $judge = $mysqli->escape_string($_GET['judge']);
 

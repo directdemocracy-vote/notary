@@ -76,11 +76,6 @@ if ($type != 'ballot') {
     $publication->citizen->signature = $citizen_signature;
 }
 
-$mysqli = new mysqli($database_host, $database_username, $database_password, $database_name);
-if ($mysqli->connect_errno)
-  error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
-$mysqli->set_charset('utf8mb4');
-$mysqli->query("SET time_zone = '+02:00'"); // CEST
 $version = intval(explode('/', $publication->schema)[4]);
 $query = "INSERT INTO publication(`version`, `type`, `key`, `signature`, published) "
         ."VALUES($version, '$type', FROM_BASE64('$publication->key'), FROM_BASE64('$publication->signature'), FROM_UNIXTIME($publication->published))";

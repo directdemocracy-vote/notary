@@ -16,11 +16,6 @@ $participation = json_decode(file_get_contents("php://input"));
 if (!$participation)
   error("Unable to parse JSON post");
 
-$mysqli = new mysqli($database_host, $database_username, $database_password, $database_name);
-if ($mysqli->connect_errno)
-  error("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
-$mysqli->set_charset('utf8mb4');
-
 $fingerprint = $participation->fingerprint;
 $polygons = 'ST_GeomFromText("MULTIPOLYGON(';
 $t1 = false;

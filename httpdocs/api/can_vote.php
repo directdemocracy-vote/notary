@@ -2,12 +2,6 @@
 require_once '../../php/database.php';
 
 $registration = json_decode(file_get_contents("php://input"));
-
-$mysqli = new mysqli($database_host, $database_username, $database_password, $database_name);
-if ($mysqli->connect_errno)
-  die("Failed to connect to MySQL database: $mysqli->connect_error ($mysqli->connect_errno)");
-$mysqli->set_charset('utf8mb4');
-
 $referendum = $mysqli->escape_string($registration->referendum));
 if (!$referendum)
   die("Missing referendum argument");
