@@ -26,7 +26,7 @@ $query = "SELECT id, CONCAT('https://directdemocracy.vote/json-schema/', `versio
 if ($key)
   $query .= "`key` = FROM_BASE64('$key') ORDER BY published ASC";  # take the first publication from the key, e.g., the citizen publication
 elseif ($fingerprint)
-  $query .= "SHA1(REPLACE(TO_BASE64(signature), '\\n', ''))='$fingerprint'";
+  $query .= "SHA1(TO_BASE64(signature))='$fingerprint'";
 else
   error("No fingerprint or key argument provided.");
 $result = $mysqli->query($query) or error($mysqli->error);
