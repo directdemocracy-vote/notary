@@ -40,7 +40,7 @@ $publication['published'] = intval($publication['published']);
 $type = $publication['type'];
 unset($publication['type']);
 if ($type == 'citizen') {
-  $query = "SELECT givenNames, familyName, CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(picture), '\\n', '') AS picture, ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen WHERE id=$publication_id";
+  $query = "SELECT givenNames, familyName, CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(picture), '\\n', '')) AS picture, ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $citizen = $result->fetch_assoc();
   $result->free();
