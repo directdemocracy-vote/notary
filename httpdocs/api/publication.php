@@ -20,7 +20,7 @@ header("Access-Control-Allow-Headers: content-type");
 $fingerprint = $mysqli->escape_string(get_string_parameter('fingerprint'));
 $key = $mysqli->escape_string(get_string_parameter('key'));
 
-$query = "SELECT id, CONCAT('https://directdemocracy.vote/json-schema/', `version`, '/', `type`, '.schema.json'), `type`, "
+$query = "SELECT id, CONCAT('https://directdemocracy.vote/json-schema/', `version`, '/', `type`, '.schema.json') AS `schema`, `type`, "
         ."TO_BASE64(`key`) AS `key`, TO_BASE64(signature) AS signature, UNIX_TIMESTAMP(published) AS published "
         ."FROM publication WHERE published <= NOW() AND ";
 if ($key)
