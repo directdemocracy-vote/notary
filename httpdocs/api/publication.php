@@ -44,7 +44,7 @@ if ($type == 'citizen') {
   $result->free();
   $citizen['latitude'] = floatval($citizen['latitude']);
   $citizen['longitude'] = floatval($citizen['longitude']);
-  $citizen['picture'] = 'data:image/jpeg;base64,' . citizen['picture'];
+  $citizen['picture'] = 'data:image/jpeg;base64,' . $citizen['picture'];
   $citizen = $publication + $citizen;
   echo json_encode($citizen, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'endorsement') {
