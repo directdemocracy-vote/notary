@@ -20,7 +20,8 @@ header("Access-Control-Allow-Headers: content-type");
 $fingerprint = $mysqli->escape_string(get_string_parameter('fingerprint'));
 $key = $mysqli->escape_string(get_string_parameter('key'));
 
-$query = "SELECT id, `type`, TO_BASE64(`key`) AS `key`, TO_BASE64(signature) AS signature, UNIX_TIMESTAMP(published) AS published "
+$query = "SELECT id, CONCAT('https://directdemocracy.vote/json-schema/', `version`, '/', `type`, '.schema.json'), `type`, "
+        ."TO_BASE64(`key`) AS `key`, TO_BASE64(signature) AS signature, UNIX_TIMESTAMP(published) AS published "
         ."FROM publication WHERE published <= NOW() AND ";
 if ($key)
   $query .= "`key` = FROM_BASE64('$key') ORDER BY published ASC";  # take the first publication from the key, e.g., the citizen publication
@@ -37,6 +38,7 @@ $publication_id = intval($publication['id']);
 unset($publication['id']);
 $publication['published'] = intval($publication['published']);
 $type = $publication['type'];
+unset($publication['type']);
 if ($type == 'citizen') {
   $query = "SELECT givenNames, familyName, CONCAT('data:image/jpeg;base64,', TO_BASE64(picture)) AS picture, ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
