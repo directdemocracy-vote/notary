@@ -14,7 +14,7 @@ else
   die("{\"error\":\"missing key or fingerprint POST argument\"}");
 $query = "SELECT REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, UNIX_TIMESTAMP(publication.published), "
         ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
-        ."citizen.familyName, citizen.givenNames, CONCAT('data:image/jpeg;base64,', "
+        ."citizen.familyName, citizen.givenNames, "
         ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude "
         ."FROM publication INNER JOIN citizen ON publication.id = citizen.id "
