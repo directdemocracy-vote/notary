@@ -30,7 +30,7 @@ if (!$title)
   error("Proposal not found");
 $answer = array();
 $answer['title'] = $title['title'];
-$query = "SELECT pc.signature, citizen.givenNames, citizen.familyName, CONCAT('data:image/jpeg;base64,', TO_BASE64(citizen.picture)) AS picture";
+$query = "SELECT pc.signature, citizen.givenNames, citizen.familyName, CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture";
 if (!$corpus)
   $query .= ", UNIX_TIMESTAMP(ps.published)";
 $query .= " FROM citizen"

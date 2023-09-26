@@ -102,7 +102,9 @@ function return_results($query) {
 }
 
 $query_base = "SELECT "
-             ."publication.`version`, publication.`type`, TO_BASE64(publication.`key`) AS `key`, TO_BASE64(publication.signature) AS signature, "
+             ."publication.`version`, publication.`type`, "
+             ."REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, "
+             ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
              ."UNIX_TIMESTAMP(publication.published) AS published, "
              ."proposal.judge, proposal.area, proposal.title, proposal.description, "
              ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
@@ -114,7 +116,9 @@ $query_base = "SELECT "
 
 if (isset($fingerprint)) {
   $query = "SELECT "
-          ."publication.`version`, publication.`type`, TO_BASE64(publication.`key`) AS `key`, TO_BASE64(publication.signature) AS signature, "
+          ."publication.`version`, publication.`type`, "
+          ."REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, "
+          ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
           ."UNIX_TIMESTAMP(publication.published) AS published, "
           ."proposal.judge, proposal.area, proposal.title, proposal.description, "
           ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
@@ -171,7 +175,9 @@ if (isset($fingerprint)) {
   if ($search !== '')
     $search = "(title LIKE \"%$search%\" OR description LIKE \"%$search%\") AND ";
   $query = "SELECT "
-          ."publication.`version`, publication.`type`, TO_BASE64(publication.`key`) AS `key`, TO_BASE64(publication.signature) AS signature, "
+          ."publication.`version`, publication.`type`, "
+          ."REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, "
+          ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
           ."UNIX_TIMESTAMP(publication.published) AS published, "
           ."proposal.judge, proposal.area, proposal.title, proposal.description, "
           ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "

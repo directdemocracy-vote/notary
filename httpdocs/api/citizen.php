@@ -12,8 +12,10 @@ else if (isset($_POST['fingerprint']))
   $condition = "SHA1(publication.signature)='" . $mysqli->escape_string($_POST['fingerprint']) . "'";
 else
   die("{\"error\":\"missing key or fingerprint POST argument\"}");
-$query = "SELECT TO_BASE64(publication.`key`) AS `key`, UNIX_TIMESTAMP(publication.published), TO_BASE64(publication.signature) AS signature, "
-        ."citizen.familyName, citizen.givenNames, CONCAT('data:image/jpeg;base64,', TO_BASE64(citizen.picture)) AS picture, "
+$query = "SELECT REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, UNIX_TIMESTAMP(publication.published), "
+        ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
+        ."citizen.familyName, citizen.givenNames, CONCAT('data:image/jpeg;base64,', "
+        ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture)), '\\n', '')) AS picture, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude "
         ."FROM publication INNER JOIN citizen ON publication.id = citizen.id "
         ."WHERE $condition";
@@ -24,8 +26,8 @@ settype($citizen['published'], 'int');
 settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
 $endorsements = endorsements($mysqli, $citizen['key']);
-$query = "SELECT TO_BASE64(pc.signature) AS signature, UNIX_TIMESTAMP(pe.published) AS published, e.`revoke`, "
-        ."c.familyName, c.givenNames, CONCAT('data:image/jpeg;base64,', TO_BASE64(c.picture)) AS picture "
+$query = "SELECT REPLACE(TO_BASE64(pc.signature), '\\n', '') AS signature, UNIX_TIMESTAMP(pe.published) AS published, e.`revoke`, "
+        ."c.familyName, c.givenNames, CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(c.picture), '\\n', '') AS picture "
         ."FROM publication pe "
         ."INNER JOIN endorsement e ON e.id = pe.id "
         ."INNER JOIN publication pc ON pc.`key` = pe.`key` "

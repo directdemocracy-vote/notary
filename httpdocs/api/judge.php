@@ -11,7 +11,7 @@ if (isset($_POST['judge']))
 else
   $judge = 'https://judge.directdemocracy.vote';
 
-$query = "SELECT TO_BASE64(`key`) AS `key` FROM webservice WHERE `type`='judge' AND url=\"$judge\"";
+$query = "SELECT REPLACE(TO_BASE64(`key`), '\\n', '') AS `key` FROM webservice WHERE `type`='judge' AND url=\"$judge\"";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $assoc = $result->fetch_assoc() or die("{\"error\":\"judge not found: $judge\"}");
 $result->free();
@@ -19,7 +19,7 @@ $judge_key = $assoc['key'];
 
 $query = "SELECT "
         ."UNIX_TIMESTAMP(endorsement_p.published), endorsement.revoke, endorsement.latest, citizen.familyName, citizen.givenNames, "
-        ."TO_BASE64(citizen_p.signature) AS signature "
+        ."REPLACE(TO_BASE64(citizen_p.signature), '\\n', '') AS signature "
         ."FROM publication AS endorsement_p "
         ."INNER JOIN endorsement ON endorsement.id = endorsement_p.id "
         ."INNER JOIN publication AS citizen_p ON citizen_p.signature = endorsement.endorsedSignature "

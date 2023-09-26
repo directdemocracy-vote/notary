@@ -26,7 +26,7 @@ $query = "SELECT id, CONCAT('https://directdemocracy.vote/json-schema/', `versio
 if ($key)
   $query .= "`key` = FROM_BASE64('$key') ORDER BY published ASC";  # take the first publication from the key, e.g., the citizen publication
 elseif ($fingerprint)
-  $query .= "SHA1(TO_BASE64(signature))='$fingerprint'";
+  $query .= "SHA1(REPLACE(TO_BASE64(signature), '\\n', ''))='$fingerprint'";
 else
   error("No fingerprint or key argument provided.");
 $result = $mysqli->query($query) or error($mysqli->error);
@@ -40,7 +40,9 @@ $publication['published'] = intval($publication['published']);
 $type = $publication['type'];
 unset($publication['type']);
 if ($type == 'citizen') {
-  $query = "SELECT givenNames, familyName, CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(picture), '\\n', '')) AS picture, ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen WHERE id=$publication_id";
+  $query = "SELECT givenNames, familyName, "
+          ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(picture), '\\n', '')) AS picture, "
+          ."ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $citizen = $result->fetch_assoc();
   $result->free();

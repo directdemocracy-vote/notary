@@ -94,7 +94,7 @@ elseif ($type == 'endorsement') {
     $endorsement->message = '';
   if (!property_exists($endorsement, 'comment'))
     $endorsement->comment = '';
-  $query = "SELECT id, `type`, TO_BASE64(signature) AS signature FROM publication WHERE signature = FROM_BASE64('$endorsement->endorsedSignature')";
+  $query = "SELECT id, `type`, REPLACE(TO_BASE64(signature), '\\n', '') AS signature FROM publication WHERE signature = FROM_BASE64('$endorsement->endorsedSignature')";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsed = $result->fetch_assoc();
   $result->free();

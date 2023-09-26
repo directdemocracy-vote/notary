@@ -1,7 +1,9 @@
 <?php
 function endorsements($mysqli, $key) {
-  $query = "SELECT UNIX_TIMESTAMP(pe.published), e.`revoke`, TO_BASE64(pc.`signature`), "
-          ."c.familyName, c.givenNames, TO_BASE64(c.picture) "
+  $query = "SELECT UNIX_TIMESTAMP(pe.published), e.`revoke`, "
+          ."REPLACE(TO_BASE64(pc.`signature`), '\\n', '') AS signature, "
+          ."c.familyName, c.givenNames, "
+          ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(c.picture), '\\n', '')) AS picture "
           ."FROM publication pe "
           ."INNER JOIN endorsement e ON e.id = pe.id "
           ."INNER JOIN publication pc ON pc.`signature` = e.endorsedSignature "

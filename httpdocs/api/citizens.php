@@ -46,12 +46,14 @@ if ($judge) {
   $result->free();
 }
 
-$query = "SELECT citizen.familyName, citizen.givenNames, CONCAT('data:image/jpeg;base64,', TO_BASE64(citizen.picture)) AS picture, "
+$query = "SELECT citizen.familyName, citizen.givenNames, CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '') AS picture, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude";
 if ($radius)  # Unfortunately, ST_Distance_Sphere is not available in MySQL 5.6, so we need to revert to this complex formula
   $query .= ", (6371 * acos(cos(radians($latitude)) * cos(radians(ST_Y(citizen.home))) * cos(radians(ST_X(citizen.home)) - radians($longitude)) "
            ."+ sin(radians($latitude)) * sin(radians(ST_Y(citizen.home))))) AS distance";
-$query .= ", publication.`version`, publication.`type`, TO_BASE64(publication.`key`) AS `key`, TO_BASE64(publication.signature) AS signature,"
+$query .= ", publication.`version`, publication.`type`,"
+         ." REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`,"
+         ." REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature,"
          ." UNIX_TIMESTAMP(publication.published)";
          ." FROM citizen";
          ." INNER JOIN publication ON publication.id = citizen.id";

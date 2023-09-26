@@ -24,8 +24,13 @@ if (!$proposal)
   die("Missing proposal argument");
 
 $now = intval(microtime(true) * 1000);  # milliseconds
-$query = "SELECT publication.`version`, TO_BASE64(publication.`key`) AS `key`, TO_BASE64(publication.signature) AS signature, UNIX_TIMESTAMP(publication.published), "
-        ."registration.proposal, TO_BASE64(registration.stationKey) AS stationKey, TO_BASE64(registration.stationSignature) AS stationSignature "
+$query = "SELECT publication.`version`, "
+        ."REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, "
+        ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
+        ."UNIX_TIMESTAMP(publication.published), "
+        ."registration.proposal, "
+        ."REPLACE(TO_BASE64(registration.stationKey), '\\n', '') AS stationKey, "
+        ."REPLACE(TO_BASE64(registration.stationSignature), '\\n', '') AS stationSignature "
         ."FROM registration LEFT JOIN publication ON publication.id=registration.id "
         ."WHERE registration.proposal = FROM_BASE64('$proposal') AND published <= NOW()";
 $result = $mysqli->query($query) or error($mysqli->error);
@@ -44,8 +49,13 @@ if ($result) {
   }
   $result->free();
 }
-$query = "SELECT publication.`version`, TO_BASE64(publication.`key`) AS `key`, TO_BASE64(publication.signature) AS signature, UNIX_TIMESTAMP(publication.published), "
-        ."TO_BASE64(ballot.proposal) AS proposal, TO_BASE64(ballot.stationKey) AS stationKey, TO_BASE64(ballot.stationSignature) AS stationSignature "
+$query = "SELECT publication.`version`, "
+        ."REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, "
+        ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
+        ."UNIX_TIMESTAMP(publication.published), "
+        ."REPLACE(TO_BASE64(ballot.proposal), '\\n', '') AS proposal, "
+        ."REPLACE(TO_BASE64(ballot.stationKey), '\\n', '') AS stationKey, "
+        ."REPLACE(TO_BASE64(ballot.stationSignature), '\\n', '') AS stationSignature "
         ."FROM ballot LEFT JOIN publication ON publication.id=ballot.id "
         ."WHERE ballot.proposal = FROM_BASE64('$proposal')"; // AND published <= NOW()"; FIXME
 $result = $mysqli->query($query) or error($mysqli->error);
