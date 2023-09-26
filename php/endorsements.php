@@ -17,8 +17,6 @@ function endorsements($mysqli, $key) {
   while($e = $result->fetch_assoc()) {
     settype($e['published'], 'int');
     $e['revoke'] = (intval($e['revoke']) == 1);
-    settype($e['latitude'], 'float');
-    settype($e['longitude'], 'float');
     $endorsements[] = $e;
   }
   $result->free();
