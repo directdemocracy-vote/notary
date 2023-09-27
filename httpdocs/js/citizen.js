@@ -23,7 +23,7 @@ window.onload = function() {
         console.log(answer.error);
         return;
       }
-      const published = new Date(answer.citizen.published).toISOString().slice(0, 10);
+      const published = new Date(answer.citizen.published * 1000).toISOString().slice(0, 10);
       const givenNames = answer.citizen.givenNames;
       const familyName = answer.citizen.familyName;
       const latitude = answer.citizen.latitude;
@@ -97,7 +97,7 @@ window.onload = function() {
             for(const endorsement of answer.endorsements) {
               let block = document.createElement('div');
               div.appendChild(block);
-              const d = new Date(parseInt(endorsement.published));
+              const d = new Date(parseInt(endorsement.published * 1000));
               const action = endorsement.revoke ? 'Revoked' : 'Endorsed';
               const latest = parseInt(endorsement.latest) === 1;
               const color = endorsement.revoke ? 'red' : 'green';
@@ -135,7 +135,7 @@ window.onload = function() {
         div.appendChild(content);
         content.style.minWidth = '250px';
         const label = (endorsement.revoke) ? '<span style="font-weight:bold;color:red">Revoked</span>' : 'Endorsed';
-        const published = new Date(endorsement.published).toISOString().slice(0, 10);
+        const published = new Date(endorsement.published * 1000).toISOString().slice(0, 10);
         content.innerHTML =
           `<a href="/citizen.html?fingerprint=${CryptoJS.SHA1(endorsement.signature).toString()}"><b>${endorsement.givenNames}<br>` +
           `${endorsement.familyName}</b></a><br><small>${label}<br>${published}</small>`;
