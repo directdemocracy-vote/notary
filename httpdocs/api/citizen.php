@@ -43,7 +43,9 @@ if (!$result)
   die("{\"error\":\"$mysqli->error\"}");
 $citizen_endorsements = array();
 while($e = $result->fetch_assoc()) {
-  settype($e['published'], 'int');  
+  settype($e['published'], 'int');
+  settype($e['latitude'], 'float');
+  settype($e['longitude'], 'float');
   $e['revoke'] = (intval($e['revoke']) == 1);
   $citizen_endorsements[] = $e;
 }
