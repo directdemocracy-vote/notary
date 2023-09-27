@@ -137,7 +137,7 @@ window.onload = function() {
         const label = (endorsement.revoke) ? '<span style="font-weight:bold;color:red">Revoked</span>' : 'Endorsed';
         const published = new Date(endorsement.published).toISOString().slice(0, 10);
         content.innerHTML =
-          `<a href="/citizen.html?fingerprint=${Crypto.SHA1(endorsement.signature).toString()}"><b>${endorsement.givenNames}<br>` +
+          `<a href="/citizen.html?fingerprint=${CryptoJS.SHA1(endorsement.signature).toString()}"><b>${endorsement.givenNames}<br>` +
           `${endorsement.familyName}</b></a><br><small>${label}<br>${published}</small>`;
       }
       let count = 0;
