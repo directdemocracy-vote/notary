@@ -45,7 +45,7 @@ if (!$proposal)
 echo("$proposal[schema]");
 foreach($proposal as $key=>$value)
   echo("key:" . $key . " value:" . $value . "\n");
-echo("$proposal");
+# echo("$proposal");
 die(json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 settype($proposal['published'], 'int');
 settype($proposal['secret'], 'bool');
