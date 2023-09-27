@@ -39,6 +39,8 @@ $query = "SELECT "
 $result = $mysqli->query($query) or die($mysqli->error);
 $proposal = $result->fetch_assoc();
 $result->free();
+if (!$proposal)
+  die('Proposal not found');
 settype($proposal['published'], 'int');
 settype($proposal['secret'], 'bool');
 settype($proposal['deadline'], 'int');
