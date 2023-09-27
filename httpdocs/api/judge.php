@@ -14,12 +14,14 @@ else
 $query = "SELECT REPLACE(TO_BASE64(`key`), '\\n', '') AS `key` FROM webservice WHERE `type`='judge' AND url=\"$judge\"";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $webservice = $result->fetch_assoc();
-if (!$webservice) {
-  $key = file_get_contents("$judge/api/key.php");
-  die($key);
-}
 $result->free();
-$judge_key = $webservice['key'];
+if (!$webservice) {
+  $file = file_get_contents("$judge/api/key.php");
+  json_decode($file, true);
+  $judge_key = $file['key'];
+  $mysqli->query("INSERT INTO webservice(`type`, `key`, url) VALUES('judge', FROM_BASE64($judge_key), '$judge')") or die($mysqli->error);
+} else
+  $judge_key = $webservice['key'];
 
 $query = "SELECT "
         ."UNIX_TIMESTAMP(endorsement_p.published) AS published, "
