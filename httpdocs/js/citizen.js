@@ -116,6 +116,19 @@ window.onload = function() {
         button.classList.remove('is-loading');
       }
 
+      function distanceFromLatitudeLongitude(lat1, lon1, lat2, lon2) {
+        const R = 6371000; // Radius of the Earth in m
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180; 
+        const a =
+          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+          Math.sin(dLon / 2) * Math.sin(dLon / 2); 
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); 
+        const d = R * c;
+        return d;
+      }
+      
       function addEndorsement(endorsement, name) {
         let columns = document.getElementById(name);        
         let column = document.createElement('div');
@@ -136,9 +149,10 @@ window.onload = function() {
         content.style.minWidth = '250px';
         const label = (endorsement.revoke) ? '<span style="font-weight:bold;color:red">Revoked</span>' : 'Endorsed';
         const published = new Date(endorsement.published * 1000).toISOString().slice(0, 10);
+        const distance = intval(distanceFromLatitudeLongitude(latitude, longitude, endorsement.latitude, endorsement.longitude));
         content.innerHTML =
           `<a href="/citizen.html?fingerprint=${CryptoJS.SHA1(endorsement.signature).toString()}"><b>${endorsement.givenNames}<br>` +
-          `${endorsement.familyName}</b></a><br><small>${label}<br>${published}</small>`;
+          `${endorsement.familyName}</b></a><br><small>Distance: ${distance} m.<br>${label}<br>${published}</small>`;
       }
       let count = 0;
       answer.citizen_endorsements.forEach(function(endorsement) {
