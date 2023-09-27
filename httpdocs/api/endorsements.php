@@ -25,6 +25,7 @@ $result = $mysqli->query($query) or error($mysqli->error);
 $citizen = $result->fetch_assoc();
 $result->free();
 $answer = array();
+$answer['q1'] = $query;
 $answer['givenNames'] = $citizen['givenNames'];
 $answer['familyName'] = $citizen['familyName'];
 $query = "SELECT UNIX_TIMESTAMP(publication.published) AS published, endorsement.`revoke`, endorsement.latest FROM publication"
