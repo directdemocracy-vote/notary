@@ -54,8 +54,8 @@ if ($radius)  # Unfortunately, ST_Distance_Sphere is not available in MySQL 5.6,
 $query .= ", publication.`version`, publication.`type`,"
          ." REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`,"
          ." REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature,"
-         ." UNIX_TIMESTAMP(publication.published) AS published";
-         ." FROM citizen";
+         ." UNIX_TIMESTAMP(publication.published) AS published"
+         ." FROM citizen"
          ." INNER JOIN publication ON publication.id = citizen.id";
 if ($key)
   $query .= " INNER JOIN endorsement ON endorsement.endorsedSignature = publication.signature AND endorsement.`revoke` = 0 AND endorsement.latest = 1"
