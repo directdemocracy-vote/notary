@@ -1,6 +1,6 @@
 <?php
 require_once '../../php/database.php';
-require_once 'admin_password.php';
+require_once 'password.php';
 
 function error($message) {
   if ($message[0] != '{')
