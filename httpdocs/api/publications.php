@@ -46,7 +46,7 @@ if ($published_to)
   $condition .="UNIX_TIMESTAMP(p.published) <= $published_to AND ";
 $condition .= "p.version=$version AND p.type = '$type'";
 
-$query = "SELECT p.`version`, p.`type`, "
+$query = "SELECT CONCAT('https://directdemocracy.vote/json-schema/', p.`version`, '/', p.`type`, '.schema.json') AS `schema`, "
         ."REPLACE(TO_BASE64(p.`key`), '\\n', '') AS `key`, "
         ."REPLACE(TO_BASE64(p.signature), '\\n', '') AS signature, "
         ."UNIX_TIMESTAMP(p.published) AS published, $fields "
@@ -57,22 +57,18 @@ $result = $mysqli->query($query) or error($mysqli->error);
 $publications = array();
 if ($result) {
   while($publication = $result->fetch_object()) {
-    $publication->schema = 'https://directdemocracy.vote/json-schema/' . $publication->version . '/' . $publication->type . '.schema.json';
-    unset($publication->version);
-    unset($publication->type);
     $publication->published = intval($publication->published);
     if ($type == 'citizen') {
       $publication->latitude = floatval($publication->latitude);
       $publication->longitude = floatval($publication->longitude);
     } elseif ($type == 'endorsement') {
-      if (intval($publication->revoke) === 1)
-        $publication->revoke = true;
+      $publication->revoke = (intval($publication->revoke) === 1);
       if ($publication->message == '')
         unset($publication->message);
       if ($publication->comment == '')
         unset($publication->comment);
     } elseif ($type == 'proposal') {
-      $publication->deadline = floatval($publication->deadline);
+      $publication->deadline = intval($publication->deadline);
       if ($publication->website == '')
         unset($publication->website);
     }
