@@ -42,8 +42,7 @@ $proposal = $result->fetch_assoc();
 $result->free();
 if (!$proposal)
   die('{"error":"Proposal not found"}');
-
-die('{"error":"Testi"}');
+die(json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 settype($proposal['published'], 'int');
 settype($proposal['secret'], 'bool');
 settype($proposal['deadline'], 'int');
