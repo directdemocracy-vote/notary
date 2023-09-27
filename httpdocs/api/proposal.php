@@ -43,8 +43,8 @@ $result->free();
 if (!$proposal)
   die('{"error":"Proposal not found"}');
 echo("$proposal[schema]");
-foreach($proposal as $key => $value)
-  echo("key:" . $key . " value:" . $value . "\n");
+#foreach($proposal as $key => $value)
+#  echo("key:" . $key . " value:" . $value . "\n");
 # echo("$proposal");
 die(json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 settype($proposal['published'], 'int');
