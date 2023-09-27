@@ -42,7 +42,7 @@ $proposal = $result->fetch_assoc();
 $result->free();
 if (!$proposal)
   die('{"error":"Proposal not found"}');
-echo("dying...");
+echo("dying...<br>\n");
 echo("$proposal[schema]");
 die(json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 settype($proposal['published'], 'int');
