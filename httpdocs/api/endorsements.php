@@ -19,7 +19,8 @@ if (!isset($_GET['judge']))
 $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
 $judge = $mysqli->escape_string($_GET['judge']);
 
-$query = "SELECT citizen.givenNames, citizen.familyName FROM citizen INNER JOIN publication ON publication.id=citizen.id AND SHA1(publication.signature)='$fingerprint'";
+$query = "SELECT citizen.givenNames, citizen.familyName FROM citizen INNER JOIN publication ON publication.id=citizen.id "
+        ."AND SHA1(REPLACE(FROM_BASE64(publication.signature), '\\', ''))='$fingerprint'";
 $result = $mysqli->query($query) or error($mysqli->error);
 $citizen = $result->fetch_assoc();
 $result->free();
