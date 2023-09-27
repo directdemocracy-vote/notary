@@ -37,13 +37,13 @@ $query = "SELECT "
         ."LEFT JOIN area ON area.id = pa.id "
         ."WHERE SHA1(REPLACE(TO_BASE64(publication.signature), '\\n', '')) = '$fingerprint'";
 
-die('{"error":"Test"}');
-
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $proposal = $result->fetch_assoc();
 $result->free();
 if (!$proposal)
   die('{"error":"Proposal not found"}');
+
+die('{"error":"Testi"}');
 settype($proposal['published'], 'int');
 settype($proposal['secret'], 'bool');
 settype($proposal['deadline'], 'int');
