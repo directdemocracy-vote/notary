@@ -17,8 +17,8 @@ $webservice = $result->fetch_assoc();
 $result->free();
 if (!$webservice) {
   $file = file_get_contents("$judge/api/key.php");
-  json_decode($file);
-  $judge_key = $file->key;
+  $j = json_decode($file);
+  $judge_key = $j->key;
   $mysqli->query("INSERT INTO webservice(`type`, `key`, url) VALUES('judge', FROM_BASE64('$judge_key'), '$judge')") or die($mysqli->error);
 } else
   $judge_key = $webservice['key'];
