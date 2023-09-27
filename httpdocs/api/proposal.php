@@ -11,6 +11,8 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
+die('{"error":"no error"}');
+
 $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
 if (!isset($fingerprint))
   die('Missing fingerprint parameter.');
