@@ -23,7 +23,7 @@ if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
   $extra = 'ST_AsGeoJSON(area.polygons) AS polygons';
 
 $query = "SELECT "
-          ."CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json') AS `schema`, "
+        ."CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json') AS `schema`, "
         ."REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, "
         ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
         ."UNIX_TIMESTAMP(publication.published) AS published, "
@@ -42,7 +42,8 @@ $proposal = $result->fetch_assoc();
 $result->free();
 if (!$proposal)
   die('{"error":"Proposal not found"}');
-echo("$proposal[schema]");
+echo("$proposal[schema]\n");
+echo("$proposal[key]\n");
 #foreach($proposal as $key => $value)
 #  echo("key:" . $key . " value:" . $value . "\n");
 # echo("$proposal");
