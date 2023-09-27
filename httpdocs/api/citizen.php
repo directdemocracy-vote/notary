@@ -6,9 +6,11 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-if (isset($_POST['key']))
+if (isset($_POST['signature']))
+  $condition = "publication.signature = FROM_BASE64('" . $mysqli->escape_string($_POST['signature']) . "')";
+elseif (isset($_POST['key']))
   $condition = "publication.`key`=FROM_BASE64('" . $mysqli->escape_string($_POST['key']) . "')";
-else if (isset($_POST['fingerprint']))
+elseif (isset($_POST['fingerprint']))  # FIXME: this option is CPU costly
   $condition = "SHA1(REPLACE(TO_BASE64(publication.signature), '\\n', ''))='" . $mysqli->escape_string($_POST['fingerprint']) . "'";
 else
   die("{\"error\":\"missing key or fingerprint POST argument\"}");
@@ -29,6 +31,7 @@ $endorsements = endorsements($mysqli, $citizen['key']);
 $query = "SELECT REPLACE(TO_BASE64(pc.signature), '\\n', '') AS signature, UNIX_TIMESTAMP(pe.published) AS published, e.`revoke`, "
         ."c.familyName, c.givenNames, "
         ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(c.picture), '\\n', '')) AS picture "
+        ."ST_Y(c.home) AS latitude, ST_X(c.home) AS longitude "
         ."FROM publication pe "
         ."INNER JOIN endorsement e ON e.id = pe.id "
         ."INNER JOIN publication pc ON pc.`key` = pe.`key` "

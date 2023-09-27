@@ -18,15 +18,18 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 $fingerprint = $mysqli->escape_string(get_string_parameter('fingerprint'));
+$signature = $mysqli->escape_string(get_string_parameter('signature'));
 $key = $mysqli->escape_string(get_string_parameter('key'));
 
 $query = "SELECT id, CONCAT('https://directdemocracy.vote/json-schema/', `version`, '/', `type`, '.schema.json') AS `schema`, `type`, "
         ."REPLACE(TO_BASE64(`key`), '\\n', '') AS `key`, REPLACE(TO_BASE64(signature), '\\n', '') AS signature, UNIX_TIMESTAMP(published) AS published "
         ."FROM publication WHERE published <= NOW() AND ";
-if ($key)
+if ($signature)
+  $query .= "signature = FROM_BASE64('$signature')";
+elseif ($key)
   $query .= "`key` = FROM_BASE64('$key') ORDER BY published ASC";  # take the first publication from the key, e.g., the citizen publication
 elseif ($fingerprint)
-  $query .= "SHA1(REPLACE(TO_BASE64(signature), '\\n', ''))='$fingerprint'";
+  $query .= "SHA1(REPLACE(TO_BASE64(signature), '\\n', ''))='$fingerprint'";  # FIXME: this looks like pretty CPU costly
 else
   error("No fingerprint or key argument provided.");
 $result = $mysqli->query($query) or error($mysqli->error);
