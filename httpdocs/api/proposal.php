@@ -11,11 +11,9 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-die('{"error":"no error"}');
-
 $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
 if (!isset($fingerprint))
-  die('Missing fingerprint parameter.');
+  die('{"error":"Missing fingerprint parameter"}');
 
 if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
   $latitude = floatval($_GET['latitude']);
@@ -38,11 +36,11 @@ $query = "SELECT "
         ."LEFT JOIN publication AS pa ON pa.signature = proposal.area "
         ."LEFT JOIN area ON area.id = pa.id "
         ."WHERE SHA1(REPLACE(TO_BASE64(publication.signature), '\\n', '')) = '$fingerprint'";
-$result = $mysqli->query($query) or die($mysqli->error);
+$result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $proposal = $result->fetch_assoc();
 $result->free();
 if (!$proposal)
-  die('Proposal not found');
+  die('{"error":"Proposal not found"}');
 settype($proposal['published'], 'int');
 settype($proposal['secret'], 'bool');
 settype($proposal['deadline'], 'int');
@@ -53,11 +51,11 @@ $proposal['areas'] = explode("\n", $proposal['areas']);
 if (!isset($latitude)) {
   $polygons = json_decode($proposal['polygons']);
   if ($polygons->type !== 'MultiPolygon')
-    die("Area without MultiPolygon: $polygons->type");
+    die("{\"error\":\"Area without MultiPolygon: $polygons->type\"}");
   $proposal['polygons'] = &$polygons->coordinates;
 } else {
   $query = "SELECT id FROM area WHERE id=$proposal[area_id] AND ST_Contains(polygons, POINT($longitude, $latitude))";
-  $result = $mysqli->query($query) or die($mysli->error);
+  $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
   $proposal['inside'] = $result->fetch_assoc() ? true : false;
   unset($proposal['area_id']);
 }
