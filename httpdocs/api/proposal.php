@@ -23,7 +23,7 @@ if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
   $extra = 'ST_AsGeoJSON(area.polygons) AS polygons';
 
 $query = "SELECT "
-        ."CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json'), "
+        ."CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json') AS schema, "
         ."REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, "
         ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
         ."UNIX_TIMESTAMP(publication.published) AS published, "
@@ -43,6 +43,7 @@ $result->free();
 if (!$proposal)
   die('{"error":"Proposal not found"}');
 echo("dying...");
+echo("$proposal[schema]")
 die(json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 settype($proposal['published'], 'int');
 settype($proposal['secret'], 'bool');
