@@ -156,7 +156,7 @@ window.onload = function() {
         const distance = Math.round(distanceFromLatitudeLongitude(latitude, longitude, endorsement.latitude, endorsement.longitude));
         content.innerHTML =
           `<a href="/citizen.html?fingerprint=${CryptoJS.SHA1(endorsement.signature).toString()}"><b>${endorsement.givenNames}<br>` +
-          `${endorsement.familyName}</b></a><br><small>Distance: ${distance} m.<br>${label}<br>${published}</small>`;
+          `${endorsement.familyName}</b></a><br><small>Distance: ${distance} m.<br>${label}: ${published}</small>`;
       }
       let count = 0;
       answer.citizen_endorsements.forEach(function(endorsement) {
