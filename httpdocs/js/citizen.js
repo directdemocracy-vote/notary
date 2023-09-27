@@ -121,7 +121,7 @@ window.onload = function() {
       }
 
       function distanceFromLatitudeLongitude(lat1, lon1, lat2, lon2) {
-        const R = 6371000; // Radius of the Earth in m
+        const R = 6370986; // Radius of the Earth in m
         const dLat = deg2rad(lat2 - lat1);
         const dLon = deg2rad(lon2 - lon1); 
         const a =
