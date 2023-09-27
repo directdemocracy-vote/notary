@@ -73,7 +73,8 @@ if ($familyName or $givenNames) {
 if ($radius)
   $query .= " HAVING distance < $radius ORDER BY distance";
 $query .= " LIMIT 0, 20;";
-$result = $mysqli->query($query) or die($query . ' => ' . $mysqli->error);
+die($query);
+$result = $mysqli->query($query) or die($mysqli->error);
 $citizens = array();
 while ($citizen = $result->fetch_assoc()) {
   unset($citizen['distance']);
