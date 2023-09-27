@@ -43,7 +43,7 @@ $result->free();
 if (!$proposal)
   die('{"error":"Proposal not found"}');
 echo("dying...");
-echo("$proposal[schema]")
+echo("$proposal[schema]");
 die(json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 settype($proposal['published'], 'int');
 settype($proposal['secret'], 'bool');
