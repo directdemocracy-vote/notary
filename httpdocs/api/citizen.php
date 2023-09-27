@@ -9,7 +9,7 @@ header("Access-Control-Allow-Headers: content-type");
 if (isset($_POST['key']))
   $condition = "publication.`key`=FROM_BASE64('" . $mysqli->escape_string($_POST['key']) . "')";
 else if (isset($_POST['fingerprint']))
-  $condition = "SHA1(publication.signature)='" . $mysqli->escape_string($_POST['fingerprint']) . "'";
+  $condition = "SHA1(REPLACE(TO_BASE64(publication.signature), '\\n', ''))='" . $mysqli->escape_string($_POST['fingerprint']) . "'";
 else
   die("{\"error\":\"missing key or fingerprint POST argument\"}");
 $query = "SELECT REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, UNIX_TIMESTAMP(publication.published) AS published, "
