@@ -49,7 +49,7 @@ if ($judge) {
 $query = "SELECT citizen.familyName, citizen.givenNames, CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude";
 if ($radius)
-# $query .= ", ST_Distance_Sphere(POINT(ST_X(citizen.home), ST_Y(citizen.home)), POINT($longitude, $latitude)) AS distance";
+#  $query .= ", ST_Distance_Sphere(POINT(ST_X(citizen.home), ST_Y(citizen.home)), POINT($longitude, $latitude)) AS distance";
 #  $query .= ", ST_Distance_Sphere(citizen.home, POINT($longitude, $latitude)) AS distance";
 # If ST_Distance_Sphere is not available (like in MySQL 5.6), so we need to revert to this formula
   $query .= ", (6371 * acos(cos(radians($latitude)) * cos(radians(ST_Y(citizen.home))) * cos(radians(ST_X(citizen.home)) - radians($longitude)) "
@@ -80,7 +80,7 @@ $query .= " LIMIT 0, 20;";
 $result = $mysqli->query($query) or die($mysqli->error);
 $citizens = array();
 while ($citizen = $result->fetch_assoc()) {
-  unset($citizen['distance']);
+  # unset($citizen['distance']);
   $citizen['latitude'] = floatval($citizen['latitude']);
   $citizen['longitude'] = floatval($citizen['longitude']);
   $citizen['published'] = intval($citizen['published']);
