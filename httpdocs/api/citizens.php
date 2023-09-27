@@ -59,7 +59,7 @@ $query .= ", publication.`version`, publication.`type`,"
          ." INNER JOIN publication ON publication.id = citizen.id";
 if ($key)
   $query .= " INNER JOIN endorsement ON endorsement.endorsedSignature = publication.signature AND endorsement.`revoke` = 0 AND endorsement.latest = 1"
-           ." INNER JOIN publication AS pe ON pe.id=endorsement.id AND pe.`key` = FROM_BASE64('$key') ";
+           ." INNER JOIN publication AS pe ON pe.id=endorsement.id AND pe.`key` = FROM_BASE64('$key')";
 if ($familyName or $givenNames) {
   $query .= " WHERE";
   if ($familyName) {
@@ -73,7 +73,6 @@ if ($familyName or $givenNames) {
 if ($radius)
   $query .= " HAVING distance < $radius ORDER BY distance";
 $query .= " LIMIT 0, 20;";
-die($query);
 $result = $mysqli->query($query) or die($mysqli->error);
 $citizens = array();
 while ($citizen = $result->fetch_assoc()) {
