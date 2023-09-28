@@ -31,8 +31,10 @@ window.onload = function() {
         document.getElementById('answers').innerHTML = answer.answers.join(' / ');
       }
       const deadline = new Date(answer.deadline * 1000);
+      const published = new Date(answer.published * 1000);
       const now = new Date();
       document.getElementById('deadline').innerHTML = `<span style="color:#${ deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
+      document.getElementById('published').innerHTML = published.toLocaleString();
       document.getElementById('judge').innerHTML = `<a target="_blank" href="${answer.judge}">${answer.judge}</a>`;
       document.querySelector('.subtitle').innerHTML = (answer.secret) ? 'referendum' : 'petition';
       document.getElementById('modal-title').innerHTML = (answer.secret) ? 'Vote at this referendum' : 'Sign this petition';
