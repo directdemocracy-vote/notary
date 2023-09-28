@@ -193,7 +193,7 @@ if (isset($fingerprint)) {
           ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
           ."LEFT JOIN area ON area.id = area_p.id "
           ."WHERE $secret$open$search"
-          ."YEAR(FROM_UNIXTIME(proposal.deadline / 1000)) = $year "
+          ."YEAR(FROM_UNIXTIME(proposal.deadline)) = $year "
           ."AND ST_Intersects(area.polygons, ST_Buffer(POINT($longitude, $latitude), $radius)) "
           ."LIMIT $limit";
   return_results($query);
