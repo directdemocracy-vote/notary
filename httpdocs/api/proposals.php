@@ -98,7 +98,7 @@ function return_results($query) {
   }
   $result->free();
   $mysqli->close();
-  #die($query);
+  die($query);  # FIXME
   die(json_encode($proposals, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 }
 
