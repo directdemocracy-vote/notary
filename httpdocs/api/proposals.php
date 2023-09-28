@@ -98,15 +98,18 @@ function return_results($query) {
   }
   $result->free();
   $mysqli->close();
+  #die($query);
   die(json_encode($proposals, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 }
 
 $query_base = "SELECT "
-             ."publication.`version`, publication.`type`, "
+             ."CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json') AS `schema`, "
              ."REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, "
              ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
              ."UNIX_TIMESTAMP(publication.published) AS published, "
-             ."proposal.judge, proposal.area, proposal.title, proposal.description, "
+             ."proposal.judge, "
+             ."REPLACE(TO_BASE64(proposal.area), '\\n', '') AS area, "
+             ."proposal.title, proposal.description, "
              ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
              ."area.name AS areas "
              ."FROM proposal "
@@ -116,11 +119,13 @@ $query_base = "SELECT "
 
 if (isset($fingerprint)) {
   $query = "SELECT "
-          ."publication.`version`, publication.`type`, "
+          ."CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json') AS `schema`, "
           ."REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, "
           ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
           ."UNIX_TIMESTAMP(publication.published) AS published, "
-          ."proposal.judge, proposal.area, proposal.title, proposal.description, "
+          ."proposal.judge, "
+          ."REPLACE(TO_BASE64(proposal.area), '\\n', '') AS area, "
+          ."proposal.title, proposal.description, "
           ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
           ."area.name AS areas "
           ."FROM proposal "
@@ -135,7 +140,7 @@ if (isset($fingerprint)) {
     $area = $proposal['area'];
     $query = "SELECT area.id FROM area "
             ."LEFT JOIN publication ON publication.id = area.id "
-            ."WHERE publication.signature='$area' "
+            ."WHERE publication.signature=FROM_BASE64('$area') "
             ."AND ST_Contains(area.polygons, POINT($longitude, $latitude))";
     $result = $mysqli->query($query) or error($mysqli->error);
     $proposal['inside'] = $result->fetch_assoc() ? true : false;
@@ -174,11 +179,13 @@ if (isset($fingerprint)) {
   if ($search !== '')
     $search = "(title LIKE \"%$search%\" OR description LIKE \"%$search%\") AND ";
   $query = "SELECT "
-          ."publication.`version`, publication.`type`, "
+          ."CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json') AS `schema`, "
           ."REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, "
           ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
           ."UNIX_TIMESTAMP(publication.published) AS published, "
-          ."proposal.judge, proposal.area, proposal.title, proposal.description, "
+          ."proposal.judge, "
+          ."REPLACE(TO_BASE64(proposal.area), '\\n', '') as area, "
+          ."proposal.title, proposal.description, "
           ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
           ."area.name AS areas "
           ."FROM proposal "
