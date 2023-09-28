@@ -211,7 +211,6 @@ window.onload = function() {
           td.innerHTML = `<span style="color:#${ deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
           tr.appendChild(td);
           tr.addEventListener('click', function() {
-            console.log(proposal.signature);
             url = `/proposal.html?fingerprint=${CryptoJS.SHA1(proposal.signature).toString()}`;
             window.open(url, '_blank').focus();
           });
