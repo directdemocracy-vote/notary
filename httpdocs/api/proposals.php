@@ -165,13 +165,12 @@ if (isset($fingerprint)) {
     $secret = '';
   else # assuming 0 or 1
     $secret = "proposal.secret = $secret AND ";
-  $now = intval(microtime(true) * 1000);
-    if ($open == 2)
+  if ($open == 2)
     $open = '';
   elseif ($open == 0)
-    $open = "proposal.deadline <= $now AND ";
+    $open = "proposal.deadline <= NOW() AND ";
   else # assuming 1
-    $open = "proposal.deadline > $now AND ";
+    $open = "proposal.deadline > NOW() AND ";
   if ($search !== '')
     $search = "(title LIKE \"%$search%\" OR description LIKE \"%$search%\") AND ";
   $query = "SELECT "

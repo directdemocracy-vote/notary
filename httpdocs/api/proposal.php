@@ -44,9 +44,10 @@ if (!$proposal)
   die('{"error":"Proposal not found"}');
 echo("$proposal[schema]\n");
 echo("$proposal[key]\n");
-#foreach($proposal as $key => $value)
-#  echo("key:" . $key . " value:" . $value . "\n");
-# echo("$proposal");
+echo("{\n");
+foreach($proposal as $key => $value)
+  echo("  \"$key\": \"$value\""\n");
+echo("}\n");
 die(json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 settype($proposal['published'], 'int');
 settype($proposal['secret'], 'bool');
