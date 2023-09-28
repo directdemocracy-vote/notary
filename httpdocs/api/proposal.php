@@ -47,7 +47,7 @@ if (!$proposal)
 settype($proposal['published'], 'int');
 settype($proposal['secret'], 'bool');
 settype($proposal['deadline'], 'int');
-settype($proposal['participation'], 'int');
+settype($proposal['participants'], 'int');
 settype($proposal['corpus'], 'int');
 $proposal['answers'] = explode("\n", $proposal['answers']);
 $proposal['areas'] = explode("\n", $proposal['areas']);
