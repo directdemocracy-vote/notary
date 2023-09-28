@@ -30,7 +30,7 @@ window.onload = function() {
         document.getElementById('answers-block').style.display = '';
         document.getElementById('answers').innerHTML = answer.answers.join(' / ');
       }
-      const deadline = new Date(answer.deadline);
+      const deadline = new Date(answer.deadline * 1000);
       const now = new Date();
       document.getElementById('deadline').innerHTML = `<span style="color:#${ deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
       document.getElementById('judge').innerHTML = `<a target="_blank" href="${answer.judge}">${answer.judge}</a>`;
