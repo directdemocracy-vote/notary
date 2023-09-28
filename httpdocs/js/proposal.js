@@ -46,7 +46,7 @@ window.onload = function() {
         actionButton.removeAttribute('disabled');
       const corpus = answer.corpus;
       const participants = answer.secret ? 'Voters' : 'Signatures'; 
-      const participation = Math.round(10000 * answer.participants / corpus) / 100;
+      const participation = corpus == 0 ? 0 : Math.round(10000 * answer.participants / corpus) / 100;
       const line = `Corpus: <a target="_blank" href="participants.html?fingerprint=${fingerprint}&corpus=1">` +
                    `${corpus}</a> &mdash; ` +
                    `${participants}: <a target="_blank" href="participants.html?fingerprint=${fingerprint}">` +
