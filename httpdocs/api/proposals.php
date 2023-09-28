@@ -75,9 +75,6 @@ elseif (!isset($fingerprint) && !isset($fingerprints))
   error('Missing parameters.');
 
 function set_types(&$proposal) {
-  $proposal['schema'] = 'https://directdemocracy.vote/json-schema/' . $proposal['version'] . '/' . $proposal['type'] . '.schema.json';
-  unset($proposal['version']);
-  unset($proposal['type']);
   settype($proposal['published'], 'int');
   settype($proposal['secret'], 'bool');
   settype($proposal['deadline'], 'int');
