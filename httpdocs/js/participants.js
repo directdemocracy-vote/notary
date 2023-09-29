@@ -38,8 +38,10 @@ window.onload = function() {
       let title = document.createElement('p');
       panel.appendChild(title);
       title.classList.add('panel-heading');
-      title.innerHTML = `<a href="petition.html?fingerprint=${fingerprint}">${answer.title}</a>`;
-      for(const participant of answer.participants) {
+      title.innerHTML = `<a href="proposal.html?fingerprint=${fingerprint}">${answer.title}</a>`;
+      if (answer.participants.length === 0)
+        block.innerHTML = '<p>Nobody signed this petition yet.</p>';
+      else for(const participant of answer.participants) {
         let block = document.createElement('div');
         block.classList.add('panel-block');
         panel.appendChild(block);
