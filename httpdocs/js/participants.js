@@ -1,8 +1,7 @@
 function findGetParameter(parameterName) {
-  let result = null;
-  let tmp = [];
+  let result;
   location.search.substr(1).split("&").forEach(function(item) {
-    tmp = item.split("=");
+    const tmp = item.split("=");
     if (tmp[0] === parameterName)
       result = decodeURIComponent(tmp[1]);
   });
@@ -12,7 +11,7 @@ function findGetParameter(parameterName) {
 window.onload = function() {
   const fingerprint = findGetParameter('fingerprint');
   if (!fingerprint) {
-    console.log('Missing fingerprint GET argument.');
+    console.error('Missing fingerprint GET argument.');
     return;
   }
   let request = `/api/participants.php?fingerprint=${fingerprint}`;
@@ -23,24 +22,24 @@ window.onload = function() {
   } else
     corpus = false;
   fetch(request)
-    .then((response) => response.json())
-    .then((answer) => {
+    .then(response => response.json())
+    .then(answer => {
       if (answer.error) {
         console.error(answer.error);
         return;
       }
-      let subtitle = document.getElementById('subtitle');
+      const subtitle = document.getElementById('subtitle');
       if (corpus)
         subtitle.innerHTML = 'Petition corpus';
       else
         subtitle.innerHTML = 'Petition participants';
-      let panel = document.getElementById('panel');
-      let title = document.createElement('p');
+      const panel = document.getElementById('panel');
+      const title = document.createElement('p');
       panel.appendChild(title);
       title.classList.add('panel-heading');
       title.innerHTML = `<a href="petition.html?fingerprint=${fingerprint}">${answer.title}</a>`;
       for(const participant of answer.participants) {
-        let block = document.createElement('div');
+        const block = document.createElement('div');
         block.classList.add('panel-block');
         panel.appendChild(block);
         let line = `<p style="width:100%"><a href="citizen.html?fingerprint=${participant.fingerprint}" target="_blank">` +
