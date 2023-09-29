@@ -3,12 +3,12 @@ function update_corpus($mysqli, $id) {
   $accepted = <<<EOT
   SELECT pep.id FROM publication AS pep
   INNER JOIN endorsement AS e ON e.id=pep.id AND e.accepted=1
-  WHERE pep.`key`=pc.`key` AND e.endorsedFingerprint=pp.fingerprint
+  WHERE pep.`key`=pc.`key` AND e.endorsedSignature=pp.signature
   EOT;
   $count = <<<EOT
   SELECT COUNT(citizen.id) FROM citizen
   INNER JOIN publication AS pc ON pc.id=citizen.id
-  INNER JOIN endorsement ON endorsement.endorsedFingerprint=pc.fingerprint AND endorsement.latest=1
+  INNER JOIN endorsement ON endorsement.endorsedSignature=pc.signature AND endorsement.latest=1
   INNER JOIN publication AS pe ON pe.id=endorsement.id
   INNER JOIN proposal ON proposal.id=$id
   INNER JOIN publication AS pp on pp.id=proposal.id

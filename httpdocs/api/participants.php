@@ -22,7 +22,7 @@ else
 
 $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
 $query = "SELECT title FROM proposal "
-        ."INNER JOIN publication ON publication.id=proposal.id AND SHA1(publication.signature)='${fingerprint}'";
+        ."INNER JOIN publication ON publication.id=proposal.id AND SHA1(REPLACE(TO_BASE64(publication.signature), '\\n', ''))='${fingerprint}'";
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
 $title = $result->fetch_assoc();
 $result->free();
@@ -35,7 +35,7 @@ if (!$corpus)
   $query .= ", UNIX_TIMESTAMP(ps.published) AS published";
 $query .= " FROM citizen"
          ." INNER JOIN publication AS pc ON pc.id=citizen.id"
-         ." INNER JOIN publication AS pp ON SHA1(pp.signature)='$fingerprint'"
+         ." INNER JOIN publication AS pp ON SHA1(REPLACE(TO_BASE64(pp.signature), '\\n', ''))='$fingerprint'"
          ." INNER JOIN proposal ON proposal.id=pp.id";
 if ($corpus)
   $query .= " INNER JOIN webservice AS judge ON judge.`type`='judge' AND judge.url=proposal.judge"
@@ -45,15 +45,16 @@ if ($corpus)
          ." INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home)))"
          ." WHERE endorsement.`revoke`=0 OR (endorsement.`revoke`=1 AND"
          ." EXISTS(SELECT pep.id FROM publication AS pep"
-         ." INNER JOIN endorsement AS e ON e.id=pep.id AND SHA1(e.endorsedSignature)='$fingerprint' AND e.accepted=1"
+         ." INNER JOIN endorsement AS e ON e.id=pep.id AND SHA1(REPLACE(TO_BASE64(e.endorsedSignature), '\\n', ''))='$fingerprint' AND e.accepted=1"
          ." WHERE pep.`key`=pc.`key`))";
 else
-  $query .= " INNER JOIN endorsement AS signature ON SHA1(signature.endorsedSignature)='$fingerprint' AND signature.accepted=1"
+  $query .= " INNER JOIN endorsement AS signature ON SHA1(REPLACE(TO_BASE64(signature.endorsedSignature), '\\n', ''))='$fingerprint' AND signature.accepted=1"
            ." INNER JOIN publication AS ps ON ps.id=signature.id AND ps.`key`=pc.`key`";
 $query .= " ORDER BY citizen.familyName, citizen.givenNames";
 
 $result = $mysqli->query($query) or error($mysqli->error);
 $participants = array();
+$answer['query'] = $query;
 while ($participant = $result->fetch_assoc()) {
   if ($corpus)
     settype($participant['published'], 'int');
@@ -63,7 +64,7 @@ $result->free();
 if ($corpus) {
   $count = sizeof($participants);
   $query = "UPDATE proposal "
-         ." INNER JOIN publication ON publication.id=proposal.id AND SHA1(publication.signature)='$fingerprint'"
+         ." INNER JOIN publication ON publication.id=proposal.id AND SHA1(REPLACE(TO_BASE64(publication.signature), '\\n', ''))='$fingerprint'"
          ." SET corpus=$count";
   $mysqli->query($query) or error($mysqli->error);
 }

@@ -29,9 +29,11 @@ window.onload = function() {
         document.getElementById('answers-block').style.display = '';
         document.getElementById('answers').innerHTML = answer.answers.join(' / ');
       }
-      const deadline = new Date(answer.deadline);
+      const deadline = new Date(answer.deadline * 1000);
+      const published = new Date(answer.published * 1000);
       const now = new Date();
       document.getElementById('deadline').innerHTML = `<span style="color:#${ deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
+      document.getElementById('published').innerHTML = published.toLocaleString();
       document.getElementById('judge').innerHTML = `<a target="_blank" href="${answer.judge}">${answer.judge}</a>`;
       document.querySelector('.subtitle').innerHTML = (answer.secret) ? 'referendum' : 'petition';
       document.getElementById('modal-title').innerHTML = (answer.secret) ? 'Vote at this referendum' : 'Sign this petition';
@@ -43,7 +45,7 @@ window.onload = function() {
         actionButton.removeAttribute('disabled');
       const corpus = answer.corpus;
       const participants = answer.secret ? 'Voters' : 'Signatures';
-      const participation = Math.round(10000 * answer.participants / corpus) / 100;
+      const participation = corpus == 0 ? 0 : Math.round(10000 * answer.participants / corpus) / 100;
       const line = `Corpus: <a target="_blank" href="participants.html?fingerprint=${fingerprint}&corpus=1">` +
                    `${corpus}</a> &mdash; ` +
                    `${participants}: <a target="_blank" href="participants.html?fingerprint=${fingerprint}">` +

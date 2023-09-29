@@ -212,7 +212,7 @@ window.onload = function() {
           publication.schema = `https://directdemocracy.vote/json-schema/${directdemocracy_version}/proposal.schema.json`;
           publication.key = stripped_key(publication_crypt.getPublicKey());
           publication.signature = '';
-          publication.published = new Date().getTime();
+          publication.published = Math.round(new Date().getTime() / 1000);
           publication.judge = judge;
           publication.area = answer.signature;
           publication.title = document.getElementById('title').value.trim();
@@ -224,7 +224,7 @@ window.onload = function() {
             publication.secret = true;
           } else
             publication.secret = false;
-          publication.deadline = Date.parse(document.getElementById('deadline').value);
+          publication.deadline = Math.round(Date.parse(document.getElementById('deadline').value) / 1000);
           const website = document.getElementById('website').value.trim();
           if (website)
             publication.website = website;
