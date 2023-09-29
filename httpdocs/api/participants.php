@@ -56,7 +56,6 @@ $query .= " ORDER BY citizen.familyName, citizen.givenNames";
 
 $result = $mysqli->query($query) or error($mysqli->error);
 $participants = array();
-$answer['query'] = $query;
 while ($participant = $result->fetch_assoc()) {
   if ($corpus)
     settype($participant['published'], 'int');
