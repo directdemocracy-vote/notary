@@ -1,5 +1,6 @@
 <?php
 require_once '../../php/database.php';
+require_once 'password.php';
 
 function error($message) {
   if ($message[0] != '{')
@@ -20,7 +21,7 @@ header("Access-Control-Allow-Headers: content-type");
 $input = json_decode(file_get_contents("php://input"));
 
 $password = $input->password;
-if ($password !== 'D6d9.vote')
+if ($password !== $admin_password)
   error('Wrong password.');
 
 $citizens = $mysqli->escape_string($input->citizens);

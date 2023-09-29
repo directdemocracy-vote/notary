@@ -75,9 +75,6 @@ elseif (!isset($fingerprint) && !isset($fingerprints))
   error('Missing parameters.');
 
 function set_types(&$proposal) {
-  $proposal['schema'] = 'https://directdemocracy.vote/json-schema/' . $proposal['version'] . '/' . $proposal['type'] . '.schema.json';
-  unset($proposal['version']);
-  unset($proposal['type']);
   settype($proposal['published'], 'int');
   settype($proposal['secret'], 'bool');
   settype($proposal['deadline'], 'int');
@@ -102,11 +99,13 @@ function return_results($query) {
 }
 
 $query_base = "SELECT "
-             ."publication.`version`, publication.`type`, "
+             ."CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json') AS `schema`, "
              ."REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, "
              ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
              ."UNIX_TIMESTAMP(publication.published) AS published, "
-             ."proposal.judge, proposal.area, proposal.title, proposal.description, "
+             ."proposal.judge, "
+             ."REPLACE(TO_BASE64(proposal.area), '\\n', '') AS area, "
+             ."proposal.title, proposal.description, "
              ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
              ."area.name AS areas "
              ."FROM proposal "
@@ -116,11 +115,13 @@ $query_base = "SELECT "
 
 if (isset($fingerprint)) {
   $query = "SELECT "
-          ."publication.`version`, publication.`type`, "
+          ."CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json') AS `schema`, "
           ."REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, "
           ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
           ."UNIX_TIMESTAMP(publication.published) AS published, "
-          ."proposal.judge, proposal.area, proposal.title, proposal.description, "
+          ."proposal.judge, "
+          ."REPLACE(TO_BASE64(proposal.area), '\\n', '') AS area, "
+          ."proposal.title, proposal.description, "
           ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
           ."area.name AS areas "
           ."FROM proposal "
@@ -135,7 +136,7 @@ if (isset($fingerprint)) {
     $area = $proposal['area'];
     $query = "SELECT area.id FROM area "
             ."LEFT JOIN publication ON publication.id = area.id "
-            ."WHERE publication.signature='$area' "
+            ."WHERE publication.signature=FROM_BASE64('$area') "
             ."AND ST_Contains(area.polygons, POINT($longitude, $latitude))";
     $result = $mysqli->query($query) or error($mysqli->error);
     $proposal['inside'] = $result->fetch_assoc() ? true : false;
@@ -165,21 +166,22 @@ if (isset($fingerprint)) {
     $secret = '';
   else # assuming 0 or 1
     $secret = "proposal.secret = $secret AND ";
-  $now = intval(microtime(true) * 1000);
-    if ($open == 2)
+  if ($open == 2)
     $open = '';
   elseif ($open == 0)
-    $open = "proposal.deadline <= $now AND ";
+    $open = "proposal.deadline <= NOW() AND ";
   else # assuming 1
-    $open = "proposal.deadline > $now AND ";
+    $open = "proposal.deadline > NOW() AND ";
   if ($search !== '')
     $search = "(title LIKE \"%$search%\" OR description LIKE \"%$search%\") AND ";
   $query = "SELECT "
-          ."publication.`version`, publication.`type`, "
+          ."CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json') AS `schema`, "
           ."REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, "
           ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
           ."UNIX_TIMESTAMP(publication.published) AS published, "
-          ."proposal.judge, proposal.area, proposal.title, proposal.description, "
+          ."proposal.judge, "
+          ."REPLACE(TO_BASE64(proposal.area), '\\n', '') as area, "
+          ."proposal.title, proposal.description, "
           ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
           ."area.name AS areas "
           ."FROM proposal "
@@ -187,7 +189,7 @@ if (isset($fingerprint)) {
           ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
           ."LEFT JOIN area ON area.id = area_p.id "
           ."WHERE $secret$open$search"
-          ."YEAR(FROM_UNIXTIME(proposal.deadline / 1000)) = $year "
+          ."YEAR(FROM_UNIXTIME(proposal.deadline)) = $year "
           ."AND ST_Intersects(area.polygons, ST_Buffer(POINT($longitude, $latitude), $radius)) "
           ."LIMIT $limit";
   return_results($query);

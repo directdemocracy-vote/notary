@@ -1,6 +1,6 @@
-function findGetParameter(parameterName, result = null) {
+function findGetParameter(parameterName, result) {
   location.search.substr(1).split("&").forEach(function(item) {
-    let tmp = item.split("=");
+    const tmp = item.split("=");
     if (tmp[0] === parameterName)
       result = decodeURIComponent(tmp[1]);
   });
@@ -12,18 +12,18 @@ window.onload = function() {
   document.getElementById('judge').value = judge.substring(8);
   const fingerprint = findGetParameter('fingerprint');
   if (!fingerprint) {
-    console.log('Missing fingerprint GET argument.');
+    console.error('Missing fingerprint GET argument.');
     return;
   }
-  let content = document.getElementById('content');
+  const content = document.getElementById('content');
   fetch('api/citizen.php', {method: 'POST', headers: {"Content-Type": "application/x-www-form-urlencoded"}, body: `fingerprint=${encodeURIComponent(fingerprint)}`})
-    .then((response) => response.json())
-    .then((answer) => {
+    .then(response => response.json())
+    .then(answer => {
       if (answer.error) {
-        console.log(answer.error);
+        console.error(answer.error);
         return;
       }
-      const published = new Date(answer.citizen.published * 1000).toISOString().slice(0, 10);
+      const published = publishedDate(answer.citizen.published);
       const givenNames = answer.citizen.givenNames;
       const familyName = answer.citizen.familyName;
       const latitude = answer.citizen.latitude;
@@ -33,7 +33,7 @@ window.onload = function() {
       document.getElementById('family-name').innerHTML = familyName;
       document.getElementById('home').innerHTML = `<a href="https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}&zoom=12" target="_blank">${latitude}, ${longitude}</a>`;
       document.getElementById('created').innerHTML = published;
-      let map = L.map('map');
+      const map = L.map('map');
       map.whenReady(function() {setTimeout(() => {this.invalidateSize();}, 0);});
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -43,8 +43,8 @@ window.onload = function() {
       map.setView([latitude, longitude], 18);
       map.on('contextmenu', function(event) {return false;});
       fetch(`https://nominatim.openstreetmap.org/reverse.php?format=json&lat=${latitude}&lon=${longitude}&zoom=20`)
-        .then((response) => response.json())
-        .then((answer) => {
+        .then(response => response.json())
+        .then(answer => {
           const address = answer.display_name;
           marker.setPopupContent(`<b>${givenNames} ${familyName}</b><br>${address}`).openPopup();
         });
@@ -52,19 +52,19 @@ window.onload = function() {
         event.currentTarget.setAttribute('disabled', '');
         event.currentTarget.classList.add('is-loading');
         judge = 'https://' + document.getElementById('judge').value;
-        let reputation = document.getElementById('reputation');
+        const reputation = document.getElementById('reputation');
         reputation.innerHTML = '...';
         reputation.style.color = 'black';
         loadReputation();
         updateJudgeEndorsements();
       });
-      
+
       function loadReputation() {
         fetch(`${judge}/api/reputation.php?key=${encodeURIComponent(answer.citizen.key)}`)
           .then((response) => {
             if (document.getElementById('judge-endorsements').innerHTML != '<b>...</b>')
               enableJudgeReloadButton();
-            return response.json()
+            return response.json();
           })
           .then((answer) => {
             if (answer.error) {
@@ -83,19 +83,19 @@ window.onload = function() {
         let div = document.getElementById('judge-endorsements');
         div.innerHTML = '<b>...</b>';
         fetch(`/api/endorsements.php?fingerprint=${fingerprint}&judge=${judge}`)
-          .then((response) => {
+          .then(response => {
             if (reputation.innerHTML != '..')
               enableJudgeReloadButton();
-            return response.json()
+            return response.json();
           })
-          .then((answer) => {
+          .then(answer => {
             if (answer.error) {
               console.error(answer.error);
               return;
             }
             div.innerHTML = '';
             for(const endorsement of answer.endorsements) {
-              let block = document.createElement('div');
+              const block = document.createElement('div');
               div.appendChild(block);
               const d = new Date(parseInt(endorsement.published * 1000));
               const action = endorsement.revoke ? 'Revoked' : 'Endorsed';
@@ -123,41 +123,46 @@ window.onload = function() {
       function distanceFromLatitudeLongitude(lat1, lon1, lat2, lon2) {
         const R = 6370986; // Radius of the Earth in m
         const dLat = deg2rad(lat2 - lat1);
-        const dLon = deg2rad(lon2 - lon1); 
+        const dLon = deg2rad(lon2 - lon1);
         const a =
           Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-          Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-          Math.sin(dLon / 2) * Math.sin(dLon / 2); 
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); 
+          Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+          Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         const d = R * c;
         return d;
       }
-      
+
       function addEndorsement(endorsement, name) {
-        let columns = document.getElementById(name);        
-        let column = document.createElement('div');
+        const columns = document.getElementById(name);
+        const column = document.createElement('div');
         columns.appendChild(column);
         column.style.overflow = 'hidden';
-        let img = document.createElement('img');
+        const img = document.createElement('img');
         column.appendChild(img);
         img.src = endorsement.picture;
         img.style.float = 'left';
         img.style.marginRight = '10px';
         img.style.marginBottom = '10px';
         img.style.width = '75px';
-        let div = document.createElement('div');
+        const div = document.createElement('div');
         column.appendChild(div);
         div.classList.add('media-content');
-        let content = document.createElement('div');
+        const content = document.createElement('div');
         div.appendChild(content);
         content.style.minWidth = '250px';
         const label = (endorsement.revoke) ? '<span style="font-weight:bold;color:red">Revoked</span>' : 'Endorsed';
-        const published = new Date(endorsement.published * 1000).toISOString().slice(0, 10);
+        const published = publishedDate(endorsement.published);
         const distance = Math.round(distanceFromLatitudeLongitude(latitude, longitude, endorsement.latitude, endorsement.longitude));
         content.innerHTML =
           `<a href="/citizen.html?fingerprint=${CryptoJS.SHA1(endorsement.signature).toString()}"><b>${endorsement.givenNames}<br>` +
           `${endorsement.familyName}</b></a><br><small>Distance: ${distance} m.<br>${label}: ${published}</small>`;
       }
+
+      function publishedDate(seconds) {
+        return new Date(seconds * 1000).toISOString().slice(0, 10);
+      }
+
       let count = 0;
       answer.citizen_endorsements.forEach(function(endorsement) {
         if (!endorsement.revoke)
@@ -177,4 +182,4 @@ window.onload = function() {
         addEndorsement(endorsement, 'has-endorsed');
       });
     });
-}
+};

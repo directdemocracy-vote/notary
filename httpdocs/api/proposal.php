@@ -13,7 +13,7 @@ header("Access-Control-Allow-Headers: content-type");
 
 $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
 if (!isset($fingerprint))
-  die('Missing fingerprint parameter.');
+  die('{"error":"Missing fingerprint parameter"}');
 
 if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
   $latitude = floatval($_GET['latitude']);
@@ -23,11 +23,13 @@ if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
   $extra = 'ST_AsGeoJSON(area.polygons) AS polygons';
 
 $query = "SELECT "
-        ."publication.`version`, publication.`type`, "
+        ."CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json') AS `schema`, "
         ."REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, "
         ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
         ."UNIX_TIMESTAMP(publication.published) AS published, "
-        ."proposal.judge, proposal.area, proposal.title, proposal.description, "
+        ."proposal.judge, "
+        ."REPLACE(TO_BASE64(proposal.area), '\\n', '') AS area, "
+        ."proposal.title, proposal.description, "
         ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
         ."proposal.participants, proposal.corpus, "
         ."area.name AS areas, $extra "
@@ -35,28 +37,33 @@ $query = "SELECT "
         ."LEFT JOIN publication ON publication.id = proposal.id "
         ."LEFT JOIN publication AS pa ON pa.signature = proposal.area "
         ."LEFT JOIN area ON area.id = pa.id "
-        ."WHERE SHA1(publication.signature) = '$fingerprint'";
-$result = $mysqli->query($query) or die($mysqli->error);
+        ."WHERE SHA1(REPLACE(TO_BASE64(publication.signature), '\\n', '')) = '$fingerprint'";
+
+$result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $proposal = $result->fetch_assoc();
 $result->free();
-$proposal['schema'] = 'https://directdemocracy.vote/json-schema/' . $proposal['version'] . '/' . $proposal['type'] . '.schema.json';
-unset($proposal['version']);
-unset($proposal['type']);
+if (!$proposal)
+  die('{"error":"Proposal not found"}');
 settype($proposal['published'], 'int');
 settype($proposal['secret'], 'bool');
 settype($proposal['deadline'], 'int');
-settype($proposal['participation'], 'int');
+settype($proposal['participants'], 'int');
 settype($proposal['corpus'], 'int');
-$proposal['answers'] = explode("\n", $proposal['answers']);
+if ($proposal['answers'] === '')
+  unset($proposal['answers']);
+else
+  $proposal['answers'] = explode("\n", $proposal['answers']);
+if ($proposal['question'] === '')
+  unset($proposal['question']);
 $proposal['areas'] = explode("\n", $proposal['areas']);
 if (!isset($latitude)) {
   $polygons = json_decode($proposal['polygons']);
   if ($polygons->type !== 'MultiPolygon')
-    die("Area without MultiPolygon: $polygons->type");
+    die("{\"error\":\"Area without MultiPolygon: $polygons->type\"}");
   $proposal['polygons'] = &$polygons->coordinates;
 } else {
   $query = "SELECT id FROM area WHERE id=$proposal[area_id] AND ST_Contains(polygons, POINT($longitude, $latitude))";
-  $result = $mysqli->query($query) or die($mysli->error);
+  $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
   $proposal['inside'] = $result->fetch_assoc() ? true : false;
   unset($proposal['area_id']);
 }
