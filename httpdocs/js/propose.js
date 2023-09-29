@@ -2,7 +2,7 @@ const directdemocracy_version = '2';
 
 function findGetParameter(parameterName, result = null) {
   location.search.substr(1).split("&").forEach(function(item) {
-    let tmp = item.split("=");
+    const tmp = item.split("=");
     if (tmp[0] === parameterName)
       result = decodeURIComponent(tmp[1]);
   });
@@ -10,7 +10,7 @@ function findGetParameter(parameterName, result = null) {
 }
 
 function showModal(title, content, ok, cancel) {
-  if (ok === undefined && cancel === undefined)
+  if (typeof ok === 'undefined' && typeof cancel === 'undefined')
     document.getElementById('modal-footer').style.display = 'none';
   okButton = document.getElementById('modal-ok-button');
   okButton.style.display = ok ? '' : 'none';
@@ -32,7 +32,7 @@ window.onload = function() {
   document.getElementById('modal-close-button').addEventListener('click', closeModal);
   document.getElementById('modal-ok-button').addEventListener('click', closeModal);
 
-  let publication_crypt = null;
+  let publication_crypt;
   let latitude = parseFloat(findGetParameter('latitude', '-1'));
   let longitude = parseFloat(findGetParameter('longitude', '-1'));
   let geolocation = false;
@@ -40,12 +40,12 @@ window.onload = function() {
     if (navigator.geolocation)
       navigator.geolocation.getCurrentPosition(getGeolocationPosition);
     fetch('https://ipinfo.io/loc')
-      .then((response) => {
+      .then(response => {
         if (response.status == 429)
-          console.log("quota exceeded");
+          console.error("quota exceeded");
         return response.text();
       })
-      .then((answer) => {
+      .then(answer => {
         if (!geolocation) {
           coords = answer.split(',');
           getGeolocationPosition({coords: {latitude: coords[0], longitude: coords[1]}});
@@ -75,22 +75,22 @@ window.onload = function() {
 
   function updateArea() {
     fetch(`https://nominatim.openstreetmap.org/reverse.php?format=json&lat=${latitude}&lon=${longitude}&zoom=10`)
-      .then((response) => response.json())
-      .then((answer) => {
-        let address = answer.address;
-        let select = document.getElementById('area');
+      .then(response => response.json())
+      .then(answer => {
+        const address = answer.address;
+        const select = document.getElementById('area');
         let count = 0;
 
         function addAdminLevel(level) {
           if (level in address)
             select.options[count++] = new Option(address[level], level);
         }
-        // we ignore admin levels lowed than 'village': 'block', 'neighbourhood', 'quarter', 'suburb', 'borough' and 'hamlet'
+        // we ignore admin levels lower than 'village': 'block', 'neighbourhood', 'quarter', 'suburb', 'borough' and 'hamlet'
         const admin = ['village', 'town', 'city', 'municipality', 'county', 'district', 'region', 'province', 'state', 'country'];
         admin.forEach(function(item) { addAdminLevel(item); });
         const country_code = address.country_code.toUpperCase();
-        if (['GB', 'DE', 'FR', 'IT', 'SE', 'PL', 'RO', 'HR', 'ES', 'NL', 'IE', 'BG', 'DK', 'GR',
-            'AT', 'HU', 'FI', 'CZ', 'PT', 'BE', 'MT', 'CY', 'LU', 'SI', 'LU', 'SK', 'EE', 'LV'].indexOf(country_code) >= 0)
+        if (['DE', 'FR', 'IT', 'SE', 'PL', 'RO', 'HR', 'ES', 'NL', 'IE', 'BG', 'DK', 'GR',
+          'AT', 'HU', 'FI', 'CZ', 'PT', 'BE', 'MT', 'CY', 'LU', 'SI', 'LU', 'SK', 'EE', 'LV'].indexOf(country_code) >= 0)
           select.options[count++] = new Option('European Union', 'union');
         select.options[count++] = new Option('Earth', 'world');
         areaChange();
@@ -98,9 +98,9 @@ window.onload = function() {
   }
 
   function areaChange() {
-    let a = document.getElementById('area');
-    let selected_name = a.options[a.selectedIndex].innerHTML;
-    let selected_type = a.options[a.selectedIndex].value;
+    const a = document.getElementById('area');
+    const selected_name = a.options[a.selectedIndex].innerHTML;
+    const selected_type = a.options[a.selectedIndex].value;
     area = '';
     let query = '';
     for (let i = a.selectedIndex; i < a.length - 1; i++) {
@@ -113,7 +113,7 @@ window.onload = function() {
         query += type + '=' + encodeURIComponent(name) + '&';
     }
     query = query.slice(0, -1);
-    let place = document.getElementById('place');
+    const place = document.getElementById('place');
     place.innerHTML = selected_name;
     if (selected_type == 'union' && selected_name == 'European Union')
       place.href = 'https://en.wikipedia.org/wiki/European_Union';
@@ -143,7 +143,7 @@ window.onload = function() {
 
   function generateCryptographicKey() {
     document.getElementById('publish-message').innerHTML = 'Forging a cryptographic key, please wait...';
-    let button = document.getElementById('publish');
+    const button = document.getElementById('publish');
     button.classList.add('is-loading');
     button.setAttribute('disabled', '');
     let dt = new Date();
@@ -195,14 +195,14 @@ window.onload = function() {
   }
 
   document.getElementById('publish').addEventListener('click', function(event) {
-    let button = event.currentTarget;
+    const button = event.currentTarget;
     button.classList.add('is-loading');
     button.setAttribute('disabled', '');
     const judge = document.getElementById('judge').value;
     const query = area.trim().replace(/(\r\n|\n|\r)/g, "&");
     fetch(`${judge}/api/publish_area.php?${query}`)
-      .then((response) => response.json())
-      .then((answer) => {
+      .then(response => response.json())
+      .then(answer => {
         if (answer.error) {
           showModal('Area publication error', JSON.stringify(answer.error));
           button.classList.remove('is-loading');
@@ -232,21 +232,21 @@ window.onload = function() {
           publication.signature = publication_crypt.sign(str, CryptoJS.SHA256, 'sha256');
           console.log(publication);
           fetch(`/api/publish.php`, {'method': 'POST', 'body': JSON.stringify(publication)})
-          .then((response) => response.json())
-          .then((answer) => {
-            button.classList.remove('is-loading');
-            button.removeAttribute('disabled');
-            if (answer.error)
+            .then(response => response.json())
+            .then(answer => {
+              button.classList.remove('is-loading');
+              button.removeAttribute('disabled');
+              if (answer.error)
                 showModal('Publication error', JSON.stringify(answer.error));
               else {
                 showModal('Publication success',
-                          `Your ${type} was just published!<br>You will be redirected to it.`, 'OK');
+                  `Your ${type} was just published!<br>You will be redirected to it.`, 'OK');
                 document.getElementById('modal-ok-button').addEventListener('click', function() {
                   window.location.href = `/proposal.html?fingerprint=${answer.fingerprint}`;
                 });
               }
-          });
+            });
         }
       });
-    });
-}
+  });
+};

@@ -7,10 +7,9 @@ let address = '';
 let markers = [];
 
 function findGetParameter(parameterName) {
-  let result = null;
-  let tmp = [];
+  let result;
   location.search.substr(1).split("&").forEach(function(item) {
-    tmp = item.split("=");
+    const tmp = item.split("=");
     if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
   });
   return result;
@@ -47,12 +46,12 @@ window.onload = function() {
     if (navigator.geolocation)
       navigator.geolocation.getCurrentPosition(getGeolocationPosition);
     fetch('https://ipinfo.io/loc')
-      .then((response) => {
+      .then(response => {
         if (response.status == 429)
-          console.log("quota exceeded");
+          console.error("quota exceeded");
         return response.text();
       })
-      .then((answer) => {
+      .then(answer => {
         if (!geolocation) {
           coords = answer.split(',');
           getGeolocationPosition({coords: {latitude: coords[0], longitude: coords[1]}});
@@ -60,7 +59,7 @@ window.onload = function() {
       });
   } else
     zoom = 12;
-  let map = L.map('map').setView([latitude, longitude], zoom);
+  const map = L.map('map').setView([latitude, longitude], zoom);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
@@ -73,8 +72,8 @@ window.onload = function() {
     popupAnchor: [1, -34],
     shadowSize: [41, 41]
   });
-  let marker = L.marker([latitude, longitude]).addTo(map).bindPopup(latitude + ',' + longitude).on('click', updateLabel);
-  let circle = L.circle([latitude, longitude], { color: 'red', opacity: 0.4, fillColor: '#f03', fillOpacity: 0.2, radius: radius}).addTo(map);
+  const marker = L.marker([latitude, longitude]).addTo(map).bindPopup(latitude + ',' + longitude).on('click', updateLabel);
+  const circle = L.circle([latitude, longitude], { color: 'red', opacity: 0.4, fillColor: '#f03', fillOpacity: 0.2, radius: radius}).addTo(map);
   marker.setPopupContent(`<div style="text-align:center" id="address">${address}</div><div><input type="range" min="5" max="100" value="${slider}" class="slider" id="range"></div>` +
     `<div style="text-align:center;color:#999" id="position">(${latitude}, ${longitude} &plusmn; ${Math.round(radius / 100) / 10} km</div></center>`).openPopup();
   document.getElementById('range').addEventListener('input', rangeChanged);
@@ -85,16 +84,16 @@ window.onload = function() {
     longitude = event.latlng.lng;
     updateLabel();
     updatePosition();
-    let range = document.getElementById('range');
+    const range = document.getElementById('range');
     range.setAttribute('value', slider);
     range.addEventListener('input', rangeChanged);
   });
   map.on('contextmenu', function(event) { return false; });
   updatePosition();
   document.getElementById('search-citizens').addEventListener('click', function(event) {
-    let fieldset = document.getElementById('citizens-fieldset');
+    const fieldset = document.getElementById('citizens-fieldset');
     fieldset.setAttribute('disabled', '');
-    let searchCitizen = event.currentTarget;
+    const searchCitizen = event.currentTarget;
     searchCitizen.classList.add('is-loading');
     const familyName = document.getElementById('family-name').value;
     const givenNames = document.getElementById('given-names').value;
@@ -145,37 +144,37 @@ window.onload = function() {
   });
 
   document.getElementById('search-proposals').addEventListener('click', searchProposals);
-  
+
   function searchProposals() {
-    let fieldset = document.getElementById('proposals-fieldset');
+    const fieldset = document.getElementById('proposals-fieldset');
     fieldset.setAttribute('disabled', '');
-    let searchProposal = document.getElementById('search-proposals');
+    const searchProposal = document.getElementById('search-proposals');
     searchProposal.classList.add('is-loading');
     const query = document.getElementById('proposal-query').value;
     const r = document.getElementById('proposal-referendum').checked;
     const p = document.getElementById('proposal-petition').checked;
-    let secret = (r && p) ? 2 : (r ? 1 : 0);
+    const secret = (r && p) ? 2 : (r ? 1 : 0);
     const o = document.getElementById('proposal-open').checked;
     const c = document.getElementById('proposal-closed').checked;
     const open = (c && o) ? 2 : (o ? 1 : 0);
     fetch(`/api/proposals.php?secret=${secret}&open=${open}&search=${encodeURIComponent(query)}&latitude=${latitude}&longitude=${longitude}&radius=${radius}&year=2023&limit=10`)
-      .then((response) => response.json())
-      .then((answer) => {
+      .then(response => response.json())
+      .then(answer => {
         fieldset.removeAttribute('disabled');
         searchProposal.classList.remove('is-loading');
-        let section = document.getElementById('proposal-results');
+        const section = document.getElementById('proposal-results');
         section.style.display = '';
         section.innerHTML = '';
         if (answer.length == 0) {
-          let div = document.createElement('div');
-          div.innerHTML = 'No result found, try to refine your search.'
+          const div = document.createElement('div');
+          div.innerHTML = 'No result found, try to refine your search.';
           section.appendChild(div);
           return;
         }
-        let table = document.createElement('table');
+        const table = document.createElement('table');
         section.appendChild(table);
         table.classList.add('table', 'is-bordered', 'is-striped', 'is-narrow', 'is-hoverable', 'is-fullwidth');
-        let thead = document.createElement('thead');
+        const thead = document.createElement('thead');
         table.appendChild(thead);
         let tr = document.createElement('tr');
         thead.appendChild(tr);
@@ -191,7 +190,7 @@ window.onload = function() {
         th = document.createElement('th');
         tr.appendChild(th);
         th.innerHTML = 'Deadline';
-        let tbody = document.createElement('tbody');
+        const tbody = document.createElement('tbody');
         table.appendChild(tbody);
         answer.forEach(function(proposal) {
           tr = document.createElement('tr');
@@ -225,13 +224,13 @@ window.onload = function() {
     map.setView([position.coords.latitude, position.coords.longitude], 12);
     setTimeout(updatePosition, 500);
   }
-  
+
   function updatePosition() {
     marker.setLatLng([latitude, longitude]);
     circle.setLatLng([latitude, longitude]);
     fetch(`https://nominatim.openstreetmap.org/reverse.php?format=json&lat=${latitude}&lon=${longitude}&zoom=10`)
-      .then((response) => response.json())
-      .then((answer) => {
+      .then(response => response.json())
+      .then(answer => {
         address = answer.display_name;
         updateLabel();
       });
@@ -241,20 +240,20 @@ window.onload = function() {
     slider = event.currentTarget.value;
     radius = slider * slider * slider;
     circle.setRadius(radius);
-    updateLabel(); 
+    updateLabel();
   }
 
   function updateLabel() {
     document.getElementById("address").innerHTML = address;
     document.getElementById("position").innerHTML = '(' + latitude + ', ' + longitude + ') &plusmn; ' + Math.round(radius / 100) / 10 + ' km';
   }
-}
+};
 
 function openTab(event, name) {
   let contentTab = document.getElementsByClassName('content-tab');
   for (let i = 0; i < contentTab.length; i++)
     contentTab[i].style.display = 'none';
-  let tab = document.getElementsByClassName('tab');
+  const tab = document.getElementsByClassName('tab');
   for (let i = 0; i < tab.length; i++)
     tab[i].classList.remove('is-active');
   document.getElementById(name).style.display = 'block';

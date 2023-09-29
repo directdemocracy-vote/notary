@@ -4,6 +4,8 @@
         "sourceType": "module"
     },
     "rules": {
-        "semi": "error"
+        "semi": "error",
+        "no-const-assign": "error",
+        "indent": ["error", 2, { "SwitchCase": 1 }]
     }
 }
