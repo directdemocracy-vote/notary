@@ -39,9 +39,12 @@ window.onload = function() {
       panel.appendChild(title);
       title.classList.add('panel-heading');
       title.innerHTML = `<a href="proposal.html?fingerprint=${fingerprint}">${answer.title}</a>`;
-      if (answer.participants.length === 0)
+      if (answer.participants.length === 0) {
+        let block = document.createElement('div');
+        block.classList.add('panel-block');
+        panel.appendChild(block);
         block.innerHTML = '<p>Nobody signed this petition yet.</p>';
-      else for(const participant of answer.participants) {
+      } else for(const participant of answer.participants) {
         let block = document.createElement('div');
         block.classList.add('panel-block');
         panel.appendChild(block);
