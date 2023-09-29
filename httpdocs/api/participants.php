@@ -22,7 +22,7 @@ else
 
 $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
 $query = "SELECT title FROM proposal "
-        ."INNER JOIN publication ON publication.id=proposal.id AND SHA1(publication.signature)='${fingerprint}'";
+        ."INNER JOIN publication ON publication.id=proposal.id AND SHA1(REPLACE(TO_BASE64(publication.signature), '\\n', ''))='${fingerprint}'";
 $result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
 $title = $result->fetch_assoc();
 $result->free();
@@ -63,7 +63,7 @@ $result->free();
 if ($corpus) {
   $count = sizeof($participants);
   $query = "UPDATE proposal "
-         ." INNER JOIN publication ON publication.id=proposal.id AND SHA1(publication.signature)='$fingerprint'"
+         ." INNER JOIN publication ON publication.id=proposal.id AND SHA1(REPLACE(TO_BASE64(publication.signature), '\\n', ''))='$fingerprint'"
          ." SET corpus=$count";
   $mysqli->query($query) or error($mysqli->error);
 }
