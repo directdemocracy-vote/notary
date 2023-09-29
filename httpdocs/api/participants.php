@@ -23,14 +23,16 @@ else
 $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
 $query = "SELECT title FROM proposal "
         ."INNER JOIN publication ON publication.id=proposal.id AND SHA1(REPLACE(TO_BASE64(publication.signature), '\\n', ''))='${fingerprint}'";
-$result = $mysqli->query($query) or error($query . " - " . $mysqli->error);
+$result = $mysqli->query($query) or error($mysqli->error);
 $title = $result->fetch_assoc();
 $result->free();
 if (!$title)
   error("Proposal not found");
 $answer = array();
 $answer['title'] = $title['title'];
-$query = "SELECT pc.signature, citizen.givenNames, citizen.familyName, CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture";
+$query = "SELECT REPLACE(TO_BASE64(pc.signature), '\\n', '') AS signature, "
+        ."citizen.givenNames, citizen.familyName, "
+        ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture";
 if (!$corpus)
   $query .= ", UNIX_TIMESTAMP(ps.published) AS published";
 $query .= " FROM citizen"
