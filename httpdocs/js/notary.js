@@ -110,7 +110,7 @@ window.onload = function() {
         markers = [];
         answer.forEach(function(citizen) {
           const name = `${citizen.givenNames} ${citizen.familyName}`;
-          const fingerprint = CryptoJS.SHA1(citizen.signature).toString();
+          const fingerprint = CryptoJS.SHA1(CryptoJS.enc.Base64.parse(citizen.signature)).toString();
           const label = `<div style="text-align:center"><a target="_blank" href="/citizen.html?fingerprint=${fingerprint}"><img src="${citizen.picture}" width="60" height="80"><br>${name}</a></div>`;
           markers.push(L.marker([citizen.latitude, citizen.longitude], {icon: greenIcon}).addTo(map).bindPopup(label));
         });
@@ -210,7 +210,7 @@ window.onload = function() {
           td.innerHTML = `<span style="color:#${ deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
           tr.appendChild(td);
           tr.addEventListener('click', function() {
-            url = `/proposal.html?fingerprint=${CryptoJS.SHA1(proposal.signature).toString()}`;
+            url = `/proposal.html?fingerprint=${CryptoJS.SHA1(CryptoJS.enc.Base64.parse(proposal.signature)).toString()}`;
             window.open(url, '_blank').focus();
           });
         });

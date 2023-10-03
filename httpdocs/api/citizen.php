@@ -12,6 +12,7 @@ elseif (isset($_POST['key']))
   $condition = "publication.`key`=FROM_BASE64('" . $mysqli->escape_string($_POST['key']) . "')";
 elseif (isset($_POST['fingerprint']))  # FIXME: this option is CPU costly
   $condition = "SHA1(REPLACE(TO_BASE64(publication.signature), '\\n', ''))='" . $mysqli->escape_string($_POST['fingerprint']) . "'";
+  $condition = "publication.signatureSHA1 = UNHEX('" . $mysqli->escape_string($_POST['fingerprint']) . "')";
 else
   die("{\"error\":\"missing key or fingerprint POST argument\"}");
 $query = "SELECT REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, UNIX_TIMESTAMP(publication.published) AS published, "
