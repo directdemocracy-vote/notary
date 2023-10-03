@@ -10,11 +10,12 @@ function findGetParameter(parameterName) {
 
 window.onload = function() {
   const fingerprint = findGetParameter('fingerprint');
-  if (!fingerprint) {
-    console.error('Missing fingerprint GET argument.');
+  const signature = findGetParameter('signature');
+  if (!fingerprint && !signature) {
+    console.error('Missing fingerprint or signature GET argument.');
     return;
   }
-  let request = `/api/participants.php?fingerprint=${fingerprint}`;
+  let request = '/api/participants.php?' + signature ? `signature=${encodeURIComponent(signature)}` : `fingerprint=${fingerprint}`;
   let corpus;
   if (findGetParameter('corpus') === '1') {
     corpus = true;
