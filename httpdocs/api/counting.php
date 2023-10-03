@@ -25,7 +25,7 @@ if (!$proposal_key && !$fingerprint)
   error("Missing proposal or fingerprint argument");
 
 if ($fingerprint)
-  $condition = "SHA1(publication.signature)=\"$fingerprint\"";
+  $condition = "publication.signatureSHA1 = UNHEX('$fingerprint')";
 else
   $condition = "publication.`key`=\"$proposal_key\"";
 

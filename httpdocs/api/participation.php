@@ -40,7 +40,7 @@ if (!str_starts_with($station, 'https://'))
 
 $query = "SELECT publication.`signature` FROM publication "
         ."INNER JOIN proposal ON proposal.id=publication.id AND proposal.secret=1 "
-        ."WHERE SHA1(publication.signature)='$referendumFingerprint'";
+        ."WHERE publication.signatureSHA1=UNHEX('$referendumFingerprint')";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
   error("Specified referendum not found");

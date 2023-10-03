@@ -37,7 +37,7 @@ $query = "SELECT "
         ."LEFT JOIN publication ON publication.id = proposal.id "
         ."LEFT JOIN publication AS pa ON pa.signature = proposal.area "
         ."LEFT JOIN area ON area.id = pa.id "
-        ."WHERE SHA1(REPLACE(TO_BASE64(publication.signature), '\\n', '')) = '$fingerprint'";
+        ."WHERE publication.signatureSHA1 = UNHEX('$fingerprint')";
 
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $proposal = $result->fetch_assoc();

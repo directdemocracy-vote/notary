@@ -128,7 +128,7 @@ if (isset($fingerprint)) {
           ."LEFT JOIN publication ON publication.id = proposal.id "
           ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
           ."LEFT JOIN area ON area.id = area_p.id "
-          ."WHERE SHA1(publication.signature) = '$fingerprint'";
+          ."WHERE publication.signatureSHA1 = UNHEX('$fingerprint')";
   $result = $mysqli->query($query) or die($mysqli->error);
   $proposal = $result->fetch_assoc();
   $result->free();
@@ -153,10 +153,10 @@ if (isset($fingerprint)) {
   if (isset($fingerprints)) {
     $list = '(';
     foreach($fingerprints as $fingerprint)
-      $list .= "\"$fingerprint\",";
+      $list .= "UNHEX('$fingerprint'),";
     $list = substr($list, 0, -1).')';
   }
-  return_results("$query_base WHERE SHA1(publication.signature) IN $list");
+  return_results("$query_base WHERE publication.signatureSHA1 IN $list");
 } else {  # assuming search/secret/latitude/longitude/radius parameters
   if (!isset($limit))
     $limit = 1;

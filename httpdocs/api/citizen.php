@@ -10,7 +10,7 @@ if (isset($_POST['signature']))
   $condition = "publication.signature = FROM_BASE64('" . $mysqli->escape_string($_POST['signature']) . "')";
 elseif (isset($_POST['key']))
   $condition = "publication.`key`=FROM_BASE64('" . $mysqli->escape_string($_POST['key']) . "')";
-elseif (isset($_POST['fingerprint']))  # FIXME: this option is CPU costly
+elseif (isset($_POST['fingerprint']))
   $condition = "publication.signatureSHA1 = UNHEX('" . $mysqli->escape_string($_POST['fingerprint']) . "')";
 else
   die("{\"error\":\"missing key or fingerprint POST argument\"}");

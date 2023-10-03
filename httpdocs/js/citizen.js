@@ -155,7 +155,7 @@ window.onload = function() {
         const published = publishedDate(endorsement.published);
         const distance = Math.round(distanceFromLatitudeLongitude(latitude, longitude, endorsement.latitude, endorsement.longitude));
         content.innerHTML =
-          `<a href="/citizen.html?fingerprint=${CryptoJS.SHA1(endorsement.signature).toString()}"><b>${endorsement.givenNames}<br>` +
+          `<a href="/citizen.html?fingerprint=${CryptoJS.SHA1(CryptoJS.enc.Base64.parse(endorsement.signature)).toString()}"><b>${endorsement.givenNames}<br>` +
           `${endorsement.familyName}</b></a><br><small>Distance: ${distance} m.<br>${label}: ${published}</small>`;
       }
 
