@@ -15,7 +15,7 @@ window.onload = function() {
     console.error('Missing fingerprint or signature GET argument.');
     return;
   }
-  let request = '/api/participants.php?' + signature ? `signature=${encodeURIComponent(signature)}` : `fingerprint=${fingerprint}`;
+  let request = '/api/participants.php?' + (signature ? `signature=${encodeURIComponent(signature)}` : `fingerprint=${fingerprint}`);
   let corpus;
   if (findGetParameter('corpus') === '1') {
     corpus = true;
