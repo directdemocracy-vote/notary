@@ -14,6 +14,8 @@ window.onload = function() {
     console.error('Missing fingerprint or signature GET argument');
     return;
   }
+  if (!fingerprint)
+    fingerprint = CryptoJS.SHA1(CryptoJS.enc.Base64.parse(signature)).toString();
   const payload = signature ? `signature=${encodeURIComponent(signature)}` : `fingerprint=${fingerprint}`;
   fetch(`/api/proposal.php?${payload}`)
     .then(response => response.json())
@@ -47,9 +49,9 @@ window.onload = function() {
       const corpus = answer.corpus;
       const participants = answer.secret ? 'Voters' : 'Signatures';
       const participation = corpus == 0 ? 0 : Math.round(10000 * answer.participants / corpus) / 100;
-      const line = `Corpus: <a target="_blank" href="participants.html?fingerprint=${fingerprint}&corpus=1">` +
+      const line = `Corpus: <a target="_blank" href="participants.html?${payload}&corpus=1">` +
                    `${corpus}</a> &mdash; ` +
-                   `${participants}: <a target="_blank" href="participants.html?fingerprint=${fingerprint}">` +
+                   `${participants}: <a target="_blank" href="participants.html?${payload}">` +
                    `${answer.participants}</a> &mdash; ` +
                    `Participation: ${participation}%`;
       document.getElementById('result').innerHTML = line;
@@ -82,7 +84,7 @@ window.onload = function() {
                 if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population')) {
                   const corpus_percent = Math.round(10000 * corpus / parseFloat(response.extratags.population)) / 100;
                   population = `<a target="_blank" href="${url}">${response.extratags.population}</a> with a ` +
-                               `<a target="_blank" href="participants.html?fingerprint=${fingerprint}&corpus=1">` +
+                               `<a target="_blank" href="participants.html?${payload}&corpus=1">` +
                                `corpus</a> of ${corpus_percent}%`;
                 } else
                   population = `<a target="_blank" href="${url}">N/A</a>`;
