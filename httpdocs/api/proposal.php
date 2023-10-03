@@ -12,8 +12,11 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
-if (!isset($fingerprint))
-  die('{"error":"Missing fingerprint parameter"}');
+$signature = $mysqli->escape_string($_GET['signature']);
+if (!isset($fingerprint) && !isset($signature))
+  die('{"error":"Missing fingerprint or signature parameter"}');
+
+$condition = (isset($signature)) ? "publication.signature=FROM_BASE64('$signature')" : "publication.signatureSHA1=UNHEX('$fingerprint')";
 
 if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
   $latitude = floatval($_GET['latitude']);
@@ -37,7 +40,7 @@ $query = "SELECT "
         ."LEFT JOIN publication ON publication.id = proposal.id "
         ."LEFT JOIN publication AS pa ON pa.signature = proposal.area "
         ."LEFT JOIN area ON area.id = pa.id "
-        ."WHERE publication.signatureSHA1 = UNHEX('$fingerprint')";
+        ."WHERE $condition";
 
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $proposal = $result->fetch_assoc();

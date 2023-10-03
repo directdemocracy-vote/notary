@@ -11,12 +11,14 @@ window.onload = function() {
   let judge = findGetParameter('judge', 'https://judge.directdemocracy.vote');
   document.getElementById('judge').value = judge.substring(8);
   const fingerprint = findGetParameter('fingerprint');
-  if (!fingerprint) {
-    console.error('Missing fingerprint GET argument.');
+  const signature = findGetParameter('signature');
+  if (!fingerprint && !signature) {
+    console.error('Missing fingerprint or signature GET argument.');
     return;
   }
   const content = document.getElementById('content');
-  fetch('api/citizen.php', {method: 'POST', headers: {"Content-Type": "application/x-www-form-urlencoded"}, body: `fingerprint=${encodeURIComponent(fingerprint)}`})
+  const body = signature ? `signature=${encodeURIComponent(signature)}` : `fingerprint=${encodeURIComponent(fingerprint)}`;
+  fetch('api/citizen.php', {method: 'POST', headers: {"Content-Type": "application/x-www-form-urlencoded"}, body: body})
     .then(response => response.json())
     .then(answer => {
       if (answer.error) {
@@ -82,7 +84,8 @@ window.onload = function() {
       function updateJudgeEndorsements() {
         let div = document.getElementById('judge-endorsements');
         div.innerHTML = '<b>...</b>';
-        fetch(`/api/endorsements.php?fingerprint=${fingerprint}&judge=${judge}`)
+        const payload = signature ? `signature=${encodeURIComponent(signature)}` : `fingerprint=${fingerprint}`;
+        fetch(`/api/endorsements.php?${payload}&judge=${judge}`)
           .then(response => {
             if (reputation.innerHTML != '..')
               enableJudgeReloadButton();
@@ -155,7 +158,7 @@ window.onload = function() {
         const published = publishedDate(endorsement.published);
         const distance = Math.round(distanceFromLatitudeLongitude(latitude, longitude, endorsement.latitude, endorsement.longitude));
         content.innerHTML =
-          `<a href="/citizen.html?fingerprint=${CryptoJS.SHA1(CryptoJS.enc.Base64.parse(endorsement.signature)).toString()}"><b>${endorsement.givenNames}<br>` +
+          `<a href="/citizen.html?signature=${encodeURIComponent(endorsement.signature)}"><b>${endorsement.givenNames}<br>` +
           `${endorsement.familyName}</b></a><br><small>Distance: ${distance} m.<br>${label}: ${published}</small>`;
       }
 
