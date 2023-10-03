@@ -47,7 +47,8 @@ window.onload = function() {
         const block = document.createElement('div');
         block.classList.add('panel-block');
         panel.appendChild(block);
-        let line = `<p style="width:100%"><a href="citizen.html?fingerprint=${participant.fingerprint}" target="_blank">` +
+        const fingerprint = CryptoJS.SHA1(CryptoJS.enc.Base64.parse(participant.signature));
+        let line = `<p style="width:100%"><a href="citizen.html?fingerprint=${fingerprint}" target="_blank">` +
                    `<img src="${participant.picture}" style="width:50px;float:left;margin-right:10px"></img> ` +
                    `${participant.givenNames} <b>${participant.familyName}</b></a>`;
         if (!corpus) {
