@@ -51,7 +51,7 @@ $limit = parameter('limit', 'int');
 $year = parameter('year', 'int');
 
 # check the parameter sets
-if (!isset($search) || !isset($secret) || isset($open) || isset($latitude) || isset($longitude) || isset($radius))
+if (!isset($search) || !isset($secret) || !isset($open) || !isset($latitude) || !isset($longitude) || !isset($radius))
   error('Missing parameters.');
 
 if (!isset($limit))
