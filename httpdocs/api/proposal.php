@@ -11,9 +11,11 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-$fingerprint = $mysqli->escape_string($_GET['fingerprint']);
-$signature = $mysqli->escape_string($_GET['signature']);
-if (!isset($fingerprint) && !isset($signature))
+if (isset($_GET['signature']))
+  $signature = $mysqli->escape_string($_GET['signature']);
+elseif (isset($_GET['fingerprint']))
+  $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
+else
   die('{"error":"Missing fingerprint or signature parameter"}');
 
 $condition = (isset($signature)) ? "publication.signature=FROM_BASE64('$signature')" : "publication.signatureSHA1=UNHEX('$fingerprint')";
