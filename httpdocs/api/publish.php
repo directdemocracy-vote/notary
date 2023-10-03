@@ -112,7 +112,7 @@ elseif ($type == 'endorsement') {
     $endorsed_id = $endorsed['id'];
     $key = $endorsement->key;
     $query = "UPDATE proposal "
-            ."INNER JOIN publication AS pc ON pc.`key`='$key' "
+            ."INNER JOIN publication AS pc ON pc.`key`=FROM_BASE64('$key') "
             ."INNER JOIN citizen ON citizen.id=pc.id "
             ."INNER JOIN publication AS pa ON pa.`signature`=proposal.area "
             ."INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home))) "
@@ -121,7 +121,6 @@ elseif ($type == 'endorsement') {
             ."INNER JOIN endorsement ON endorsement.id = pe.id AND endorsement.`revoke`=0 AND endorsement.latest=1 AND endorsement.endorsedSignature=pc.signature "
             ."SET participants=participants+1 "
             ."WHERE proposal.id=$endorsed_id AND proposal.`secret`=0";
-    die($query);
     $mysqli->query($query) or error($msqli->error);
     $accepted = $mysqli->affected_rows;
   } else
