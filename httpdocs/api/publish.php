@@ -121,6 +121,7 @@ elseif ($type == 'endorsement') {
             ."INNER JOIN endorsement ON endorsement.id = pe.id AND endorsement.`revoke`=0 AND endorsement.latest=1 AND endorsement.endorsedSignature=pc.signature "
             ."SET participants=participants+1 "
             ."WHERE proposal.id=$endorsed_id AND proposal.`secret`=0";
+    die($query);
     $mysqli->query($query) or error($msqli->error);
     $accepted = $mysqli->affected_rows;
   } else
