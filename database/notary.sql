@@ -49,10 +49,11 @@ CREATE TABLE `endorsement` (
 CREATE TABLE `publication` (
   `id` int(11) NOT NULL,
   `version` smallint(6) NOT NULL,
-  `type` enum('citizen', 'endorsement', 'area', 'proposal', 'participation', 'registration', 'ballot', 'vote') NOT NULL,
-  `key` blob NOT NULL,
-  `signature` blob NOT NULL,
+  `type` enum('citizen','endorsement','area','proposal','participation','registration','ballot','vote') NOT NULL,
   `published` datetime NOT NULL,
+  `signature` blob NOT NULL COMMENT 'signature of the publication by the author',
+  `signatureSHA1` binary(20) GENERATED ALWAYS AS (unhex(sha(`signature`))) STORED,
+  `key` blob NOT NULL COMMENT 'public key of author'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `proposal` (
@@ -131,7 +132,7 @@ ALTER TABLE `participation`
 
 ALTER TABLE `publication`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `signature` (`signature`);
+  ADD UNIQUE KEY `signatureSHA1` (`signatureSHA1`),
   ADD KEY `key` (`key`);
 
 ALTER TABLE `proposal`
