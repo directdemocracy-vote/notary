@@ -32,8 +32,7 @@ if (isset($_GET['corpus']))
 else
   $corpus = false;
 
-$query = "SELECT title FROM proposal INNER JOIN publication ON publication.id=proposal.id AND $condition)";
-die($query);
+$query = "SELECT title FROM proposal INNER JOIN publication ON publication.id=proposal.id AND $condition";
 $result = $mysqli->query($query) or error($mysqli->error);
 $title = $result->fetch_assoc();
 $result->free();
