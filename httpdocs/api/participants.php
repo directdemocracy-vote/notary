@@ -57,7 +57,7 @@ if ($corpus)
          ." INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home)))"
          ." WHERE endorsement.`revoke`=0 OR (endorsement.`revoke`=1 AND"
          ." EXISTS(SELECT pep.id FROM publication AS pep"
-         ." INNER JOIN endorsement AS e ON e.id=pep.id AND $joint2_condition AND e.accepted=1"
+         ." INNER JOIN endorsement AS e ON e.id=pep.id AND $join2_condition AND e.accepted=1"
          ." WHERE pep.`key`=pc.`key`))";
 else
   $query .= " INNER JOIN endorsement AS signature ON $join3_condition AND signature.accepted=1"
