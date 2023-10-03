@@ -20,7 +20,7 @@ $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
 $judge = $mysqli->escape_string($_GET['judge']);
 
 $query = "SELECT citizen.givenNames, citizen.familyName FROM citizen INNER JOIN publication ON publication.id=citizen.id "
-        ."AND SHA1(REPLACE(TO_BASE64(publication.signature), '\\n', ''))='$fingerprint'";
+        ."AND publication.signatureSHA1 = UNHEX('$fingerprint')";
 $result = $mysqli->query($query) or error($mysqli->error);
 $citizen = $result->fetch_assoc();
 $result->free();
