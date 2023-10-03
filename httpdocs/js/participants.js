@@ -15,7 +15,8 @@ window.onload = function() {
     console.error('Missing fingerprint or signature GET argument.');
     return;
   }
-  let request = '/api/participants.php?' + (signature ? `signature=${encodeURIComponent(signature)}` : `fingerprint=${fingerprint}`);
+  const selector = signature ? `signature=${encodeURIComponent(signature)}` : `fingerprint=${fingerprint}`;
+  let request = `/api/participants.php?${selector}`;
   let corpus;
   if (findGetParameter('corpus') === '1') {
     corpus = true;
@@ -38,7 +39,7 @@ window.onload = function() {
       const title = document.createElement('p');
       panel.appendChild(title);
       title.classList.add('panel-heading');
-      title.innerHTML = `<a href="proposal.html?fingerprint=${fingerprint}">${answer.title}</a>`;
+      title.innerHTML = `<a href="proposal.html?${selector}">${answer.title}</a>`;
       if (answer.participants.length === 0) {
         const block = document.createElement('div');
         block.classList.add('panel-block');
@@ -48,8 +49,7 @@ window.onload = function() {
         const block = document.createElement('div');
         block.classList.add('panel-block');
         panel.appendChild(block);
-        const fingerprint = CryptoJS.SHA1(CryptoJS.enc.Base64.parse(participant.signature));
-        let line = `<p style="width:100%"><a href="citizen.html?fingerprint=${fingerprint}" target="_blank">` +
+        let line = `<p style="width:100%"><a href="citizen.html?${selector}" target="_blank">` +
                    `<img src="${participant.picture}" style="width:50px;float:left;margin-right:10px"></img> ` +
                    `${participant.givenNames} <b>${participant.familyName}</b></a>`;
         if (!corpus) {
