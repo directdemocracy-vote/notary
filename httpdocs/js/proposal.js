@@ -8,7 +8,7 @@ function findGetParameter(parameterName) {
 }
 
 window.onload = function() {
-  const fingerprint = findGetParameter('fingerprint');
+  let fingerprint = findGetParameter('fingerprint');
   const signature = findGetParameter('signature');
   if (!fingerprint && ! signature) {
     console.error('Missing fingerprint or signature GET argument');
