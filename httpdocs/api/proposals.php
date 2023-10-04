@@ -43,7 +43,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 $search = sanitize_field($_GET['search'], 'string', 'search');
-$secret = parameter('secret', 'int');
+$secret = sanitize_field($_GET['secret'], 'int_options', 'secret');
 $open = parameter('open', 'int');
 $latitude = parameter('latitude', 'float');
 $longitude = parameter('longitude', 'float');

@@ -11,10 +11,15 @@ function sanitize_field($variable, $type, $name) {
       $variable = $mysqli->escape_string($variable);
       break;
 
-      case 'year':
-        $variable = intval($variable);
-        if ($variable > 9999 or $variable < 2023)
-          die("Error: $name should be between 2023 and 9999");
+    case 'year':
+      $variable = intval($variable);
+      if ($variable > 9999 or $variable < 2023)
+        die("Error: $name should be between 2023 and 9999");
+
+    case 'int_options':
+      $variable = intval($variable);
+      if ($variable < 0 or $variable > 2)
+        die("Error: $name should be between 0 and 2");
   }
   return $variable;
 }
