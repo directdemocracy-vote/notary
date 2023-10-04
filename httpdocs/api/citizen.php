@@ -2,6 +2,23 @@
 require_once '../../php/database.php';
 require_once '../../php/endorsements.php';
 
+function sanitize_field($variable, $type, $name) {
+  switch ($type) {
+    case 'string':
+      if (!is_string($variable))
+        die("Error: $name should be a string");
+      $variable = strip_tags($variable); // Remove html tags, not enough to prevent XSS but will avoid to store too much trash
+      $variable = htmlspecialchars($variable); // Convert html special character to prevent XSS
+      $variable = $mysqli->escape_string($variable);
+      break;
+
+    default:
+      // code...
+      break;
+  }
+  return $variable;
+}
+
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
@@ -14,6 +31,13 @@ elseif (isset($_POST['fingerprint']))
   $condition = "publication.signatureSHA1 = UNHEX('" . $mysqli->escape_string($_POST['fingerprint']) . "')";
 else
   die("{\"error\":\"missing key or fingerprint POST argument\"}");
+
+$test = "this is a test string";
+$test = sanitize_field($test, "string", "familyName");
+$test = sanitize_field($signature, "string", "signature");
+$test = 24
+$test = sanitize_field($test, "string", "signature");
+
 $query = "SELECT REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, UNIX_TIMESTAMP(publication.published) AS published, "
         ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
         ."citizen.familyName, citizen.givenNames, "
