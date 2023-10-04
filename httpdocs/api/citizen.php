@@ -23,20 +23,15 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-if (isset($_POST['signature']))
-  $condition = "publication.signature = FROM_BASE64('" . $mysqli->escape_string($_POST['signature']) . "')";
-elseif (isset($_POST['key']))
+if (isset($_POST['signature'])) {
+  $signature = sanitize_field($_POST['signature'], "string", "signature", $mysqli);
+  $condition = "publication.signature = FROM_BASE64('" . $signature . "')";
+} elseif (isset($_POST['key']))
   $condition = "publication.`key`=FROM_BASE64('" . $mysqli->escape_string($_POST['key']) . "')";
 elseif (isset($_POST['fingerprint']))
   $condition = "publication.signatureSHA1 = UNHEX('" . $mysqli->escape_string($_POST['fingerprint']) . "')";
 else
   die("{\"error\":\"missing key or fingerprint POST argument\"}");
-
-$test = "this is a test string";
-$test = sanitize_field($test, "string", "familyName", $mysqli);
-$test = sanitize_field($_POST['signature'], "string", "signature", $mysqli);
-$test = 24;
-$test = sanitize_field($test, "string", "number", $mysqli);
 
 $query = "SELECT REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, UNIX_TIMESTAMP(publication.published) AS published, "
         ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
