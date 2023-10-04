@@ -1,23 +1,7 @@
 <?php
 require_once '../../php/database.php';
 require_once '../../php/endorsements.php';
-
-function sanitize_field($variable, $type, $name, $mysqli) {
-  switch ($type) {
-    case 'string':
-      if (!is_string($variable))
-        die("Error: $name should be a string");
-      $variable = strip_tags($variable); // Remove html tags, not enough to prevent XSS but will avoid to store too much trash
-      $variable = htmlspecialchars($variable); // Convert html special character to prevent XSS
-      $variable = $mysqli->escape_string($variable);
-      break;
-
-    default:
-      // code...
-      break;
-  }
-  return $variable;
-}
+require_once '../../php/sanitizer.php';
 
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
