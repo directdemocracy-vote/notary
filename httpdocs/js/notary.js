@@ -166,7 +166,7 @@ window.onload = function() {
         section.innerHTML = '';
         if (answer.length == 0) {
           const div = document.createElement('div');
-          div.innerHTML = 'No result found, try to refine your search.';
+          div.textContent = 'No result found, try to refine your search.';
           section.appendChild(div);
           return;
         }
@@ -179,29 +179,29 @@ window.onload = function() {
         thead.appendChild(tr);
         let th = document.createElement('th');
         tr.appendChild(th);
-        th.innerHTML = 'Type';
+        th.textContent = 'Type';
         th = document.createElement('th');
         tr.appendChild(th);
-        th.innerHTML = 'Area';
+        th.textContent = 'Area';
         th = document.createElement('th');
         tr.appendChild(th);
-        th.innerHTML = 'Title';
+        th.textContent = 'Title';
         th = document.createElement('th');
         tr.appendChild(th);
-        th.innerHTML = 'Deadline';
+        th.textContent = 'Deadline';
         const tbody = document.createElement('tbody');
         table.appendChild(tbody);
         answer.forEach(function(proposal) {
           tr = document.createElement('tr');
           tbody.appendChild(tr);
           let td = document.createElement('td');
-          td.innerHTML = `${proposal.secret ? 'Referendum' : 'Petition'}`;
+          td.textContent = `${proposal.secret ? 'Referendum' : 'Petition'}`;
           tr.appendChild(td);
           td = document.createElement('td');
-          td.innerHTML = proposal.areas[0].split('=')[1];
+          td.textContent = proposal.areas[0].split('=')[1];
           tr.appendChild(td);
           td = document.createElement('td');
-          td.innerHTML = proposal.title;
+          td.textContent = proposal.title;
           tr.appendChild(td);
           td = document.createElement('td');
           const deadline = new Date(proposal.deadline * 1000);
@@ -243,8 +243,8 @@ window.onload = function() {
   }
 
   function updateLabel() {
-    document.getElementById("address").innerHTML = address;
-    document.getElementById("position").innerHTML = '(' + latitude + ', ' + longitude + ') &plusmn; ' + Math.round(radius / 100) / 10 + ' km';
+    document.getElementById("address").textContent = address;
+    document.getElementById("position").textContent = '(' + latitude + ', ' + longitude + ') &plusmn; ' + Math.round(radius / 100) / 10 + ' km';
   }
 };
 
