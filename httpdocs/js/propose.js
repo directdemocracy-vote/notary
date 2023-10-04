@@ -241,6 +241,7 @@ window.onload = function() {
               else {
                 showModal('Publication success',
                   `Your ${type} was just published!<br>You will be redirected to it.`, 'OK');
+                console.log(answer);
                 document.getElementById('modal-ok-button').addEventListener('click', function() {
                   window.location.href = `/proposal.html?signature=${encodeURIComponent(answer.signature)}`;
                 });
