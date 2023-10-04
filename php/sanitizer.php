@@ -1,5 +1,7 @@
 <?php
-function sanitize_field($variable, $type, $name, $mysqli) {
+function sanitize_field($variable, $type, $name) {
+  global $mysqli;
+
   switch ($type) {
     case 'string':
       if (!is_string($variable))
