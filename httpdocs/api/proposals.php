@@ -11,6 +11,7 @@
 # - year (optional): year of the deadline of the proposal.
 
 require_once '../../php/database.php';
+require_once '../../php/sanitizer.php';
 
 function error($message) {
   if ($message[0] != '{')
@@ -41,7 +42,7 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-$search = parameter('search');
+$search = sanitize_field($_GET['search'], 'string', 'search');
 $secret = parameter('secret', 'int');
 $open = parameter('open', 'int');
 $latitude = parameter('latitude', 'float');
