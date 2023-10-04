@@ -13,8 +13,6 @@ function sanitize_field($variable, $type, $name, $mysqli) {
         $variable = intval($variable);
         if ($variable > 9999 or $variable < 2023)
           die("Error: $name should be between 2023 and 9999");
-
-        if ($variable)
   }
   return $variable;
 }
