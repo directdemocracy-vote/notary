@@ -124,9 +124,7 @@ window.onload = function() {
   function closeModal() {
     document.getElementById('modal').classList.remove('is-active');
   }
-  document.getElementById('modal-cancel-button').addEventListener('click', closeModal);
   document.getElementById('modal-close-button').addEventListener('click', closeModal);
-  document.getElementById('modal-ok-button').addEventListener('click', closeModal);
   document.getElementById('action-button').addEventListener('click', function() {
     let binaryFingerprint = '';
     for(let i = 0; i < 40; i+=2)
