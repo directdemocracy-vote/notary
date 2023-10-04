@@ -2,7 +2,7 @@
 require_once '../../php/database.php';
 require_once '../../php/endorsements.php';
 
-function sanitize_field($variable, $type, $name) {
+function sanitize_field($variable, $type, $name, $mysli) {
   switch ($type) {
     case 'string':
       if (!is_string($variable))
@@ -33,10 +33,10 @@ else
   die("{\"error\":\"missing key or fingerprint POST argument\"}");
 
 $test = "this is a test string";
-$test = sanitize_field($test, "string", "familyName");
-$test = sanitize_field($signature, "string", "signature");
+$test = sanitize_field($test, "string", "familyName", $mysqli);
+$test = sanitize_field($signature, "string", "signature", $mysqli);
 $test = 24;
-$test = sanitize_field($test, "string", "number");
+$test = sanitize_field($test, "string", "number", $mysqli);
 
 $query = "SELECT REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, UNIX_TIMESTAMP(publication.published) AS published, "
         ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "

@@ -156,7 +156,8 @@ window.onload = function() {
     const o = document.getElementById('proposal-open').checked;
     const c = document.getElementById('proposal-closed').checked;
     const open = (c && o) ? 2 : (o ? 1 : 0);
-    fetch(`/api/proposals.php?secret=${secret}&open=${open}&search=${encodeURIComponent(query)}&latitude=${latitude}&longitude=${longitude}&radius=${radius}&year=2023&limit=10`)
+    const year = document.getElementById('proposal-year').value;
+    fetch(`/api/proposals.php?secret=${secret}&open=${open}&search=${encodeURIComponent(query)}&latitude=${latitude}&longitude=${longitude}&radius=${radius}&year=${year}&limit=10`)
       .then(response => response.json())
       .then(answer => {
         fieldset.removeAttribute('disabled');
