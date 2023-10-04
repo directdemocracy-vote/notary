@@ -34,7 +34,7 @@ else
 
 $test = "this is a test string";
 $test = sanitize_field($test, "string", "familyName", $mysqli);
-$test = sanitize_field($signature, "string", "signature", $mysqli);
+$test = sanitize_field($_POST['signature']), "string", "signature", $mysqli);
 $test = 24;
 $test = sanitize_field($test, "string", "number", $mysqli);
 
