@@ -14,12 +14,12 @@ function showModal(title, content, ok, cancel) {
     document.getElementById('modal-footer').style.display = 'none';
   okButton = document.getElementById('modal-ok-button');
   okButton.style.display = ok ? '' : 'none';
-  okButton.innerHTML = ok ? ok : 'OK';
+  okButton.textContent = ok ? ok : 'OK';
   cancelButton = document.getElementById('modal-cancel-button');
   cancelButton.style.display = cancel ? '' : 'none';
-  cancelButton.innerHTML = cancel ? cancel : 'Cancel';
-  document.getElementById('modal-title').innerHTML = title;
-  document.getElementById('modal-content').innerHTML = content;
+  cancelButton.textContent = cancel ? cancel : 'Cancel';
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-content').textContent = content;
   document.getElementById('modal').classList.add('is-active');
 }
 
@@ -99,7 +99,7 @@ window.onload = function() {
 
   function areaChange() {
     const a = document.getElementById('area');
-    const selected_name = a.options[a.selectedIndex].innerHTML;
+    const selected_name = a.options[a.selectedIndex].textContent;
     const selected_type = a.options[a.selectedIndex].value;
     area = '';
     let query = '';
@@ -107,14 +107,14 @@ window.onload = function() {
       let type = a.options[i].value;
       if (['village', 'town', 'municipality'].includes(type))
         type = 'city';
-      const name = a.options[i].innerHTML;
+      const name = a.options[i].textContent;
       area += type + '=' + name + '\n';
       if (type != 'union')
         query += type + '=' + encodeURIComponent(name) + '&';
     }
     query = query.slice(0, -1);
     const place = document.getElementById('place');
-    place.innerHTML = selected_name;
+    place.textContent = selected_name;
     if (selected_type == 'union' && selected_name == 'European Union')
       place.href = 'https://en.wikipedia.org/wiki/European_Union';
     else if (selected_type == 'world' && selected_name == 'Earth')
@@ -130,19 +130,19 @@ window.onload = function() {
       document.getElementById('answers-block').style.display = 'block';
       document.getElementById('title').setAttribute('placeholder', 'Enter the title of your referendum');
       document.getElementById('description').setAttribute('placeholder', 'Enter the description of your referendum');
-      document.getElementById('publish').innerHTML = 'Publish your referendum';
+      document.getElementById('publish').textContent = 'Publish your referendum';
     } else {
       document.getElementById('question-block').style.display = 'none';
       document.getElementById('answers-block').style.display = 'none';
       document.getElementById('title').setAttribute('placeholder', 'Enter the title of your petition');
       document.getElementById('description').setAttribute('placeholder', 'Enter the description of your petition');
-      document.getElementById('publish').innerHTML = 'Publish your petition';
+      document.getElementById('publish').textContent = 'Publish your petition';
     }
     validate();
   }
 
   function generateCryptographicKey() {
-    document.getElementById('publish-message').innerHTML = 'Forging a cryptographic key, please wait...';
+    document.getElementById('publish-message').textContent = 'Forging a cryptographic key, please wait...';
     const button = document.getElementById('publish');
     button.classList.add('is-loading');
     button.setAttribute('disabled', '');
@@ -154,7 +154,7 @@ window.onload = function() {
     publication_crypt.getKey(function() {
       dt = new Date();
       time += (dt.getTime());
-      document.getElementById('publish-message').innerHTML = `A cryptographic key was just forged in ${Number(time / 1000).toFixed(2)} seconds.`;
+      document.getElementById('publish-message').textContent = `A cryptographic key was just forged in ${Number(time / 1000).toFixed(2)} seconds.`;
       button.classList.remove('is-loading');
       button.removeAttribute('disabled');
       validate();
