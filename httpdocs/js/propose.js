@@ -239,9 +239,10 @@ window.onload = function() {
               if (answer.error)
                 showModal('Publication error', JSON.stringify(answer.error));
               else {
+                console.log("DEBUG");
+                console.log(answer)
                 showModal('Publication success',
                   `Your ${type} was just published!<br>You will be redirected to it.`, 'OK');
-                console.log(answer);
                 document.getElementById('modal-ok-button').addEventListener('click', function() {
                   window.location.href = `/proposal.html?signature=${encodeURIComponent(answer.signature)}`;
                 });
