@@ -9,17 +9,9 @@ function findGetParameter(parameterName, result = null) {
   return result;
 }
 
-function showModal(title, content, ok, cancel) {
-  if (typeof ok === 'undefined' && typeof cancel === 'undefined')
-    document.getElementById('modal-footer').style.display = 'none';
-  else
-    document.getElementById('modal-footer').style.display = '';
+function showModal(title, content) {
   okButton = document.getElementById('modal-ok-button');
-  okButton.style.display = ok ? '' : 'none';
-  okButton.innerHTML = ok ? ok : 'OK';
-  cancelButton = document.getElementById('modal-cancel-button');
-  cancelButton.style.display = cancel ? '' : 'none';
-  cancelButton.innerHTML = cancel ? cancel : 'Cancel';
+  okButton.innerHTML = 'OK';
   document.getElementById('modal-title').innerHTML = title;
   document.getElementById('modal-content').innerHTML = content;
   document.getElementById('modal').classList.add('is-active');
@@ -30,7 +22,6 @@ function closeModal() {
 }
 
 window.onload = function() {
-  document.getElementById('modal-cancel-button').addEventListener('click', closeModal);
   document.getElementById('modal-close-button').addEventListener('click', closeModal);
   document.getElementById('modal-ok-button').addEventListener('click', closeModal);
 
@@ -242,7 +233,7 @@ window.onload = function() {
                 showModal('Publication error', JSON.stringify(answer.error));
               else {
                 showModal('Publication success',
-                  `Your ${type} was just published!<br>You will be redirected to it.`, 'OK');
+                  `Your ${type} was just published!<br>You will be redirected to it.`);
                 document.getElementById('modal-ok-button').addEventListener('click', function() {
                   window.location.href = `/proposal.html?signature=${encodeURIComponent(answer.signature)}`;
                 });
