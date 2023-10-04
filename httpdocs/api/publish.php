@@ -192,6 +192,6 @@ if ($type == 'proposal')
 if ($type == 'endorsement')
   echo json_encode(endorsements($mysqli, $publication->key), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 else
-  echo("{\"fingerprint\":\"$publication->signature\"}");
+  echo("{\"signature\":\"$publication->signature\"}");
 $mysqli->close();
 ?>
