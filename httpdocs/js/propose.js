@@ -218,6 +218,7 @@ window.onload = function() {
           } else
             publication.secret = false;
           publication.deadline = Math.round(Date.parse(document.getElementById('deadline').value) / 1000);
+          console.log(deadline);
           const website = document.getElementById('website').value.trim();
           if (website)
             publication.website = website;
