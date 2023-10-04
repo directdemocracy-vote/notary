@@ -2,7 +2,7 @@
 require_once '../../php/database.php';
 require_once '../../php/endorsements.php';
 
-function sanitize_field($variable, $type, $name, $mysli) {
+function sanitize_field($variable, $type, $name, $mysqli) {
   switch ($type) {
     case 'string':
       if (!is_string($variable))
