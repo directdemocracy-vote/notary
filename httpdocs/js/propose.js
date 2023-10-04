@@ -12,6 +12,8 @@ function findGetParameter(parameterName, result = null) {
 function showModal(title, content, ok, cancel) {
   if (typeof ok === 'undefined' && typeof cancel === 'undefined')
     document.getElementById('modal-footer').style.display = 'none';
+  else
+    document.getElementById('modal-footer').style.display = '';
   okButton = document.getElementById('modal-ok-button');
   okButton.style.display = ok ? '' : 'none';
   okButton.innerHTML = ok ? ok : 'OK';
