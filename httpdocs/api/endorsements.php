@@ -16,7 +16,7 @@ if (isset($_GET['fingerprint'])) {
   $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
   $condition = "publication.signatureSHA1=UNHEX('$fingerprint')";
   $join_condition = "SHA1(endorsement.endorsedSignature)='$fingerprint'";
-} elseif (isset(_GET['signature'])) {
+} elseif (isset($_GET['signature'])) {
   $signature = $mysqli->escape_string($_GET['signature']);
   $condition = "publication.signature=FROM_BASE64('$signature')";
   $join_condition = "endorsement.endorsedSignature=FROM_BASE64('$signature')";
