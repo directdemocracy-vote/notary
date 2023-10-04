@@ -35,7 +35,7 @@ else
 $test = "this is a test string";
 $test = sanitize_field($test, "string", "familyName");
 $test = sanitize_field($signature, "string", "signature");
-$test = 24
+$test = 24;
 $test = sanitize_field($test, "string", "signature");
 
 $query = "SELECT REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, UNIX_TIMESTAMP(publication.published) AS published, "
