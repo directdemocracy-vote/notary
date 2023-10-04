@@ -239,8 +239,6 @@ window.onload = function() {
               if (answer.error)
                 showModal('Publication error', JSON.stringify(answer.error));
               else {
-                console.log("DEBUG");
-                console.log(answer)
                 showModal('Publication success',
                   `Your ${type} was just published!<br>You will be redirected to it.`, 'OK');
                 document.getElementById('modal-ok-button').addEventListener('click', function() {
