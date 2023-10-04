@@ -174,7 +174,6 @@ window.onload = function() {
     const content = document.getElementById('modal-content');
     content.innerHTML = '';
     content.appendChild(div);
-    document.getElementById('modal-footer').style.display = 'none';
     document.getElementById('modal').classList.add('is-active');
   });
 };
