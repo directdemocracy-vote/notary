@@ -6,7 +6,7 @@ function sanitize_field($methods, $type, $name) {
   elseif ($methods === 'post' and isset($_POST[$name]))
     $variable = $_POST[$name];
   else
-    $variable = $methods // for case like $registration->citizen
+    $variable = $methods; // for case like $registration->citizen
 
   switch ($type) {
     case 'string':
