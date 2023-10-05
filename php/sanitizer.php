@@ -45,6 +45,15 @@ function sanitize_field($variable, $type, $name) {
     case 'int':
       $variable = intval($variable);
       break;
+    case 'url':
+      $variable = sanitize_string($variable, $name);
+      $variable = filter_var($variable, FILTER_SANITIZE_URL);
+      die("test $variable");
+      // if (filter_var($variable, FILTER_VALIDATE_URL)) {
+      //     echo("$url is a valid URL");
+      // } else {
+      //     echo("$url is not a valid URL");
+      }
 
     default:
       die("Unknown type: $type");

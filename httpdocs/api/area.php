@@ -1,5 +1,6 @@
 <?php
 require_once '../php/database.php';
+require_once '../../php/sanitizer.php';
 
 function error($message) {
   die("{\"error\":$message}");
@@ -10,7 +11,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 $input = json_decode(file_get_contents("php://input"));
-$judge = $mysqli->escape_string($input->judge);
+$judge = sanitize_field($input->judge, 'url', 'judge');
 $area = $mysqli->escape_string($input->area);
 
 if (!$judge)

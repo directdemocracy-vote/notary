@@ -19,25 +19,6 @@ function error($message) {
   die("{\"error\":$message}");
 }
 
-function parameter($parameter, $type='') {
-  global $mysqli;
-
-  if (isset($_POST[$parameter]))
-    $value = $_POST[$parameter];
-  elseif (isset($_GET[$parameter]))
-    $value = $_GET[$parameter];
-  else
-    return null;
-  if ($type === 'float')
-    return floatval($value);
-  elseif ($type === 'int')
-    return intval($value);
-  elseif ($type === 'bool')
-    return (strcasecmp($value, 'true') === 0);
-  else
-    return $mysqli->escape_string($value);
-}
-
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
