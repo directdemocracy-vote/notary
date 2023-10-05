@@ -1,6 +1,7 @@
 <?php
 
 require_once '../../php/database.php';
+require_once '../../php/sanitizer.php';
 
 function error($message) {
   if ($message[0] != '{')
@@ -28,15 +29,15 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-$radius = get_float_parameter('radius');
+$radius = sanitize_field($_GET['radius'], 'positive_float', 'radius');
 if ($radius) {
   $radius = $radius / 1000;
-  $latitude = get_float_parameter('latitude');
-  $longitude = get_float_parameter('longitude');
+  $latitude = sanitize_field($_GET['latitude'], 'float', 'latitude');
+  $longitude = sanitize_field($_GET['longitude'], 'float', 'longitude');
 }
-$familyName = $mysqli->escape_string(get_string_parameter('familyName'));
-$givenNames = $mysqli->escape_string(get_string_parameter('givenNames'));
-$judge = $mysqli->escape_string(get_string_parameter('judge'));
+$familyName = sanitize_field($_GET['familyName'], 'string', 'familyName');
+$givenNames = sanitize_field($_GET['givenNames'], 'string', 'givenNames');
+$judge = sanitize_field(($_GET['judge'], 'url', 'judge');
 
 $key = '';
 if ($judge) {
