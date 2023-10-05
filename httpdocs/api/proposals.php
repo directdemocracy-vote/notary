@@ -42,7 +42,7 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-$search = sanitize_field($_GET['secret'], 'string', 'search');
+$search = sanitize_field($_GET['search'], 'string', 'search');
 $secret = sanitize_field($_GET['secret'], 'int_options', 'secret');
 $open = sanitize_field($_GET['open'], 'int_options', 'open');
 $latitude = sanitize_field($_GET['latitude'], 'float', 'latitude');
@@ -50,7 +50,7 @@ $longitude = sanitize_field($_GET['longitude'], 'float', 'longitude');
 $radius = sanitize_field($_GET['radius'], 'positive_float', 'radius') / 100000;
 $limit = sanitize_field($_GET['limit'], 'int', 'limit');
 $year = sanitize_field($_GET['year'], 'year', 'year');
-die ("variable: $search $secret $open $latitude $longitude $radius $limit $year");
+
 # check the parameter sets
 if (!isset($search) || !isset($secret) || !isset($open) || !isset($latitude) || !isset($longitude) || !isset($radius))
   error('Missing parameters.');
