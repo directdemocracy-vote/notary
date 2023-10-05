@@ -1,11 +1,13 @@
 <?php
 function sanitize_field($methods, $type, $name) {
   $variable = null;
-  if ($methods === 'get' and isset($_GET[$name]))
+  if ($methods === 'get') {
+    if (isset($_GET[$name]))
     $variable = $_GET[$name];
-  elseif ($methods === 'post' and isset($_POST[$name]))
-    $variable = $_POST[$name];
-  else
+  } elseif ($methods === 'post') {
+    if (isset($_POST[$name]))
+      $variable = $_POST[$name];
+  } else
     $variable = $methods; // for case like $registration->citizen
 
   switch ($type) {
