@@ -35,10 +35,10 @@ function sanitize_field($variable, $type, $name) {
         die("Variable $name is not in hexadecimal format.");
       break;
     case 'float':
-      $variable = floatval($floatval);
+      $variable = floatval($variable);
       break;
     case 'positive_float':
-      $variable = floatval($floatval);
+      $variable = floatval($variable);
       if ($variable < 0)
         die("Variable $name should be positive.");
       break;
