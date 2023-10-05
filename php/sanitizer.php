@@ -21,11 +21,11 @@ function sanitize_field($variable, $type, $name) {
 
       $str = base64_decode($variable, true);
       if ($str === false)
-        die("Bad characters in base 64 variable $name)";
+        die("Bad characters in base 64 variable $name.");
       else {
         $b64 = base64_encode($str);
         if ($variable !== $b64)
-          die("Invalid base 64 variable $name");
+          die("Invalid base 64 variable $name.");
         die("valid b64");
       }
       break;
