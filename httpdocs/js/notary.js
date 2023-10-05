@@ -205,7 +205,6 @@ window.onload = function() {
           td.innerHTML = proposal.title;
           tr.appendChild(td);
           td = document.createElement('td');
-          console.log(proposal.deadline)
           const deadline = new Date(proposal.deadline * 1000);
           const now = new Date();
           td.innerHTML = `<span style="color:#${ deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
