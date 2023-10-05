@@ -52,8 +52,10 @@ function sanitize_field($methods, $type, $name) {
       if ($variable < 0)
         die("Variable $name should be positive.");
       break;
-    case 'int':
+    case 'positive_int':
       $variable = intval($variable);
+      if ($variable < 0)
+        die("Variable $name should be positive.");
       break;
     case 'url':
       $variable = sanitize_string($variable, $name);
