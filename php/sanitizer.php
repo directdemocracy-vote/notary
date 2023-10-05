@@ -1,5 +1,8 @@
 <?php
 function sanitize_field($variable, $type, $name) {
+  if (!isset($variable))
+    return null;
+
   switch ($type) {
     case 'string':
       $variable = sanitize_string($variable, $name);
@@ -31,6 +34,18 @@ function sanitize_field($variable, $type, $name) {
       if (!ctype_xdigit($variable);
         die("Variable $name is not in hexadecimal format.");
       break;
+    case 'float':
+      $variable = floatval($floatval);
+      break;
+    case 'positive_float':
+      $variable = floatval($floatval);
+      if ($variable < 0)
+        die("Variable $name should be positive.");
+      break;
+    case 'int':
+      $variable = intval($variable);
+      break;
+
     default:
       die("Unknown type: $type");
   }
