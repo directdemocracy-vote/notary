@@ -8,7 +8,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 if (isset($_POST['signature'])) {
-  $signature = sanitize_field($_POST['signature'], "string", "signature");
+  $signature = sanitize_field($_POST['signature'], "base_64", "signature");
   $condition = "publication.signature = FROM_BASE64('" . $signature . "')";
 } elseif (isset($_POST['key']))
   $condition = "publication.`key`=FROM_BASE64('" . $mysqli->escape_string($_POST['key']) . "')";
