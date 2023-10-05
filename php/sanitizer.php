@@ -1,7 +1,5 @@
 <?php
 function sanitize_field($variable, $type, $name) {
-  global $mysqli;
-
   switch ($type) {
     case 'string':
       $variable = sanitize_string($variable, $name);
@@ -36,6 +34,8 @@ function sanitize_field($variable, $type, $name) {
 }
 
 function sanitize_string($variable, $name) {
+  global $mysqli;
+
   if (!is_string($variable))
     die("Error: $name should be a string");
   $variable = strip_tags($variable); // Remove html tags, not enough to prevent XSS but will avoid to store too much trash
