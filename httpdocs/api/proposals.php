@@ -50,7 +50,7 @@ $longitude = sanitize_field($_GET['longitude'], 'float', 'longitude');
 $radius = sanitize_field($_GET['radius'], 'positive_float', 'radius') / 100000;
 $limit = sanitize_field($_GET['limit'], 'int', 'limit');
 $year = sanitize_field($_GET['year'], 'year', 'year');
-die("year $year");
+
 # check the parameter sets
 if (!isset($search) || !isset($secret) || !isset($open) || !isset($latitude) || !isset($longitude) || !isset($radius))
   error('Missing parameters.');
