@@ -1,7 +1,12 @@
 <?php
-function sanitize_field($variable, $type, $name) {
-  if (!isset($variable))
-    return null;
+function sanitize_field($methods, $type, $name) {
+  $variable = null;
+  if ($methods === 'get' and isset($_GET[$name]))
+    $variable = $_GET[$name];
+  elseif ($methods === 'post' and isset($_POST[$name]))
+    $variable = $_POST[$name];
+  else
+    $variable = $methods // for case like $registration->citizen
 
   switch ($type) {
     case 'string':

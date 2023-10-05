@@ -29,15 +29,15 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-$radius = sanitize_field($_GET['radius'], 'positive_float', 'radius');
+$radius = sanitize_field('get', 'positive_float', 'radius');
 if ($radius) {
   $radius = $radius / 1000;
-  $latitude = sanitize_field($_GET['latitude'], 'float', 'latitude');
-  $longitude = sanitize_field($_GET['longitude'], 'float', 'longitude');
+  $latitude = sanitize_field('get', 'float', 'latitude');
+  $longitude = sanitize_field('get', 'float', 'longitude');
 }
-$familyName = sanitize_field($_GET['familyName'], 'string', 'familyName');
-$givenNames = sanitize_field($_GET['givenNames'], 'string', 'givenNames');
-$judge = sanitize_field($_GET['judge'], 'url', 'judge');
+$familyName = sanitize_field('get', 'string', 'familyName');
+$givenNames = sanitize_field('get', 'string', 'givenNames');
+$judge = sanitize_field('get', 'url', 'judge');
 
 $key = '';
 if ($judge) {
