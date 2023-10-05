@@ -37,7 +37,7 @@ if ($radius) {
 }
 $familyName = sanitize_field($_GET['familyName'], 'string', 'familyName');
 $givenNames = sanitize_field($_GET['givenNames'], 'string', 'givenNames');
-$judge = sanitize_field(($_GET['judge'], 'url', 'judge');
+$judge = sanitize_field($_GET['judge'], 'url', 'judge');
 
 $key = '';
 if ($judge) {
