@@ -16,7 +16,7 @@ window.onload = function() {
   }
   if (!fingerprint)
     fingerprint = CryptoJS.SHA1(CryptoJS.enc.Base64.parse(signature)).toString();
-  console.log(fingerprint);
+
   const payload = signature ? `signature=${encodeURIComponent(signature)}` : `fingerprint=${fingerprint}`;
   fetch(`/api/proposal.php?${payload}`)
     .then(response => response.json())
