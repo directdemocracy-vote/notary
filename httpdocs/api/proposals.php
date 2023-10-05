@@ -49,8 +49,7 @@ $latitude = sanitize_field($_GET['latitude'], 'float', 'latitude');
 $longitude = sanitize_field($_GET['longitude'], 'float', 'longitude');
 $radius = sanitize_field($_GET['radius'], 'positive_float', 'radius') / 100000;
 $limit = sanitize_field($_GET['limit'], 'int', 'limit');
-die("limit: $limit");
-$year = $radius = sanitize_field($_GET['year'], 'year', 'year');
+$year = sanitize_field($_GET['year'], 'year', 'year');
 
 # check the parameter sets
 if (!isset($search) || !isset($secret) || !isset($open) || !isset($latitude) || !isset($longitude) || !isset($radius))
