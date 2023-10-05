@@ -1,25 +1,18 @@
 <?php
 require_once '../../php/database.php';
+require_once '../../php/sanitizer.php';
 
 function error($message) {
   die("{\"error\":\"$message\"}");
-}
-
-function get_string_parameter($name) {
-  if (isset($_GET[$name]))
-    return $_GET[$name];
-  if (isset($_POST[$name]))
-    return $_POST[$name];
-  return FALSE;
 }
 
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-$fingerprint = $mysqli->escape_string(get_string_parameter('fingerprint'));
-$signature = $mysqli->escape_string(get_string_parameter('signature'));
-$key = $mysqli->escape_string(get_string_parameter('key'));
+$fingerprint = sanitize_field('get', "hex", "fingerprint");
+$signature = sanitize_field('get', "base_64", "signature");
+$key = sanitize_field('get', "base_64", "key");
 
 $query = "SELECT id, CONCAT('https://directdemocracy.vote/json-schema/', `version`, '/', `type`, '.schema.json') AS `schema`, `type`, "
         ."REPLACE(TO_BASE64(`key`), '\\n', '') AS `key`, REPLACE(TO_BASE64(signature), '\\n', '') AS signature, UNIX_TIMESTAMP(published) AS published "
