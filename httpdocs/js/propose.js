@@ -10,8 +10,6 @@ function findGetParameter(parameterName, result = null) {
 }
 
 function showModal(title, content) {
-  okButton = document.getElementById('modal-ok-button');
-  okButton.innerHTML = 'OK';
   document.getElementById('modal-title').innerHTML = title;
   document.getElementById('modal-content').innerHTML = content;
   document.getElementById('modal').classList.add('is-active');
