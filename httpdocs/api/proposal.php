@@ -22,8 +22,8 @@ else
 $condition = (isset($signature)) ? "publication.signature=FROM_BASE64('$signature')" : "publication.signatureSHA1=UNHEX('$fingerprint')";
 
 if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
-  $latitude = floatval($_GET['latitude']);
-  $longitude = floatval($_GET['longitude']);
+  $latitude = sanitize_field('get', 'float', 'latitude');
+  $longitude = sanitize_field('get', 'float', 'longitude');
   $extra = 'area.id AS area_id';
 } else
   $extra = 'ST_AsGeoJSON(area.polygons) AS polygons';
