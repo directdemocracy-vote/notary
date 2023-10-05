@@ -1,18 +1,11 @@
 <?php
 require_once '../../php/database.php';
+require_once '../../php/sanitizer.php';
 
 function error($message) {
   if ($message[0] != '{')
     $message = '"'.$message.'"';
   die("{\"error\":$message}");
-}
-
-function get_string_parameter($name) {
-  if (isset($_GET[$name]))
-    return $_GET[$name];
-  if (isset($_POST[$name]))
-    return $_POST[$name];
-  return FALSE;
 }
 
 function public_key($key) {
@@ -28,8 +21,8 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-$referendumFingerprint = $mysqli->escape_string(get_string_parameter('referendum'));
-$station = $mysqli->escape_string(get_string_parameter('station'));
+$referendumFingerprint = sanitize_field('get', "hex", "fingerprint");
+$station = sanitize_field('get', 'url', 'station');
 
 if (!$referendumFingerprint)
   error("Missing referendum argument");
