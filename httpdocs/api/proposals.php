@@ -63,7 +63,7 @@ if ($secret == 2)
 else # assuming 0 or 1
   $secret = "proposal.secret = $secret AND ";
 
-die($open);
+die("OPEN: " .$open);
 if ($open == 2)
   $open = '';
 elseif ($open == 0)
