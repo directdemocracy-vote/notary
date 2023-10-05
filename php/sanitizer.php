@@ -26,6 +26,11 @@ function sanitize_field($variable, $type, $name) {
           die("Invalid base 64 variable $name.");
       }
       break;
+    case 'hex':
+      $variable = sanitize_string($variable, $name);
+      if (!ctype_xdigit($variable);
+        die("Variable $name is not in hexadecimal format.");
+      break;
     default:
       die("Unknown type: $type");
   }
