@@ -26,6 +26,7 @@ function sanitize_field($variable, $type, $name) {
         $b64 = base64_encode($str);
         if ($variable !== $b64)
           die("Invalid base 64 variable $name");
+        die("valid b64");
       }
       break;
     default:
