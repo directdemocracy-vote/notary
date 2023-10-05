@@ -9,22 +9,6 @@ function error($message) {
   die("{\"error\":$message}");
 }
 
-function get_float_parameter($name) {
-  if (isset($_GET[$name]))
-    return floatval($_GET[$name]);
-  if (isset($_POST[$name]))
-    return floatval($_POST[$name]);
-  return FALSE;
-}
-
-function get_string_parameter($name) {
-  if (isset($_GET[$name]))
-    return $_GET[$name];
-  if (isset($_POST[$name]))
-    return $_POST[$name];
-  return FALSE;
-}
-
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
