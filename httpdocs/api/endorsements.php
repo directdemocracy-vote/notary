@@ -1,5 +1,6 @@
 <?php
 require_once '../../php/database.php';
+require_once '../../php/sanitizer.php';
 
 function error($message) {
   if ($message[0] != '{')
@@ -13,18 +14,19 @@ header("Access-Control-Allow-Headers: content-type");
 
 
 if (isset($_GET['fingerprint'])) {
-  $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
+  $fingerprint = sanitize_field('get', "hex", "fingerprint");
   $condition = "publication.signatureSHA1=UNHEX('$fingerprint')";
   $join_condition = "SHA1(endorsement.endorsedSignature)='$fingerprint'";
 } elseif (isset($_GET['signature'])) {
-  $signature = $mysqli->escape_string($_GET['signature']);
+  $signature = sanitize_field('get', "base_64", "signature");
   $condition = "publication.signature=FROM_BASE64('$signature')";
   $join_condition = "endorsement.endorsedSignature=FROM_BASE64('$signature')";
 } else
   error("Missing fingerprint or signature parameter");
 
+
 if (isset($_GET['judge']))
-  $judge = $mysqli->escape_string($_GET['judge']);
+  $judge = sanitize_field('get', 'url', 'judge');
 else
   error("Missing judge parameter");
 
