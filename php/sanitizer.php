@@ -31,7 +31,7 @@ function sanitize_field($variable, $type, $name) {
       break;
     case 'hex':
       $variable = sanitize_string($variable, $name);
-      if (!ctype_xdigit($variable);
+      if (!ctype_xdigit($variable))
         die("Variable $name is not in hexadecimal format.");
       break;
     case 'float':
