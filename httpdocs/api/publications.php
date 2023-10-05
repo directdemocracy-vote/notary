@@ -1,5 +1,7 @@
 <?php
 require_once '../../php/database.php';
+require_once '../../php/sanitizer.php';
+
 $version = '2';
 
 function error($message) {
