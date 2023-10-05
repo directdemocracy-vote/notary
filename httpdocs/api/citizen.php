@@ -13,9 +13,10 @@ if (isset($_POST['signature'])) {
 } elseif (isset($_POST['key'])) {
   $key = sanitize_field($_POST['key'], "base_64", "key");
   $condition = "publication.`key`=FROM_BASE64('" . $key . "')";
-} elseif (isset($_POST['fingerprint']))
-  $condition = "publication.signatureSHA1 = UNHEX('" . $mysqli->escape_string($_POST['fingerprint']) . "')";
-else
+} elseif (isset($_POST['fingerprint'])) {
+  $fingerprint = sanitize_field($_POST['fingerprint'], "hex", "fingerprint");
+  $condition = "publication.signatureSHA1 = UNHEX('" . $fingerprint . "')";
+} else
   die("{\"error\":\"missing key, signature or fingerprint POST argument\"}");
 
 $query = "SELECT REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, UNIX_TIMESTAMP(publication.published) AS published, "
