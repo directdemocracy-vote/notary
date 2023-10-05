@@ -50,6 +50,7 @@ $radius = parameter('radius', 'float') / 100000;
 $limit = parameter('limit', 'int');
 $year = parameter('year', 'int');
 
+die ("variable: $search $secret $open $latitude $longitude $radius $limit $year");
 # check the parameter sets
 if (!isset($search) || !isset($secret) || !isset($open) || !isset($latitude) || !isset($longitude) || !isset($radius))
   error('Missing parameters.');
