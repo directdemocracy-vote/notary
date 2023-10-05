@@ -8,13 +8,13 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 if (isset($_POST['signature'])) {
-  $signature = sanitize_field($_POST['signature'], "base_64", "signature");
+  $signature = sanitize_field('post', "base_64", "signature");
   $condition = "publication.signature = FROM_BASE64('" . $signature . "')";
 } elseif (isset($_POST['key'])) {
-  $key = sanitize_field($_POST['key'], "base_64", "key");
+  $key = sanitize_field('post', "base_64", "key");
   $condition = "publication.`key`=FROM_BASE64('" . $key . "')";
 } elseif (isset($_POST['fingerprint'])) {
-  $fingerprint = sanitize_field($_POST['fingerprint'], "hex", "fingerprint");
+  $fingerprint = sanitize_field('post', "hex", "fingerprint");
   $condition = "publication.signatureSHA1 = UNHEX('" . $fingerprint . "')";
 } else
   die("{\"error\":\"missing key, signature or fingerprint POST argument\"}");
