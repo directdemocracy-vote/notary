@@ -6,15 +6,16 @@
 # proposal area.
 
 require_once '../../php/database.php';
+require_once '../../php/sanitizer.php';
 
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 if (isset($_GET['signature']))
-  $signature = $mysqli->escape_string($_GET['signature']);
+  $signature = sanitize_field('get', "base_64", "signature");
 elseif (isset($_GET['fingerprint']))
-  $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
+  $fingerprint = sanitize_field('get', "hex", "fingerprint");
 else
   die('{"error":"Missing fingerprint or signature parameter"}');
 
