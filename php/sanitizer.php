@@ -59,7 +59,7 @@ function sanitize_field($methods, $type, $name) {
       $variable = sanitize_string($variable, $name);
       $variable = filter_var($variable, FILTER_SANITIZE_URL);
       if (!filter_var($variable, FILTER_VALIDATE_URL))
-           die("$name is not  a valid URL");
+           die("$name is not a valid URL");
       break;
     default:
       die("Unknown type: $type");

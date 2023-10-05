@@ -1,6 +1,6 @@
 <?php
-
 require_once '../../php/database.php';
+require_once '../../php/sanitizer.php';
 
 function error($message) {
   if ($message[0] != '{')
@@ -13,13 +13,13 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 if (isset($_GET['signature'])) {
-  $signature = $mysqli->escape_string($_GET['signature']);
+  $signature = sanitize_field('post', "base_64", "signature");
   $condition = "publication.signature=FROM_BASE64('$signature')";
   $join1_condition = "pp.signature=FROM_BASE64('$signature')";
   $join2_condition = "e.endorsedSignature=FROM_BASE64('$signature')";
   $join3_condition = "signature.endorsedSignature=FROM_BASE64('$signature')";
 } elseif (isset($_GET['fingerprint'])) {
-  $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
+  $fingerprint = sanitize_field('get', "hex", "fingerprint");
   $condition = "publication.signatureSHA1=UNHEX('$fingerprint')";
   $join1_condition = "pp.signatureSHA1=UNHEX('$fingerprint')";
   $join2_condition = "SHA1(e.endorsedSignature)='$fingerprint'";
