@@ -65,9 +65,9 @@ else # assuming 0 or 1
 if ($open == 2)
   $open = '';
 elseif ($open == 0)
-  $open = "proposal.deadline <= NOW() AND ";
+  $open = "proposal.deadline * 1000 <= NOW() AND ";
 else # assuming 1
-  $open = "proposal.deadline > NOW() AND ";
+  $open = "proposal.deadline * 1000 > NOW() AND ";
 if ($search !== '')
   $search = "(title LIKE \"%$search%\" OR description LIKE \"%$search%\") AND ";
 $query = "SELECT "
