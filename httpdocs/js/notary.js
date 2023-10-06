@@ -16,11 +16,11 @@ function findGetParameter(parameterName) {
 }
 
 function sanitizeString(str) {
-  str = str.replaceAll('&', '&amp;');
-  str = str.replaceAll("'", '&apos;');
-  str = str.replaceAll('"', '&quot;');
-  str = str.replaceAll('<', '&lt;');
-  str = str.replaceAll('>', '&gt;');
+  str = str.replaceAll('&', '\&amp;');
+  str = str.replaceAll("'", '\&apos;');
+  str = str.replaceAll('"', '\&quot;');
+  str = str.replaceAll('<', '\&lt;');
+  str = str.replaceAll('>', '\&gt;');
 
   return str;
 }
