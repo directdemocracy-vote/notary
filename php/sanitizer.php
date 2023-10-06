@@ -86,7 +86,7 @@ function sanitize_string($variable, $name) {
   $pattern = preg_quote($blacklistedChars, '/');
 
   if (preg_match('/[' . $pattern . ']/', $variable))
-     error("$name contains non escaped characters.");
+     error("$name contains non escaped characters. $variable");
 
   //Check for &
   $test_variable = str_replace("&amp;", "", $variable);
