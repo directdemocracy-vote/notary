@@ -40,7 +40,7 @@ $signature = sanitize_field($publication->signature, "base_64", "signature");
 if (isset($publication->blindKey))
   $blindKey = sanitize_field($publication->blindKey, "base_64", "signature");
 if (isset($publication->encryptedVote))
-$encryptedVote = sanitize_field($publication->encryptedVote, "base_64", "signature");
+  $encryptedVote = sanitize_field($publication->encryptedVote, "base_64", "signature");
 
 $validator = new Validator();
 $result = $validator->validate($publication, file_get_contents($schema));
@@ -135,16 +135,29 @@ elseif ($type == 'endorsement') {
 } elseif ($type == 'proposal') {
   $proposal =&$publication;
   if (!isset($proposal->website))  # optional
-    $proposal->website = '';
+    $website = '';
+  else
+    $website = sanitize_field($publication->website, 'url', 'website');
+
   if (!isset($proposal->question))  # optional
-    $proposal->question = '';
+    $question = '';
+  else
+    $question = sanitize_field($publication->question, 'string', 'question');
+
   if (!isset($proposal->answers))  # optional
-    $proposal->answers = array();
-  $answers = implode("\n", $proposal->answers);
+    $answers = array();
+  else
+    $answer = sanitize_field($publication->answer, 'string', 'answer');
+  $answers = implode("\n", $answers);
   $secret = ($proposal->secret) ? 1 : 0;
+  $judge = sanitize_field($publication->answer, 'url', 'judge');
+  $area = sanitize_field($publication->area, 'base_64', 'area');
+  $title = sanitize_field($publication->title, 'string', 'title');
+  $description = sanitize_field($publication->description, 'string', 'description');
+  $deadline = sanitize_field($publication->deadline, 'positive_int', 'deadline');
   $query = "INSERT INTO proposal(id, judge, area, title, description, question, answers, secret, deadline, website, participants, corpus) "
-          ."VALUES($id, \"$proposal->judge\", FROM_BASE64('$proposal->area'), \"$proposal->title\", \"$proposal->description\", "
-          ."\"$proposal->question\", \"$answers\", $secret, $proposal->deadline, \"$proposal->website\", 0, 0)";
+          ."VALUES($id, \"$judge\", FROM_BASE64('$area'), \"$title\", \"$description\", "
+          ."\"$question\", \"$answers\", $secret, $deadline, \"$website\", 0, 0)";
 } elseif ($type == 'registration')
   $query = "INSERT INTO registration(id, blindKey, encryptedVote) "
           ."VALUES($id, FROM_BASE64('$blindKey'), FROM_BASE64('$encryptedVote'))";
