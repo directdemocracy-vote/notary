@@ -87,8 +87,8 @@ function sanitize_string($variable, $name) {
   if (preg_match('/[' . $pattern . ']/', $variable))
      error("$name contains non escaped characters.");
 
-  die($variable);
   $variable = $mysqli->escape_string($variable);
+  die($variable);
 
   return $variable;
 }
