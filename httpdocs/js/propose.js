@@ -217,7 +217,7 @@ window.onload = function() {
           publication.judge = judge;
           publication.area = answer.signature;
           publication.title = document.getElementById('title').value.trim();
-          publication.description = document.getElementById('description').value.trim();
+          publication.description = sanitizeString(document.getElementById('description').value.trim());
           const type = document.querySelector('input[name="type"]:checked').value;
           if (type === 'referendum') {
             publication.question = document.getElementById('question').value.trim();

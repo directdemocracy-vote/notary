@@ -88,7 +88,6 @@ function sanitize_string($variable, $name) {
      error("$name contains non escaped characters.");
 
   $variable = $mysqli->escape_string($variable);
-  die($variable);
 
   return $variable;
 }
