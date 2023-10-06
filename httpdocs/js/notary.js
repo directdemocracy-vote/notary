@@ -150,6 +150,7 @@ window.onload = function() {
     const searchProposal = document.getElementById('search-proposals');
     searchProposal.classList.add('is-loading');
     const query = document.getElementById('proposal-query').value;
+    console.log(query)
     const r = document.getElementById('proposal-referendum').checked;
     const p = document.getElementById('proposal-petition').checked;
     const secret = (r && p) ? 2 : (r ? 1 : 0);
