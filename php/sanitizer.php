@@ -95,7 +95,7 @@ function sanitize_string($variable, $name) {
   $test_variable = str_replace("&lt;", "", $test_variable);
   $test_variable = str_replace("&gt;", "", $test_variable);
 
-  if (str_contains($test_variable, "&"));
+  if (str_contains($test_variable, "&"))
     error("$name contains non escaped &.");
 
   $variable = $mysqli->escape_string($variable);
