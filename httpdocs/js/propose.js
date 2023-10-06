@@ -10,8 +10,8 @@ function findGetParameter(parameterName, result = null) {
 }
 
 function showModal(title, content) {
-  document.getElementById('modal-title').textContent = title;
-  document.getElementById('modal-content').textContent = content;
+  document.getElementById('modal-title').innerHtml = title;
+  document.getElementById('modal-content').innerHtml = content;
   document.getElementById('modal').classList.add('is-active');
 }
 
