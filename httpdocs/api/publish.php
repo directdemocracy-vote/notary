@@ -37,7 +37,9 @@ $schema = sanitize_field($publication->schema, 'string', 'schema');
 $key = sanitize_field($publication->key, "base_64", "key");
 $published = sanitize_field($publication->published, 'positive_int', 'published');
 $signature = sanitize_field($publication->signature, "base_64", "signature");
-$blindKey = sanitize_field($publication->blindKey, "base_64", "signature");
+if (isset($publication->blindKey))
+  $blindKey = sanitize_field($publication->blindKey, "base_64", "signature");
+if (isset($publication->encryptedVote))
 $encryptedVote = sanitize_field($publication->encryptedVote, "base_64", "signature");
 
 $validator = new Validator();
