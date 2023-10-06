@@ -15,6 +15,16 @@ function findGetParameter(parameterName) {
   return result;
 }
 
+function sanitizeString(str) {
+  str = str.replaceAll('&', '&amp;');
+  str = str.replaceAll("'", '&apos;');
+  str = str.replaceAll('"', '&quot;');
+  str = str.replaceAll('<', '&lt;');
+  str = str.replaceAll('>', '&gt;');
+
+  return str;
+}
+
 window.onload = function() {
   document.getElementById('proposal').addEventListener('click', function() {
     window.open(`propose.html?latitude=${latitude}&longitude=${longitude}`, '_blank');
@@ -150,8 +160,8 @@ window.onload = function() {
     const searchProposal = document.getElementById('search-proposals');
     searchProposal.classList.add('is-loading');
     const query = document.getElementById('proposal-query').value;
-    const sanitizer = new Sanitizer();
-    console.log(sanitizer.sanitize(query));
+    console.log(query);
+    console.log(sanitizeString(query))
     const r = document.getElementById('proposal-referendum').checked;
     const p = document.getElementById('proposal-petition').checked;
     const secret = (r && p) ? 2 : (r ? 1 : 0);

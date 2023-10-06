@@ -19,6 +19,16 @@ function closeModal() {
   document.getElementById('modal').classList.remove('is-active');
 }
 
+function sanitizeString(str) {
+  str = str.replaceAll('&', '&amp;');
+  str = str.replaceAll("'", '&apos;');
+  str = str.replaceAll('"', '&quot;');
+  str = str.replaceAll('<', '&lt;');
+  str = str.replaceAll('>', '&gt;');
+
+  return str;
+}
+
 window.onload = function() {
   document.getElementById('modal-close-button').addEventListener('click', closeModal);
   document.getElementById('modal-ok-button').addEventListener('click', closeModal);
