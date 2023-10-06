@@ -26,7 +26,7 @@ window.onload = function() {
         return;
       }
       document.getElementById('title').innerText = answer.title;
-      document.getElementById('description').innerHTML = answer.description;
+      document.getElementById('description').textContent = answer.description;
       if (answer.secret) {
         document.getElementById('question-block').style.display = '';
         document.getElementById('question').textContent = answer.question;
