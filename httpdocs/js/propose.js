@@ -20,7 +20,6 @@ function closeModal() {
 }
 
 function sanitizeString(str) {
-  console.log(str)
   str = str.replaceAll('&', '&amp;');
   str = str.replaceAll("'", '&apos;');
   str = str.replaceAll('"', '&quot;');
