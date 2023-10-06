@@ -156,8 +156,9 @@ if ($type == 'citizen') {
   if (!isset($proposal->answers))  # optional
     $answers = array();
   else
-    $answers = sanitize_field($publication->answers, 'string', 'answer');
+    $answers = $publication->answers;
   $answers = implode("\n", $answers);
+  $answers = sanitize_field($answers, 'string', 'answer');
   $secret = ($proposal->secret) ? 1 : 0;
   $judge = sanitize_field($publication->judge, 'url', 'judge');
   $area = sanitize_field($publication->area, 'base_64', 'area');
