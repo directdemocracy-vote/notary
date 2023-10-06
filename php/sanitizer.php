@@ -31,8 +31,8 @@ function sanitize_field($methods, $type, $name) {
       break;
     case 'int_options':
       $variable = intval($variable);
-      if ($variable < 0 or $variable > 2)
-        die("Error: $name should be between 0 and 2");
+      if (true or $variable < 0 or $variable > 2)
+        error("$name should be between 0 and 2");
       break;
     case 'base_64':
       $variable = sanitize_string($variable, $name);
