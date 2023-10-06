@@ -89,7 +89,7 @@ window.onload = function() {
                                `corpus</a> of ${corpus_percent}%`;
                 } else
                   population = `<a target="_blank" href="${url}">N/A</a>`;
-                areaName.textContent = `Area: ${areas[1]} (estimated population: ${population})`;
+                areaName.innerHtml = `Area: ${areas[1]} (estimated population: ${population})`;
               }
             }
           });
