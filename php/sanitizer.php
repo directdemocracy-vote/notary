@@ -84,9 +84,10 @@ function sanitize_string($variable, $name) {
 
   $blacklistedChars = '"\'<>';
   $pattern = preg_quote($blacklistedChars, '/');
-  if (preg_match('/[' . $pattern . ']/', $variable)) {
+  if (preg_match('/[' . $pattern . ']/', $variable))
      error("$name contains non escaped characters.");
-  }
+
+  die($variable);
   $variable = $mysqli->escape_string($variable);
 
   return $variable;
