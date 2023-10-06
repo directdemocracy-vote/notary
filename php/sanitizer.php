@@ -1,4 +1,11 @@
 <?php
+
+function error($message) {
+  if ($message[0] != '{')
+    $message = '"'.$message.'"';
+  die("{\"error\":$message}");
+}
+
 function sanitize_field($methods, $type, $name) {
   $variable = null;
   if ($methods === 'get') {

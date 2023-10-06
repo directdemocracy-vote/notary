@@ -10,10 +10,6 @@ use Opis\JsonSchema\{
   Validator, Errors\ErrorFormatter
 };
 
-function error($message) {
-  die("{\"error\":\"$message\"}");
-}
-
 function get_type($schema) {
   $p = strrpos($schema, '/', 13);
   return substr($schema, $p + 1, strlen($schema) - $p - 13);  # remove the .schema.json suffix

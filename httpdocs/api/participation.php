@@ -2,12 +2,6 @@
 require_once '../../php/database.php';
 require_once '../../php/sanitizer.php';
 
-function error($message) {
-  if ($message[0] != '{')
-    $message = '"'.$message.'"';
-  die("{\"error\":$message}");
-}
-
 function public_key($key) {
   $public_key = "-----BEGIN PUBLIC KEY-----\n";
   $l = strlen($key);
