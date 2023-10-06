@@ -83,7 +83,7 @@ function sanitize_string($variable, $name) {
     error("Error: $name should be a string.");
 
   $blacklistedChars = '"\'<>';
-  $pattern = preg_quote($blacklistChars, '/');
+  $pattern = preg_quote($blacklistedChars, '/');
   if (preg_match('/[' . $pattern . ']/', $variable)) {
      error("$name contains non escaped characters.");
   }
