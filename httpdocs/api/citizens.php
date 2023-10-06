@@ -14,6 +14,7 @@ if ($radius) {
   $longitude = sanitize_field('get', 'float', 'longitude');
 }
 $familyName = sanitize_field('get', 'string', 'familyName');
+die("Family: $familyName");
 $givenNames = sanitize_field('get', 'string', 'givenNames');
 $judge = sanitize_field('get', 'url', 'judge');
 
