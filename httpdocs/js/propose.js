@@ -222,7 +222,7 @@ window.onload = function() {
           const type = document.querySelector('input[name="type"]:checked').value;
           if (type === 'referendum') {
             publication.question = sanitizeString(document.getElementById('question').value.trim());
-            publication.answers = sanitizeString(document.getElementById('answers').value.trim().split("\n"));
+            publication.answers = sanitizeString(document.getElementById('answers').value.trim()).split("\n");
             publication.secret = true;
           } else
             publication.secret = false;
