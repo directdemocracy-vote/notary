@@ -110,9 +110,9 @@ window.onload = function() {
     judge = sanitizeString(document.getElementById('judge').value);
     let parameters = `latitude=${latitude}&longitude=${longitude}&radius=${radius}&judge=https://${judge}`;
     if (familyName)
-      parameters += `&familyName=${encodeURI(familyName)}`;
+      parameters += `&familyName=${encodeURIComponent(familyName)}`;
     if (givenNames)
-      parameters += `&givenNames=${encodeURI(givenNames)}`;
+      parameters += `&givenNames=${encodeURIComponent(givenNames)}`;
     fetch(`/api/citizens.php?${parameters}`)
       .then((response) => response.json())
       .then((answer) => {
