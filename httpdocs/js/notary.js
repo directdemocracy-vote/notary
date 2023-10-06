@@ -107,7 +107,7 @@ window.onload = function() {
     searchCitizen.classList.add('is-loading');
     const familyName = sanitizeString(document.getElementById('family-name').value);
     const givenNames = sanitizeString(document.getElementById('given-names').value);
-    judge = sanitizeString(document.getElementById('judge').value);
+    judge = sanitizeString(encodeURIComponent(sanitizeString(document.getElementById('judge').value)));
     let parameters = `latitude=${latitude}&longitude=${longitude}&radius=${radius}&judge=https://${judge}`;
     if (familyName)
       parameters += `&familyName=${encodeURIComponent(familyName)}`;
@@ -159,7 +159,7 @@ window.onload = function() {
     fieldset.setAttribute('disabled', '');
     const searchProposal = document.getElementById('search-proposals');
     searchProposal.classList.add('is-loading');
-    const query = document.getElementById('proposal-query').value;
+    const query = encodeURIComponent(sanitizeString(document.getElementById('proposal-query').value));
     const r = document.getElementById('proposal-referendum').checked;
     const p = document.getElementById('proposal-petition').checked;
     const secret = (r && p) ? 2 : (r ? 1 : 0);
