@@ -82,10 +82,21 @@ function sanitize_string($variable, $name) {
   if (!is_string($variable))
     error("Error: $name should be a string.");
 
-  $blacklistedChars = '"\'<>&';
+  $blacklistedChars = '"\'<>';
   $pattern = preg_quote($blacklistedChars, '/');
+
   if (preg_match('/[' . $pattern . ']/', $variable))
      error("$name contains non escaped characters.");
+
+  //Check for &
+  $test_variable = str_replace("&amp;", "", $variable);
+  $test_variable = str_replace("&apos;", "", $test_variable);
+  $test_variable = str_replace("&quot;", "", $test_variable);
+  $test_variable = str_replace("&lt;", "", $test_variable);
+  $test_variable = str_replace("&gt;", "", $test_variable);
+
+  if (str_contains($test_variable, "&"));
+    error("$name contains non escaped &.");
 
   $variable = $mysqli->escape_string($variable);
 
