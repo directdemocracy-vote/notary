@@ -80,9 +80,13 @@ function sanitize_string($variable, $name) {
   global $mysqli;
 
   if (!is_string($variable))
-    error("Error: $name should be a string");
-  $variable = strip_tags($variable); // Remove html tags, not enough to prevent XSS but will avoid to store too much trash
-  $variable = htmlspecialchars($variable); // Convert html special character to prevent XSS
+    error("Error: $name should be a string.");
+
+  $blacklistedChars = '"\'<>';
+  $pattern = preg_quote($blacklistChars, '/');
+  if (preg_match('/[' . $pattern . ']/', $variable)) {
+     error("$name contains non escaped characters.");
+  }
   $variable = $mysqli->escape_string($variable);
 
   return $variable;
