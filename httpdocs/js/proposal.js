@@ -68,7 +68,7 @@ window.onload = function() {
         if (type)
           query += type + '=' + encodeURIComponent(name) + '&';
       });
-      areaName.textContent = `Area: ${areas[1]}`;
+      areaName.innerHtml = `Area: ${areas[1]}`;
       query = query.slice(0, -1);
       if (!areas[0])
         areaName.innerHTML = `Area: <a target="_blank" href="https://en.wikipedia.org/wiki/Earth">Earth</a>`;
