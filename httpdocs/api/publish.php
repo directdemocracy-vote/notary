@@ -215,6 +215,7 @@ elseif ($type == 'ballot') {
     $polygons .= ')';
   }
   $polygons .= ')")';
+  $polygons = htmlspecialchars($polygons);
   $polygons = sanitize_field($polygons, 'string', 'polygons');
   $name = sanitize_field($publication->name, 'string', 'name');
   $name = implode("\n", $name);
