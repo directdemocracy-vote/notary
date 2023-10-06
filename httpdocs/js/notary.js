@@ -105,8 +105,8 @@ window.onload = function() {
     fieldset.setAttribute('disabled', '');
     const searchCitizen = event.currentTarget;
     searchCitizen.classList.add('is-loading');
-    const familyName = document.getElementById('family-name').value;
-    const givenNames = document.getElementById('given-names').value;
+    const familyName = sanitizeString(document.getElementById('family-name').value);
+    const givenNames = sanitizeString(document.getElementById('given-names').value);
     judge = sanitizeString(document.getElementById('judge').value);
     let parameters = `latitude=${latitude}&longitude=${longitude}&radius=${radius}&judge=https://${judge}`;
     if (familyName)
