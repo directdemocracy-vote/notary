@@ -214,21 +214,21 @@ window.onload = function() {
           publication.key = stripped_key(publication_crypt.getPublicKey());
           publication.signature = '';
           publication.published = Math.round(new Date().getTime() / 1000);
-          publication.judge = judge;
+          publication.judge = sanitizeString(judge);
           publication.area = answer.signature;
           publication.title = sanitizeString(document.getElementById('title').value.trim());
           publication.description = sanitizeString(document.getElementById('description').value.trim());
           const type = document.querySelector('input[name="type"]:checked').value;
           if (type === 'referendum') {
-            publication.question = document.getElementById('question').value.trim();
-            publication.answers = document.getElementById('answers').value.trim().split("\n");
+            publication.question = sanitizeString(document.getElementById('question').value.trim());
+            publication.answers = sanitizeString(document.getElementById('answers').value.trim().split("\n"));
             publication.secret = true;
           } else
             publication.secret = false;
           publication.deadline = Math.round(Date.parse(document.getElementById('deadline').value) / 1000);
           const website = document.getElementById('website').value.trim();
           if (website)
-            publication.website = website;
+            publication.website = sanitizeString(website);
           const str = JSON.stringify(publication);
           publication.signature = publication_crypt.sign(str, CryptoJS.SHA256, 'sha256');
           console.log(publication);
