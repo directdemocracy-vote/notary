@@ -63,7 +63,7 @@ if (!$publication) {
   $result = $mysqli->query($query) or error($mysqli->error);
   if (!$result) {
     $mysqli->query("INSERT INTO webservice(`type`, `key`, url) VALUES('station', FROM_BASE64('$key'), '$station')") or error($mysqli->error);
-    $id = mysqli->insert_id;
+    $id = $mysqli->insert_id;
   } else {
     $webservice = $result->fetch_assoc();
     $result->free();

@@ -8,7 +8,6 @@ header("Access-Control-Allow-Headers: content-type");
 
 if (isset($_GET['signature'])) {
   $signature = sanitize_field('get', "base_64", "signature");
-  $signature = $mysqli->escape_string($_GET['signature']);
   $condition = "publication.signature=FROM_BASE64('$signature')";
   $join1_condition = "pp.signature=FROM_BASE64('$signature')";
   $join2_condition = "e.endorsedSignature=FROM_BASE64('$signature')";
