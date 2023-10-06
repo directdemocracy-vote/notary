@@ -25,8 +25,8 @@ window.onload = function() {
         console.error(`Cannot get petition: ${answer.error}`);
         return;
       }
-      document.getElementById('title').innerText = answer.title;
-      document.getElementById('description').textContent = answer.description;
+      document.getElementById('title').innerHTML = answer.title;
+      document.getElementById('description').innerHTML = answer.description;
       if (answer.secret) {
         document.getElementById('question-block').style.display = '';
         document.getElementById('question').textContent = answer.question;
