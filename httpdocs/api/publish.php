@@ -215,7 +215,7 @@ elseif ($type == 'ballot') {
     $polygons .= ')';
   }
   $polygons .= ')")';
-  $polygons = sanitize_field($publication->polygons, 'string', 'polygons');
+  $polygons = sanitize_field($polygons, 'string', 'polygons');
   $name = sanitize_field($publication->name, 'string', 'name');
   $name = implode("\n", $name);
   $query = "INSERT INTO area(id, name, polygons) VALUES($id, \"$name\", $polygons)";
