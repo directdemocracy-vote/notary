@@ -31,10 +31,10 @@ window.onload = function() {
       const latitude = answer.citizen.latitude;
       const longitude = answer.citizen.longitude;
       document.getElementById('picture').src = answer.citizen.picture;
-      document.getElementById('given-names').textContent = givenNames;
-      document.getElementById('family-name').textContent = familyName;
+      document.getElementById('given-names').innerHTML = givenNames;
+      document.getElementById('family-name').innerHTML = familyName;
       document.getElementById('home').innerHTML = `<a href="https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}&zoom=12" target="_blank">${latitude}, ${longitude}</a>`;
-      document.getElementById('created').textContent = published;
+      document.getElementById('created').innerHTML = published;
       const map = L.map('map');
       map.whenReady(function() {setTimeout(() => {this.invalidateSize();}, 0);});
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -55,7 +55,7 @@ window.onload = function() {
         event.currentTarget.classList.add('is-loading');
         judge = 'https://' + document.getElementById('judge').value;
         const reputation = document.getElementById('reputation');
-        reputation.textContent = '...';
+        reputation.innerHTML = '...';
         reputation.style.color = 'black';
         loadReputation();
         updateJudgeEndorsements();
@@ -71,10 +71,10 @@ window.onload = function() {
           .then((answer) => {
             if (answer.error) {
               reputation.style.color = 'red';
-              reputation.textContent = answer.error;
+              reputation.innerHTML = answer.error;
             } else {
               reputation.style.color = answer.endorsed ? 'green' : 'red';
-              reputation.textContent = `${answer.reputation}`;
+              reputation.innerHTML = `${answer.reputation}`;
             }
           });
       }
@@ -87,7 +87,7 @@ window.onload = function() {
         const payload = signature ? `signature=${encodeURIComponent(signature)}` : `fingerprint=${fingerprint}`;
         fetch(`/api/endorsements.php?${payload}&judge=${judge}`)
           .then(response => {
-            if (reputation.textContent != '..')
+            if (reputation.innerHTML != '..')
               enableJudgeReloadButton();
             return response.json();
           })
@@ -96,7 +96,7 @@ window.onload = function() {
               console.error(answer.error);
               return;
             }
-            div.textContent = '';
+            div.innerHTML = '';
             for(const endorsement of answer.endorsements) {
               const block = document.createElement('div');
               div.appendChild(block);
@@ -171,7 +171,7 @@ window.onload = function() {
         if (!endorsement.revoke)
           count++;
       });
-      document.getElementById('endorsed-by-header').textContent = answer.citizen_endorsements.length ? `Endorsed by ${count} / ${answer.citizen_endorsements.length}:` : `Not endorsed by anyone.`;
+      document.getElementById('endorsed-by-header').innerHTML = answer.citizen_endorsements.length ? `Endorsed by ${count} / ${answer.citizen_endorsements.length}:` : `Not endorsed by anyone.`;
       answer.citizen_endorsements.forEach(function(endorsement) {
         addEndorsement(endorsement, 'endorsed-by');
       });
@@ -180,7 +180,7 @@ window.onload = function() {
         if (!endorsement.revoke)
           count++;
       });
-      document.getElementById('has-endorsed-header').textContent = answer.endorsements.length ? `Has endorsed ${count} / ${answer.endorsements.length}:` : `Has not endorsed anyone.`;
+      document.getElementById('has-endorsed-header').innerHTML = answer.endorsements.length ? `Has endorsed ${count} / ${answer.endorsements.length}:` : `Has not endorsed anyone.`;
       answer.endorsements.forEach(function(endorsement) {
         addEndorsement(endorsement, 'has-endorsed');
       });

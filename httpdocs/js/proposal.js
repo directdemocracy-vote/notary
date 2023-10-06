@@ -29,22 +29,22 @@ window.onload = function() {
       document.getElementById('description').innerHTML = answer.description;
       if (answer.secret) {
         document.getElementById('question-block').style.display = '';
-        document.getElementById('question').textContent = answer.question;
+        document.getElementById('question').innerHTML = answer.question;
         document.getElementById('answers-block').style.display = '';
-        document.getElementById('answers').textContent = answer.answers.join(' / ');
+        document.getElementById('answers').innerHTML = answer.answers.join(' / ');
       }
       const deadline = new Date(answer.deadline * 1000);
       const published = new Date(answer.published * 1000);
       const now = new Date();
       document.getElementById('deadline').innerHTML = `<span style="color:#${ deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
-      document.getElementById('published').textContent = published.toLocaleString();
+      document.getElementById('published').innerHTML = published.toLocaleString();
       document.getElementById('judge').innerHTML = `<a target="_blank" href="${answer.judge}">${answer.judge}</a>`;
-      document.querySelector('.subtitle').textContent = (answer.secret) ? 'referendum' : 'petition';
-      document.getElementById('modal-title').textContent = (answer.secret) ? 'Vote at this referendum' : 'Sign this petition';
+      document.querySelector('.subtitle').innerHTML = (answer.secret) ? 'referendum' : 'petition';
+      document.getElementById('modal-title').innerHTML = (answer.secret) ? 'Vote at this referendum' : 'Sign this petition';
       const actionButton = document.getElementById('action-button');
-      actionButton.textContent = (answer.secret) ? 'Vote' : 'Sign';
+      actionButton.innerHTML = (answer.secret) ? 'Vote' : 'Sign';
       if (deadline < now)
-        actionButton.textContent = 'Closed';
+        actionButton.innerHTML = 'Closed';
       else
         actionButton.removeAttribute('disabled');
       const corpus = answer.corpus;
@@ -158,7 +158,7 @@ window.onload = function() {
     const a = document.createElement('a');
     control.appendChild(a);
     a.classList.add('button', 'is-info');
-    a.textContent = 'Copy';
+    a.innerHTML = 'Copy';
     const message = document.createElement('div');
     div.appendChild(message);
     message.innerHTML = 'From the <i>directdemocracy</i> app, scan this QR code or copy and paste it.';

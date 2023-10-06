@@ -32,9 +32,9 @@ window.onload = function() {
       }
       const subtitle = document.getElementById('subtitle');
       if (corpus)
-        subtitle.textContent = 'Petition corpus';
+        subtitle.innerHTML = 'Petition corpus';
       else
-        subtitle.textContent = 'Petition participants';
+        subtitle.innerHTML = 'Petition participants';
       const panel = document.getElementById('panel');
       const title = document.createElement('p');
       panel.appendChild(title);
