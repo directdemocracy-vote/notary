@@ -120,7 +120,7 @@ window.onload = function() {
         markers = [];
         answer.forEach(function(citizen) {
           const name = `${citizen.givenNames} ${citizen.familyName}`;
-          const label = `<div style="text-align:center"><a target="_blank" href="/citizen.html?signature=${encodeURIComponent(citizen.signature)}"><img src="${citizen.picture}" width="60" height="80"><br>${encodeURIComponent(name)}</a></div>`;
+          const label = `<div style="text-align:center"><a target="_blank" href="/citizen.html?signature=${encodeURIComponent(citizen.signature)}"><img src="${citizen.picture}" width="60" height="80"><br>${name}</a></div>`;
           markers.push(L.marker([citizen.latitude, citizen.longitude], {icon: greenIcon}).addTo(map).bindPopup(label));
         });
         fieldset.removeAttribute('disabled');
