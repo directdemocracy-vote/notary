@@ -20,11 +20,11 @@ function closeModal() {
 }
 
 function sanitizeString(str) {
-  str = str.replaceAll('&', '&amp;');
-  str = str.replaceAll("'", '&apos;');
-  str = str.replaceAll('"', '&quot;');
-  str = str.replaceAll('<', '&lt;');
-  str = str.replaceAll('>', '&gt;');
+  str = str.replaceAll('&', '%26amp;');
+  str = str.replaceAll("'", '%26apos;');
+  str = str.replaceAll('"', '%26quot;');
+  str = str.replaceAll('<', '%26lt;');
+  str = str.replaceAll('>', '%26gt;');
 
   return str;
 }
