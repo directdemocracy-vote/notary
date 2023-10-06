@@ -70,7 +70,7 @@ if ($type == 'citizen') {
 if ($type != 'ballot') {
   $publication->signature = '';
   $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-  die($data);
+
   $verify = openssl_verify($data, base64_decode($signature), public_key($key), OPENSSL_ALGO_SHA256);
   if ($verify != 1)
     error("Wrong signature for $type");
