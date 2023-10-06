@@ -150,7 +150,7 @@ elseif ($type == 'endorsement') {
     $answer = sanitize_field($publication->answer, 'string', 'answer');
   $answers = implode("\n", $answers);
   $secret = ($proposal->secret) ? 1 : 0;
-  $judge = sanitize_field($publication->answer, 'url', 'judge');
+  $judge = sanitize_field($publication->judge, 'url', 'judge');
   $area = sanitize_field($publication->area, 'base_64', 'area');
   $title = sanitize_field($publication->title, 'string', 'title');
   $description = sanitize_field($publication->description, 'string', 'description');

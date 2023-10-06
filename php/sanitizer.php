@@ -82,8 +82,6 @@ function sanitize_string($variable, $name) {
   if (!is_string($variable))
     error("Error: $name should be a string.");
 
-  if ($name === "description")
-    die($variable);
   $blacklistedChars = '"\'<>&';
   $pattern = preg_quote($blacklistedChars, '/');
   if (preg_match('/[' . $pattern . ']/', $variable))
