@@ -200,6 +200,7 @@ window.onload = function() {
     button.classList.add('is-loading');
     button.setAttribute('disabled', '');
     const judge = document.getElementById('judge').value;
+    console.log(area)
     const query = area.trim().replace(/(\r\n|\n|\r)/g, "&");
     fetch(`${judge}/api/publish_area.php?${query}`)
       .then(response => response.json())
