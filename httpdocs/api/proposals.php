@@ -80,7 +80,7 @@ while ($proposal = $result->fetch_assoc()) {
 $result->free();
 
 $query = "SELECT "
-        ."COUNT(*)"
+        ."COUNT(*) AS number_of_proposals"
         ."FROM proposal "
         ."LEFT JOIN publication ON publication.id = proposal.id "
         ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
@@ -94,6 +94,6 @@ $number = $result->fetch_assoc() or die($mysqli->error);
 $mysqli->close();
 $answer = array();
 $answer['proposals'] = $proposals;
-$answer['number'] = $number;
+$answer['number'] = $number['number_of_proposals'];
 die(json_encode($answer, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
