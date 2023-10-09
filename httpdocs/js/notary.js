@@ -228,7 +228,9 @@ window.onload = function() {
           });
         });
         if (limit < answer.number) {
-          console.log("NEXT");
+          const next = document.createElement('button');
+          next.innerHTML = 'Next';
+          section.appendChild(next);
         }
       });
   }
