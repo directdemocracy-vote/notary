@@ -78,6 +78,22 @@ while ($proposal = $result->fetch_assoc()) {
   $proposals[] = $proposal;
 }
 $result->free();
+
+$query = "SELECT "
+        ."COUNT(*)"
+        ."FROM proposal "
+        ."LEFT JOIN publication ON publication.id = proposal.id "
+        ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
+        ."LEFT JOIN area ON area.id = area_p.id "
+        ."WHERE $secret$open$search"
+        ."YEAR(FROM_UNIXTIME(proposal.deadline)) = $year "
+        ."AND ST_Intersects(area.polygons, ST_Buffer(POINT($longitude, $latitude), $radius))";
+
+$result = $mysqli->query($query) or die($mysqli->error);
+$number = $result->fetch_assoc() or die($mysqli->error);
 $mysqli->close();
-die(json_encode($proposals, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+$answer = array();
+$answer['proposals'] = $proposals;
+$answer['number'] = $number;
+die(json_encode($answer, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
