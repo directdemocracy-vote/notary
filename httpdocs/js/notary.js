@@ -172,13 +172,13 @@ window.onload = function() {
     fetch(`/api/proposals.php?secret=${secret}&open=${open}&search=${encodeURIComponent(query)}&latitude=${latitude}&longitude=${longitude}&radius=${radius}&year=${year}&limit=10`)
       .then(response => response.json())
       .then(answer => {
-        console.log(answer)
+        console.log(answer.number)
         fieldset.removeAttribute('disabled');
         searchProposal.classList.remove('is-loading');
         const section = document.getElementById('proposal-results');
         section.style.display = '';
         section.innerHTML = '';
-        if (answer.length == 0) {
+        if (answer.number == 0) {
           const div = document.createElement('div');
           div.innerHTML = 'No result found, try to refine your search.';
           section.appendChild(div);
