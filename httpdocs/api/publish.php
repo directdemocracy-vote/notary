@@ -217,8 +217,8 @@ elseif ($type == 'ballot') {
   $polygons .= ')")';
   $polygons = htmlspecialchars($polygons);
   $polygons = sanitize_field($polygons, 'string', 'polygons');
-  $name = sanitize_field($publication->name, 'string', 'name');
-  $name = implode("\n", $name);
+  $name = implode("\n", $publication->name);
+  $name = sanitize_field($name, 'string', 'name');
   $query = "INSERT INTO area(id, name, polygons) VALUES($id, \"$name\", $polygons)";
 } else
   error("Unknown publication type.");
