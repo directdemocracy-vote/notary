@@ -227,7 +227,7 @@ window.onload = function() {
             window.open(url, '_blank').focus();
           });
         });
-        if (limit < answers.count) {
+        if (limit < answer.count) {
           console.log("NEXT");
         }
       });
