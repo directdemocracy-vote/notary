@@ -172,7 +172,6 @@ window.onload = function() {
     fetch(`/api/proposals.php?secret=${secret}&open=${open}&search=${encodeURIComponent(query)}&latitude=${latitude}&longitude=${longitude}&radius=${radius}&year=${year}&limit=10`)
       .then(response => response.json())
       .then(answer => {
-        console.log(answer.number)
         fieldset.removeAttribute('disabled');
         searchProposal.classList.remove('is-loading');
         const section = document.getElementById('proposal-results');
@@ -205,7 +204,7 @@ window.onload = function() {
         th.innerHTML = 'Deadline';
         const tbody = document.createElement('tbody');
         table.appendChild(tbody);
-        answer.forEach(function(proposal) {
+        answer.proposals.forEach(function(proposal) {
           tr = document.createElement('tr');
           tbody.appendChild(tr);
           let td = document.createElement('td');
