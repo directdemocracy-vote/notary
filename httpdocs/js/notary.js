@@ -108,7 +108,8 @@ window.onload = function() {
     const familyName = sanitizeString(document.getElementById('family-name').value);
     const givenNames = sanitizeString(document.getElementById('given-names').value);
     judge = sanitizeString(encodeURIComponent(sanitizeString(document.getElementById('judge').value)));
-    console.log(judge)
+    if (judge)
+      console.log("judge")
     let parameters = `latitude=${latitude}&longitude=${longitude}&radius=${radius}&judge=https://${judge}`;
     if (familyName)
       parameters += `&familyName=${encodeURIComponent(familyName)}`;
