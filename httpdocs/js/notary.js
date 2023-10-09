@@ -169,7 +169,8 @@ window.onload = function() {
     const c = document.getElementById('proposal-closed').checked;
     const open = (c && o) ? 2 : (o ? 1 : 0);
     const year = document.getElementById('proposal-year').value;
-    fetch(`/api/proposals.php?secret=${secret}&open=${open}&search=${encodeURIComponent(query)}&latitude=${latitude}&longitude=${longitude}&radius=${radius}&year=${year}&limit=10`)
+    const limit = 10;
+    fetch(`/api/proposals.php?secret=${secret}&open=${open}&search=${encodeURIComponent(query)}&latitude=${latitude}&longitude=${longitude}&radius=${radius}&year=${year}&limit=${limit}`)
       .then(response => response.json())
       .then(answer => {
         fieldset.removeAttribute('disabled');
@@ -226,6 +227,9 @@ window.onload = function() {
             window.open(url, '_blank').focus();
           });
         });
+        if (limit < answers.count) {
+          console.log("NEXT");
+        }
       });
   }
 
