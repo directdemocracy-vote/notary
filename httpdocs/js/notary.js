@@ -170,6 +170,10 @@ window.onload = function() {
     const open = (c && o) ? 2 : (o ? 1 : 0);
     const year = document.getElementById('proposal-year').value;
     const limit = 10;
+    fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, limit);
+  }
+
+  function fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, limit) {
     fetch(`/api/proposals.php?secret=${secret}&open=${open}&search=${encodeURIComponent(query)}&latitude=${latitude}&longitude=${longitude}&radius=${radius}&year=${year}&limit=${limit}`)
       .then(response => response.json())
       .then(answer => {
