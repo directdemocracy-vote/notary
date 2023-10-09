@@ -31,8 +31,10 @@ $year = sanitize_field("get", "year", "year");
 if (!isset($search) || !isset($secret) || !isset($open) || !isset($latitude) || !isset($longitude) || !isset($radius))
   error('Missing parameters.');
 
-if (!isset($offset))
+if (!isset($offset)) {
     $offset = 0;
+    die("OFFSET");
+}
 if (!isset($limit))
   $limit = 1;
 if (!isset($year))
