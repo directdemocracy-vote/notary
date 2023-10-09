@@ -170,6 +170,8 @@ window.onload = function() {
   }
 
   function fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, offset, limit) {
+    console.log(offset)
+    console.log(limit)
     const fieldset = document.getElementById('proposals-fieldset');
     fieldset.setAttribute('disabled', '');
     const searchProposal = document.getElementById('search-proposals');
