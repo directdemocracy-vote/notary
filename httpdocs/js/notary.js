@@ -118,6 +118,7 @@ window.onload = function() {
       .then((answer) => {
         markers.forEach(function(marker) {map.removeLayer(marker);});
         markers = [];
+        console.log(answer)
         answer.forEach(function(citizen) {
           const name = `${citizen.givenNames} ${citizen.familyName}`;
           const label = `<div style="text-align:center"><a target="_blank" href="/citizen.html?signature=${encodeURIComponent(citizen.signature)}"><img src="${citizen.picture}" width="60" height="80"><br>${name}</a></div>`;
