@@ -166,10 +166,10 @@ window.onload = function() {
     const open = (c && o) ? 2 : (o ? 1 : 0);
     const year = document.getElementById('proposal-year').value;
     const limit = 10;
-    fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, limit);
+    fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, 0, limit);
   }
 
-  function fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, limit) {
+  function fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, offset, limit) {
     const fieldset = document.getElementById('proposals-fieldset');
     fieldset.setAttribute('disabled', '');
     const searchProposal = document.getElementById('search-proposals');
@@ -234,6 +234,9 @@ window.onload = function() {
         if (limit < answer.number) {
           const next = document.createElement('button');
           next.innerHTML = 'Next';
+          next.onclick = () => {
+            fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, offset + limit, limit * 2);
+          }
           section.appendChild(next);
         }
       });

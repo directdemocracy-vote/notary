@@ -23,6 +23,7 @@ $open = sanitize_field("get", "int_options", "open");
 $latitude = sanitize_field("get", "float", "latitude");
 $longitude = sanitize_field("get", "float", "longitude");
 $radius = sanitize_field("get", "positive_float", "radius") / 100000;
+$offset = sanitize_field("get", "offset", "offset");
 $limit = sanitize_field("get", "positive_int", "limit");
 $year = sanitize_field("get", "year", "year");
 
@@ -30,6 +31,8 @@ $year = sanitize_field("get", "year", "year");
 if (!isset($search) || !isset($secret) || !isset($open) || !isset($latitude) || !isset($longitude) || !isset($radius))
   error('Missing parameters.');
 
+if (!isset($offset))
+    $offset = 0;
 if (!isset($limit))
   $limit = 1;
 if (!isset($year))
@@ -64,7 +67,7 @@ $query = "SELECT "
         ."WHERE $secret$open$search"
         ."YEAR(FROM_UNIXTIME(proposal.deadline)) = $year "
         ."AND ST_Intersects(area.polygons, ST_Buffer(POINT($longitude, $latitude), $radius)) "
-        ."LIMIT $limit";
+        ."LIMIT $offset, $limit";
 
 $result = $mysqli->query($query) or die($mysqli->error);
 $proposals = array();
