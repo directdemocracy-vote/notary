@@ -238,7 +238,7 @@ window.onload = function() {
           const next = document.createElement('button');
           next.innerHTML = 'Next';
           next.onclick = () => {
-            fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, offset + limit, limit * 2);
+            fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, offset + limit, limit);
           }
           section.appendChild(next);
         }
