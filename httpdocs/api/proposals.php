@@ -33,7 +33,6 @@ if (!isset($search) || !isset($secret) || !isset($open) || !isset($latitude) || 
 
 if (!isset($offset)) {
     $offset = 0;
-    die("OFFSET");
 }
 if (!isset($limit))
   $limit = 1;
