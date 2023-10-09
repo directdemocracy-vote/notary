@@ -80,7 +80,7 @@ while ($proposal = $result->fetch_assoc()) {
 $result->free();
 
 $query = "SELECT "
-        ."COUNT(*) AS number_of_proposals"
+        ."COUNT(*) AS number_of_proposals "
         ."FROM proposal "
         ."LEFT JOIN publication ON publication.id = proposal.id "
         ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
