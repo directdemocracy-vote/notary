@@ -108,6 +108,7 @@ window.onload = function() {
     const familyName = sanitizeString(document.getElementById('family-name').value);
     const givenNames = sanitizeString(document.getElementById('given-names').value);
     judge = sanitizeString(encodeURIComponent(sanitizeString(document.getElementById('judge').value)));
+    console.log(judge)
     let parameters = `latitude=${latitude}&longitude=${longitude}&radius=${radius}&judge=https://${judge}`;
     if (familyName)
       parameters += `&familyName=${encodeURIComponent(familyName)}`;
@@ -118,7 +119,6 @@ window.onload = function() {
       .then((answer) => {
         markers.forEach(function(marker) {map.removeLayer(marker);});
         markers = [];
-        console.log(answer)
         answer.forEach(function(citizen) {
           const name = `${citizen.givenNames} ${citizen.familyName}`;
           const label = `<div style="text-align:center"><a target="_blank" href="/citizen.html?signature=${encodeURIComponent(citizen.signature)}"><img src="${citizen.picture}" width="60" height="80"><br>${name}</a></div>`;
