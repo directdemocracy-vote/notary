@@ -190,6 +190,7 @@ window.onload = function() {
           section.appendChild(div);
           return;
         }
+        console.log(answer.number)
         const table = document.createElement('table');
         section.appendChild(table);
         table.classList.add('table', 'is-bordered', 'is-striped', 'is-narrow', 'is-hoverable', 'is-fullwidth');
