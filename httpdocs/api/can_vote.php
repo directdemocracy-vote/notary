@@ -17,7 +17,7 @@ $result = $mysqli->query($query) or die($mysqli->error);
 $r = $result->fetch_assoc();
 $result->free();
 if (!$r)
-  die('Referendum not found.');
+  die("Referendum not found."");
 $judge = $r['judge'];
 
 # check if citizen is endorsed by the judge

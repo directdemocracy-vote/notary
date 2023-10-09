@@ -13,17 +13,17 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 if (isset($_GET['signature']))
-  $signature = sanitize_field('get', "base_64", "signature");
+  $signature = sanitize_field("get", "base_64", "signature");
 elseif (isset($_GET['fingerprint']))
-  $fingerprint = sanitize_field('get', "hex", "fingerprint");
+  $fingerprint = sanitize_field("get", "hex", "fingerprint");
 else
   die('{"error":"Missing fingerprint or signature parameter"}');
 
 $condition = (isset($signature)) ? "publication.signature=FROM_BASE64('$signature')" : "publication.signatureSHA1=UNHEX('$fingerprint')";
 
 if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
-  $latitude = sanitize_field('get', 'float', 'latitude');
-  $longitude = sanitize_field('get', 'float', 'longitude');
+  $latitude = sanitize_field("get", "float", "latitude");
+  $longitude = sanitize_field("get", "float", "longitude");
   $extra = 'area.id AS area_id';
 } else
   $extra = 'ST_AsGeoJSON(area.polygons) AS polygons';

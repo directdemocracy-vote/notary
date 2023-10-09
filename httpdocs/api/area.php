@@ -7,8 +7,8 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 $input = json_decode(file_get_contents("php://input"));
-$judge = sanitize_field($input->judge, 'url', 'judge');
-$area = sanitize_field($input->area, 'string', 'area');
+$judge = sanitize_field($input->judge, "url", "judge");
+$area = sanitize_field($input->area, "string", "area");
 
 if (!$judge)
   error("Missing judge argument");

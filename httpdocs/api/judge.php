@@ -8,9 +8,9 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 if (isset($_POST['judge']))
-  $judge = sanitize_field('post', 'url', 'judge');
+  $judge = sanitize_field("post", "url", "judge");
 else
-  $judge = 'https://judge.directdemocracy.vote';
+  $judge = "https://judge.directdemocracy.vote";
 
 $query = "SELECT REPLACE(TO_BASE64(`key`), '\\n', '') AS `key` FROM webservice WHERE `type`='judge' AND url=\"$judge\"";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");

@@ -6,9 +6,9 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-$fingerprint = sanitize_field('get', "hex", "fingerprint");
-$signature = sanitize_field('get', "base_64", "signature");
-$key = sanitize_field('get', "base_64", "key");
+$fingerprint = sanitize_field("get", "hex", "fingerprint");
+$signature = sanitize_field("get", "base_64", "signature");
+$key = sanitize_field("get", "base_64", "key");
 
 $query = "SELECT id, CONCAT('https://directdemocracy.vote/json-schema/', `version`, '/', `type`, '.schema.json') AS `schema`, `type`, "
         ."REPLACE(TO_BASE64(`key`), '\\n', '') AS `key`, REPLACE(TO_BASE64(signature), '\\n', '') AS signature, UNIX_TIMESTAMP(published) AS published "

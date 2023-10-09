@@ -17,14 +17,14 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-$search = sanitize_field('get', 'string', 'search');
-$secret = sanitize_field('get', 'int_options', 'secret');
-$open = sanitize_field('get', 'int_options', 'open');
-$latitude = sanitize_field('get', 'float', 'latitude');
-$longitude = sanitize_field('get', 'float', 'longitude');
-$radius = sanitize_field('get', 'positive_float', 'radius') / 100000;
-$limit = sanitize_field('get', 'positive_int', 'limit');
-$year = sanitize_field('get', 'year', 'year');
+$search = sanitize_field("get", "string", "search");
+$secret = sanitize_field("get", "int_options", "secret");
+$open = sanitize_field("get", "int_options", "open");
+$latitude = sanitize_field("get", "float", "latitude");
+$longitude = sanitize_field("get", "float", "longitude");
+$radius = sanitize_field("get", "positive_float", "radius") / 100000;
+$limit = sanitize_field("get", "positive_int", "limit");
+$year = sanitize_field("get", "year", "year");
 
 # check the parameter sets
 if (!isset($search) || !isset($secret) || !isset($open) || !isset($latitude) || !isset($longitude) || !isset($radius))

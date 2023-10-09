@@ -15,8 +15,8 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-$referendumFingerprint = sanitize_field('get', "hex", "fingerprint");
-$station = sanitize_field('get', 'url', 'station');
+$referendumFingerprint = sanitize_field("get", "hex", "fingerprint");
+$station = sanitize_field("get", "url", "station");
 
 if (!$referendumFingerprint)
   error("Missing referendum argument");

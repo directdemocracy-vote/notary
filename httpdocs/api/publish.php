@@ -35,7 +35,7 @@ if (!isset($publication->schema))
   error("Unable to read schema field");
 $schema = sanitize_field($publication->schema, "string", "schema");
 $key = sanitize_field($publication->key, "base_64", "key");
-$published = sanitize_field($publication->published, 'positive_int', 'published');
+$published = sanitize_field($publication->published, "positive_int", "published");
 $signature = sanitize_field($publication->signature, "base_64", "signature");
 if (isset($publication->blindKey))
   $blindKey = sanitize_field($publication->blindKey, "base_64", "signature");
@@ -90,10 +90,10 @@ $mysqli->query($query) or error($mysqli->error);
 $id = $mysqli->insert_id;
 
 if ($type == 'citizen') {
-  $familyName = sanitize_field($publication->familyName, 'string', 'familyName');
-  $givenNames = sanitize_field($publication->givenNames, 'string', 'givenNames');
-  $latitude = sanitize_field($citizen->latitude, 'float', 'latitude');
-  $longitude = sanitize_field($citizen->longitude, 'float', 'longitude');
+  $familyName = sanitize_field($publication->familyName, "string", "familyName");
+  $givenNames = sanitize_field($publication->givenNames, "string", "givenNames");
+  $latitude = sanitize_field($citizen->latitude, "float", "latitude");
+  $longitude = sanitize_field($citizen->longitude, "float", "longitude");
   $query = "INSERT INTO citizen(id, familyName, givenNames, picture, home) "
           ."VALUES($id, \"$familyName\", \"$givenNames\", "
           ."FROM_BASE64(\"$citizen_picture\"), POINT($longitude, $latitude))";
@@ -146,25 +146,25 @@ if ($type == 'citizen') {
   if (!isset($proposal->website))  # optional
     $website = '';
   else
-    $website = sanitize_field($publication->website, 'url', 'website');
+    $website = sanitize_field($publication->website, "url", "website");
 
   if (!isset($proposal->question))  # optional
     $question = '';
   else
-    $question = sanitize_field($publication->question, 'string', 'question');
+    $question = sanitize_field($publication->question, "string", "question");
 
   if (!isset($proposal->answers))  # optional
     $answers = array();
   else
     $answers = $publication->answers;
   $answers = implode("\n", $answers);
-  $answers = sanitize_field($answers, 'string', 'answer');
+  $answers = sanitize_field($answers, "string", "answer");
   $secret = ($proposal->secret) ? 1 : 0;
-  $judge = sanitize_field($publication->judge, 'url', 'judge');
-  $area = sanitize_field($publication->area, 'base_64', 'area');
-  $title = sanitize_field($publication->title, 'string', 'title');
-  $description = sanitize_field($publication->description, 'string', 'description');
-  $deadline = sanitize_field($publication->deadline, 'positive_int', 'deadline');
+  $judge = sanitize_field($publication->judge, "url", "judge");
+  $area = sanitize_field($publication->area, "base_64", "area");
+  $title = sanitize_field($publication->title, "string", "title");
+  $description = sanitize_field($publication->description, "string", "description");
+  $deadline = sanitize_field($publication->deadline, "positive_int", "deadline");
   $query = "INSERT INTO proposal(id, judge, area, title, description, question, answers, secret, deadline, website, participants, corpus) "
           ."VALUES($id, \"$judge\", FROM_BASE64('$area'), \"$title\", \"$description\", "
           ."\"$question\", \"$answers\", $secret, $deadline, \"$website\", 0, 0)";
@@ -175,7 +175,7 @@ elseif ($type == 'ballot') {
   if (!isset($publication->answer)) # optional
     $answer = '';
   else
-    $answer = sanitize_field($publication->answer, 'string', 'answer');
+    $answer = sanitize_field($publication->answer, "string", "answer");
 
   if (isset($publication->station)) {
     $station_key = sanitize_field($publication->station->key, "base_64", "station_key");
@@ -216,7 +216,7 @@ elseif ($type == 'ballot') {
   }
   $polygons .= ')")';
   $name = implode("\n", $publication->name);
-  $name = sanitize_field($name, 'string', 'name');
+  $name = sanitize_field($name, "string", "name");
   $query = "INSERT INTO area(id, name, polygons) VALUES($id, \"$name\", $polygons)";
 } else
   error("Unknown publication type.");
