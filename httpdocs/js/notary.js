@@ -174,7 +174,7 @@ window.onload = function() {
     fieldset.setAttribute('disabled', '');
     const searchProposal = document.getElementById('search-proposals');
     searchProposal.classList.add('is-loading');
-    fetch(`/api/proposals.php?secret=${secret}&open=${open}&search=${encodeURIComponent(query)}&latitude=${latitude}&longitude=${longitude}&radius=${radius}&year=${year}&limit=${limit}`)
+    fetch(`/api/proposals.php?secret=${secret}&open=${open}&search=${encodeURIComponent(query)}&latitude=${latitude}&longitude=${longitude}&radius=${radius}&year=${year}&offset=${offset}&limit=${limit}`)
       .then(response => response.json())
       .then(answer => {
         fieldset.removeAttribute('disabled');
