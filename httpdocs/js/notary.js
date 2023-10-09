@@ -108,9 +108,9 @@ window.onload = function() {
     const familyName = sanitizeString(document.getElementById('family-name').value);
     const givenNames = sanitizeString(document.getElementById('given-names').value);
     judge = sanitizeString(encodeURIComponent(sanitizeString(document.getElementById('judge').value)));
+    let parameters = `latitude=${latitude}&longitude=${longitude}&radius=${radius}`;
     if (judge)
-      console.log("judge")
-    let parameters = `latitude=${latitude}&longitude=${longitude}&radius=${radius}&judge=https://${judge}`;
+      parameters += `&judge=https://${encodeURIComponent(judge)}`;
     if (familyName)
       parameters += `&familyName=${encodeURIComponent(familyName)}`;
     if (givenNames)
