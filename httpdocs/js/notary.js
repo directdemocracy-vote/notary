@@ -157,10 +157,6 @@ window.onload = function() {
   document.getElementById('search-proposals').addEventListener('click', searchProposals);
 
   function searchProposals() {
-    const fieldset = document.getElementById('proposals-fieldset');
-    fieldset.setAttribute('disabled', '');
-    const searchProposal = document.getElementById('search-proposals');
-    searchProposal.classList.add('is-loading');
     const query = encodeURIComponent(sanitizeString(document.getElementById('proposal-query').value));
     const r = document.getElementById('proposal-referendum').checked;
     const p = document.getElementById('proposal-petition').checked;
@@ -174,6 +170,10 @@ window.onload = function() {
   }
 
   function fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, limit) {
+    const fieldset = document.getElementById('proposals-fieldset');
+    fieldset.setAttribute('disabled', '');
+    const searchProposal = document.getElementById('search-proposals');
+    searchProposal.classList.add('is-loading');
     fetch(`/api/proposals.php?secret=${secret}&open=${open}&search=${encodeURIComponent(query)}&latitude=${latitude}&longitude=${longitude}&radius=${radius}&year=${year}&limit=${limit}`)
       .then(response => response.json())
       .then(answer => {
