@@ -23,7 +23,7 @@ $open = sanitize_field("get", "int_options", "open");
 $latitude = sanitize_field("get", "float", "latitude");
 $longitude = sanitize_field("get", "float", "longitude");
 $radius = sanitize_field("get", "positive_float", "radius") / 100000;
-$offset = sanitize_field("get", "offset", "offset");
+$offset = sanitize_field("get", "positive_int", "offset");
 $limit = sanitize_field("get", "positive_int", "limit");
 $year = sanitize_field("get", "year", "year");
 
