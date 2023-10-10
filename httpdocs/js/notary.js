@@ -242,7 +242,7 @@ window.onload = function() {
           section.appendChild(prev);
         }
 
-        if (limit < answer.number) {
+        if (limit + offset < answer.number) {
           console.log(answer.number)
           console.log(limit)
           const next = document.createElement('button');
