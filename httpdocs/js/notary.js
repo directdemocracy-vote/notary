@@ -243,8 +243,6 @@ window.onload = function() {
         }
 
         if (limit + offset < answer.number) {
-          console.log(answer.number)
-          console.log(limit + offset)
           const next = document.createElement('button');
           next.innerHTML = 'Next';
           next.className = 'button is-info';
