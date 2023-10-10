@@ -246,6 +246,7 @@ window.onload = function() {
           const next = document.createElement('button');
           next.innerHTML = 'Next';
           next.className = 'button is-info';
+          next.style.float = 'right';
           next.onclick = () => {
             fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, offset + limit, limit);
           }
