@@ -231,7 +231,6 @@ window.onload = function() {
             publication.website = sanitizeString(website);
           const str = JSON.stringify(publication);
           publication.signature = publication_crypt.sign(str, CryptoJS.SHA256, 'sha256');
-          console.log(publication);
           fetch(`/api/publish.php`, {'method': 'POST', 'body': JSON.stringify(publication)})
             .then(response => response.json())
             .then(answer => {

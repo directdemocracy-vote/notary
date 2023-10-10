@@ -8,7 +8,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 if (isset($_POST['judge']))
-  $judge = sanitize_field("post", "url", "judge");
+  $judge = sanitize_field($_POST["judge"], "url", "judge");
 else
   $judge = "https://judge.directdemocracy.vote";
 
