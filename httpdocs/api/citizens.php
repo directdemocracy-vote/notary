@@ -13,8 +13,11 @@ if ($radius) {
   $latitude = sanitize_field($_GET["latitude"], "float", "latitude");
   $longitude = sanitize_field($_GET["longitude"], "float", "longitude");
 }
-$familyName = sanitize_field($_GET["familyName"], "string", "familyName");
-$givenNames = sanitize_field($_GET["givenNames"], "string", "givenNames");
+
+if (isset($_GET["familyName"]))
+  $familyName = sanitize_field($_GET["familyName"], "string", "familyName");
+if (isset($_GET["givenNames"]))
+  $givenNames = sanitize_field($_GET["givenNames"], "string", "givenNames");
 $judge = sanitize_field($_GET["judge"], "url", "judge");
 
 $key = '';
