@@ -231,6 +231,16 @@ window.onload = function() {
             window.open(url, '_blank').focus();
           });
         });
+
+        if (offset > 0) {
+          const prev = document.createElement('button');
+          prev.innerHTML = 'Previous';
+          prev.onclick = () => {
+            fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, offset - limit, limit);
+          }
+          section.appendChild(prev);
+        }
+
         if (limit < answer.number) {
           const next = document.createElement('button');
           next.innerHTML = 'Next';
