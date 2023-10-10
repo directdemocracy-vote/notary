@@ -235,6 +235,7 @@ window.onload = function() {
         if (offset > 0) {
           const prev = document.createElement('button');
           prev.innerHTML = 'Previous';
+          prev.className = 'button is-info';
           prev.onclick = () => {
             fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, offset - limit, limit);
           }
@@ -244,6 +245,7 @@ window.onload = function() {
         if (limit < answer.number) {
           const next = document.createElement('button');
           next.innerHTML = 'Next';
+          next.className = 'button is-info';
           next.onclick = () => {
             fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, offset + limit, limit);
           }
