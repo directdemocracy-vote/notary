@@ -243,6 +243,7 @@ window.onload = function() {
         }
 
         if (limit < answer.number) {
+          console.log("next")
           const next = document.createElement('button');
           next.innerHTML = 'Next';
           next.className = 'button is-info';
