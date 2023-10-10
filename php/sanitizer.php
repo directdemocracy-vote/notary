@@ -29,7 +29,7 @@ function sanitize_field($methods, $type, $name) {
       if ($variable > 9999 or $variable < 2023)
         error("$name should be between 2023 and 9999");
       break;
-    case 'int_options':
+    case '(0|1|2)':
       $variable = intval($variable);
       if ($variable < 0 or $variable > 2)
         error("$name should be between 0 and 2");

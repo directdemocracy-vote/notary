@@ -18,8 +18,8 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 $search = sanitize_field("get", "string", "search");
-$secret = sanitize_field("get", "int_options", "secret");
-$open = sanitize_field("get", "int_options", "open");
+$secret = sanitize_field("get", "(0|1|2)", "secret");
+$open = sanitize_field("get", "(0|1|2)", "open");
 $latitude = sanitize_field("get", "float", "latitude");
 $longitude = sanitize_field("get", "float", "longitude");
 $radius = sanitize_field("get", "positive_float", "radius") / 100000;
