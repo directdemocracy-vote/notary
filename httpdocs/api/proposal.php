@@ -13,7 +13,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 if (isset($_GET['signature']))
-  $signature = sanitize_field("get", "base_64", "signature");
+  $signature = sanitize_field("get", "base64", "signature");
 elseif (isset($_GET['fingerprint']))
   $fingerprint = sanitize_field("get", "hex", "fingerprint");
 else

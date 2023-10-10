@@ -12,7 +12,7 @@ if (isset($_GET['fingerprint'])) {
   $condition = "publication.signatureSHA1=UNHEX('$fingerprint')";
   $join_condition = "SHA1(endorsement.endorsedSignature)='$fingerprint'";
 } elseif (isset($_GET['signature'])) {
-  $signature = sanitize_field("get", "base_64", "signature");
+  $signature = sanitize_field("get", "base64", "signature");
   $condition = "publication.signature=FROM_BASE64('$signature')";
   $join_condition = "endorsement.endorsedSignature=FROM_BASE64('$signature')";
 } else

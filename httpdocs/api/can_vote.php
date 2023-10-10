@@ -3,10 +3,10 @@ require_once '../../php/database.php';
 require_once '../../php/sanitizer.php';
 
 $registration = json_decode(file_get_contents("php://input"));
-$referendum = sanitize_field($registration->referendum, "base_64", "referendum");
+$referendum = sanitize_field($registration->referendum, "base64", "referendum");
 if (!$referendum)
   die("Missing referendum argument");
-$citizen = sanitize_field($registration->citizen, "base_64", "citizen");
+$citizen = sanitize_field($registration->citizen, "base64", "citizen");
 if (!$citizen)
   die("Missing citizen argument");
 

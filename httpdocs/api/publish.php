@@ -34,13 +34,13 @@ if (!$publication)
 if (!isset($publication->schema))
   error("Unable to read schema field");
 $schema = sanitize_field($publication->schema, "string", "schema");
-$key = sanitize_field($publication->key, "base_64", "key");
+$key = sanitize_field($publication->key, "base64", "key");
 $published = sanitize_field($publication->published, "positive_int", "published");
-$signature = sanitize_field($publication->signature, "base_64", "signature");
+$signature = sanitize_field($publication->signature, "base64", "signature");
 if (isset($publication->blindKey))
-  $blindKey = sanitize_field($publication->blindKey, "base_64", "signature");
+  $blindKey = sanitize_field($publication->blindKey, "base64", "signature");
 if (isset($publication->encryptedVote))
-  $encryptedVote = sanitize_field($publication->encryptedVote, "base_64", "signature");
+  $encryptedVote = sanitize_field($publication->encryptedVote, "base64", "signature");
 
 $validator = new Validator();
 $result = $validator->validate($publication, file_get_contents($schema));
@@ -56,7 +56,7 @@ if ($type != 'ballot' && $published > $now + 60)  # allowing a 1 minute (60 seco
 if ($type == 'citizen') {
   $citizen = &$publication;
   $citizen_picture = substr($citizen->picture, strlen('data:image/jpeg;base64,'));
-  $citizen_picture = sanitize_field($citizen_picture, "base_64", "citizen_picture");
+  $citizen_picture = sanitize_field($citizen_picture, "base64", "citizen_picture");
   $data = base64_decode($citizen_picture);
   try {
     $size = @getimagesizefromstring($data);
@@ -105,7 +105,7 @@ if ($type == 'citizen') {
     $endorsement->message = '';
   if (!property_exists($endorsement, 'comment'))
     $endorsement->comment = '';
-  $endorsedSignature = sanitize_field($endorsement->endorsedSignature, "base_64", "endorsedSignature");
+  $endorsedSignature = sanitize_field($endorsement->endorsedSignature, "base64", "endorsedSignature");
   $query = "SELECT id, `type`, REPLACE(TO_BASE64(signature), '\\n', '') AS signature FROM publication WHERE signature = FROM_BASE64('$endorsedSignature')";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsed = $result->fetch_assoc();
@@ -161,7 +161,7 @@ if ($type == 'citizen') {
   $answers = sanitize_field($answers, "string", "answer");
   $secret = ($proposal->secret) ? 1 : 0;
   $judge = sanitize_field($publication->judge, "url", "judge");
-  $area = sanitize_field($publication->area, "base_64", "area");
+  $area = sanitize_field($publication->area, "base64", "area");
   $title = sanitize_field($publication->title, "string", "title");
   $description = sanitize_field($publication->description, "string", "description");
   $deadline = sanitize_field($publication->deadline, "positive_int", "deadline");
@@ -178,15 +178,15 @@ elseif ($type == 'ballot') {
     $answer = sanitize_field($publication->answer, "string", "answer");
 
   if (isset($publication->station)) {
-    $station_key = sanitize_field($publication->station->key, "base_64", "station_key");
-    $station_signature = sanitize_field($publication->station->signature, "base_64", "station_signature");
+    $station_key = sanitize_field($publication->station->key, "base64", "station_key");
+    $station_signature = sanitize_field($publication->station->signature, "base64", "station_signature");
     $station_names = " stationKey, stationSignature,";
     $station_values = " FROM_BASE64('$station_key'), FROM_BASE64('$station_signature'),";
   } else {
     $station_names = "";
     $station_values = "";
   }
-  $publication_proposal = sanitize_field($publication->proposal, "base_64", "station_signature");
+  $publication_proposal = sanitize_field($publication->proposal, "base64", "station_signature");
   $query = "INSERT INTO ballot(id, proposal,$station_names answer) "
           ."VALUES($id, FROM_BASE64('$publication_proposal'),$station_values \"$answer\")";
 } elseif ($type == 'area') {

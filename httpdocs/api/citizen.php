@@ -8,10 +8,10 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 if (isset($_POST['signature'])) {
-  $signature = sanitize_field("post", "base_64", "signature");
+  $signature = sanitize_field("post", "base64", "signature");
   $condition = "publication.signature = FROM_BASE64('" . $signature . "')";
 } elseif (isset($_POST['key'])) {
-  $key = sanitize_field("post", "base_64", "key");
+  $key = sanitize_field("post", "base64", "key");
   $condition = "publication.`key`=FROM_BASE64('" . $key . "')";
 } elseif (isset($_POST['fingerprint'])) {
   $fingerprint = sanitize_field("post", "hex", "fingerprint");

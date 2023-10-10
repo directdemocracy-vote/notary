@@ -34,7 +34,7 @@ function sanitize_field($methods, $type, $name) {
       if ($variable < 0 or $variable > 2)
         error("$name should be between 0 and 2");
       break;
-    case 'base_64':
+    case 'base64':
       $variable = sanitize_string($variable, $name);
 
       $str = base64_decode($variable, true);
