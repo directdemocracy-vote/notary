@@ -56,7 +56,6 @@ if ($type != 'ballot' && $published > $now + 60)  # allowing a 1 minute (60 seco
 if ($type == 'citizen') {
   $citizen = &$publication;
   $citizen_picture = substr($citizen->picture, strlen('data:image/jpeg;base64,'));
-  $citizen_picture = sanitize_field($citizen_picture, "base64", "citizen_picture");
   $data = base64_decode($citizen_picture);
   try {
     $size = @getimagesizefromstring($data);
