@@ -14,18 +14,9 @@ if ($radius) {
   $longitude = sanitize_field($_GET["longitude"], "float", "longitude");
 }
 
-if (isset($_GET["familyName"]))
-  $familyName = sanitize_field($_GET["familyName"], "string", "familyName");
-else
-  $familyName = null;
-if (isset($_GET["givenNames"]))
-  $givenNames = sanitize_field($_GET["givenNames"], "string", "givenNames");
-else
-  $givenNames = null;
-if (isset($_GET["judge"]))
-  $judge = sanitize_field($_GET["judge"], "url", "judge");
-else
-  $judge = null;
+$familyName = isset($_GET["familyName"]) ? sanitize_field($_GET["familyName"], "string", "familyName") : null;
+$givenNames = isset($_GET["givenNames"]) ? sanitize_field($_GET["givenNames"], "string", "givenNames") : null;
+$judge = isset($_GET["judge"]) ? sanitize_field($_GET["judge"], "url", "judge") : null;
 
 $key = '';
 if ($judge) {
