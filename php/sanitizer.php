@@ -25,8 +25,6 @@ function sanitize_field($variable, $type, $name) {
         error("$name should be between 0 and 2");
       break;
     case 'base64':
-      $variable = sanitize_string($variable, $name);
-
       $str = base64_decode($variable, true);
       if ($str === false)
         error("Bad characters in base64 field $name.");

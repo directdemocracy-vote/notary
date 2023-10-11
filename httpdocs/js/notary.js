@@ -238,7 +238,7 @@ window.onload = function() {
           prev.className = 'button is-info';
           prev.onclick = () => {
             fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, offset - limit, limit);
-          }
+          };
           section.appendChild(prev);
         }
 
@@ -249,7 +249,7 @@ window.onload = function() {
           next.style.float = 'right';
           next.onclick = () => {
             fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, offset + limit, limit);
-          }
+          };
           section.appendChild(next);
         }
       });
