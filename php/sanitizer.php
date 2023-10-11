@@ -7,6 +7,8 @@ function error($message) {
 }
 
 function sanitize_field($variable, $type, $name) {
+  global $mysqli;
+
   if (!isset($variable))
     return null;
 
