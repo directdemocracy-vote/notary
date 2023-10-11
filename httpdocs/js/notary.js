@@ -107,7 +107,7 @@ window.onload = function() {
     searchCitizen.classList.add('is-loading');
     const familyName = sanitizeString(document.getElementById('family-name').value);
     const givenNames = sanitizeString(document.getElementById('given-names').value);
-    judge = sanitizeString(encodeURIComponent(sanitizeString(document.getElementById('judge').value)));
+    judge = sanitizeString(document.getElementById('judge').value);
     let parameters = `latitude=${latitude}&longitude=${longitude}&radius=${radius}`;
     if (judge)
       parameters += `&judge=https://${encodeURIComponent(judge)}`;
