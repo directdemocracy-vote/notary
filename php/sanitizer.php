@@ -58,7 +58,7 @@ function sanitize_field($variable, $type, $name) {
       $variable = sanitize_string($variable, $name);
       $variable = filter_var($variable, FILTER_SANITIZE_URL);
       if (!filter_var($variable, FILTER_VALIDATE_URL))
-           error("$name is not a valid URL");
+           error("Field $name is not a valid URL");
       break;
     default:
       error("Unknown type: $type");
