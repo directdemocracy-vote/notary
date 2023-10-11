@@ -7,16 +7,6 @@ function error($message) {
 }
 
 function sanitize_field($variable, $type, $name) {
-  // $variable = null;
-  // if ($methods === 'get') {
-  //   if (isset($_GET[$name]))
-  //     $variable = $_GET[$name];
-  // } elseif ($methods === 'post') {
-  //   if (isset($_POST[$name]))
-  //     $variable = $_POST[$name];
-  // } else
-  //   $variable = $methods; // for case like $registration->citizen
-
   if (!isset($variable))
     return null;
 
