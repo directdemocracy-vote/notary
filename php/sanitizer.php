@@ -47,7 +47,7 @@ function sanitize_field($variable, $type, $name) {
     case 'positive_float':
       $variable = floatval($variable);
       if ($variable < 0)
-        error("Variable $name should be positive.");
+        error("Field $name should be positive.");
       break;
     case 'positive_int':
       $variable = intval($variable);
