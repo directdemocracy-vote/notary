@@ -22,7 +22,10 @@ if (isset($_GET["givenNames"]))
   $givenNames = sanitize_field($_GET["givenNames"], "string", "givenNames");
 else
   $givenNames = null;
-$judge = sanitize_field($_GET["judge"], "url", "judge");
+if (isset($_GET["givenNames"]))
+  $judge = sanitize_field($_GET["judge"], "url", "judge");
+else
+  $judge = null;
 
 $key = '';
 if ($judge) {
