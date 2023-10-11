@@ -52,7 +52,7 @@ function sanitize_field($variable, $type, $name) {
         error("Field $name should be positive.");
       break;
     case 'url':
-      $variable = sanitize_string($variable, $name);
+      $variable = $mysqli->escape_string($variable);
       $variable = filter_var($variable, FILTER_SANITIZE_URL);
       if (!filter_var($variable, FILTER_VALIDATE_URL))
            error("Field $name is not a valid URL");
