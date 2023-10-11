@@ -15,6 +15,16 @@ function findGetParameter(parameterName) {
   return result;
 }
 
+function sanitizeString(str) {
+  str = str.replaceAll('&', '&amp;');
+  str = str.replaceAll("'", '&apos;');
+  str = str.replaceAll('"', '&quot;');
+  str = str.replaceAll('<', '&lt;');
+  str = str.replaceAll('>', '&gt;');
+
+  return str;
+}
+
 window.onload = function() {
   document.getElementById('proposal').addEventListener('click', function() {
     window.open(`propose.html?latitude=${latitude}&longitude=${longitude}`, '_blank');
@@ -95,14 +105,16 @@ window.onload = function() {
     fieldset.setAttribute('disabled', '');
     const searchCitizen = event.currentTarget;
     searchCitizen.classList.add('is-loading');
-    const familyName = document.getElementById('family-name').value;
-    const givenNames = document.getElementById('given-names').value;
-    judge = document.getElementById('judge').value;
-    let parameters = `latitude=${latitude}&longitude=${longitude}&radius=${radius}&judge=https://${judge}`;
+    const familyName = sanitizeString(document.getElementById('family-name').value);
+    const givenNames = sanitizeString(document.getElementById('given-names').value);
+    judge = sanitizeString(document.getElementById('judge').value);
+    let parameters = `latitude=${latitude}&longitude=${longitude}&radius=${radius}`;
+    if (judge)
+      parameters += `&judge=https://${encodeURIComponent(judge)}`;
     if (familyName)
-      parameters += `&familyName=${encodeURI(familyName)}`;
+      parameters += `&familyName=${encodeURIComponent(familyName)}`;
     if (givenNames)
-      parameters += `&givenNames=${encodeURI(givenNames)}`;
+      parameters += `&givenNames=${encodeURIComponent(givenNames)}`;
     fetch(`/api/citizens.php?${parameters}`)
       .then((response) => response.json())
       .then((answer) => {
@@ -145,11 +157,7 @@ window.onload = function() {
   document.getElementById('search-proposals').addEventListener('click', searchProposals);
 
   function searchProposals() {
-    const fieldset = document.getElementById('proposals-fieldset');
-    fieldset.setAttribute('disabled', '');
-    const searchProposal = document.getElementById('search-proposals');
-    searchProposal.classList.add('is-loading');
-    const query = document.getElementById('proposal-query').value;
+    const query = sanitizeString(document.getElementById('proposal-query').value);
     const r = document.getElementById('proposal-referendum').checked;
     const p = document.getElementById('proposal-petition').checked;
     const secret = (r && p) ? 2 : (r ? 1 : 0);
@@ -157,7 +165,16 @@ window.onload = function() {
     const c = document.getElementById('proposal-closed').checked;
     const open = (c && o) ? 2 : (o ? 1 : 0);
     const year = document.getElementById('proposal-year').value;
-    fetch(`/api/proposals.php?secret=${secret}&open=${open}&search=${encodeURIComponent(query)}&latitude=${latitude}&longitude=${longitude}&radius=${radius}&year=${year}&limit=10`)
+    const limit = 10;
+    fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, 0, limit);
+  }
+
+  function fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, offset, limit) {
+    const fieldset = document.getElementById('proposals-fieldset');
+    fieldset.setAttribute('disabled', '');
+    const searchProposal = document.getElementById('search-proposals');
+    searchProposal.classList.add('is-loading');
+    fetch(`/api/proposals.php?secret=${secret}&open=${open}&search=${encodeURIComponent(query)}&latitude=${latitude}&longitude=${longitude}&radius=${radius}&year=${year}&offset=${offset}&limit=${limit}`)
       .then(response => response.json())
       .then(answer => {
         fieldset.removeAttribute('disabled');
@@ -165,7 +182,7 @@ window.onload = function() {
         const section = document.getElementById('proposal-results');
         section.style.display = '';
         section.innerHTML = '';
-        if (answer.length == 0) {
+        if (answer.number == 0) {
           const div = document.createElement('div');
           div.innerHTML = 'No result found, try to refine your search.';
           section.appendChild(div);
@@ -192,7 +209,7 @@ window.onload = function() {
         th.innerHTML = 'Deadline';
         const tbody = document.createElement('tbody');
         table.appendChild(tbody);
-        answer.forEach(function(proposal) {
+        answer.proposals.forEach(function(proposal) {
           tr = document.createElement('tr');
           tbody.appendChild(tr);
           let td = document.createElement('td');
@@ -214,6 +231,27 @@ window.onload = function() {
             window.open(url, '_blank').focus();
           });
         });
+
+        if (offset > 0) {
+          const prev = document.createElement('button');
+          prev.innerHTML = 'Previous';
+          prev.className = 'button is-info';
+          prev.onclick = () => {
+            fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, offset - limit, limit);
+          };
+          section.appendChild(prev);
+        }
+
+        if (limit + offset < answer.number) {
+          const next = document.createElement('button');
+          next.innerHTML = 'Next';
+          next.className = 'button is-info';
+          next.style.float = 'right';
+          next.onclick = () => {
+            fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, offset + limit, limit);
+          };
+          section.appendChild(next);
+        }
       });
   }
 

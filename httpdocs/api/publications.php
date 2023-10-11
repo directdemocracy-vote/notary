@@ -1,29 +1,17 @@
 <?php
 require_once '../../php/database.php';
+require_once '../../php/sanitizer.php';
+
 $version = '2';
-
-function error($message) {
-  if ($message[0] != '{')
-    $message = '"'.$message.'"';
-  die("{\"error\":$message}");
-}
-
-function get_string_parameter($name) {
-  if (isset($_GET[$name]))
-    return $_GET[$name];
-  if (isset($_POST[$name]))
-    return $_POST[$name];
-  return FALSE;
-}
 
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-$type = $mysqli->escape_string(get_string_parameter('type'));
-$published_from = intval(get_string_parameter('published_from'));
-$published_to = intval(get_string_parameter('published_to'));
-$v = $mysqli->escape_string(get_string_parameter('version'));
+$type = sanitize_field($_GET["type"], "string", "type");
+$published_from = sanitize_field($_GET["published_from"], "positive_int", "published_from");
+$published_to = sanitize_field($_GET["published_to"], "positive_int", "published_to");
+$v = sanitize_field($_GET["version"], "string", "version");
 if ($v)
   $version = $v;
 

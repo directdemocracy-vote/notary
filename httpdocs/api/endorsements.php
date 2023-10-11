@@ -1,11 +1,6 @@
 <?php
 require_once '../../php/database.php';
-
-function error($message) {
-  if ($message[0] != '{')
-    $message = '"'.$message.'"';
-  die("{\"error\":$message}");
-}
+require_once '../../php/sanitizer.php';
 
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
@@ -13,18 +8,19 @@ header("Access-Control-Allow-Headers: content-type");
 
 
 if (isset($_GET['fingerprint'])) {
-  $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
+  $fingerprint = sanitize_field($_GET["fingerprint"], "hex", "fingerprint");
   $condition = "publication.signatureSHA1=UNHEX('$fingerprint')";
   $join_condition = "SHA1(endorsement.endorsedSignature)='$fingerprint'";
 } elseif (isset($_GET['signature'])) {
-  $signature = $mysqli->escape_string($_GET['signature']);
+  $signature = sanitize_field($_GET["signature"], "base64", "signature");
   $condition = "publication.signature=FROM_BASE64('$signature')";
   $join_condition = "endorsement.endorsedSignature=FROM_BASE64('$signature')";
 } else
   error("Missing fingerprint or signature parameter");
 
+
 if (isset($_GET['judge']))
-  $judge = $mysqli->escape_string($_GET['judge']);
+  $judge = sanitize_field($_GET["judge"], "url", "judge");
 else
   error("Missing judge parameter");
 

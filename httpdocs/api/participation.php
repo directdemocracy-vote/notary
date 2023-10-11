@@ -1,19 +1,6 @@
 <?php
 require_once '../../php/database.php';
-
-function error($message) {
-  if ($message[0] != '{')
-    $message = '"'.$message.'"';
-  die("{\"error\":$message}");
-}
-
-function get_string_parameter($name) {
-  if (isset($_GET[$name]))
-    return $_GET[$name];
-  if (isset($_POST[$name]))
-    return $_POST[$name];
-  return FALSE;
-}
+require_once '../../php/sanitizer.php';
 
 function public_key($key) {
   $public_key = "-----BEGIN PUBLIC KEY-----\n";
@@ -28,8 +15,8 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-$referendumFingerprint = $mysqli->escape_string(get_string_parameter('referendum'));
-$station = $mysqli->escape_string(get_string_parameter('station'));
+$referendumFingerprint = sanitize_field($_GET["fingerprint"], "hex", "fingerprint");
+$station = sanitize_field($_GET["station"], "url", "station");
 
 if (!$referendumFingerprint)
   error("Missing referendum argument");
@@ -76,7 +63,7 @@ if (!$publication) {
   $result = $mysqli->query($query) or error($mysqli->error);
   if (!$result) {
     $mysqli->query("INSERT INTO webservice(`type`, `key`, url) VALUES('station', FROM_BASE64('$key'), '$station')") or error($mysqli->error);
-    $id = mysqli->insert_id;
+    $id = $mysqli->insert_id;
   } else {
     $webservice = $result->fetch_assoc();
     $result->free();

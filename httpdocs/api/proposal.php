@@ -6,23 +6,24 @@
 # proposal area.
 
 require_once '../../php/database.php';
+require_once '../../php/sanitizer.php';
 
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 if (isset($_GET['signature']))
-  $signature = $mysqli->escape_string($_GET['signature']);
+  $signature = sanitize_field($_GET["signature"], "base64", "signature");
 elseif (isset($_GET['fingerprint']))
-  $fingerprint = $mysqli->escape_string($_GET['fingerprint']);
+  $fingerprint = sanitize_field($_GET["fingerprint"], "hex", "fingerprint");
 else
   die('{"error":"Missing fingerprint or signature parameter"}');
 
 $condition = (isset($signature)) ? "publication.signature=FROM_BASE64('$signature')" : "publication.signatureSHA1=UNHEX('$fingerprint')";
 
 if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
-  $latitude = floatval($_GET['latitude']);
-  $longitude = floatval($_GET['longitude']);
+  $latitude = sanitize_field($_GET["latitude"], "float", "latitude");
+  $longitude = sanitize_field($_GET["longitude"], "float", "longitude");
   $extra = 'area.id AS area_id';
 } else
   $extra = 'ST_AsGeoJSON(area.polygons) AS polygons';

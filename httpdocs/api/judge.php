@@ -1,15 +1,16 @@
 <?php
 require_once '../../php/database.php';
 require_once '../../php/endorsements.php';
+require_once '../../php/sanitizer.php';
 
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 if (isset($_POST['judge']))
-  $judge = $mysqli->escape_string($_POST['judge']);
+  $judge = sanitize_field($_POST["judge"], "url", "judge");
 else
-  $judge = 'https://judge.directdemocracy.vote';
+  $judge = "https://judge.directdemocracy.vote";
 
 $query = "SELECT REPLACE(TO_BASE64(`key`), '\\n', '') AS `key` FROM webservice WHERE `type`='judge' AND url=\"$judge\"";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
@@ -18,7 +19,7 @@ $result->free();
 if (!$webservice) {
   $file = file_get_contents("$judge/api/key.php");
   $j = json_decode($file);
-  $judge_key = $j->key;
+  $judge_key = sanitize_field($j->key, "base64", "judge_key");
   $mysqli->query("INSERT INTO webservice(`type`, `key`, url) VALUES('judge', FROM_BASE64('$judge_key'), '$judge')") or die($mysqli->error);
 } else
   $judge_key = $webservice['key'];

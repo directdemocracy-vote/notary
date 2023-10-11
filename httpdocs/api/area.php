@@ -1,17 +1,14 @@
 <?php
 require_once '../php/database.php';
-
-function error($message) {
-  die("{\"error\":$message}");
-}
+require_once '../../php/sanitizer.php';
 
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 $input = json_decode(file_get_contents("php://input"));
-$judge = $mysqli->escape_string($input->judge);
-$area = $mysqli->escape_string($input->area);
+$judge = sanitize_field($input->judge, "url", "judge");
+$area = sanitize_field($input->area, "string", "area");
 
 if (!$judge)
   error("Missing judge argument");

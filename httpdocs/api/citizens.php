@@ -1,42 +1,22 @@
 <?php
 
 require_once '../../php/database.php';
-
-function error($message) {
-  if ($message[0] != '{')
-    $message = '"'.$message.'"';
-  die("{\"error\":$message}");
-}
-
-function get_float_parameter($name) {
-  if (isset($_GET[$name]))
-    return floatval($_GET[$name]);
-  if (isset($_POST[$name]))
-    return floatval($_POST[$name]);
-  return FALSE;
-}
-
-function get_string_parameter($name) {
-  if (isset($_GET[$name]))
-    return $_GET[$name];
-  if (isset($_POST[$name]))
-    return $_POST[$name];
-  return FALSE;
-}
+require_once '../../php/sanitizer.php';
 
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-$radius = get_float_parameter('radius');
+$radius = sanitize_field($_GET["radius"], "positive_float", "radius");
 if ($radius) {
   $radius = $radius / 1000;
-  $latitude = get_float_parameter('latitude');
-  $longitude = get_float_parameter('longitude');
+  $latitude = sanitize_field($_GET["latitude"], "float", "latitude");
+  $longitude = sanitize_field($_GET["longitude"], "float", "longitude");
 }
-$familyName = $mysqli->escape_string(get_string_parameter('familyName'));
-$givenNames = $mysqli->escape_string(get_string_parameter('givenNames'));
-$judge = $mysqli->escape_string(get_string_parameter('judge'));
+
+$familyName = isset($_GET["familyName"]) ? sanitize_field($_GET["familyName"], "string", "familyName") : null;
+$givenNames = isset($_GET["givenNames"]) ? sanitize_field($_GET["givenNames"], "string", "givenNames") : null;
+$judge = isset($_GET["judge"]) ? sanitize_field($_GET["judge"], "url", "judge") : null;
 
 $key = '';
 if ($judge) {

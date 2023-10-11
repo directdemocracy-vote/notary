@@ -1,11 +1,12 @@
 <?php
 require_once '../../php/database.php';
+require_once '../../php/sanitizer.php';
 
 $registration = json_decode(file_get_contents("php://input"));
-$referendum = $mysqli->escape_string($registration->referendum));
+$referendum = sanitize_field($registration->referendum, "base64", "referendum");
 if (!$referendum)
   die("Missing referendum argument");
-$citizen = $mysqli->escape_string($registration->citizen));
+$citizen = sanitize_field($registration->citizen, "base64", "citizen");
 if (!$citizen)
   die("Missing citizen argument");
 
@@ -16,7 +17,7 @@ $result = $mysqli->query($query) or die($mysqli->error);
 $r = $result->fetch_assoc();
 $result->free();
 if (!$r)
-  die('Referendum not found.');
+  die("Referendum not found.");
 $judge = $r['judge'];
 
 # check if citizen is endorsed by the judge
