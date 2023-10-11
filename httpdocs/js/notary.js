@@ -157,7 +157,7 @@ window.onload = function() {
   document.getElementById('search-proposals').addEventListener('click', searchProposals);
 
   function searchProposals() {
-    const query = encodeURIComponent(sanitizeString(document.getElementById('proposal-query').value));
+    const query = sanitizeString(document.getElementById('proposal-query').value);
     const r = document.getElementById('proposal-referendum').checked;
     const p = document.getElementById('proposal-petition').checked;
     const secret = (r && p) ? 2 : (r ? 1 : 0);
