@@ -29,7 +29,7 @@ function sanitize_field($variable, $type, $name) {
 
       $str = base64_decode($variable, true);
       if ($str === false)
-        error("Bad characters in base 64 variable $name.");
+        error("Bad characters in base64 field $name.");
       else {
         $b64 = base64_encode($str);
         if ($variable !== $b64)
