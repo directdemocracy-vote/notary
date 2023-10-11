@@ -39,7 +39,7 @@ function sanitize_field($variable, $type, $name) {
     case 'hex':
       $variable = sanitize_string($variable, $name);
       if (!ctype_xdigit($variable))
-        error("Variable $name is not in hexadecimal format.");
+        error("Field $name is not in hexadecimal format.");
       break;
     case 'float':
       $variable = floatval($variable);
