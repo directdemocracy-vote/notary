@@ -50,6 +50,14 @@ else # assuming 1
   $open = "FROM_UNIXTIME(proposal.deadline) > NOW() AND ";
 if ($search !== '')
   $search = "(title LIKE \"%$search%\" OR description LIKE \"%$search%\") AND ";
+
+$query_common_part = "FROM proposal "
+                    ."LEFT JOIN publication ON publication.id = proposal.id "
+                    ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
+                    ."LEFT JOIN area ON area.id = area_p.id "
+                    ."WHERE $secret$open$search"
+                    ."YEAR(FROM_UNIXTIME(proposal.deadline)) = $year "
+                    ."AND ST_Intersects(area.polygons, ST_Buffer(POINT($longitude, $latitude), $radius))";
 $query = "SELECT "
         ."CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json') AS `schema`, "
         ."REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, "
@@ -60,13 +68,7 @@ $query = "SELECT "
         ."proposal.title, proposal.description, "
         ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
         ."area.name AS areas "
-        ."FROM proposal "
-        ."LEFT JOIN publication ON publication.id = proposal.id "
-        ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
-        ."LEFT JOIN area ON area.id = area_p.id "
-        ."WHERE $secret$open$search"
-        ."YEAR(FROM_UNIXTIME(proposal.deadline)) = $year "
-        ."AND ST_Intersects(area.polygons, ST_Buffer(POINT($longitude, $latitude), $radius)) "
+        .$query_common_part
         ."LIMIT $offset, $limit";
 
 $result = $mysqli->query($query) or die($mysqli->error);
@@ -84,13 +86,8 @@ $result->free();
 
 $query = "SELECT "
         ."COUNT(*) AS number_of_proposals "
-        ."FROM proposal "
-        ."LEFT JOIN publication ON publication.id = proposal.id "
-        ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
-        ."LEFT JOIN area ON area.id = area_p.id "
-        ."WHERE $secret$open$search"
-        ."YEAR(FROM_UNIXTIME(proposal.deadline)) = $year "
-        ."AND ST_Intersects(area.polygons, ST_Buffer(POINT($longitude, $latitude), $radius))";
+        .$query_common_part;
+
 
 $result = $mysqli->query($query) or die($mysqli->error);
 $number = $result->fetch_assoc() or die($mysqli->error);
