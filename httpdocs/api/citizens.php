@@ -16,6 +16,7 @@ if ($radius) {
 
 if (isset($_GET["familyName"]))
   $familyName = sanitize_field($_GET["familyName"], "string", "familyName");
+
 if (isset($_GET["givenNames"]))
   $givenNames = sanitize_field($_GET["givenNames"], "string", "givenNames");
 $judge = sanitize_field($_GET["judge"], "url", "judge");

@@ -8,10 +8,10 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-$type = sanitize_field("get", "string", "type");
-$published_from = sanitize_field("get", "positive_int", "published_from");
-$published_to = sanitize_field("get", "positive_int", "published_to");
-$v = sanitize_field("get", "string", "version");
+$type = sanitize_field($_GET["type"], "string", "type");
+$published_from = sanitize_field($_GET["published_from"], "positive_int", "published_from");
+$published_to = sanitize_field($_GET["published_to"], "positive_int", "published_to");
+$v = sanitize_field($_GET["version"], "string", "version");
 if ($v)
   $version = $v;
 
