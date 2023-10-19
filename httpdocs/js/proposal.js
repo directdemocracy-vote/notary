@@ -7,7 +7,7 @@ function findGetParameter(parameterName) {
   return result;
 }
 
-window.onload = function() {
+window.onload = async function() {
   let fingerprint = findGetParameter('fingerprint');
   const signature = findGetParameter('signature');
   if (!fingerprint && ! signature) {
@@ -18,6 +18,13 @@ window.onload = function() {
     console.log(CryptoJS.SHA1(CryptoJS.enc.Base64.parse(signature)))
     console.log(CryptoJS.SHA1(CryptoJS.enc.Base64.parse(signature)).toString())
     fingerprint = CryptoJS.SHA1(CryptoJS.enc.Base64.parse(signature)).toString();
+
+    const binaryString = atob(signature);
+    const bytes = new Uint8Array(binaryString.length);
+    for (var i = 0; i < binaryString.length; i++)
+       bytes[i] = binaryString.charCodeAt(i);
+    fingerprint = await crypto.subtle.digest("SHA-1", bytes);
+    console.log(fingerprint)
   }
 
   const payload = signature ? `signature=${encodeURIComponent(signature)}` : `fingerprint=${fingerprint}`;
