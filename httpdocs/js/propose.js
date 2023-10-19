@@ -174,7 +174,7 @@ window.onload = function() {
       ["sign", "verify"]
     );
 
-    publicationPrivateKey = keyPair.publicationPrivateKey;
+    publicationPrivateKey = keyPair.privateKey;
     const publicKey = await window.crypto.subtle.exportKey('spki', keyPair.publicKey);
     publicationPublicKeyBase64 = btoa(String.fromCharCode(...new Uint8Array(publicKey)));
   }
