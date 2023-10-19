@@ -242,7 +242,7 @@ window.onload = function() {
             publicationPrivateKey,
             new TextEncoder().encode(str)
           );
-          publication.signature = btoa(String.fromCharCode(...new Uint8Array(signature));
+          publication.signature = btoa(String.fromCharCode(...new Uint8Array(signature)));
           console.log(publication.signature)
           publication.signature = publication_crypt.sign(str, CryptoJS.SHA256, 'sha256');
           console.log(publication.signature)
