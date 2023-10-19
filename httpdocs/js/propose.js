@@ -29,11 +29,10 @@ function sanitizeString(str) {
   return str;
 }
 
-window.onload = function() {
+window.onload = async function() {
   document.getElementById('modal-close-button').addEventListener('click', closeModal);
   document.getElementById('modal-ok-button').addEventListener('click', closeModal);
 
-  let publication_crypt;
   let publicationPublicKeyBase64;
   let publicationPrivateKey;
   let latitude = parseFloat(findGetParameter('latitude', '-1'));
@@ -74,7 +73,7 @@ window.onload = function() {
   document.getElementById('deadline').addEventListener('input', validate);
   document.getElementById('judge').addEventListener('input', validate);
 
-  generateCryptographicKey();
+  await generateCryptographicKey();
 
   function updateArea() {
     fetch(`https://nominatim.openstreetmap.org/reverse.php?format=json&lat=${latitude}&lon=${longitude}&zoom=10`)
@@ -145,24 +144,6 @@ window.onload = function() {
   }
 
   async function generateCryptographicKey() {
-    document.getElementById('publish-message').innerHTML = 'Forging a cryptographic key, please wait...';
-    const button = document.getElementById('publish');
-    button.classList.add('is-loading');
-    button.setAttribute('disabled', '');
-    let dt = new Date();
-    let time = -(dt.getTime());
-    publication_crypt = new JSEncrypt({
-      default_key_size: 2048
-    });
-    publication_crypt.getKey(function() {
-      dt = new Date();
-      time += (dt.getTime());
-      document.getElementById('publish-message').innerHTML = `A cryptographic key was just forged in ${Number(time / 1000).toFixed(2)} seconds.`;
-      button.classList.remove('is-loading');
-      button.removeAttribute('disabled');
-      validate();
-    });
-
     const keyPair = await window.crypto.subtle.generateKey(
       {
         name: "RSASSA-PKCS1-v1_5",
@@ -236,15 +217,12 @@ window.onload = function() {
           if (website)
             publication.website = sanitizeString(website);
           const str = JSON.stringify(publication);
-          publication.signature = publication_crypt.sign(str, CryptoJS.SHA256, 'sha256');
-          console.log(publication.signature)
           const signature = await window.crypto.subtle.sign(
             "RSASSA-PKCS1-v1_5",
             publicationPrivateKey,
             new TextEncoder().encode(str)
           );
           publication.signature = btoa(String.fromCharCode(...new Uint8Array(signature)));
-          console.log(publication.signature)
           fetch(`/api/publish.php`, {'method': 'POST', 'body': JSON.stringify(publication)})
             .then(response => response.json())
             .then(answer => {
