@@ -14,8 +14,10 @@ window.onload = function() {
     console.error('Missing fingerprint or signature GET argument');
     return;
   }
-  if (!fingerprint)
+  if (!fingerprint) {
+    console.log(CryptoJS.SHA1(CryptoJS.enc.Base64.parse(signature)).toString();)
     fingerprint = CryptoJS.SHA1(CryptoJS.enc.Base64.parse(signature)).toString();
+  }
 
   const payload = signature ? `signature=${encodeURIComponent(signature)}` : `fingerprint=${fingerprint}`;
   fetch(`/api/proposal.php?${payload}`)
