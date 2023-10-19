@@ -16,15 +16,15 @@ window.onload = async function() {
   }
   if (!fingerprint) {
     console.log(CryptoJS.SHA1(CryptoJS.enc.Base64.parse(signature)))
-    console.log(CryptoJS.SHA1(CryptoJS.enc.Base64.parse(signature)).toString())
     fingerprint = CryptoJS.SHA1(CryptoJS.enc.Base64.parse(signature)).toString();
+    console.log(fingerprint)
 
     const binaryString = atob(signature);
     const bytes = new Uint8Array(binaryString.length);
     for (var i = 0; i < binaryString.length; i++)
        bytes[i] = binaryString.charCodeAt(i);
     fingerprint = await crypto.subtle.digest("SHA-1", bytes);
-    fingerprint = btoa(String.fromCharCode(...new Uint8Array(fingerprint)));
+    fingerprint = Array.from(fingerprint, byte => ('0' + (byte & 0xFF).toString(16)).slice(-2)).join('')
     console.log(fingerprint)
   }
 
