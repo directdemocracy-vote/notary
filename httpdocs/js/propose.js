@@ -34,6 +34,8 @@ window.onload = function() {
   document.getElementById('modal-ok-button').addEventListener('click', closeModal);
 
   let publication_crypt;
+  let publicationPublicKeyBase64;
+  let publicationPrivateKey;
   let latitude = parseFloat(findGetParameter('latitude', '-1'));
   let longitude = parseFloat(findGetParameter('longitude', '-1'));
   let geolocation = false;
@@ -142,7 +144,7 @@ window.onload = function() {
     validate();
   }
 
-  function generateCryptographicKey() {
+  async function generateCryptographicKey() {
     document.getElementById('publish-message').innerHTML = 'Forging a cryptographic key, please wait...';
     const button = document.getElementById('publish');
     button.classList.add('is-loading');
@@ -160,17 +162,21 @@ window.onload = function() {
       button.removeAttribute('disabled');
       validate();
     });
-  }
 
-  function stripped_key(public_key) {
-    let stripped = '';
-    const header = '-----BEGIN PUBLIC KEY-----\n'.length;
-    const footer = '-----END PUBLIC KEY-----'.length;
-    const l = public_key.length - footer;
-    for (let i = header; i < l; i += 65)
-      stripped += public_key.substr(i, 64);
-    stripped = stripped.slice(0, -1 - footer);
-    return stripped;
+    const keyPair = await window.crypto.subtle.generateKey(
+      {
+        name: "RSASSA-PKCS1-v1_5",
+        modulusLength: 2048,
+        publicExponent: new Uint8Array([1, 0, 1]),
+        hash: "SHA-256",
+      },
+      true,
+      ["sign", "verify"]
+    );
+
+    publicationPrivateKey = keyPair.publicationPrivateKey;
+    const publicKey = await window.crypto.subtle.exportKey('spki', keyPair.publicKey);
+    publicationPublicKeyBase64 = btoa(String.fromCharCode(...new Uint8Array(publicKey)));
   }
 
   function validate() {
@@ -203,7 +209,7 @@ window.onload = function() {
     const query = area.trim().replace(/(\r\n|\n|\r)/g, "&");
     fetch(`${judge}/api/publish_area.php?${query}`)
       .then(response => response.json())
-      .then(answer => {
+      .then(async function(answer) {
         if (answer.error) {
           showModal('Area publication error', JSON.stringify(answer.error));
           button.classList.remove('is-loading');
@@ -211,7 +217,7 @@ window.onload = function() {
         } else {
           publication = {};
           publication.schema = `https://directdemocracy.vote/json-schema/${directdemocracy_version}/proposal.schema.json`;
-          publication.key = stripped_key(publication_crypt.getPublicKey());
+          publication.key = publicationPublicKeyBase64;
           publication.signature = '';
           publication.published = Math.round(new Date().getTime() / 1000);
           publication.judge = sanitizeString(judge);
@@ -230,7 +236,16 @@ window.onload = function() {
           if (website)
             publication.website = sanitizeString(website);
           const str = JSON.stringify(publication);
+
+          const signature = await window.crypto.subtle.sign(
+            "RSASSA-PKCS1-v1_5",
+            publicationPrivateKey,
+            new TextEncoder().encode(str)
+          );
+          publication.signature = btoa(String.fromCharCode(...new Uint8Array(signature));
+          console.log(publication.signature)
           publication.signature = publication_crypt.sign(str, CryptoJS.SHA256, 'sha256');
+          console.log(publication.signature)
           fetch(`/api/publish.php`, {'method': 'POST', 'body': JSON.stringify(publication)})
             .then(response => response.json())
             .then(answer => {
