@@ -15,6 +15,7 @@ window.onload = function() {
     return;
   }
   if (!fingerprint) {
+    console.log(CryptoJS.SHA1(CryptoJS.enc.Base64.parse(signature)))
     console.log(CryptoJS.SHA1(CryptoJS.enc.Base64.parse(signature)).toString())
     fingerprint = CryptoJS.SHA1(CryptoJS.enc.Base64.parse(signature)).toString();
   }
