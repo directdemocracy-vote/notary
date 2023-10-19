@@ -236,15 +236,14 @@ window.onload = function() {
           if (website)
             publication.website = sanitizeString(website);
           const str = JSON.stringify(publication);
-          console.log(publicationPrivateKey)
+          publication.signature = publication_crypt.sign(str, CryptoJS.SHA256, 'sha256');
+          console.log(publication.signature)
           const signature = await window.crypto.subtle.sign(
             "RSASSA-PKCS1-v1_5",
             publicationPrivateKey,
             new TextEncoder().encode(str)
           );
           publication.signature = btoa(String.fromCharCode(...new Uint8Array(signature)));
-          console.log(publication.signature)
-          publication.signature = publication_crypt.sign(str, CryptoJS.SHA256, 'sha256');
           console.log(publication.signature)
           fetch(`/api/publish.php`, {'method': 'POST', 'body': JSON.stringify(publication)})
             .then(response => response.json())
