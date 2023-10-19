@@ -24,7 +24,7 @@ window.onload = async function() {
     for (var i = 0; i < binaryString.length; i++)
        bytes[i] = binaryString.charCodeAt(i);
     fingerprint = await crypto.subtle.digest("SHA-1", bytes);
-    fingerprint = Array.from(fingerprint, function(byte) {
+    fingerprint = Array.from(new Uint8Array(fingerprint), function(byte) {
     return ('0' + (byte & 0xFF).toString(16)).slice(-2);
   }).join('')
     console.log(fingerprint)
