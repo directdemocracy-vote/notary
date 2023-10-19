@@ -236,7 +236,7 @@ window.onload = function() {
           if (website)
             publication.website = sanitizeString(website);
           const str = JSON.stringify(publication);
-
+          console.log(publicationPrivateKey)
           const signature = await window.crypto.subtle.sign(
             "RSASSA-PKCS1-v1_5",
             publicationPrivateKey,
