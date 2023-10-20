@@ -29,11 +29,12 @@ function sanitizeString(str) {
   return str;
 }
 
-window.onload = function() {
+window.onload = async function() {
   document.getElementById('modal-close-button').addEventListener('click', closeModal);
   document.getElementById('modal-ok-button').addEventListener('click', closeModal);
 
-  let publication_crypt;
+  let publicationPublicKeyBase64;
+  let publicationPrivateKey;
   let latitude = parseFloat(findGetParameter('latitude', '-1'));
   let longitude = parseFloat(findGetParameter('longitude', '-1'));
   let geolocation = false;
@@ -72,7 +73,7 @@ window.onload = function() {
   document.getElementById('deadline').addEventListener('input', validate);
   document.getElementById('judge').addEventListener('input', validate);
 
-  generateCryptographicKey();
+  await generateCryptographicKey();
 
   function updateArea() {
     fetch(`https://nominatim.openstreetmap.org/reverse.php?format=json&lat=${latitude}&lon=${longitude}&zoom=10`)
@@ -142,35 +143,21 @@ window.onload = function() {
     validate();
   }
 
-  function generateCryptographicKey() {
-    document.getElementById('publish-message').innerHTML = 'Forging a cryptographic key, please wait...';
-    const button = document.getElementById('publish');
-    button.classList.add('is-loading');
-    button.setAttribute('disabled', '');
-    let dt = new Date();
-    let time = -(dt.getTime());
-    publication_crypt = new JSEncrypt({
-      default_key_size: 2048
-    });
-    publication_crypt.getKey(function() {
-      dt = new Date();
-      time += (dt.getTime());
-      document.getElementById('publish-message').innerHTML = `A cryptographic key was just forged in ${Number(time / 1000).toFixed(2)} seconds.`;
-      button.classList.remove('is-loading');
-      button.removeAttribute('disabled');
-      validate();
-    });
-  }
+  async function generateCryptographicKey() {
+    const keyPair = await window.crypto.subtle.generateKey(
+      {
+        name: "RSASSA-PKCS1-v1_5",
+        modulusLength: 2048,
+        publicExponent: new Uint8Array([1, 0, 1]),
+        hash: "SHA-256",
+      },
+      true,
+      ["sign", "verify"]
+    );
 
-  function stripped_key(public_key) {
-    let stripped = '';
-    const header = '-----BEGIN PUBLIC KEY-----\n'.length;
-    const footer = '-----END PUBLIC KEY-----'.length;
-    const l = public_key.length - footer;
-    for (let i = header; i < l; i += 65)
-      stripped += public_key.substr(i, 64);
-    stripped = stripped.slice(0, -1 - footer);
-    return stripped;
+    publicationPrivateKey = keyPair.privateKey;
+    const publicKey = await window.crypto.subtle.exportKey('spki', keyPair.publicKey);
+    publicationPublicKeyBase64 = btoa(String.fromCharCode(...new Uint8Array(publicKey)));
   }
 
   function validate() {
@@ -203,7 +190,7 @@ window.onload = function() {
     const query = area.trim().replace(/(\r\n|\n|\r)/g, "&");
     fetch(`${judge}/api/publish_area.php?${query}`)
       .then(response => response.json())
-      .then(answer => {
+      .then(async function(answer) {
         if (answer.error) {
           showModal('Area publication error', JSON.stringify(answer.error));
           button.classList.remove('is-loading');
@@ -211,7 +198,7 @@ window.onload = function() {
         } else {
           publication = {};
           publication.schema = `https://directdemocracy.vote/json-schema/${directdemocracy_version}/proposal.schema.json`;
-          publication.key = stripped_key(publication_crypt.getPublicKey());
+          publication.key = publicationPublicKeyBase64;
           publication.signature = '';
           publication.published = Math.round(new Date().getTime() / 1000);
           publication.judge = sanitizeString(judge);
@@ -230,7 +217,12 @@ window.onload = function() {
           if (website)
             publication.website = sanitizeString(website);
           const str = JSON.stringify(publication);
-          publication.signature = publication_crypt.sign(str, CryptoJS.SHA256, 'sha256');
+          const signature = await window.crypto.subtle.sign(
+            "RSASSA-PKCS1-v1_5",
+            publicationPrivateKey,
+            new TextEncoder().encode(str)
+          );
+          publication.signature = btoa(String.fromCharCode(...new Uint8Array(signature)));
           fetch(`/api/publish.php`, {'method': 'POST', 'body': JSON.stringify(publication)})
             .then(response => response.json())
             .then(answer => {

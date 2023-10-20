@@ -7,15 +7,22 @@ function findGetParameter(parameterName) {
   return result;
 }
 
-window.onload = function() {
+window.onload = async function() {
   let fingerprint = findGetParameter('fingerprint');
   const signature = findGetParameter('signature');
   if (!fingerprint && ! signature) {
     console.error('Missing fingerprint or signature GET argument');
     return;
   }
-  if (!fingerprint)
-    fingerprint = CryptoJS.SHA1(CryptoJS.enc.Base64.parse(signature)).toString();
+  if (!fingerprint) {
+    const binaryString = atob(signature);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++)
+
+       bytes[i] = binaryString.charCodeAt(i);
+    const bytesArray = await crypto.subtle.digest("SHA-1", bytes);
+    fingerprint = Array.from(new Uint8Array(bytesArray), byte => ('0' + (byte & 0xFF).toString(16)).slice(-2)).join('');
+  }
 
   const payload = signature ? `signature=${encodeURIComponent(signature)}` : `fingerprint=${fingerprint}`;
   fetch(`/api/proposal.php?${payload}`)
