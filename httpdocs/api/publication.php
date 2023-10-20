@@ -6,18 +6,21 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-$fingerprint = sanitize_field($_GET["fingerprint"], "hex", "fingerprint");
-$signature = sanitize_field($_GET["signature"], "base64", "signature");
-$key = sanitize_field($_GET["key"], "base64", "key");
+if (isset($_GET['signature']))
+  $signature = sanitize_field($_GET['signature'], 'base64', 'signature');
+elseif (isset($_GET['key']))
+  $key = sanitize_field($_GET['key'], 'base64', 'key');
+elseif (isset(($_GET['fingerprint']))
+  $fingerprint = sanitize_field($_GET['fingerprint'], 'hex', 'fingerprint');
 
 $query = "SELECT id, CONCAT('https://directdemocracy.vote/json-schema/', `version`, '/', `type`, '.schema.json') AS `schema`, `type`, "
         ."REPLACE(TO_BASE64(`key`), '\\n', '') AS `key`, REPLACE(TO_BASE64(signature), '\\n', '') AS signature, UNIX_TIMESTAMP(published) AS published "
         ."FROM publication WHERE published <= NOW() AND ";
-if ($signature)
+if (isset($signature))
   $query .= "signature = FROM_BASE64('$signature')";
-elseif ($key)
+elseif (isset($key))
   $query .= "`key` = FROM_BASE64('$key') ORDER BY published ASC";  # take the first publication from the key, e.g., the citizen publication
-elseif ($fingerprint)
+elseif (isset($fingerprint))
   $query .= "signatureSHA1 = UNHEX('$fingerprint')";
 else
   error("No fingerprint or key argument provided.");
