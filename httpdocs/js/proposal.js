@@ -17,7 +17,8 @@ window.onload = async function() {
   if (!fingerprint) {
     const binaryString = atob(signature);
     const bytes = new Uint8Array(binaryString.length);
-    for (var i = 0; i < binaryString.length; i++)
+    for (let i = 0; i < binaryString.length; i++)
+
        bytes[i] = binaryString.charCodeAt(i);
     const bytesArray = await crypto.subtle.digest("SHA-1", bytes);
     fingerprint = Array.from(new Uint8Array(bytesArray), byte => ('0' + (byte & 0xFF).toString(16)).slice(-2)).join('');
