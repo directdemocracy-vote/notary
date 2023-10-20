@@ -10,7 +10,7 @@ if (isset($_GET['signature']))
   $signature = sanitize_field($_GET['signature'], 'base64', 'signature');
 elseif (isset($_GET['key']))
   $key = sanitize_field($_GET['key'], 'base64', 'key');
-elseif (isset(($_GET['fingerprint']))
+elseif (isset($_GET['fingerprint']))
   $fingerprint = sanitize_field($_GET['fingerprint'], 'hex', 'fingerprint');
 
 $query = "SELECT id, CONCAT('https://directdemocracy.vote/json-schema/', `version`, '/', `type`, '.schema.json') AS `schema`, `type`, "
