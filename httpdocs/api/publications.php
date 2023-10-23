@@ -9,12 +9,9 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 $type = sanitize_field($_GET["type"], "string", "type");
-if (isset($_GET["published_from"]))
-  $published_from = sanitize_field($_GET["published_from"], "positive_int", "published_from");
-if (isset($_GET["published_to"]))
-  $published_to = sanitize_field($_GET["published_to"], "positive_int", "published_to");
-if (isset($_GET["version"]))
-  $v = sanitize_field($_GET["version"], "string", "version");
+$published_from = isset($_GET["published_from"]) ? sanitize_field($_GET["published_from"], "positive_int", "published_from") : null;
+$published_to = isset($_GET["published_to"]) ? sanitize_field($_GET["published_to"], "positive_int", "published_to") : null;
+$v = isset($_GET["version"]) ? sanitize_field($_GET["version"], "string", "version") : null;
 if ($v)
   $version = $v;
 
