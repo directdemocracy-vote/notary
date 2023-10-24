@@ -8,7 +8,6 @@ if ($_POST['password'] !== $developer_password)
   die('Wrong password');
 if ($_POST['type'] !== 'citizen')
   die('Only deletion of citizen is supported');
-
 $query = "SELECT REPLACE(TO_BASE64(`key`), '\\n', '') AS `key`, id FROM publication WHERE signature=FROM_BASE64('$signature')";
 $result = $mysqli->query($query) or die($msqli->error);
 $entry = $result->fetch_assoc();
@@ -32,16 +31,11 @@ $registration_ids = array();
 while($row = $result->fetch_assoc())
   $registration_ids[] = intval($row['id']);
 $registrations = implode(',', $registration_ids);
-
-# $mysqli->query("DELETE FROM endorsement WHERE id IN ($registrations)") or die($mysqli->error);
-# $mysqli->query("DELETE FROM publication WHERE id IN ($registrations)") or die($mysqli->error);
-
-# $mysqli->query("DELETE FROM endorsement WHERE id IN ($endorsements)") or die($mysqli->error);
-# $mysqli->query("DELETE FROM publication WHERE id IN ($endorsements)") or die($mysqli->error);
-
-# $mysqli->query("DELETE FROM citizen WHERE id=$id") or die($mysqli->error);
-# $mysqli->query("DELETE FROM publication WHERE id=$id") or die($mysqli->error);
-
-die("citizen: $id\nendorsements: $endorsements\nregistrations: $registrations");
-die("Not yet implemeted");
+$mysqli->query("DELETE FROM registration WHERE id IN ($registrations)") or die($mysqli->error);
+$mysqli->query("DELETE FROM publication WHERE id IN ($registrations)") or die($mysqli->error);
+$mysqli->query("DELETE FROM endorsement WHERE id IN ($endorsements)") or die($mysqli->error);
+$mysqli->query("DELETE FROM publication WHERE id IN ($endorsements)") or die($mysqli->error);
+$mysqli->query("DELETE FROM citizen WHERE id=$id") or die($mysqli->error);
+$mysqli->query("DELETE FROM publication WHERE id=$id") or die($mysqli->error);
+die("OK");
 ?>
