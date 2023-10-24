@@ -10,8 +10,16 @@ window.onload = function() {
     const password = document.getElementById('password').value;
     const url = 'https://notary.directdemocracy.vote';
     hash(password + url, 'SHA-256').then(h => {
-      localStorage.setItem('password', h);
-      window.location.replace(url);
+      fetch('/api/developer/login.php', {method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'hash=' + h } )
+      .then(response => response.json())
+      .then(answer => {
+        if (answer === 'OK') {
+          localStorage.setItem('password', h);
+          window.location.replace(url);
+        } else {
+
+        }
+      }
     });
   });
 };
