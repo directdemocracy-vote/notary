@@ -30,7 +30,7 @@ window.onload = function() {
     a.addEventListener('click', function(event) {
       const h = localStorage.getItem('password');
       fetch('/api/developer/delete.php', {method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'password=' + h + '&type=citizen&signature=' + signature } )
+        body: 'password=' + h + '&type=citizen&signature=' + encodeURIComponent(signature) } )
       .then(response => response.text())
       .then(response => {
         if (response === 'OK') {
