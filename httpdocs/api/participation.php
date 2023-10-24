@@ -53,7 +53,7 @@ if (!$publication) {
   $blindKey = $publication['blindKey'];
   $query = "SELECT id, REPLACE(TO_BASE64(`key`), '\\n', '') AS `key` FROM webservice WHERE url='$station' AND `type`='station'";
   $result = $mysqli->query($query) or error($mysqli->error);
-  if (!$result or $result->num_rows === 0) {
+  if ($result->num_rows === 0) {
     $mysqli->query("INSERT INTO webservice(`type`, `key`, url) VALUES('station', FROM_BASE64('$key'), '$station')") or error($mysqli->error);
     $id = $mysqli->insert_id;
   } else {
@@ -65,11 +65,8 @@ if (!$publication) {
   }
   # $publication['schema'] looks like this: 'https://directdemocracy.vote/json-schema/2/participation.json'
   $version = intval(explode('/', $publication['schema'])[4]);
-  $publication_key = $publication['key'];
-  $publication_signature = $publication['signature']; 
-  $publication_published = $publication['published'];
   $query = "INSERT INTO publication(`version`, `type`, `key`, `signature`, published) "
-          ."VALUES($version, 'participation', FROM_BASE64('$publication_key'), FROM_BASE64('$publication_signature'), FROM_UNIXTIME($publication_published / 1000))";
+          ."VALUES($version, 'participation', FROM_BASE64('$publication[key]'), FROM_BASE64('$publication[signature]'), FROM_UNIXTIME($publication[published] / 1000))";
   $mysqli->query($query) or error($mysqli->error);
   $publicationId = $mysqli->insert_id;
   $query = "INSERT INTO participation(id, referendum, blindKey, station) "
