@@ -12,7 +12,7 @@ window.onload = function() {
     hash(password + url, 'SHA-256').then(h => {
       localStorage.setItem('password', h); // FIXME: remove
       fetch('/api/developer/login.php', {method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'password=' + h } )
-      .then(response => response.json())
+      .then(response => response.text())
       .then(answer => {
         if (answer === 'OK') {
           localStorage.setItem('password', h);
