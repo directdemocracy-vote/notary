@@ -69,8 +69,8 @@ if (!$publication) {
   $publication_signature = $publication['signature']; 
   $publication_published = $publication['published'];
 
-  $query = "INSERT INTO publication(`version`, `type`, `key`, `signature`, published) "
-          ."VALUES($version, 'participation', FROM_BASE64('$publication_key'), FROM_BASE64('$publication_signature'), FROM_UNIXTIME(1698132613060))";
+  $query = "INSERT INTO publication(published, `version`, `type`, `key`, `signature`) "
+          ."VALUES(FROM_UNIXTIME(1698132613060), $version, 'participation', FROM_BASE64('$publication_key'), FROM_BASE64('$publication_signature'))";
   $mysqli->query($query) or error($mysqli->error);
   $publicationId = $mysqli->insert_id;
   $query = "INSERT INTO participation(id, referendum, blindKey, station) "
