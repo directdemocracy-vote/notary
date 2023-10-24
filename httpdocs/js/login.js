@@ -8,9 +8,10 @@ async function hash(payload, type) {
 window.onload = function() {
   document.getElementById('login').addEventListener('click', function(event) {
     const password = document.getElementById('password').value;
-    console.log('password = ' + password);
-    hash(password, 'SHA-256').then(h => {
-      console.log('hash = ' + h);
+    const url = 'https://notary.directdemocracy.vote';
+    hash(password + url, 'SHA-256').then(h => {
+      localStorage.setItem('password', h);
+      window.location.replace(url);
     });
   });
 };
