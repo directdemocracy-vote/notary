@@ -8,5 +8,9 @@ if ($_POST['password'] !== $developer_password)
   die('Wrong password');
 if ($_POST['type'] !== 'citizen')
   die('Only deletion of citizen is supported');
-die('Not yet implemeted');
+
+$result = $mysqli->query("SELECT `key` FROM publication WHERE signature='$signature'") or die($msqli->error);
+$entry = $result->fetch_assoc('key');
+$key = $entry['key']
+die("Not yet implemeted: key=$key");
 ?>
