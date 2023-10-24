@@ -1,4 +1,4 @@
-async function login(const password) {
+async function login(password) {
   const hash = await crypto.subtle.digest('SHA-256', password);
   console.log('password = ' + password);
   console.log('hash = ' + hash);
