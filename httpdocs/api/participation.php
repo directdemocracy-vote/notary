@@ -15,6 +15,7 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
+die($_GET["referendum"]);
 $referendumSignature = sanitize_field($_GET["referendum"], "base64", "referendum");
 $station = sanitize_field($_GET["station"], "url", "station");
 
