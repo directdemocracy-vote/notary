@@ -11,6 +11,6 @@ if ($_POST['type'] !== 'citizen')
 
 $result = $mysqli->query("SELECT `key` FROM publication WHERE signature='$signature'") or die($msqli->error);
 $entry = $result->fetch_assoc('key');
-$key = $entry['key']
+$key = $entry['key'];
 die("Not yet implemeted: key=$key");
 ?>
