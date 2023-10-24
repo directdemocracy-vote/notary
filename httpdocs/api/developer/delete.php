@@ -43,7 +43,7 @@ if ($type === 'citizen') {
   $mysqli->query("DELETE FROM publication WHERE id=$id") or die($mysqli->error);
   die("OK");
 } elseif ($type === 'proposal') {
-  $query = "SELECT id FROM publication WHERE `signature`=FROM_BASE64('$signature') AND `type`='endorsement'";
+  $query = "SELECT id FROM publication WHERE `signature`=FROM_BASE64('$signature') AND `type`='proposal'";
   $result = $mysqli->query($query) or die($msqli->error);
   $entry = $result->fetch_assoc();
   if (!$entry)
