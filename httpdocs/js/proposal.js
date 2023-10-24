@@ -13,7 +13,25 @@ window.onload = async function() {
     document.getElementById('logout').addEventListener('click', function(event) {
       document.getElementById('logout-div').innerHTML = ``;
       localStorage.removeItem('password');
+      document.getElementById('panel-heading').removeChild(document.getElementById('delete-link'))
     });
+    const a = document.createElement('a');
+    a.classList.add('level-right');
+    a.setAttribute('id', 'delete-link');
+    a.innerHTML = 'Delete';
+    a.addEventListener('click', function(event) {
+      const h = localStorage.getItem('password');
+      fetch('/api/developer/delete.php', {method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'password=' + h + '&type=proposal&signature=' + encodeURIComponent(signature) } )
+      .then(response => response.text())
+      .then(response => {
+        if (response === 'OK') {
+          window.location.replace('https://notary.directdemocracy.vote');
+        } else
+          console.log(response);
+      });
+    });
+    document.getElementById('panel-heading').appendChild(a);
   }
   let fingerprint = findGetParameter('fingerprint');
   const signature = findGetParameter('signature');

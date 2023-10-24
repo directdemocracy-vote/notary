@@ -38,7 +38,6 @@ window.onload = function() {
         } else
           console.log(response);
       });
-
     });
     document.getElementById('panel-heading').appendChild(a);
   }
