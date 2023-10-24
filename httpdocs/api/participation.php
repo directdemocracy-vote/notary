@@ -53,13 +53,12 @@ if (!$publication) {
   $blindKey = $publication['blindKey'];
   $query = "SELECT id, REPLACE(TO_BASE64(`key`), '\\n', '') AS `key` FROM webservice WHERE url='$station' AND `type`='station'";
   $result = $mysqli->query($query) or error($mysqli->error);
-  if (!$result) {
+  if (!$result or $result->num_rows = 0) {
     $mysqli->query("INSERT INTO webservice(`type`, `key`, url) VALUES('station', FROM_BASE64('$key'), '$station')") or error($mysqli->error);
     $id = $mysqli->insert_id;
   } else {
     $webservice = $result->fetch_assoc();
     $result->free();
-    die($webservice); 
     if ($webservice['key'] != $key)
       error("$key Changed key for $station: $wk");
     $id = intval($webservice['id']);
