@@ -31,6 +31,7 @@ $registration_ids = array();
 while($row = $result->fetch_assoc())
   $registration_ids[] = intval($row['id']);
 $registrations = implode(',', $registration_ids);
+die("DELETE FROM registration WHERE id IN ($registrations)");
 $mysqli->query("DELETE FROM registration WHERE id IN ($registrations)") or die($mysqli->error);
 $mysqli->query("DELETE FROM publication WHERE id IN ($registrations)") or die($mysqli->error);
 $mysqli->query("DELETE FROM endorsement WHERE id IN ($endorsements)") or die($mysqli->error);
