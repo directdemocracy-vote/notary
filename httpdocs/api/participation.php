@@ -68,7 +68,7 @@ if (!$publication) {
   $publication_key = $publication['key'];
   $publication_signature = $publication['signature']; 
   $publication_published = $publication['published'];
-  $query = "INSERT INTO publication(`version`, `type`, `key`, `signature`, published) "
+  $query = "INSERT INTO publication(`version`, `type`, `key`, `signature`, `published`) "
           ."VALUES($version, 'participation', FROM_BASE64('$publication_key'), FROM_BASE64('$publication_signature'), FROM_UNIXTIME($publication_published))";
   $mysqli->query($query) or error($mysqli->error);
   $publicationId = $mysqli->insert_id;
