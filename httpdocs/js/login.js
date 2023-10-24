@@ -11,7 +11,7 @@ window.onload = function() {
     const url = 'https://notary.directdemocracy.vote';
     hash(password + url, 'SHA-256').then(h => {
       localStorage.setItem('password', h); // FIXME: remove
-      fetch('/api/developer/login.php', {method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'hash=' + h } )
+      fetch('/api/developer/login.php', {method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'password=' + h } )
       .then(response => response.json())
       .then(answer => {
         if (answer === 'OK') {
