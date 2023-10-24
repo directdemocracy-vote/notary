@@ -65,11 +65,13 @@ if (!$publication) {
   }
   # $publication['schema'] looks like this: 'https://directdemocracy.vote/json-schema/2/participation.json'
   $version = intval(explode('/', $publication['schema'])[4]);
-  $pulbication_key = $publication['key'];
-  $publication_signature = $publication['signature'];
+  $publication_key = $publication['key'];
+  $publication_signature = $publication['signature']; 
   $publication_published = $publication['published'];
+  die($version." key:".$publication_key." signature:".$publication_signature." published: ".$publication_published);
+
   $query = "INSERT INTO publication(`version`, `type`, `key`, `signature`, published) "
-          ."VALUES($version, 'participation', FROM_BASE64('$pulbication_key'), FROM_BASE64('$publication_signature'), FROM_UNIXTIME($publication_published))";
+          ."VALUES($version, 'participation', FROM_BASE64('$publication_key'), FROM_BASE64('$publication_signature'), FROM_UNIXTIME($publication_published))";
   $mysqli->query($query) or error($mysqli->error);
   $publicationId = $mysqli->insert_id;
   $query = "INSERT INTO participation(id, referendum, blindKey, station) "
