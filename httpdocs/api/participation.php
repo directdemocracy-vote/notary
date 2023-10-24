@@ -60,7 +60,7 @@ if (!$publication) {
     $webservice = $result->fetch_assoc();
     $result->free();
     if ($webservice['key'] != $key)
-      error("$key Changed key for $station: $wk");
+      error("Changed key for $station");
     $id = intval($webservice['id']);
   }
   # $publication['schema'] looks like this: 'https://directdemocracy.vote/json-schema/2/participation.json'
