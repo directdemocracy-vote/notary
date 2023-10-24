@@ -11,7 +11,7 @@ if ($_POST['type'] !== 'citizen')
 
 $result = $mysqli->query("SELECT `key` FROM publication WHERE signature='$signature'") or die($msqli->error);
 $entry = $result->fetch_assoc();
-die($query);
+die("SELECT `key` FROM publication WHERE signature='$signature'");
 if ($entry)
   $key = $entry['key'];
 else
