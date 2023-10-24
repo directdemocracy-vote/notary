@@ -5,7 +5,7 @@ async function hash(payload, type) {
   return hash;
 }
 
-window.onload = async function() {
+window.onload = function() {
   document.getElementById('login').addEventListener('click', function(event) {
     const password = document.getElementById('password').value;
     console.log('password = ' + password);
