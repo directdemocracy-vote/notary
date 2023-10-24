@@ -10,7 +10,7 @@ if ($_POST['type'] !== 'citizen')
   die('Only deletion of citizen is supported');
 
 $result = $mysqli->query("SELECT `key` FROM publication WHERE signature='$signature'") or die($msqli->error);
-$entry = $result->fetch_assoc('key');
+$entry = $result->fetch_assoc();
 $key = $entry['key'];
 die("Not yet implemeted: key=$key");
 ?>
