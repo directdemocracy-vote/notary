@@ -1,0 +1,1 @@
+<?php die($_POST['password'] === '********' ? 'OK' : 'Wrong password') ?>

@@ -30,6 +30,13 @@ function sanitizeString(str) {
 }
 
 window.onload = async function() {
+  if (localStorage.getItem('password')) {
+    document.getElementById('logout-div').innerHTML = `<a id="logout">logout</a>`;
+    document.getElementById('logout').addEventListener('click', function(event) {
+      document.getElementById('logout-div').innerHTML = ``;
+      localStorage.removeItem('password');
+    });
+  }
   document.getElementById('modal-close-button').addEventListener('click', closeModal);
   document.getElementById('modal-ok-button').addEventListener('click', closeModal);
 

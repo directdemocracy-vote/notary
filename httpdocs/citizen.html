@@ -29,7 +29,7 @@
     </section>
     <section class="section">
       <nav class="panel">
-        <p class="panel-heading">Citizen card</p>
+        <div class="panel-heading level" id="panel-heading"><span class="level-left">Citizen card</span></div>
         <div class="panel-block pr-0">
           <div class="columns" style="width:100%">
             <div class="column is-narrow" style="min-width:400px">
@@ -49,7 +49,7 @@
           <div class="field has-addons" style="width:100%">
             <div class="control"><a class="button is-static">https://</a></div>
             <div class="control is-expanded"><input id="judge" class="input" type="text" placeholder="judge.directdemocracy.vote" value=""></div>
-            <div class="control"><a id="reload" class="button is-info"><i class="icon f7-icons" style="rotate:45deg">arrow_clockwise</i></a></div>
+            <div class="control"><a id="reload" class="button is-info"><i class="icon f7-icons" style="transform: translate(-4px, 3px) rotate(45deg)">arrow_clockwise</i></a></div>
           </div>
         </div>
         <div class="panel-block" style="display:block">
@@ -70,6 +70,8 @@
     <footer class="footer">
       <div class="content has-text-centered">
         More information is available from our <a href="https://github.com/directdemocracy-vote/notary" target="_blank">GitHub repository</a>.
+      </div>
+      <div id="logout-div" class="content has-text-centered">
       </div>
     </footer>
   </body>
