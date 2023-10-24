@@ -15,24 +15,16 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-$referendumFingerprint = sanitize_field($_GET["fingerprint"], "hex", "fingerprint");
+$referendumSignature = sanitize_field($_GET["referendum"], "base64", "referendum");
 $station = sanitize_field($_GET["station"], "url", "station");
 
-if (!$referendumFingerprint)
+if (!$referendumSignature)
   error("Missing referendum argument");
 if (!$station)
   error("Missing station argument");
 if (!str_starts_with($station, 'https://'))
   error("The station argument should start with 'https://'");
 
-$query = "SELECT publication.`signature` FROM publication "
-        ."INNER JOIN proposal ON proposal.id=publication.id AND proposal.secret=1 "
-        ."WHERE publication.signatureSHA1=UNHEX('$referendumFingerprint')";
-$result = $mysqli->query($query) or error($mysqli->error);
-if (!$result)
-  error("Specified referendum not found");
-$referendum = $result->fetch_assoc();
-$referendumSignature = $referendum['signature'];
 $query = "SELECT publication.`version`, publication.`type`, "
         ."REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, "
         ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
@@ -41,7 +33,7 @@ $query = "SELECT publication.`version`, publication.`type`, "
         ."REPLACE(TO_BASE64(participation.blindKey), '\\n', '') AS blindKey FROM participation "
         ."INNER JOIN publication ON publication.id=participation.id "
         ."INNER JOIN webservice AS station ON station.url='$station' "
-        ."WHERE SHA1(participation.referendum)='$referendumFingerprint' AND participation.station=station.id";
+        ."WHERE participation.referendum='$referendumSignature' AND participation.station=station.id";
 $result = $mysqli->query($query) or error($mysqli->error);
 $publication = $result->fetch_assoc();
 $result->free();
@@ -61,7 +53,7 @@ if (!$publication) {
   $blindKey = $publication['blindKey'];
   $query = "SELECT id, REPLACE(TO_BASE64(`key`), '\\n', '') AS `key` FROM webservice WHERE url='$station' AND `type`='station'";
   $result = $mysqli->query($query) or error($mysqli->error);
-  if (!$result) {
+  if ($result->num_rows === 0) {
     $mysqli->query("INSERT INTO webservice(`type`, `key`, url) VALUES('station', FROM_BASE64('$key'), '$station')") or error($mysqli->error);
     $id = $mysqli->insert_id;
   } else {
