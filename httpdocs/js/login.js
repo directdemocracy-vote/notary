@@ -6,6 +6,13 @@ async function hash(payload, type) {
 }
 
 window.onload = function() {
+  if (localStorage.getItem('password')) {
+    document.getElementById('logout-div').innerHTML = `<a id="logout">logout</a>`;
+    document.getElementById('logout').addEventListener('click', function(event) {
+      document.getElementById('logout-div').innerHTML = ``;
+      localStorage.removeItem('password');
+    });
+  }
   document.getElementById('login').addEventListener('click', function(event) {
     const password = document.getElementById('password').value;
     const url = 'https://notary.directdemocracy.vote';

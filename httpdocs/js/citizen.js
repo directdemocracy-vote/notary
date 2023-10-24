@@ -8,6 +8,13 @@ function findGetParameter(parameterName, result) {
 }
 
 window.onload = function() {
+  if (localStorage.getItem('password')) {
+    document.getElementById('logout-div').innerHTML = `<a id="logout">logout</a>`;
+    document.getElementById('logout').addEventListener('click', function(event) {
+      document.getElementById('logout-div').innerHTML = ``;
+      localStorage.removeItem('password');
+    });
+  }
   let judge = findGetParameter('judge', 'https://judge.directdemocracy.vote');
   document.getElementById('judge').value = judge.substring(8);
   const fingerprint = findGetParameter('fingerprint');
