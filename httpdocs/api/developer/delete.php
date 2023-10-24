@@ -9,12 +9,12 @@ if ($_POST['password'] !== $developer_password)
 if ($_POST['type'] !== 'citizen')
   die('Only deletion of citizen is supported');
 
-$result = $mysqli->query("SELECT `key` FROM publication WHERE signature='$signature'") or die($msqli->error);
+$result = $mysqli->query("SELECT REPLACE(TO_BASE64(`key`), '\\n', '') AS `key` FROM publication WHERE signature=FROM_BASE64('$signature')") or die($msqli->error);
 $entry = $result->fetch_assoc();
-die("SELECT `key` FROM publication WHERE signature='$signature'");
 if ($entry)
   $key = $entry['key'];
-else
-  $key = 'not found';
-die("Not yet implemeted: key=$key");
+else {
+  die("SELECT `key` FROM publication WHERE signature='$signature'");
+}
+die("Not yet implemeted");
 ?>
