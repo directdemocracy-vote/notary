@@ -1,6 +1,8 @@
-window.onload = function() {
+window.onload = async function() {
   document.getElementById('login').addEventListener('click', function(event) {
     const password = document.getElementById('password').value;
-    console.log('value = ' + password);
+    const hash = await crypto.subtle.digest('SHA-256', password);
+    console.log('password = ' + password);
+    console.log('hash = ' + hash);
   });
 };
