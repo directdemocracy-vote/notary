@@ -59,7 +59,7 @@ if (!$publication) {
   } else {
     $webservice = $result->fetch_assoc();
     $result->free();
-    $wk = $webservice['key']; 
+    die($webservice); 
     if ($webservice['key'] != $key)
       error("$key Changed key for $station: $wk");
     $id = intval($webservice['id']);
