@@ -14,7 +14,7 @@ window.onload = function() {
       document.getElementById('logout-div').innerHTML = ``;
       localStorage.removeItem('password');
     });
-    document.getElementById('')
+    // document.getElementById('')
   }
   let judge = findGetParameter('judge', 'https://judge.directdemocracy.vote');
   document.getElementById('judge').value = judge.substring(8);
