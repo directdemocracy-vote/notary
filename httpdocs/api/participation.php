@@ -36,6 +36,7 @@ $query = "SELECT publication.`version`, publication.`type`, "
         ."WHERE participation.referendum='$referendumSignature' AND participation.station=station.id";
 $result = $mysqli->query($query) or error($mysqli->error);
 $publication = $result->fetch_assoc();
+$die($publication)
 $result->free();
 if (!$publication) {
   $answer = file_get_contents("$station/api/participation.php?referendum=" . urlencode($referendumSignature));
