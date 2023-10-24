@@ -16,10 +16,9 @@ window.onload = function() {
         if (answer === 'OK') {
           localStorage.setItem('password', h);
           window.location.replace(url);
-        } else {
-
-        }
-      }
+        } else
+          alert('Wrong password, try again');
+      });
     });
   });
 };
