@@ -13,9 +13,11 @@ window.onload = function() {
     document.getElementById('logout').addEventListener('click', function(event) {
       document.getElementById('logout-div').innerHTML = ``;
       localStorage.removeItem('password');
+      document.getElementById('panel-heading').removeChild(document.getElementById('delete-link'))
     });
     const span = document.createElement('span');
     span.classList.add('level-right');
+    span.setAttribute('id', 'delete-link');
     span.innerHTML = 'Delete';
     document.getElementById('panel-heading').appendChild(span);
   }
