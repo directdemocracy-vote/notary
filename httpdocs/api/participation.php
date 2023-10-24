@@ -36,12 +36,12 @@ $query = "SELECT publication.`version`, publication.`type`, "
         ."WHERE participation.referendum='$referendumSignature' AND participation.station=station.id";
 $result = $mysqli->query($query) or error($mysqli->error);
 $publication = $result->fetch_assoc();
-die($publication);
 $result->free();
 if (!$publication) {
   $answer = file_get_contents("$station/api/participation.php?referendum=" . urlencode($referendumSignature));
   $publication = json_decode($answer,true);
   $signature = $publication['signature'];
+  die($anser);
   $publication['signature'] = '';
   $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
   $verify = openssl_verify($data, base64_decode($signature), public_key($publication['key']), OPENSSL_ALGO_SHA256);
