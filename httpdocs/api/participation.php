@@ -28,7 +28,7 @@ if (!str_starts_with($station, 'https://'))
 $query = "SELECT publication.`version`, publication.`type`, "
         ."REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, "
         ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
-        ."publication.published AS published, "
+        ."UNIX_TIMESTAMP(publication.published) AS published, "
         ."REPLACE(TO_BASE64(participation.referendum), '\\n', '') AS referendum, "
         ."REPLACE(TO_BASE64(participation.blindKey), '\\n', '') AS blindKey FROM participation "
         ."INNER JOIN publication ON publication.id=participation.id "
