@@ -41,7 +41,6 @@ if (!$publication) {
   $answer = file_get_contents("$station/api/participation.php?referendum=" . urlencode($referendumSignature));
   $publication = json_decode($answer,true);
   $signature = $publication['signature'];
-  die($answer);
   $publication['signature'] = '';
   $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
   $verify = openssl_verify($data, base64_decode($signature), public_key($publication['key']), OPENSSL_ALGO_SHA256);
@@ -67,7 +66,7 @@ if (!$publication) {
   # $publication['schema'] looks like this: 'https://directdemocracy.vote/json-schema/2/participation.json'
   $version = intval(explode('/', $publication['schema'])[4]);
   $query = "INSERT INTO publication(`version`, `type`, `key`, `signature`, published) "
-          ."VALUES($version, 'participation', FROM_BASE64('$publication[key]'), FROM_BASE64('$publication[signature]'), FROM_UNIXTIME($publication[published]))";
+          ."VALUES($version, 'participation', FROM_BASE64('$publication[\'key\']'), FROM_BASE64('$publication[\'signature\']'), FROM_UNIXTIME($publication[\'published\']))";
   $mysqli->query($query) or error($mysqli->error);
   $publicationId = $mysqli->insert_id;
   $query = "INSERT INTO participation(id, referendum, blindKey, station) "
