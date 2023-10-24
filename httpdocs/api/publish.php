@@ -73,7 +73,8 @@ if ($type != 'ballot') {
 
   $verify = openssl_verify($data, base64_decode($signature), public_key($key), OPENSSL_ALGO_SHA256);
   if ($verify != 1)
-    error("Wrong signature for $type:\n$data");
+    error($data);
+    # error("Wrong signature for $type:");
   # restore original signatures if needed
   $publication->signature = $signature;
   if (isset($station_signature))
