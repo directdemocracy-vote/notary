@@ -23,7 +23,7 @@ window.onload = async function() {
   if (localStorage.getItem('password')) {
     const a = document.createElement('a');
     a.setAttribute('id', 'logout');
-    a.textContent = 'logout'
+    a.textContent = 'logout';
     document.getElementById('logout-div').appendChild(a);;
     document.getElementById('logout').addEventListener('click', function(event) {
       document.getElementById('logout-div').textContent = '';
@@ -50,7 +50,7 @@ window.onload = async function() {
       .then(answer => {
         if (!geolocation) {
           coords = answer.split(',');
-          getGeolocationPosition({coords: {latitude: coords[0], longitude: coords[1]}});
+          getGeolocationPosition({ coords: { latitude: coords[0], longitude: coords[1] } });
         }
       });
 
@@ -223,7 +223,7 @@ window.onload = async function() {
             new TextEncoder().encode(str)
           );
           publication.signature = btoa(String.fromCharCode(...new Uint8Array(signature)));
-          fetch(`/api/publish.php`, {'method': 'POST', 'body': JSON.stringify(publication)})
+          fetch(`/api/publish.php`, { 'method': 'POST', 'body': JSON.stringify(publication) })
             .then(response => response.json())
             .then(answer => {
               button.classList.remove('is-loading');

@@ -20,15 +20,15 @@ window.onload = function() {
     const password = document.getElementById('password').value;
     const url = 'https://notary.directdemocracy.vote';
     hash(password + url, 'SHA-256').then(h => {
-      fetch('/api/developer/login.php', {method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'password=' + h } )
-      .then(response => response.text())
-      .then(answer => {
-        if (answer === 'OK') {
-          localStorage.setItem('password', h);
-          window.location.replace(url);
-        } else
-          alert('Wrong password, try again');
-      });
+      fetch('/api/developer/login.php', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'password=' + h })
+        .then(response => response.text())
+        .then(answer => {
+          if (answer === 'OK') {
+            localStorage.setItem('password', h);
+            window.location.replace(url);
+          } else
+            alert('Wrong password, try again');
+        });
     });
   });
 };

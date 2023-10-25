@@ -17,7 +17,7 @@ window.onload = function() {
     return;
   }
   if (localStorage.getItem('password')) {
-    const a = document.createElement('a');
+    let a = document.createElement('a');
     a.setAttribute('id', 'logout');
     a.textContent = 'logout';
     document.getElementById('logout-div').appendChild(a);
@@ -25,27 +25,28 @@ window.onload = function() {
       document.getElementById('logout-div').textContent = '';
       localStorage.removeItem('password');
     });
-    const a = document.createElement('a');
+    a = document.createElement('a');
     a.classList.add('level-right');
     a.setAttribute('id', 'delete-link');
     a.textContent = 'Delete';
     a.addEventListener('click', function(event) {
       const h = localStorage.getItem('password');
-      fetch('/api/developer/delete.php', {method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'password=' + h + '&type=citizen&signature=' + encodeURIComponent(signature) } )
-      .then(response => response.text())
-      .then(response => {
-        if (response === 'OK') {
-          window.location.replace('https://notary.directdemocracy.vote');
-        } else
-          console.log(response);
-      });
+      fetch('/api/developer/delete.php', {
+        method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'password=' + h + '&type=citizen&signature=' + encodeURIComponent(signature)
+      }).then(response => response.text())
+        .then(response => {
+          if (response === 'OK') {
+            window.location.replace('https://notary.directdemocracy.vote');
+          } else
+            console.log(response);
+        });
     });
     document.getElementById('panel-heading').appendChild(a);
   }
   const content = document.getElementById('content');
   const body = signature ? `signature=${encodeURIComponent(signature)}` : `fingerprint=${encodeURIComponent(fingerprint)}`;
-  fetch('api/citizen.php', {method: 'POST', headers: {"Content-Type": "application/x-www-form-urlencoded"}, body: body})
+  fetch('api/citizen.php', { method: 'POST', headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: body })
     .then(response => response.json())
     .then(answer => {
       if (answer.error) {
@@ -63,14 +64,14 @@ window.onload = function() {
       document.getElementById('home').innerHTML = `<a href="https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}&zoom=12" target="_blank">${latitude}, ${longitude}</a>`;
       document.getElementById('created').textContent = published;
       const map = L.map('map');
-      map.whenReady(function() {setTimeout(() => {this.invalidateSize();}, 0);});
+      map.whenReady(function() { setTimeout(() => { this.invalidateSize(); }, 0); });
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
       marker = L.marker([latitude, longitude]).addTo(map);
       marker.bindPopup(`<b>${givenNames} ${familyName}</b><br>[${latitude}, ${longitude}]`);
       map.setView([latitude, longitude], 18);
-      map.on('contextmenu', function(event) {return false;});
+      map.on('contextmenu', function(event) { return false; });
       fetch(`https://nominatim.openstreetmap.org/reverse.php?format=json&lat=${latitude}&lon=${longitude}&zoom=20`)
         .then(response => response.json())
         .then(answer => {
@@ -124,7 +125,7 @@ window.onload = function() {
               return;
             }
             div.innerHTML = '';
-            for(const endorsement of answer.endorsements) {
+            for (const endorsement of answer.endorsements) {
               const block = document.createElement('div');
               div.appendChild(block);
               const d = new Date(parseInt(endorsement.published * 1000));
@@ -133,7 +134,7 @@ window.onload = function() {
               const color = endorsement.revoke ? 'red' : 'green';
               const icon = endorsement.revoke ? 'xmark_seal_fill' : 'checkmark_seal_fill';
               block.innerHTML = `<p style="width:100%"><i class="icon f7-icons margin-right" style="color:${color};font-size:110%">${icon}</i>`
-                              + `${latest ? '<b>' : ''}${action}${latest ? '</b>' : ''} on: ${d.toLocaleString()}</p>`;
+                + `${latest ? '<b>' : ''}${action}${latest ? '</b>' : ''} on: ${d.toLocaleString()}</p>`;
             }
           });
       }

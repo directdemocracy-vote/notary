@@ -69,7 +69,7 @@ window.onload = function() {
         const p = document.createElement('p');
         p.textContent = 'Nobody signed this petition yet.';
         block.appendChild(p);
-      } else for(const participant of answer.participants) {
+      } else for (const participant of answer.participants) {
         const block = document.createElement('div');
         block.classList.add('panel-block');
         const p = document.createElement('p');

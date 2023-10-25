@@ -9,36 +9,38 @@ function findGetParameter(parameterName) {
 
 window.onload = async function() {
   if (localStorage.getItem('password')) {
-    const a = document.createElement('a');
+    let a = document.createElement('a');
     a.setAttribute('id', 'logout');
-    a.textContent = 'logout'
+    a.textContent = 'logout';
     document.getElementById('logout-div').appendChild(a);;
     document.getElementById('logout').addEventListener('click', function(event) {
       document.getElementById('logout-div').textContent = '';
       localStorage.removeItem('password');
-      document.getElementById('panel-heading').removeChild(document.getElementById('delete-link'))
+      document.getElementById('panel-heading').removeChild(document.getElementById('delete-link'));
     });
-    const a = document.createElement('a');
+    a = document.createElement('a');
     a.classList.add('level-right');
     a.setAttribute('id', 'delete-link');
     a.textContent = 'Delete';
     a.addEventListener('click', function(event) {
       const h = localStorage.getItem('password');
-      fetch('/api/developer/delete.php', {method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'password=' + h + '&type=proposal&signature=' + encodeURIComponent(signature) } )
-      .then(response => response.text())
-      .then(response => {
-        if (response === 'OK') {
-          window.location.replace('https://notary.directdemocracy.vote');
-        } else
-          console.log('Cannot delete proposal: ' + response);
-      });
+      fetch('/api/developer/delete.php', {
+        method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'password=' + h + '&type=proposal&signature=' + encodeURIComponent(signature)
+      })
+        .then(response => response.text())
+        .then(response => {
+          if (response === 'OK') {
+            window.location.replace('https://notary.directdemocracy.vote');
+          } else
+            console.log('Cannot delete proposal: ' + response);
+        });
     });
     document.getElementById('panel-heading').appendChild(a);
   }
   let fingerprint = findGetParameter('fingerprint');
   const signature = findGetParameter('signature');
-  if (!fingerprint && ! signature) {
+  if (!fingerprint && !signature) {
     console.error('Missing fingerprint or signature GET argument');
     return;
   }
@@ -47,7 +49,7 @@ window.onload = async function() {
     const bytes = new Uint8Array(binaryString.length);
     for (let i = 0; i < binaryString.length; i++)
 
-       bytes[i] = binaryString.charCodeAt(i);
+      bytes[i] = binaryString.charCodeAt(i);
     const bytesArray = await crypto.subtle.digest("SHA-1", bytes);
     fingerprint = Array.from(new Uint8Array(bytesArray), byte => ('0' + (byte & 0xFF).toString(16)).slice(-2)).join('');
   }
@@ -71,7 +73,7 @@ window.onload = async function() {
       const deadline = new Date(answer.deadline * 1000);
       const published = new Date(answer.published * 1000);
       const now = new Date();
-      document.getElementById('deadline').innerHTML = `<span style="color:#${ deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
+      document.getElementById('deadline').innerHTML = `<span style="color:#${deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
       document.getElementById('published').textContent = published.toLocaleString();
       const a = document.createElement('a');
       a.setAttribute('target', '_blank');
@@ -90,10 +92,10 @@ window.onload = async function() {
       const participants = answer.secret ? 'Voters' : 'Signatures';
       const participation = corpus == 0 ? 0 : Math.round(10000 * answer.participants / corpus) / 100;
       const line = `Corpus: <a target="_blank" href="participants.html?${payload}&corpus=1">` +
-                   `${corpus}</a> &mdash; ` +
-                   `${participants}: <a target="_blank" href="participants.html?${payload}">` +
-                   `${answer.participants}</a> &mdash; ` +
-                   `Participation: ${participation}%`;
+        `${corpus}</a> &mdash; ` +
+        `${participants}: <a target="_blank" href="participants.html?${payload}">` +
+        `${answer.participants}</a> &mdash; ` +
+        `Participation: ${participation}%`;
       document.getElementById('result').innerHTML = line;
       areaName = document.getElementById('area-name');
       const areas = answer.areas[0].split('=');
@@ -124,8 +126,8 @@ window.onload = async function() {
                 if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population')) {
                   const corpus_percent = Math.round(10000 * corpus / parseFloat(response.extratags.population)) / 100;
                   population = `<a target="_blank" href="${url}">${response.extratags.population}</a> with a ` +
-                               `<a target="_blank" href="participants.html?${payload}&corpus=1">` +
-                               `corpus</a> of ${corpus_percent}%`;
+                    `<a target="_blank" href="participants.html?${payload}&corpus=1">` +
+                    `corpus</a> of ${corpus_percent}%`;
                 } else
                   population = `<a target="_blank" href="${url}">N/A</a>`;
                 areaName.textContent = `Area: ${areas[1]} (estimated population: ${population})`;
@@ -137,9 +139,9 @@ window.onload = async function() {
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
-      map.whenReady(function() {setTimeout(() => {this.invalidateSize();}, 0);});
+      map.whenReady(function() { setTimeout(() => { this.invalidateSize(); }, 0); });
       map.on('contextmenu', function(event) { return false; });
-      L.geoJSON({type: 'MultiPolygon', coordinates: answer.polygons}).addTo(map);
+      L.geoJSON({ type: 'MultiPolygon', coordinates: answer.polygons }).addTo(map);
       let maxLon = -1000;
       let minLon = 1000;
       let maxLat = -1000;
@@ -167,7 +169,7 @@ window.onload = async function() {
   document.getElementById('modal-close-button').addEventListener('click', closeModal);
   document.getElementById('action-button').addEventListener('click', function() {
     let binaryFingerprint = '';
-    for(let i = 0; i < 40; i+=2)
+    for (let i = 0; i < 40; i += 2)
       binaryFingerprint += String.fromCharCode(parseInt(fingerprint.slice(i, i + 2), 16));
     const qr = new QRious({
       value: binaryFingerprint,
