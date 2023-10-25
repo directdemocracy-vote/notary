@@ -26,7 +26,6 @@ window.onload = function() {
       localStorage.removeItem('password');
     });
   }
-  }
   document.getElementById('proposal').addEventListener('click', function() {
     window.open(`propose.html?latitude=${latitude}&longitude=${longitude}`, '_blank');
   });
@@ -65,7 +64,7 @@ window.onload = function() {
       .then(answer => {
         if (!geolocation) {
           coords = answer.split(',');
-          getGeolocationPosition({coords: {latitude: coords[0], longitude: coords[1]}});
+          getGeolocationPosition({ coords: { latitude: coords[0], longitude: coords[1] } });
         }
       });
   } else
@@ -74,7 +73,7 @@ window.onload = function() {
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
-  map.whenReady(function() {setTimeout(() => {this.invalidateSize();}, 0);});
+  map.whenReady(function() { setTimeout(() => { this.invalidateSize(); }, 0); });
   const greenIcon = new L.Icon({
     iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -84,7 +83,7 @@ window.onload = function() {
     shadowSize: [41, 41]
   });
   const marker = L.marker([latitude, longitude]).addTo(map).bindPopup(latitude + ',' + longitude).on('click', updateLabel);
-  const circle = L.circle([latitude, longitude], { color: 'red', opacity: 0.4, fillColor: '#f03', fillOpacity: 0.2, radius: radius}).addTo(map);
+  const circle = L.circle([latitude, longitude], { color: 'red', opacity: 0.4, fillColor: '#f03', fillOpacity: 0.2, radius: radius }).addTo(map);
   marker.setPopupContent(`<div style="text-align:center" id="address">${address}</div><div><input type="range" min="5" max="100" value="${slider}" class="slider" id="range"></div>` +
     `<div style="text-align:center;color:#999" id="position">(${latitude}, ${longitude} &plusmn; ${Math.round(radius / 100) / 10} km</div></center>`).openPopup();
   document.getElementById('range').addEventListener('input', rangeChanged);
@@ -119,12 +118,12 @@ window.onload = function() {
     fetch(`/api/citizens.php?${parameters}`)
       .then((response) => response.json())
       .then((answer) => {
-        markers.forEach(function(marker) {map.removeLayer(marker);});
+        markers.forEach(function(marker) { map.removeLayer(marker); });
         markers = [];
         answer.forEach(function(citizen) {
           const name = `${citizen.givenNames} ${citizen.familyName}`;
           const label = `<div style="text-align:center"><a target="_blank" href="/citizen.html?signature=${encodeURIComponent(citizen.signature)}"><img src="${citizen.picture}" width="60" height="80"><br>${name}</a></div>`;
-          markers.push(L.marker([citizen.latitude, citizen.longitude], {icon: greenIcon}).addTo(map).bindPopup(label));
+          markers.push(L.marker([citizen.latitude, citizen.longitude], { icon: greenIcon }).addTo(map).bindPopup(label));
         });
         fieldset.removeAttribute('disabled');
         searchCitizen.classList.remove('is-loading');
@@ -225,7 +224,7 @@ window.onload = function() {
           td = document.createElement('td');
           const deadline = new Date(proposal.deadline * 1000);
           const now = new Date();
-          td.innerHTML = `<span style="color:#${ deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
+          td.innerHTML = `<span style="color:#${deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
           tr.appendChild(td);
           tr.addEventListener('click', function() {
             url = `/proposal.html?signature=${encodeURIComponent(proposal.signature)}`;
