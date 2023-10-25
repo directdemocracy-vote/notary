@@ -41,7 +41,7 @@ if ($type === 'citizen') {
   }
   $mysqli->query("DELETE FROM citizen WHERE id=$id") or die($mysqli->error);
   $mysqli->query("DELETE FROM publication WHERE id=$id") or die($mysqli->error);
-  die("OK");
+  die('OK');
 } elseif ($type === 'proposal') {
   $query = "SELECT id FROM publication WHERE `signature`=FROM_BASE64('$signature') AND `type`='proposal'";
   $result = $mysqli->query($query) or die($msqli->error);
@@ -64,6 +64,7 @@ if ($type === 'citizen') {
   }
   $mysqli->query("DELETE FROM publication WHERE id=$id") or die($msqli->error);
   $mysqli->query("DELETE FROM proposal WHERE id=$id") or die($msqli->error);
+  die('OK');
 } else
   die('Only deletion of a citizen or a proposal is supported');
 ?>
