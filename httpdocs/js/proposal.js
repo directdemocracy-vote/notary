@@ -28,7 +28,7 @@ window.onload = async function() {
         if (response === 'OK') {
           window.location.replace('https://notary.directdemocracy.vote');
         } else
-          console.log(response);
+          console.log('Cannot delete proposal: ' + response);
       });
     });
     document.getElementById('panel-heading').appendChild(a);
