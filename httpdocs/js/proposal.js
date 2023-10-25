@@ -1,7 +1,9 @@
+/* global L, QRious */
+
 function findGetParameter(parameterName) {
   let result;
-  location.search.substr(1).split("&").forEach(function(item) {
-    const tmp = item.split("=");
+  location.search.substr(1).split('&').forEach(function(item) {
+    const tmp = item.split('=');
     if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
   });
   return result;
@@ -12,7 +14,7 @@ window.onload = async function() {
     let a = document.createElement('a');
     a.setAttribute('id', 'logout');
     a.textContent = 'logout';
-    document.getElementById('logout-div').appendChild(a);;
+    document.getElementById('logout-div').appendChild(a);
     document.getElementById('logout').addEventListener('click', function(event) {
       document.getElementById('logout-div').textContent = '';
       localStorage.removeItem('password');
@@ -25,14 +27,15 @@ window.onload = async function() {
     a.addEventListener('click', function(event) {
       const h = localStorage.getItem('password');
       fetch('/api/developer/delete.php', {
-        method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'password=' + h + '&type=proposal&signature=' + encodeURIComponent(signature)
       })
         .then(response => response.text())
         .then(response => {
-          if (response === 'OK') {
+          if (response === 'OK')
             window.location.replace('https://notary.directdemocracy.vote');
-          } else
+          else
             console.log('Cannot delete proposal: ' + response);
         });
     });
@@ -50,7 +53,7 @@ window.onload = async function() {
     for (let i = 0; i < binaryString.length; i++)
 
       bytes[i] = binaryString.charCodeAt(i);
-    const bytesArray = await crypto.subtle.digest("SHA-1", bytes);
+    const bytesArray = await crypto.subtle.digest('SHA-1', bytes);
     fingerprint = Array.from(new Uint8Array(bytesArray), byte => ('0' + (byte & 0xFF).toString(16)).slice(-2)).join('');
   }
 
@@ -73,7 +76,8 @@ window.onload = async function() {
       const deadline = new Date(answer.deadline * 1000);
       const published = new Date(answer.published * 1000);
       const now = new Date();
-      document.getElementById('deadline').innerHTML = `<span style="color:#${deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
+      document.getElementById('deadline').innerHTML = `<span style="color:#${deadline < now ? 'a00' : '0a0'}">` +
+        `${deadline.toLocaleString()}</span>`;
       document.getElementById('published').textContent = published.toLocaleString();
       const a = document.createElement('a');
       a.setAttribute('target', '_blank');
@@ -90,14 +94,14 @@ window.onload = async function() {
         actionButton.removeAttribute('disabled');
       const corpus = answer.corpus;
       const participants = answer.secret ? 'Voters' : 'Signatures';
-      const participation = corpus == 0 ? 0 : Math.round(10000 * answer.participants / corpus) / 100;
+      const participation = corpus === 0 ? 0 : Math.round(10000 * answer.participants / corpus) / 100;
       const line = `Corpus: <a target="_blank" href="participants.html?${payload}&corpus=1">` +
         `${corpus}</a> &mdash; ` +
         `${participants}: <a target="_blank" href="participants.html?${payload}">` +
         `${answer.participants}</a> &mdash; ` +
         `Participation: ${participation}%`;
       document.getElementById('result').innerHTML = line;
-      areaName = document.getElementById('area-name');
+      const areaName = document.getElementById('area-name');
       const areas = answer.areas[0].split('=');
       let query = '';
       answer.areas.forEach(function(line) {
@@ -113,7 +117,7 @@ window.onload = async function() {
       query = query.slice(0, -1);
       if (!areas[0])
         areaName.innerHTML = `Area: <a target="_blank" href="https://en.wikipedia.org/wiki/Earth">Earth</a>`;
-      else if (areas[0] == 'union')
+      else if (areas[0] === 'union')
         areaName.innerHTML = `Area: <a target="_blank" href="https://en.wikipedia.org/wiki/European_Union">European Union</a>`;
       else {
         fetch(`https://nominatim.openstreetmap.org/search.php?${query}&format=json&extratags=1`)
@@ -123,11 +127,12 @@ window.onload = async function() {
               const response = answer[0];
               if (response.hasOwnProperty('osm_id')) {
                 const url = 'https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=' + response.osm_id;
+                let population;
                 if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population')) {
-                  const corpus_percent = Math.round(10000 * corpus / parseFloat(response.extratags.population)) / 100;
+                  const corpusPercent = Math.round(10000 * corpus / parseFloat(response.extratags.population)) / 100;
                   population = `<a target="_blank" href="${url}">${response.extratags.population}</a> with a ` +
                     `<a target="_blank" href="participants.html?${payload}&corpus=1">` +
-                    `corpus</a> of ${corpus_percent}%`;
+                    `corpus</a> of ${corpusPercent}%`;
                 } else
                   population = `<a target="_blank" href="${url}">N/A</a>`;
                 areaName.textContent = `Area: ${areas[1]} (estimated population: ${population})`;
@@ -206,7 +211,7 @@ window.onload = async function() {
     a.addEventListener('click', function() {
       input.select();
       input.setSelectionRange(0, 99999);
-      document.execCommand("copy");
+      document.execCommand('copy');
       input.setSelectionRange(0, 0);
       input.blur();
       message.innerHTML = 'Copied in clipboard! You can now paste in the <i>directdemocracy</i> app.';

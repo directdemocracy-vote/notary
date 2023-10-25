@@ -1,8 +1,8 @@
-const directdemocracy_version = '2';
+const directdemocracyVersion = '2';
 
 function findGetParameter(parameterName, result = null) {
-  location.search.substr(1).split("&").forEach(function(item) {
-    const tmp = item.split("=");
+  location.search.substr(1).split('&').forEach(function(item) {
+    const tmp = item.split('=');
     if (tmp[0] === parameterName)
       result = decodeURIComponent(tmp[1]);
   });
@@ -20,11 +20,12 @@ function closeModal() {
 }
 
 window.onload = async function() {
+  let area = '';
   if (localStorage.getItem('password')) {
     const a = document.createElement('a');
     a.setAttribute('id', 'logout');
     a.textContent = 'logout';
-    document.getElementById('logout-div').appendChild(a);;
+    document.getElementById('logout-div').appendChild(a);
     document.getElementById('logout').addEventListener('click', function(event) {
       document.getElementById('logout-div').textContent = '';
       localStorage.removeItem('password');
@@ -38,28 +39,27 @@ window.onload = async function() {
   let latitude = parseFloat(findGetParameter('latitude', '-1'));
   let longitude = parseFloat(findGetParameter('longitude', '-1'));
   let geolocation = false;
-  if (latitude == -1) {
+  function getGeolocationPosition(position) {
+    geolocation = true;
+    latitude = position.coords.latitude;
+    longitude = position.coords.longitude;
+    updateArea();
+  }
+  if (latitude === -1) {
     if (navigator.geolocation)
       navigator.geolocation.getCurrentPosition(getGeolocationPosition);
     fetch('https://ipinfo.io/loc')
       .then(response => {
-        if (response.status == 429)
-          console.error("quota exceeded");
+        if (response.status === 429)
+          console.error('quota exceeded');
         return response.text();
       })
       .then(answer => {
         if (!geolocation) {
-          coords = answer.split(',');
+          const coords = answer.split(',');
           getGeolocationPosition({ coords: { latitude: coords[0], longitude: coords[1] } });
         }
       });
-
-    function getGeolocationPosition(position) {
-      geolocation = true;
-      latitude = position.coords.latitude;
-      longitude = position.coords.longitude;
-      updateArea();
-    }
   } else
     updateArea();
 
@@ -88,11 +88,21 @@ window.onload = async function() {
             select.options[count++] = new Option(address[level], level);
         }
         // we ignore admin levels lower than 'village': 'block', 'neighbourhood', 'quarter', 'suburb', 'borough' and 'hamlet'
-        const admin = ['village', 'town', 'city', 'municipality', 'county', 'district', 'region', 'province', 'state', 'country'];
+        const admin = [
+          'village',
+          'town',
+          'city',
+          'municipality',
+          'county',
+          'district',
+          'region',
+          'province',
+          'state',
+          'country'];
         admin.forEach(function(item) { addAdminLevel(item); });
-        const country_code = address.country_code.toUpperCase();
+        const countryCode = address.country_code.toUpperCase();
         if (['DE', 'FR', 'IT', 'SE', 'PL', 'RO', 'HR', 'ES', 'NL', 'IE', 'BG', 'DK', 'GR',
-          'AT', 'HU', 'FI', 'CZ', 'PT', 'BE', 'MT', 'CY', 'LU', 'SI', 'LU', 'SK', 'EE', 'LV'].indexOf(country_code) >= 0)
+          'AT', 'HU', 'FI', 'CZ', 'PT', 'BE', 'MT', 'CY', 'LU', 'SI', 'LU', 'SK', 'EE', 'LV'].indexOf(countryCode) >= 0)
           select.options[count++] = new Option('European Union', 'union');
         select.options[count++] = new Option('Earth', 'world');
         areaChange();
@@ -101,8 +111,8 @@ window.onload = async function() {
 
   function areaChange() {
     const a = document.getElementById('area');
-    const selected_name = a.options[a.selectedIndex].textContent;
-    const selected_type = a.options[a.selectedIndex].value;
+    const selectedName = a.options[a.selectedIndex].textContent;
+    const selectedType = a.options[a.selectedIndex].value;
     area = '';
     let query = '';
     for (let i = a.selectedIndex; i < a.length - 1; i++) {
@@ -111,15 +121,15 @@ window.onload = async function() {
         type = 'city';
       const name = a.options[i].textContent;
       area += type + '=' + name + '\n';
-      if (type != 'union')
+      if (type !== 'union')
         query += type + '=' + encodeURIComponent(name) + '&';
     }
     query = query.slice(0, -1);
     const place = document.getElementById('place');
-    place.textContent = selected_name;
-    if (selected_type == 'union' && selected_name == 'European Union')
+    place.textContent = selectedName;
+    if (selectedType === 'union' && selectedName === 'European Union')
       place.href = 'https://en.wikipedia.org/wiki/European_Union';
-    else if (selected_type == 'world' && selected_name == 'Earth')
+    else if (selectedType === 'world' && selectedName === 'Earth')
       place.href = 'https://en.wikipedia.org/wiki/Earth';
     else
       place.href = 'https://nominatim.openstreetmap.org/ui/search.html?' + query + '&polygon_geojson=1';
@@ -127,7 +137,7 @@ window.onload = async function() {
   }
 
   function updateProposalType() {
-    if (document.querySelector('input[name="type"]:checked').value == 'referendum') {
+    if (document.querySelector('input[name="type"]:checked').value === 'referendum') {
       document.getElementById('question-block').style.display = 'block';
       document.getElementById('answers-block').style.display = 'block';
       document.getElementById('title').setAttribute('placeholder', 'Enter the title of your referendum');
@@ -146,13 +156,13 @@ window.onload = async function() {
   async function generateCryptographicKey() {
     const keyPair = await window.crypto.subtle.generateKey(
       {
-        name: "RSASSA-PKCS1-v1_5",
+        name: 'RSASSA-PKCS1-v1_5',
         modulusLength: 2048,
         publicExponent: new Uint8Array([1, 0, 1]),
-        hash: "SHA-256",
+        hash: 'SHA-256'
       },
       true,
-      ["sign", "verify"]
+      ['sign', 'verify']
     );
 
     publicationPrivateKey = keyPair.privateKey;
@@ -165,19 +175,19 @@ window.onload = async function() {
     if (!document.querySelector('input[name="type"]:checked'))
       return;
     const type = document.querySelector('input[name="type"]:checked').value;
-    if (document.getElementById('title').value == '')
+    if (document.getElementById('title').value === '')
       return;
-    if (document.getElementById('description').value == '')
+    if (document.getElementById('description').value === '')
       return;
-    if (type == referendum) {
-      if (document.getElementById('question').value == '')
+    if (type === 'referendum') {
+      if (document.getElementById('question').value === '')
         return;
-      if (document.getElementById('answers').value == '')
+      if (document.getElementById('answers').value === '')
         return;
     }
-    if (document.getElementById('deadline').value == '')
+    if (document.getElementById('deadline').value === '')
       return;
-    if (document.getElementById('judge').value == '')
+    if (document.getElementById('judge').value === '')
       return;
     document.getElementById('publish').removeAttribute('disabled');
   }
@@ -187,7 +197,7 @@ window.onload = async function() {
     button.classList.add('is-loading');
     button.setAttribute('disabled', '');
     const judge = document.getElementById('judge').value;
-    const query = area.trim().replace(/(\r\n|\n|\r)/g, "&");
+    const query = area.trim().replace(/(\r\n|\n|\r)/g, '&');
     fetch(`${judge}/api/publish_area.php?${query}`)
       .then(response => response.json())
       .then(async function(answer) {
@@ -196,8 +206,8 @@ window.onload = async function() {
           button.classList.remove('is-loading');
           button.removeAttribute('disabled');
         } else {
-          publication = {};
-          publication.schema = `https://directdemocracy.vote/json-schema/${directdemocracy_version}/proposal.schema.json`;
+          let publication = {};
+          publication.schema = `https://directdemocracy.vote/json-schema/${directdemocracyVersion}/proposal.schema.json`;
           publication.key = publicationPublicKeyBase64;
           publication.signature = '';
           publication.published = Math.round(new Date().getTime() / 1000);
@@ -208,7 +218,7 @@ window.onload = async function() {
           const type = document.querySelector('input[name="type"]:checked').value;
           if (type === 'referendum') {
             publication.question = document.getElementById('question').value.trim();
-            publication.answers = document.getElementById('answers').value.trim().split("\n");
+            publication.answers = document.getElementById('answers').value.trim().split('\n');
             publication.secret = true;
           } else
             publication.secret = false;
@@ -218,7 +228,7 @@ window.onload = async function() {
             publication.website = website;
           const str = JSON.stringify(publication);
           const signature = await window.crypto.subtle.sign(
-            "RSASSA-PKCS1-v1_5",
+            'RSASSA-PKCS1-v1_5',
             publicationPrivateKey,
             new TextEncoder().encode(str)
           );

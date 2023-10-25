@@ -1,3 +1,5 @@
+/* global L */
+
 let geolocation = false;
 let latitude = 0;
 let longitude = 0;
@@ -8,8 +10,8 @@ let markers = [];
 
 function findGetParameter(parameterName) {
   let result;
-  location.search.substr(1).split("&").forEach(function(item) {
-    const tmp = item.split("=");
+  location.search.substr(1).split('&').forEach(function(item) {
+    const tmp = item.split('=');
     if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
   });
   return result;
@@ -57,13 +59,13 @@ window.onload = function() {
       navigator.geolocation.getCurrentPosition(getGeolocationPosition);
     fetch('https://ipinfo.io/loc')
       .then(response => {
-        if (response.status == 429)
-          console.error("quota exceeded");
+        if (response.status === 429)
+          console.error('quota exceeded');
         return response.text();
       })
       .then(answer => {
         if (!geolocation) {
-          coords = answer.split(',');
+          let coords = answer.split(',');
           getGeolocationPosition({ coords: { latitude: coords[0], longitude: coords[1] } });
         }
       });
@@ -83,9 +85,17 @@ window.onload = function() {
     shadowSize: [41, 41]
   });
   const marker = L.marker([latitude, longitude]).addTo(map).bindPopup(latitude + ',' + longitude).on('click', updateLabel);
-  const circle = L.circle([latitude, longitude], { color: 'red', opacity: 0.4, fillColor: '#f03', fillOpacity: 0.2, radius: radius }).addTo(map);
-  marker.setPopupContent(`<div style="text-align:center" id="address">${address}</div><div><input type="range" min="5" max="100" value="${slider}" class="slider" id="range"></div>` +
-    `<div style="text-align:center;color:#999" id="position">(${latitude}, ${longitude} &plusmn; ${Math.round(radius / 100) / 10} km</div></center>`).openPopup();
+  const circle = L.circle([latitude, longitude], {
+    color: 'red',
+    opacity: 0.4,
+    fillColor: '#f03',
+    fillOpacity: 0.2,
+    radius: radius
+  }).addTo(map);
+  marker.setPopupContent(`<div style="text-align:center" id="address">${address}</div>` +
+    `<div><input type="range" min="5" max="100" value="${slider}" class="slider" id="range"></div>` +
+    `<div style="text-align:center;color:#999" id="position">` +
+    `(${latitude}, ${longitude} &plusmn; ${Math.round(radius / 100) / 10} km</div></center>`).openPopup();
   document.getElementById('range').addEventListener('input', rangeChanged);
   map.on('click', function(event) {
     marker.setLatLng(event.latlng).openPopup();
@@ -122,7 +132,9 @@ window.onload = function() {
         markers = [];
         answer.forEach(function(citizen) {
           const name = `${citizen.givenNames} ${citizen.familyName}`;
-          const label = `<div style="text-align:center"><a target="_blank" href="/citizen.html?signature=${encodeURIComponent(citizen.signature)}"><img src="${citizen.picture}" width="60" height="80"><br>${name}</a></div>`;
+          const label = '<div style="text-align:center">' +
+            `<a target="_blank" href="/citizen.html?signature=${encodeURIComponent(citizen.signature)}">` +
+            `<img src="${citizen.picture}" width="60" height="80"><br>${name}</a></div>`;
           markers.push(L.marker([citizen.latitude, citizen.longitude], { icon: greenIcon }).addTo(map).bindPopup(label));
         });
         fieldset.removeAttribute('disabled');
@@ -174,7 +186,16 @@ window.onload = function() {
     fieldset.setAttribute('disabled', '');
     const searchProposal = document.getElementById('search-proposals');
     searchProposal.classList.add('is-loading');
-    fetch(`/api/proposals.php?secret=${secret}&open=${open}&search=${encodeURIComponent(query)}&latitude=${latitude}&longitude=${longitude}&radius=${radius}&year=${year}&offset=${offset}&limit=${limit}`)
+    fetch('/api/proposals.php' +
+      `?secret=${secret}` +
+      `&open=${open}` +
+      `&search=${encodeURIComponent(query)}` +
+      `&latitude=${latitude}` +
+      `&longitude=${longitude}` +
+      `&radius=${radius}` +
+      `&year=${year}` +
+      `&offset=${offset}` +
+      `&limit=${limit}`)
       .then(response => response.json())
       .then(answer => {
         fieldset.removeAttribute('disabled');
@@ -182,7 +203,7 @@ window.onload = function() {
         const section = document.getElementById('proposal-results');
         section.style.display = '';
         section.innerHTML = '';
-        if (answer.number == 0) {
+        if (answer.number === 0) {
           const div = document.createElement('div');
           div.textContent = 'No result found, try to refine your search.';
           section.appendChild(div);
@@ -227,7 +248,7 @@ window.onload = function() {
           td.innerHTML = `<span style="color:#${deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
           tr.appendChild(td);
           tr.addEventListener('click', function() {
-            url = `/proposal.html?signature=${encodeURIComponent(proposal.signature)}`;
+            const url = `/proposal.html?signature=${encodeURIComponent(proposal.signature)}`;
             window.open(url, '_blank').focus();
           });
         });
@@ -282,18 +303,7 @@ window.onload = function() {
   }
 
   function updateLabel() {
-    document.getElementById("address").textContent = address;
-    document.getElementById("position").innerHTML = '(' + latitude + ', ' + longitude + ') &plusmn; ' + Math.round(radius / 100) / 10 + ' km';
+    document.getElementById('address').textContent = address;
+    document.getElementById('position').innerHTML = `(${latitude}, ${longitude}) &plusmn; ${Math.round(radius / 100) / 10} km`;
   }
 };
-
-function openTab(event, name) {
-  let contentTab = document.getElementsByClassName('content-tab');
-  for (let i = 0; i < contentTab.length; i++)
-    contentTab[i].style.display = 'none';
-  const tab = document.getElementsByClassName('tab');
-  for (let i = 0; i < tab.length; i++)
-    tab[i].classList.remove('is-active');
-  document.getElementById(name).style.display = 'block';
-  event.currentTarget.classList.add('is-active');
-}

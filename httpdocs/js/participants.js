@@ -1,20 +1,11 @@
 function findGetParameter(parameterName) {
   let result;
-  location.search.substr(1).split("&").forEach(function(item) {
-    const tmp = item.split("=");
+  location.search.substr(1).split('&').forEach(function(item) {
+    const tmp = item.split('=');
     if (tmp[0] === parameterName)
       result = decodeURIComponent(tmp[1]);
   });
   return result;
-}
-
-function sanitizeString(str) {
-  str = str.replaceAll('&', '&amp;');
-  str = str.replaceAll("'", '&apos;');
-  str = str.replaceAll('"', '&quot;');
-  str = str.replaceAll('<', '&lt;');
-  str = str.replaceAll('>', '&gt;');
-  return str;
 }
 
 window.onload = function() {
@@ -69,32 +60,34 @@ window.onload = function() {
         const p = document.createElement('p');
         p.textContent = 'Nobody signed this petition yet.';
         block.appendChild(p);
-      } else for (const participant of answer.participants) {
-        const block = document.createElement('div');
-        block.classList.add('panel-block');
-        const p = document.createElement('p');
-        p.setAttribute('style', 'width:100%');
-        const a = document.createElement('a');
-        a.setAttribute('href', `citizen.html?${selector}`);
-        a.setAttribute('target', '_blank');
-        p.appendChild(a);
-        const img = document.createElement('img');
-        img.setAttribute('src', participant.picture);
-        img.setAttribute('style', 'width:50px;float:left;margin-right:10px');
-        a.appendChild(img);
-        a.appendChild(document.createTextNode(participant.givenNames));
-        const b = document.createElement('b');
-        b.textContent = participant.familyName;
-        a.appendChild(b);
-        if (!corpus) {
-          const d = new Date(parseInt(participant.published));
-          p.appendChild(document.createElement('br'));
-          const small = document.createElement('small');
-          small.textContent = `Signed on: ${d.toLocaleString()}`;
-          p.appendChild(small);
+      } else {
+        for (const participant of answer.participants) {
+          const block = document.createElement('div');
+          block.classList.add('panel-block');
+          const p = document.createElement('p');
+          p.setAttribute('style', 'width:100%');
+          const a = document.createElement('a');
+          a.setAttribute('href', `citizen.html?${selector}`);
+          a.setAttribute('target', '_blank');
+          p.appendChild(a);
+          const img = document.createElement('img');
+          img.setAttribute('src', participant.picture);
+          img.setAttribute('style', 'width:50px;float:left;margin-right:10px');
+          a.appendChild(img);
+          a.appendChild(document.createTextNode(participant.givenNames));
+          const b = document.createElement('b');
+          b.textContent = participant.familyName;
+          a.appendChild(b);
+          if (!corpus) {
+            const d = new Date(parseInt(participant.published));
+            p.appendChild(document.createElement('br'));
+            const small = document.createElement('small');
+            small.textContent = `Signed on: ${d.toLocaleString()}`;
+            p.appendChild(small);
+          }
+          block.appendChild(p);
+          panel.appendChild(block);
         }
-        block.appendChild(p);
-        panel.appendChild(block);
       }
     });
 };

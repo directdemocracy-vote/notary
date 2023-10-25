@@ -1,6 +1,8 @@
+/* global L */
+
 function findGetParameter(parameterName, result) {
-  location.search.substr(1).split("&").forEach(function(item) {
-    const tmp = item.split("=");
+  location.search.substr(1).split('&').forEach(function(item) {
+    const tmp = item.split('=');
     if (tmp[0] === parameterName)
       result = decodeURIComponent(tmp[1]);
   });
@@ -32,21 +34,21 @@ window.onload = function() {
     a.addEventListener('click', function(event) {
       const h = localStorage.getItem('password');
       fetch('/api/developer/delete.php', {
-        method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'password=' + h + '&type=citizen&signature=' + encodeURIComponent(signature)
       }).then(response => response.text())
         .then(response => {
-          if (response === 'OK') {
+          if (response === 'OK')
             window.location.replace('https://notary.directdemocracy.vote');
-          } else
+          else
             console.log(response);
         });
     });
     document.getElementById('panel-heading').appendChild(a);
   }
-  const content = document.getElementById('content');
   const body = signature ? `signature=${encodeURIComponent(signature)}` : `fingerprint=${encodeURIComponent(fingerprint)}`;
-  fetch('api/citizen.php', { method: 'POST', headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: body })
+  fetch('api/citizen.php', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body })
     .then(response => response.json())
     .then(answer => {
       if (answer.error) {
@@ -68,7 +70,7 @@ window.onload = function() {
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
-      marker = L.marker([latitude, longitude]).addTo(map);
+      let marker = L.marker([latitude, longitude]).addTo(map);
       marker.bindPopup(`<b>${givenNames} ${familyName}</b><br>[${latitude}, ${longitude}]`);
       map.setView([latitude, longitude], 18);
       map.on('contextmenu', function(event) { return false; });
@@ -92,11 +94,12 @@ window.onload = function() {
       function loadReputation() {
         fetch(`${judge}/api/reputation.php?key=${encodeURIComponent(answer.citizen.key)}`)
           .then((response) => {
-            if (document.getElementById('judge-endorsements').innerHTML != '<b>...</b>')
+            if (document.getElementById('judge-endorsements').innerHTML !== '<b>...</b>')
               enableJudgeReloadButton();
             return response.json();
           })
           .then((answer) => {
+            const reputation = document.getElementById('reputation');
             if (answer.error) {
               reputation.style.color = 'red';
               reputation.textContent = answer.error;
@@ -115,7 +118,8 @@ window.onload = function() {
         const payload = signature ? `signature=${encodeURIComponent(signature)}` : `fingerprint=${fingerprint}`;
         fetch(`/api/endorsements.php?${payload}&judge=${judge}`)
           .then(response => {
-            if (reputation.innerHTML != '..')
+            const reputation = document.getElementById('reputation');
+            if (reputation.textContent !== '..')
               enableJudgeReloadButton();
             return response.json();
           })
@@ -133,8 +137,9 @@ window.onload = function() {
               const latest = parseInt(endorsement.latest) === 1;
               const color = endorsement.revoke ? 'red' : 'green';
               const icon = endorsement.revoke ? 'xmark_seal_fill' : 'checkmark_seal_fill';
-              block.innerHTML = `<p style="width:100%"><i class="icon f7-icons margin-right" style="color:${color};font-size:110%">${icon}</i>`
-                + `${latest ? '<b>' : ''}${action}${latest ? '</b>' : ''} on: ${d.toLocaleString()}</p>`;
+              block.innerHTML = '<p style="width:100%">' +
+                `<i class="icon f7-icons margin-right" style="color:${color};font-size:110%">${icon}</i>` +
+                `${latest ? '<b>' : ''}${action}${latest ? '</b>' : ''} on: ${d.toLocaleString()}</p>`;
             }
           });
       }
@@ -184,7 +189,8 @@ window.onload = function() {
         content.style.minWidth = '250px';
         const label = (endorsement.revoke) ? '<span style="font-weight:bold;color:red">Revoked</span>' : 'Endorsed';
         const published = publishedDate(endorsement.published);
-        const distance = Math.round(distanceFromLatitudeLongitude(latitude, longitude, endorsement.latitude, endorsement.longitude));
+        const distance = Math.round(
+          distanceFromLatitudeLongitude(latitude, longitude, endorsement.latitude, endorsement.longitude));
         content.innerHTML =
           `<a href="/citizen.html?signature=${encodeURIComponent(endorsement.signature)}"><b>${endorsement.givenNames}<br>` +
           `${endorsement.familyName}</b></a><br><small>Distance: ${distance} m.<br>${label}: ${published}</small>`;
@@ -199,7 +205,9 @@ window.onload = function() {
         if (!endorsement.revoke)
           count++;
       });
-      document.getElementById('endorsed-by-header').textContent = answer.citizen_endorsements.length ? `Endorsed by ${count} / ${answer.citizen_endorsements.length}:` : `Not endorsed by anyone.`;
+      document.getElementById('endorsed-by-header').textContent = answer.citizen_endorsements.length
+        ? `Endorsed by ${count} / ${answer.citizen_endorsements.length}:`
+        : `Not endorsed by anyone.`;
       answer.citizen_endorsements.forEach(function(endorsement) {
         addEndorsement(endorsement, 'endorsed-by');
       });
@@ -208,7 +216,9 @@ window.onload = function() {
         if (!endorsement.revoke)
           count++;
       });
-      document.getElementById('has-endorsed-header').textContent = answer.endorsements.length ? `Has endorsed ${count} / ${answer.endorsements.length}:` : `Has not endorsed anyone.`;
+      document.getElementById('has-endorsed-header').textContent = answer.endorsements.length
+        ? `Has endorsed ${count} / ${answer.endorsements.length}:`
+        : 'Has not endorsed anyone.';
       answer.endorsements.forEach(function(endorsement) {
         addEndorsement(endorsement, 'has-endorsed');
       });
