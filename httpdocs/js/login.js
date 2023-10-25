@@ -7,9 +7,12 @@ async function hash(payload, type) {
 
 window.onload = function() {
   if (localStorage.getItem('password')) {
-    document.getElementById('logout-div').innerHTML = `<a id="logout">logout</a>`;
+    const a = document.createElement('a');
+    a.setAttribute('id', 'logout');
+    a.textContent = 'logout';
+    document.getElementById('logout-div').appendChild(a);
     document.getElementById('logout').addEventListener('click', function(event) {
-      document.getElementById('logout-div').innerHTML = ``;
+      document.getElementById('logout-div').textContent = '';
       localStorage.removeItem('password');
     });
   }

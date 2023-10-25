@@ -15,23 +15,17 @@ function findGetParameter(parameterName) {
   return result;
 }
 
-function sanitizeString(str) {
-  str = str.replaceAll('&', '&amp;');
-  str = str.replaceAll("'", '&apos;');
-  str = str.replaceAll('"', '&quot;');
-  str = str.replaceAll('<', '&lt;');
-  str = str.replaceAll('>', '&gt;');
-
-  return str;
-}
-
 window.onload = function() {
   if (localStorage.getItem('password')) {
-    document.getElementById('logout-div').innerHTML = `<a id="logout">logout</a>`;
+    const a = document.createElement('a');
+    a.setAttribute('id', 'logout');
+    a.textContent = 'logout';
+    document.getElementById('logout-div').appendChild(a);
     document.getElementById('logout').addEventListener('click', function(event) {
-      document.getElementById('logout-div').innerHTML = ``;
+      document.getElementById('logout-div').textContent = '';
       localStorage.removeItem('password');
     });
+  }
   }
   document.getElementById('proposal').addEventListener('click', function() {
     window.open(`propose.html?latitude=${latitude}&longitude=${longitude}`, '_blank');
@@ -112,9 +106,9 @@ window.onload = function() {
     fieldset.setAttribute('disabled', '');
     const searchCitizen = event.currentTarget;
     searchCitizen.classList.add('is-loading');
-    const familyName = sanitizeString(document.getElementById('family-name').value);
-    const givenNames = sanitizeString(document.getElementById('given-names').value);
-    judge = sanitizeString(document.getElementById('judge').value);
+    const familyName = document.getElementById('family-name').value;
+    const givenNames = document.getElementById('given-names').value;
+    judge = document.getElementById('judge').value;
     let parameters = `latitude=${latitude}&longitude=${longitude}&radius=${radius}`;
     if (judge)
       parameters += `&judge=https://${encodeURIComponent(judge)}`;
@@ -164,7 +158,7 @@ window.onload = function() {
   document.getElementById('search-proposals').addEventListener('click', searchProposals);
 
   function searchProposals() {
-    const query = sanitizeString(document.getElementById('proposal-query').value);
+    const query = document.getElementById('proposal-query').value;
     const r = document.getElementById('proposal-referendum').checked;
     const p = document.getElementById('proposal-petition').checked;
     const secret = (r && p) ? 2 : (r ? 1 : 0);
@@ -191,7 +185,7 @@ window.onload = function() {
         section.innerHTML = '';
         if (answer.number == 0) {
           const div = document.createElement('div');
-          div.innerHTML = 'No result found, try to refine your search.';
+          div.textContent = 'No result found, try to refine your search.';
           section.appendChild(div);
           return;
         }
@@ -204,29 +198,29 @@ window.onload = function() {
         thead.appendChild(tr);
         let th = document.createElement('th');
         tr.appendChild(th);
-        th.innerHTML = 'Type';
+        th.textContent = 'Type';
         th = document.createElement('th');
         tr.appendChild(th);
-        th.innerHTML = 'Area';
+        th.textContent = 'Area';
         th = document.createElement('th');
         tr.appendChild(th);
-        th.innerHTML = 'Title';
+        th.textContent = 'Title';
         th = document.createElement('th');
         tr.appendChild(th);
-        th.innerHTML = 'Deadline';
+        th.textContent = 'Deadline';
         const tbody = document.createElement('tbody');
         table.appendChild(tbody);
         answer.proposals.forEach(function(proposal) {
           tr = document.createElement('tr');
           tbody.appendChild(tr);
           let td = document.createElement('td');
-          td.innerHTML = `${proposal.secret ? 'Referendum' : 'Petition'}`;
+          td.textContent = `${proposal.secret ? 'Referendum' : 'Petition'}`;
           tr.appendChild(td);
           td = document.createElement('td');
-          td.innerHTML = proposal.areas[0].split('=')[1];
+          td.textContent = proposal.areas[0].split('=')[1];
           tr.appendChild(td);
           td = document.createElement('td');
-          td.innerHTML = proposal.title;
+          td.textContent = proposal.title;
           tr.appendChild(td);
           td = document.createElement('td');
           const deadline = new Date(proposal.deadline * 1000);
@@ -241,7 +235,7 @@ window.onload = function() {
 
         if (offset > 0) {
           const prev = document.createElement('button');
-          prev.innerHTML = 'Previous';
+          prev.textContent = 'Previous';
           prev.className = 'button is-info';
           prev.onclick = () => {
             fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, offset - limit, limit);
@@ -251,7 +245,7 @@ window.onload = function() {
 
         if (limit + offset < answer.number) {
           const next = document.createElement('button');
-          next.innerHTML = 'Next';
+          next.textContent = 'Next';
           next.className = 'button is-info';
           next.style.float = 'right';
           next.onclick = () => {
@@ -289,7 +283,7 @@ window.onload = function() {
   }
 
   function updateLabel() {
-    document.getElementById("address").innerHTML = address;
+    document.getElementById("address").textContent = address;
     document.getElementById("position").innerHTML = '(' + latitude + ', ' + longitude + ') &plusmn; ' + Math.round(radius / 100) / 10 + ' km';
   }
 };

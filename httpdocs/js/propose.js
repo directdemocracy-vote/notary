@@ -10,8 +10,8 @@ function findGetParameter(parameterName, result = null) {
 }
 
 function showModal(title, content) {
-  document.getElementById('modal-title').innerHTML = title;
-  document.getElementById('modal-content').innerHTML = content;
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-content').textContent = content;
   document.getElementById('modal').classList.add('is-active');
 }
 
@@ -19,21 +19,14 @@ function closeModal() {
   document.getElementById('modal').classList.remove('is-active');
 }
 
-function sanitizeString(str) {
-  str = str.replaceAll('&', '&amp;');
-  str = str.replaceAll("'", '&apos;');
-  str = str.replaceAll('"', '&quot;');
-  str = str.replaceAll('<', '&lt;');
-  str = str.replaceAll('>', '&gt;');
-
-  return str;
-}
-
 window.onload = async function() {
   if (localStorage.getItem('password')) {
-    document.getElementById('logout-div').innerHTML = `<a id="logout">logout</a>`;
+    const a = document.createElement('a');
+    a.setAttribute('id', 'logout');
+    a.textContent = 'logout'
+    document.getElementById('logout-div').appendChild(a);;
     document.getElementById('logout').addEventListener('click', function(event) {
-      document.getElementById('logout-div').innerHTML = ``;
+      document.getElementById('logout-div').textContent = '';
       localStorage.removeItem('password');
     });
   }
@@ -108,7 +101,7 @@ window.onload = async function() {
 
   function areaChange() {
     const a = document.getElementById('area');
-    const selected_name = a.options[a.selectedIndex].innerHTML;
+    const selected_name = a.options[a.selectedIndex].textContent;
     const selected_type = a.options[a.selectedIndex].value;
     area = '';
     let query = '';
@@ -116,14 +109,14 @@ window.onload = async function() {
       let type = a.options[i].value;
       if (['village', 'town', 'municipality'].includes(type))
         type = 'city';
-      const name = a.options[i].innerHTML;
+      const name = a.options[i].textContent;
       area += type + '=' + name + '\n';
       if (type != 'union')
         query += type + '=' + encodeURIComponent(name) + '&';
     }
     query = query.slice(0, -1);
     const place = document.getElementById('place');
-    place.innerHTML = selected_name;
+    place.textContent = selected_name;
     if (selected_type == 'union' && selected_name == 'European Union')
       place.href = 'https://en.wikipedia.org/wiki/European_Union';
     else if (selected_type == 'world' && selected_name == 'Earth')
@@ -139,13 +132,13 @@ window.onload = async function() {
       document.getElementById('answers-block').style.display = 'block';
       document.getElementById('title').setAttribute('placeholder', 'Enter the title of your referendum');
       document.getElementById('description').setAttribute('placeholder', 'Enter the description of your referendum');
-      document.getElementById('publish').innerHTML = 'Publish your referendum';
+      document.getElementById('publish').textContent = 'Publish your referendum';
     } else {
       document.getElementById('question-block').style.display = 'none';
       document.getElementById('answers-block').style.display = 'none';
       document.getElementById('title').setAttribute('placeholder', 'Enter the title of your petition');
       document.getElementById('description').setAttribute('placeholder', 'Enter the description of your petition');
-      document.getElementById('publish').innerHTML = 'Publish your petition';
+      document.getElementById('publish').textContent = 'Publish your petition';
     }
     validate();
   }
@@ -208,21 +201,21 @@ window.onload = async function() {
           publication.key = publicationPublicKeyBase64;
           publication.signature = '';
           publication.published = Math.round(new Date().getTime() / 1000);
-          publication.judge = sanitizeString(judge);
+          publication.judge = judge;
           publication.area = answer.signature;
-          publication.title = sanitizeString(document.getElementById('title').value.trim());
-          publication.description = sanitizeString(document.getElementById('description').value.trim());
+          publication.title = document.getElementById('title').value.trim();
+          publication.description = document.getElementById('description').value.trim();
           const type = document.querySelector('input[name="type"]:checked').value;
           if (type === 'referendum') {
-            publication.question = sanitizeString(document.getElementById('question').value.trim());
-            publication.answers = sanitizeString(document.getElementById('answers').value.trim()).split("\n");
+            publication.question = document.getElementById('question').value.trim();
+            publication.answers = document.getElementById('answers').value.trim().split("\n");
             publication.secret = true;
           } else
             publication.secret = false;
           publication.deadline = Math.round(Date.parse(document.getElementById('deadline').value) / 1000);
           const website = document.getElementById('website').value.trim();
           if (website)
-            publication.website = sanitizeString(website);
+            publication.website = website;
           const str = JSON.stringify(publication);
           const signature = await window.crypto.subtle.sign(
             "RSASSA-PKCS1-v1_5",

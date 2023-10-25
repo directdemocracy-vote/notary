@@ -17,7 +17,7 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-$search = sanitize_field($_GET["search"], "string", "search");
+$search = $mysqli->escape_string($_GET["search"]);
 $secret = sanitize_field($_GET["secret"], "(0|1|2)", "secret");
 $open = sanitize_field($_GET["open"], "(0|1|2)", "open");
 $latitude = sanitize_field($_GET["latitude"], "float", "latitude");

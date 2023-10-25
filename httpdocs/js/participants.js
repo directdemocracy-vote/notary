@@ -8,11 +8,23 @@ function findGetParameter(parameterName) {
   return result;
 }
 
+function sanitizeString(str) {
+  str = str.replaceAll('&', '&amp;');
+  str = str.replaceAll("'", '&apos;');
+  str = str.replaceAll('"', '&quot;');
+  str = str.replaceAll('<', '&lt;');
+  str = str.replaceAll('>', '&gt;');
+  return str;
+}
+
 window.onload = function() {
   if (localStorage.getItem('password')) {
-    document.getElementById('logout-div').innerHTML = `<a id="logout">logout</a>`;
+    const a = document.createElement('a');
+    a.setAttribute('id', 'logout');
+    a.textContent = 'logout';
+    document.getElementById('logout-div').appendChild(a);
     document.getElementById('logout').addEventListener('click', function(event) {
-      document.getElementById('logout-div').innerHTML = ``;
+      document.getElementById('logout-div').textContent = '';
       localStorage.removeItem('password');
     });
   }
@@ -39,32 +51,50 @@ window.onload = function() {
       }
       const subtitle = document.getElementById('subtitle');
       if (corpus)
-        subtitle.innerHTML = 'Petition corpus';
+        subtitle.textContent = 'Petition corpus';
       else
-        subtitle.innerHTML = 'Petition participants';
+        subtitle.textContent = 'Petition participants';
       const panel = document.getElementById('panel');
       const title = document.createElement('p');
       panel.appendChild(title);
       title.classList.add('panel-heading');
-      title.innerHTML = `<a href="proposal.html?${selector}">${answer.title}</a>`;
+      const a = document.createElement('a');
+      a.setAttribute('href', `proposal.html?${selector}`);
+      a.textContent = answer.title;
+      title.appendChild(a);
       if (answer.participants.length === 0) {
         const block = document.createElement('div');
         block.classList.add('panel-block');
         panel.appendChild(block);
-        block.innerHTML = '<p>Nobody signed this petition yet.</p>';
+        const p = document.createElement('p');
+        p.textContent = 'Nobody signed this petition yet.';
+        block.appendChild(p);
       } else for(const participant of answer.participants) {
         const block = document.createElement('div');
         block.classList.add('panel-block');
-        panel.appendChild(block);
-        let line = `<p style="width:100%"><a href="citizen.html?${selector}" target="_blank">` +
-                   `<img src="${participant.picture}" style="width:50px;float:left;margin-right:10px"></img> ` +
-                   `${participant.givenNames} <b>${participant.familyName}</b></a>`;
+        const p = document.createElement('p');
+        p.setAttribute('style', 'width:100%');
+        const a = document.createElement('a');
+        a.setAttribute('href', `citizen.html?${selector}`);
+        a.setAttribute('target', '_blank');
+        p.appendChild(a);
+        const img = document.createElement('img');
+        img.setAttribute('src', participant.picture);
+        img.setAttribute('style', 'width:50px;float:left;margin-right:10px');
+        a.appendChild(img);
+        a.appendChild(document.createTextNode(participant.givenNames));
+        const b = document.createElement('b');
+        b.textContent = participant.familyName;
+        a.appendChild(b);
         if (!corpus) {
           const d = new Date(parseInt(participant.published));
-          line += `<br><small>Signed on: ${d.toLocaleString()}</small>`;
+          p.appendChild(document.createElement('br'));
+          const small = document.createElement('small');
+          small.textContent = `Signed on: ${d.toLocaleString()}`;
+          p.appendChild(small);
         }
-        line += '</p>';
-        block.innerHTML = line;
+        block.appendChild(p);
+        panel.appendChild(block);
       }
     });
 };

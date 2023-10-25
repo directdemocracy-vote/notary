@@ -8,7 +8,7 @@ header("Access-Control-Allow-Headers: content-type");
 
 $input = json_decode(file_get_contents("php://input"));
 $judge = sanitize_field($input->judge, "url", "judge");
-$area = sanitize_field($input->area, "string", "area");
+$area = $mysqli->escape_string($input->area);
 
 if (!$judge)
   error("Missing judge argument");

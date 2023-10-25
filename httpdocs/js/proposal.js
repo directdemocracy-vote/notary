@@ -9,16 +9,19 @@ function findGetParameter(parameterName) {
 
 window.onload = async function() {
   if (localStorage.getItem('password')) {
-    document.getElementById('logout-div').innerHTML = `<a id="logout">logout</a>`;
+    const a = document.createElement('a');
+    a.setAttribute('id', 'logout');
+    a.textContent = 'logout'
+    document.getElementById('logout-div').appendChild(a);;
     document.getElementById('logout').addEventListener('click', function(event) {
-      document.getElementById('logout-div').innerHTML = ``;
+      document.getElementById('logout-div').textContent = '';
       localStorage.removeItem('password');
       document.getElementById('panel-heading').removeChild(document.getElementById('delete-link'))
     });
     const a = document.createElement('a');
     a.classList.add('level-right');
     a.setAttribute('id', 'delete-link');
-    a.innerHTML = 'Delete';
+    a.textContent = 'Delete';
     a.addEventListener('click', function(event) {
       const h = localStorage.getItem('password');
       fetch('/api/developer/delete.php', {method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -57,26 +60,30 @@ window.onload = async function() {
         console.error(`Cannot get petition: ${answer.error}`);
         return;
       }
-      document.getElementById('title').innerHTML = answer.title;
-      document.getElementById('description').innerHTML = answer.description;
+      document.getElementById('title').textContent = answer.title;
+      document.getElementById('description').textContent = answer.description;
       if (answer.secret) {
         document.getElementById('question-block').style.display = '';
-        document.getElementById('question').innerHTML = answer.question;
+        document.getElementById('question').textContent = answer.question;
         document.getElementById('answers-block').style.display = '';
-        document.getElementById('answers').innerHTML = answer.answers.join(' / ');
+        document.getElementById('answers').textContent = answer.answers.join(' / ');
       }
       const deadline = new Date(answer.deadline * 1000);
       const published = new Date(answer.published * 1000);
       const now = new Date();
       document.getElementById('deadline').innerHTML = `<span style="color:#${ deadline < now ? 'a00' : '0a0'}">${deadline.toLocaleString()}</span>`;
-      document.getElementById('published').innerHTML = published.toLocaleString();
-      document.getElementById('judge').innerHTML = `<a target="_blank" href="${answer.judge}">${answer.judge}</a>`;
-      document.querySelector('.subtitle').innerHTML = (answer.secret) ? 'referendum' : 'petition';
-      document.getElementById('modal-title').innerHTML = (answer.secret) ? 'Vote at this referendum' : 'Sign this petition';
+      document.getElementById('published').textContent = published.toLocaleString();
+      const a = document.createElement('a');
+      a.setAttribute('target', '_blank');
+      a.setAttribute('href', answer.judge);
+      a.textContent = answer.judge;
+      document.getElementById('judge').appendChild(a);
+      document.querySelector('.subtitle').textContent = (answer.secret) ? 'referendum' : 'petition';
+      document.getElementById('modal-title').textContent = (answer.secret) ? 'Vote at this referendum' : 'Sign this petition';
       const actionButton = document.getElementById('action-button');
-      actionButton.innerHTML = (answer.secret) ? 'Vote' : 'Sign';
+      actionButton.textContent = (answer.secret) ? 'Vote' : 'Sign';
       if (deadline < now)
-        actionButton.innerHTML = 'Closed';
+        actionButton.textContent = 'Closed';
       else
         actionButton.removeAttribute('disabled');
       const corpus = answer.corpus;
@@ -100,7 +107,7 @@ window.onload = async function() {
         if (type)
           query += type + '=' + encodeURIComponent(name) + '&';
       });
-      areaName.innerHTML = `Area: ${areas[1]}`;
+      areaName.textContent = `Area: ${areas[1]}`;
       query = query.slice(0, -1);
       if (!areas[0])
         areaName.innerHTML = `Area: <a target="_blank" href="https://en.wikipedia.org/wiki/Earth">Earth</a>`;
@@ -121,7 +128,7 @@ window.onload = async function() {
                                `corpus</a> of ${corpus_percent}%`;
                 } else
                   population = `<a target="_blank" href="${url}">N/A</a>`;
-                areaName.innerHTML = `Area: ${areas[1]} (estimated population: ${population})`;
+                areaName.textContent = `Area: ${areas[1]} (estimated population: ${population})`;
               }
             }
           });
@@ -190,7 +197,7 @@ window.onload = async function() {
     const a = document.createElement('a');
     control.appendChild(a);
     a.classList.add('button', 'is-info');
-    a.innerHTML = 'Copy';
+    a.textContent = 'Copy';
     const message = document.createElement('div');
     div.appendChild(message);
     message.innerHTML = 'From the <i>directdemocracy</i> app, scan this QR code or copy and paste it.';

@@ -13,8 +13,8 @@ function sanitize_field($variable, $type, $name) {
     return null;
 
   switch ($type) {
-    case 'string':
-      $variable = sanitize_string($variable, $name);
+    case 'string':  // FIXME: remove this
+      $variable = $variable;
       break;
     case 'year':
       $variable = intval($variable);
@@ -62,33 +62,6 @@ function sanitize_field($variable, $type, $name) {
     default:
       error("Unknown type: $type");
   }
-  return $variable;
-}
-
-function sanitize_string($variable, $name) {
-  global $mysqli;
-
-  if (!is_string($variable))
-    error("Error: $name should be a string.");
-
-  $blacklistedChars = '"\'<>';
-  $pattern = preg_quote($blacklistedChars, '/');
-
-  if (preg_match('/[' . $pattern . ']/', $variable))
-     error("$name contains non escaped characters.");
-
-  //Check for &
-  $test_variable = str_replace("&amp;", "", $variable);
-  $test_variable = str_replace("&apos;", "", $test_variable);
-  $test_variable = str_replace("&quot;", "", $test_variable);
-  $test_variable = str_replace("&lt;", "", $test_variable);
-  $test_variable = str_replace("&gt;", "", $test_variable);
-
-  if (str_contains($test_variable, "&"))
-    error("$name contains non escaped &.");
-
-  $variable = $mysqli->escape_string($variable);
-
   return $variable;
 }
 ?>

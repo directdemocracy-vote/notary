@@ -33,7 +33,7 @@ if (!$publication)
   error("Unable to parse JSON post");
 if (!isset($publication->schema))
   error("Unable to read schema field");
-$schema = sanitize_field($publication->schema, "string", "schema");
+$schema = sanitize_field($publication->schema, "url", "schema");
 $key = sanitize_field($publication->key, "base64", "key");
 $published = sanitize_field($publication->published, "positive_int", "published");
 $signature = sanitize_field($publication->signature, "base64", "signature");
@@ -89,8 +89,8 @@ $mysqli->query($query) or error($mysqli->error);
 $id = $mysqli->insert_id;
 
 if ($type == 'citizen') {
-  $familyName = sanitize_field($publication->familyName, "string", "familyName");
-  $givenNames = sanitize_field($publication->givenNames, "string", "givenNames");
+  $familyName = $mysqli->escape_string($publication->familyName);
+  $givenNames = $mysqli->escape_string($publication->givenNames);
   $latitude = sanitize_field($citizen->latitude, "float", "latitude");
   $longitude = sanitize_field($citizen->longitude, "float", "longitude");
   $query = "INSERT INTO citizen(id, familyName, givenNames, picture, home) "
@@ -136,8 +136,8 @@ if ($type == 'citizen') {
   } else
     $accepted = 0;
   $revoke = $endorsement->revoke ? 1 : 0;
-  $message = sanitize_field($endorsement->message, "string", "message");
-  $comment = sanitize_field($endorsement->comment, "string", "comment");
+  $message = $mysqli->escape_string($endorsement->message);
+  $comment = $mysqli->escape_string($endorsement->comment);
   $query = "INSERT INTO endorsement(id, `revoke`, `message`, comment, endorsedSignature, latest, accepted) "
           ."VALUES($id, $revoke, \"$message\", \"$comment\", FROM_BASE64('$endorsedSignature'), 1, $accepted)";
 } elseif ($type == 'proposal') {
@@ -150,19 +150,19 @@ if ($type == 'citizen') {
   if (!isset($proposal->question))  # optional
     $question = '';
   else
-    $question = sanitize_field($publication->question, "string", "question");
+    $question = $mysqli->escape_string($publication->question);
 
   if (!isset($proposal->answers))  # optional
     $answers = array();
   else
     $answers = $publication->answers;
   $answers = implode("\n", $answers);
-  $answers = sanitize_field($answers, "string", "answer");
+  $answers = $mysqli->escape_string($answers);
   $secret = ($proposal->secret) ? 1 : 0;
   $judge = sanitize_field($publication->judge, "url", "judge");
   $area = sanitize_field($publication->area, "base64", "area");
-  $title = sanitize_field($publication->title, "string", "title");
-  $description = sanitize_field($publication->description, "string", "description");
+  $title = $mysqli->escape_string($publication->title);
+  $description = $mysqli->escape_string($publication->description);
   $deadline = sanitize_field($publication->deadline, "positive_int", "deadline");
   $query = "INSERT INTO proposal(id, judge, area, title, description, question, answers, secret, deadline, website, participants, corpus) "
           ."VALUES($id, \"$judge\", FROM_BASE64('$area'), \"$title\", \"$description\", "
@@ -174,7 +174,7 @@ elseif ($type == 'ballot') {
   if (!isset($publication->answer)) # optional
     $answer = '';
   else
-    $answer = sanitize_field($publication->answer, "string", "answer");
+    $answer = $mysqli->escape_string($publication->answer);
 
   if (isset($publication->station)) {
     $station_key = sanitize_field($publication->station->key, "base64", "station_key");
@@ -215,7 +215,7 @@ elseif ($type == 'ballot') {
   }
   $polygons .= ')")';
   $name = implode("\n", $publication->name);
-  $name = sanitize_field($name, "string", "name");
+  $name = $mysqli->escape_string($name);
   $query = "INSERT INTO area(id, name, polygons) VALUES($id, \"$name\", $polygons)";
 } else
   error("Unknown publication type.");

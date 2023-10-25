@@ -2,16 +2,16 @@
 require_once '../../php/database.php';
 require_once '../../php/sanitizer.php';
 
-$version = '2';
+$version = 2;
 
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-$type = sanitize_field($_GET["type"], "string", "type");
+$type = $mysqli->escape_string($_GET["type"]);
 $published_from = isset($_GET["published_from"]) ? sanitize_field($_GET["published_from"], "positive_int", "published_from") : null;
 $published_to = isset($_GET["published_to"]) ? sanitize_field($_GET["published_to"], "positive_int", "published_to") : null;
-$v = isset($_GET["version"]) ? sanitize_field($_GET["version"], "string", "version") : null;
+$v = isset($_GET["version"]) ? sanitize_field($_GET["version"], "positive_int", "version") : null;
 if ($v)
   $version = $v;
 

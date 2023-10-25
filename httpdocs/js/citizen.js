@@ -17,16 +17,18 @@ window.onload = function() {
     return;
   }
   if (localStorage.getItem('password')) {
-    document.getElementById('logout-div').innerHTML = `<a id="logout">logout</a>`;
+    const a = document.createElement('a');
+    a.setAttribute('id', 'logout');
+    a.textContent = 'logout';
+    document.getElementById('logout-div').appendChild(a);
     document.getElementById('logout').addEventListener('click', function(event) {
-      document.getElementById('logout-div').innerHTML = ``;
+      document.getElementById('logout-div').textContent = '';
       localStorage.removeItem('password');
-      document.getElementById('panel-heading').removeChild(document.getElementById('delete-link'))
     });
     const a = document.createElement('a');
     a.classList.add('level-right');
     a.setAttribute('id', 'delete-link');
-    a.innerHTML = 'Delete';
+    a.textContent = 'Delete';
     a.addEventListener('click', function(event) {
       const h = localStorage.getItem('password');
       fetch('/api/developer/delete.php', {method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -56,10 +58,10 @@ window.onload = function() {
       const latitude = answer.citizen.latitude;
       const longitude = answer.citizen.longitude;
       document.getElementById('picture').src = answer.citizen.picture;
-      document.getElementById('given-names').innerHTML = givenNames;
-      document.getElementById('family-name').innerHTML = familyName;
+      document.getElementById('given-names').textContent = givenNames;
+      document.getElementById('family-name').textContent = familyName;
       document.getElementById('home').innerHTML = `<a href="https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}&zoom=12" target="_blank">${latitude}, ${longitude}</a>`;
-      document.getElementById('created').innerHTML = published;
+      document.getElementById('created').textContent = published;
       const map = L.map('map');
       map.whenReady(function() {setTimeout(() => {this.invalidateSize();}, 0);});
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -96,10 +98,10 @@ window.onload = function() {
           .then((answer) => {
             if (answer.error) {
               reputation.style.color = 'red';
-              reputation.innerHTML = answer.error;
+              reputation.textContent = answer.error;
             } else {
               reputation.style.color = answer.endorsed ? 'green' : 'red';
-              reputation.innerHTML = `${answer.reputation}`;
+              reputation.textContent = `${answer.reputation}`;
             }
           });
       }
@@ -196,7 +198,7 @@ window.onload = function() {
         if (!endorsement.revoke)
           count++;
       });
-      document.getElementById('endorsed-by-header').innerHTML = answer.citizen_endorsements.length ? `Endorsed by ${count} / ${answer.citizen_endorsements.length}:` : `Not endorsed by anyone.`;
+      document.getElementById('endorsed-by-header').textContent = answer.citizen_endorsements.length ? `Endorsed by ${count} / ${answer.citizen_endorsements.length}:` : `Not endorsed by anyone.`;
       answer.citizen_endorsements.forEach(function(endorsement) {
         addEndorsement(endorsement, 'endorsed-by');
       });
@@ -205,7 +207,7 @@ window.onload = function() {
         if (!endorsement.revoke)
           count++;
       });
-      document.getElementById('has-endorsed-header').innerHTML = answer.endorsements.length ? `Has endorsed ${count} / ${answer.endorsements.length}:` : `Has not endorsed anyone.`;
+      document.getElementById('has-endorsed-header').textContent = answer.endorsements.length ? `Has endorsed ${count} / ${answer.endorsements.length}:` : `Has not endorsed anyone.`;
       answer.endorsements.forEach(function(endorsement) {
         addEndorsement(endorsement, 'has-endorsed');
       });

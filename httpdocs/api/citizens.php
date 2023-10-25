@@ -14,8 +14,8 @@ if ($radius) {
   $longitude = sanitize_field($_GET["longitude"], "float", "longitude");
 }
 
-$familyName = isset($_GET["familyName"]) ? sanitize_field($_GET["familyName"], "string", "familyName") : null;
-$givenNames = isset($_GET["givenNames"]) ? sanitize_field($_GET["givenNames"], "string", "givenNames") : null;
+$familyName = isset($_GET["familyName"]) ? $mysqli->escape_string($_GET["familyName"]) : null;
+$givenNames = isset($_GET["givenNames"]) ? $mysqli->escape_string($_GET["givenNames"]) : null;
 $judge = isset($_GET["judge"]) ? sanitize_field($_GET["judge"], "url", "judge") : null;
 
 $key = '';
