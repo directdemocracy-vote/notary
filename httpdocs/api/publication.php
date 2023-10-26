@@ -35,7 +35,7 @@ $publication['published'] = intval($publication['published']);
 $type = $publication['type'];
 unset($publication['type']);
 if ($type == 'citizen') {
-  $query = "SELECT givenNames, familyName, "
+  $query = "SELECT REPLACE(TO_BASE64(appKey), '\\n', '')) AS appKey, REPLACE(TO_BASE64(appSignature), '\\n', '')) AS appSignature, givenNames, familyName, "
           ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(picture), '\\n', '')) AS picture, "
           ."ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
@@ -46,7 +46,8 @@ if ($type == 'citizen') {
   $citizen = $publication + $citizen;
   echo json_encode($citizen, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'endorsement') {
-  $query = "SELECT revoke, message, comment, endorsedSignature FROM endorsement WHERE id=$publication_id";
+  $query = "SELECT REPLACE(TO_BASE64(appKey), '\\n', '')) AS appKey, REPLACE(TO_BASE64(appSignature), '\\n', '')) AS appSignature, `revoke`, "
+          ."message, comment, endorsedSignature FROM endorsement WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsement = $result->fetch_assoc();
   $result->free();
@@ -65,7 +66,9 @@ if ($type == 'citizen') {
   $proposal = $publication + $proposal;
   echo json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'ballot') {
-  $query = "SELECT REPLACE(TO_BASE64(stationKey), '\\n', ''), REPLACE(TO_BASE64(stationSignature), '\\n', ''), answer from ballot WHERE id=$publication_id";
+  $query = "SELECT REPLACE(TO_BASE64(appKey), '\\n', '')) AS appKey, REPLACE(TO_BASE64(appSignature), '\\n', '')) AS appSignature, "
+          ."REPLACE(TO_BASE64(stationKey), '\\n', '') AS stationKey, REPLACE(TO_BASE64(stationSignature), '\\n', '') AS stationSignature, "
+          ."answer from ballot WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $ballot = $result->fetch_assoc();
   $result->free();

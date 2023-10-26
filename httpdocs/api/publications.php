@@ -17,10 +17,12 @@ if ($v)
 
 if (!$type)
   error("No type argument provided.");
+$citizen_fields = "REPLACE(TO_BASE64(" + $type + ".appKey), '\\n', '') AS appKey, REPLACE(TO_BASE64(" + $type + ".appSignature), '\\n', '') AS appsignature";
 if ($type == 'endorsement')
-  $fields = "REPLACE(TO_BASE64(endorsement.endorsedSignature), '\\n', '') AS endorsedSignature, endorsement.revoke, endorsement.message, endorsement.comment";
+  $fields = "$citizen_fields, REPLACE(TO_BASE64(endorsement.endorsedSignature), '\\n', '') AS endorsedSignature, endorsement.revoke, endorsement.message, "
+           ."endorsement.comment";
 elseif ($type == 'citizen')
-  $fields = "citizen.familyName, citizen.givenNames, CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')), "
+  $fields = "$citizen_fields, citizen.familyName, citizen.givenNames, CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')), "
            ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude";
 elseif ($type == 'proposal')
   $fields = 'proposal.judge, proposal.area, proposal.title, proposal.description, proposal.question, proposal.answers, proposal.deadline, proposal.website';
