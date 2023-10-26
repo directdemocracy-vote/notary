@@ -13,6 +13,8 @@ CREATE TABLE `ballot` (
   `id` int(11) NOT NULL,
   `stationKey` blob NOT NULL,
   `stationSignature` blob NOT NULL,
+  `appKey` blob NOT NULL,
+  `appSignature` blob NOT NULL,
   `revoke` tinyint(1) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -25,6 +27,8 @@ CREATE TABLE `ballots` (
 
 CREATE TABLE `citizen` (
   `id` int(11) NOT NULL,
+  `appKey` blob NOT NULL,
+  `appSignature` blob NOT NULL,
   `givenNames` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `familyName` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `picture` blob NOT NULL,
@@ -38,6 +42,8 @@ CREATE TABLE `corpus` (
 
 CREATE TABLE `endorsement` (
   `id` int(11) NOT NULL,
+  `appKey` blob NOT NULL,
+  `appSignature` blob NOT NULL,
   `revoke` tinyint(1) NOT NULL,
   `message` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
   `comment` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -52,13 +58,12 @@ CREATE TABLE `publication` (
   `type` enum('citizen','endorsement','area','proposal','participation','registration','ballot','vote') NOT NULL,
   `published` datetime NOT NULL,
   `signature` blob NOT NULL COMMENT 'signature of the publication by the author',
-  `signatureSHA1` binary(20) GENERATED ALWAYS AS (unhex(sha(`signature`))) STORED,
   `key` blob NOT NULL COMMENT 'public key of author'
+  `signatureSHA1` binary(20) GENERATED ALWAYS AS (unhex(sha(`signature`))) STORED,
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `proposal` (
   `id` int(11) NOT NULL,
-  `judge` varchar(2048) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `area` blob NOT NULL,
   `title` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -80,6 +85,8 @@ CREATE TABLE `participation` (
 
 CREATE TABLE `registration` (
   `id` int(11) NOT NULL,
+  `appKey` blob NOT NULL,
+  `appSignature` blob NOT NULL,
   `blindKey` blob NOT NULL,
   `encryptedVote` blob NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
