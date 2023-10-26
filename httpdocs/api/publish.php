@@ -27,7 +27,7 @@ function public_key($key) {
 function check_app($publication) {
   global $mysqli;
   $appKey = sanitize_field($publication->appKey, 'base64', 'appKey');
-  $result = $mysqli->query("SELECT id FROM webservice WHERE `type`='app' and `key`='$appKey'");
+  $result = $mysqli->query("SELECT id FROM webservice WHERE `type`='app' and `key`=FROM_BASE64('$appKey')");
   if ($result->num_rows === 0)
     error("Unknown app");
   $appSignature = sanitize_field($publication->appSignature, 'base64', 'appSignature');
