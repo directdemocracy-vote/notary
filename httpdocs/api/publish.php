@@ -117,6 +117,10 @@ if ($type == 'citizen') {
   $endorsement = &$publication;
   if (isset($endorsement->appKey))
     list($appKey, $appSignature) = check_app($endorsement);
+  else {
+    $appKey = '';
+    $appSignature = '';
+  }
   if (!property_exists($endorsement, 'revoke'))
     $endorsement->revoke = false;
   if (!property_exists($endorsement, 'message'))
