@@ -79,7 +79,7 @@ window.onload = function() {
           b.textContent = participant.familyName;
           a.appendChild(b);
           if (!corpus) {
-            const d = new Date(parseInt(participant.published));
+            const d = new Date(parseInt(participant.published) * 1000);
             p.appendChild(document.createElement('br'));
             const small = document.createElement('small');
             small.textContent = `Signed on: ${d.toLocaleString()}`;
