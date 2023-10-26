@@ -113,7 +113,7 @@ window.onload = async function() {
         if (type)
           query += type + '=' + encodeURIComponent(name) + '&';
       });
-      areaName.innerHTML = `Area: ${areas[1]}`;
+      areaName.textContent = `Area: ${areas[1]}`;
       query = query.slice(0, -1);
       if (!areas[0])
         areaName.innerHTML = `Area: <a target="_blank" href="https://en.wikipedia.org/wiki/Earth">Earth</a>`;
@@ -135,7 +135,7 @@ window.onload = async function() {
                     `corpus</a> of ${corpusPercent}%`;
                 } else
                   population = `<a target="_blank" href="${url}">N/A</a>`;
-                areaName.textContent = `Area: ${areas[1]} (estimated population: ${population})`;
+                areaName.innerHTML = `Area: ${areas[1]} (estimated population: ${population})`;
               }
             }
           });
