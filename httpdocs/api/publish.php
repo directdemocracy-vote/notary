@@ -1,5 +1,9 @@
 <?php
 
+
+# FIXME: we should factorize and check appKey/appSignature for citizen, endorsement and registration publications
+
+
 require_once '../../vendor/autoload.php';
 require_once '../../php/database.php';
 require_once '../../php/endorsements.php';
@@ -89,13 +93,15 @@ $mysqli->query($query) or error($mysqli->error);
 $id = $mysqli->insert_id;
 
 if ($type == 'citizen') {
+  $appKey = sanitize_field($citizen->appKey, 'base64', 'appKey');
+  $appSignature = sanitize_field($citizen->appSignature, 'base64', 'appSignature');
   $familyName = $mysqli->escape_string($publication->familyName);
   $givenNames = $mysqli->escape_string($publication->givenNames);
   $latitude = sanitize_field($citizen->latitude, "float", "latitude");
   $longitude = sanitize_field($citizen->longitude, "float", "longitude");
-  $query = "INSERT INTO citizen(id, familyName, givenNames, picture, home) "
-          ."VALUES($id, \"$familyName\", \"$givenNames\", "
-          ."FROM_BASE64(\"$citizen_picture\"), POINT($longitude, $latitude))";
+  $query = "INSERT INTO citizen(id, appKey, appSignature, familyName, givenNames, picture, home) "
+          ."VALUES($id, FROM_BASE64('$appKey'), FROM_BASE64('$appSignature'), \"$familyName\", \"$givenNames\", "
+          ."FROM_BASE64('$citizen_picture'), POINT($longitude, $latitude))";
 } elseif ($type == 'endorsement') {
   $endorsement = &$publication;
   if (!property_exists($endorsement, 'revoke'))
@@ -104,6 +110,8 @@ if ($type == 'citizen') {
     $endorsement->message = '';
   if (!property_exists($endorsement, 'comment'))
     $endorsement->comment = '';
+  $appKey = sanitize_field($endorsement->appKey, 'base64', 'appKey');
+  $appSignature = sanitize_field($endorsement->appSignature, 'base64', 'appSignature');
   $endorsedSignature = sanitize_field($endorsement->endorsedSignature, "base64", "endorsedSignature");
   $query = "SELECT id, `type`, REPLACE(TO_BASE64(signature), '\\n', '') AS signature FROM publication WHERE signature = FROM_BASE64('$endorsedSignature')";
   $result = $mysqli->query($query) or error($mysqli->error);
@@ -128,7 +136,8 @@ if ($type == 'citizen') {
             ."INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home))) "
             ."INNER JOIN webservice AS judge ON judge.`type`='judge' AND judge.url=proposal.judge "
             ."INNER JOIN publication AS pe ON pe.`key`=judge.`key` "
-            ."INNER JOIN endorsement ON endorsement.id = pe.id AND endorsement.`revoke`=0 AND endorsement.latest=1 AND endorsement.endorsedSignature=pc.signature "
+            ."INNER JOIN endorsement ON endorsement.id = pe.id AND endorsement.`revoke`=0 AND endorsement.latest=1 "
+            ."AND endorsement.endorsedSignature=pc.signature "
             ."SET participants=participants+1 "
             ."WHERE proposal.id=$endorsed_id AND proposal.`secret`=0";
     $mysqli->query($query) or error($msqli->error);
@@ -138,8 +147,9 @@ if ($type == 'citizen') {
   $revoke = $endorsement->revoke ? 1 : 0;
   $message = $mysqli->escape_string($endorsement->message);
   $comment = $mysqli->escape_string($endorsement->comment);
-  $query = "INSERT INTO endorsement(id, `revoke`, `message`, comment, endorsedSignature, latest, accepted) "
-          ."VALUES($id, $revoke, \"$message\", \"$comment\", FROM_BASE64('$endorsedSignature'), 1, $accepted)";
+  $query = "INSERT INTO endorsement(id, appKey, appSignature, `revoke`, `message`, comment, endorsedSignature, latest, accepted) "
+          ."VALUES($id, FROM_BASE64('$appKey'), FROM_BASE64('$appSignature'), $revoke, \"$message\", \"$comment\", FROM_BASE64('$endorsedSignature'), "
+          . "1, $accepted)";
 } elseif ($type == 'proposal') {
   $proposal =&$publication;
   if (!isset($proposal->website))  # optional
@@ -159,18 +169,17 @@ if ($type == 'citizen') {
   $answers = implode("\n", $answers);
   $answers = $mysqli->escape_string($answers);
   $secret = ($proposal->secret) ? 1 : 0;
-  $judge = sanitize_field($publication->judge, "url", "judge");
   $area = sanitize_field($publication->area, "base64", "area");
   $title = $mysqli->escape_string($publication->title);
   $description = $mysqli->escape_string($publication->description);
   $deadline = sanitize_field($publication->deadline, "positive_int", "deadline");
-  $query = "INSERT INTO proposal(id, judge, area, title, description, question, answers, secret, deadline, website, participants, corpus) "
-          ."VALUES($id, \"$judge\", FROM_BASE64('$area'), \"$title\", \"$description\", "
+  $query = "INSERT INTO proposal(id, area, title, description, question, answers, secret, deadline, website, participants, corpus) "
+          ."VALUES($id, FROM_BASE64('$area'), \"$title\", \"$description\", "
           ."\"$question\", \"$answers\", $secret, $deadline, \"$website\", 0, 0)";
-} elseif ($type == 'registration')
+} elseif ($type == 'registration') {
   $query = "INSERT INTO registration(id, blindKey, encryptedVote) "
           ."VALUES($id, FROM_BASE64('$blindKey'), FROM_BASE64('$encryptedVote'))";
-elseif ($type == 'ballot') {
+} elseif ($type == 'ballot') {
   if (!isset($publication->answer)) # optional
     $answer = '';
   else
