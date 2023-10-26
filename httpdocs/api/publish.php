@@ -115,7 +115,8 @@ if ($type == 'citizen') {
           ."FROM_BASE64('$citizen_picture'), POINT($longitude, $latitude))";
 } elseif ($type == 'endorsement') {
   $endorsement = &$publication;
-  list($appKey, $appSignature) = check_app($endorsement);
+  if (isset($endorsement->appKey))
+    list($appKey, $appSignature) = check_app($endorsement);
   if (!property_exists($endorsement, 'revoke'))
     $endorsement->revoke = false;
   if (!property_exists($endorsement, 'message'))
