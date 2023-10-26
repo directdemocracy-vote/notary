@@ -74,7 +74,7 @@ window.onload = function() {
           img.setAttribute('src', participant.picture);
           img.setAttribute('style', 'width:50px;float:left;margin-right:10px');
           a.appendChild(img);
-          a.appendChild(document.createTextNode(participant.givenNames));
+          a.appendChild(document.createTextNode(participant.givenNames + ' '));
           const b = document.createElement('b');
           b.textContent = participant.familyName;
           a.appendChild(b);
