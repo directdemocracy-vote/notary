@@ -29,7 +29,8 @@ window.onload = function() {
     });
   }
   document.getElementById('proposal').addEventListener('click', function() {
-    window.open(`propose.html?latitude=${latitude}&longitude=${longitude}`, '_blank');
+    const judge = document.getElementById('judge').value.trim();
+    window.open(`https://${judge}/propose.html?latitude=${latitude}&longitude=${longitude}`, '_blank');
   });
 
   document.getElementById('proposal-year').setAttribute('value', new Date().getFullYear());
