@@ -1,9 +1,5 @@
 <?php
 
-
-# FIXME: we should factorize and check appKey/appSignature for citizen, endorsement and registration publications
-
-
 require_once '../../vendor/autoload.php';
 require_once '../../php/database.php';
 require_once '../../php/endorsements.php';
@@ -26,6 +22,21 @@ function public_key($key) {
     $public_key .= substr($key, $i, 64) . "\n";
   $public_key.= "-----END PUBLIC KEY-----";
   return $public_key;
+}
+
+function check_app($publication) {
+  $appKey = sanitize_field($publication->appKey, 'base64', 'appKey');
+  $appSignature = sanitize_field($publication->appSignature, 'base64', 'appSignature');
+  $publication->appSignature = '';
+  $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+  $verify = openssl_verify($data, base64_decode($appSignature), public_key($appKey), OPENSSL_ALGO_SHA256);
+  if ($verify != 1) {
+    $type = get_type(sanitize_field($publication->schema, "url", "schema"));
+    error("Wrong app signature for $type:");
+  }
+  # restore original signature
+  $publication->appSignature = $appSignature;
+  return array($appKey, $appSignature);
 }
 
 header("Content-Type: application/json");
@@ -80,10 +91,6 @@ if ($type != 'ballot') {
     error("Wrong signature for $type:");
   # restore original signatures if needed
   $publication->signature = $signature;
-  if (isset($station_signature))
-    $publication->station->signature = $station_signature;
-  if (isset($citizen_signature))
-    $publication->citizen->signature = $citizen_signature;
 }
 
 $version = intval(explode('/', $schema)[4]);
@@ -93,8 +100,7 @@ $mysqli->query($query) or error($mysqli->error);
 $id = $mysqli->insert_id;
 
 if ($type == 'citizen') {
-  $appKey = sanitize_field($citizen->appKey, 'base64', 'appKey');
-  $appSignature = sanitize_field($citizen->appSignature, 'base64', 'appSignature');
+  list($appKey, $appSignature) = check_app($citizen);
   $familyName = $mysqli->escape_string($publication->familyName);
   $givenNames = $mysqli->escape_string($publication->givenNames);
   $latitude = sanitize_field($citizen->latitude, "float", "latitude");
@@ -104,14 +110,13 @@ if ($type == 'citizen') {
           ."FROM_BASE64('$citizen_picture'), POINT($longitude, $latitude))";
 } elseif ($type == 'endorsement') {
   $endorsement = &$publication;
+  list($appKey, $appSignature) = check_app($endorsement);
   if (!property_exists($endorsement, 'revoke'))
     $endorsement->revoke = false;
   if (!property_exists($endorsement, 'message'))
     $endorsement->message = '';
   if (!property_exists($endorsement, 'comment'))
     $endorsement->comment = '';
-  $appKey = sanitize_field($endorsement->appKey, 'base64', 'appKey');
-  $appSignature = sanitize_field($endorsement->appSignature, 'base64', 'appSignature');
   $endorsedSignature = sanitize_field($endorsement->endorsedSignature, "base64", "endorsedSignature");
   $query = "SELECT id, `type`, REPLACE(TO_BASE64(signature), '\\n', '') AS signature FROM publication WHERE signature = FROM_BASE64('$endorsedSignature')";
   $result = $mysqli->query($query) or error($mysqli->error);
@@ -134,10 +139,10 @@ if ($type == 'citizen') {
             ."INNER JOIN citizen ON citizen.id=pc.id "
             ."INNER JOIN publication AS pa ON pa.`signature`=proposal.area "
             ."INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home))) "
-            ."INNER JOIN webservice AS judge ON judge.`type`='judge' AND judge.url=proposal.judge "
-            ."INNER JOIN publication AS pe ON pe.`key`=judge.`key` "
-            ."INNER JOIN endorsement ON endorsement.id = pe.id AND endorsement.`revoke`=0 AND endorsement.latest=1 "
-            ."AND endorsement.endorsedSignature=pc.signature "
+            ."INNER JOIN publication AS pp ON pp.id=proposal.id "
+            ."INNER JOIN webservice AS judge ON judge.`type`='judge' AND judge.`key`=pp.`key` "
+            ."INNER JOIN publication AS pe ON pe.`key`=pp.`key` "
+            ."INNER JOIN endorsement ON endorsement.id = pe.id AND endorsement.`revoke`=0 AND endorsement.latest=1 AND endorsement.endorsedSignature=pc.signature "
             ."SET participants=participants+1 "
             ."WHERE proposal.id=$endorsed_id AND proposal.`secret`=0";
     $mysqli->query($query) or error($msqli->error);
@@ -177,8 +182,9 @@ if ($type == 'citizen') {
           ."VALUES($id, FROM_BASE64('$area'), \"$title\", \"$description\", "
           ."\"$question\", \"$answers\", $secret, $deadline, \"$website\", 0, 0)";
 } elseif ($type == 'registration') {
-  $query = "INSERT INTO registration(id, blindKey, encryptedVote) "
-          ."VALUES($id, FROM_BASE64('$blindKey'), FROM_BASE64('$encryptedVote'))";
+  list($appKey, $appSignature) = check_app($endorsement);
+  $query = "INSERT INTO registration(id, appKey, appSignature, blindKey, encryptedVote) "
+          ."VALUES($id, FROM_BASE64('$appKey'), FROM_BASE64('$appSignature'), FROM_BASE64('$blindKey'), FROM_BASE64('$encryptedVote'))";
 } elseif ($type == 'ballot') {
   if (!isset($publication->answer)) # optional
     $answer = '';
