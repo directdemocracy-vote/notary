@@ -17,7 +17,7 @@ if ($v)
 
 if (!$type)
   error("No type argument provided.");
-$citizen_fields = "REPLACE(TO_BASE64(" + $type + ".appKey), '\\n', '') AS appKey, REPLACE(TO_BASE64(" + $type + ".appSignature), '\\n', '') AS appsignature";
+$citizen_fields = "REPLACE(TO_BASE64(".$type.".appKey), '\\n', '') AS appKey, REPLACE(TO_BASE64(".$type.".appSignature), '\\n', '') AS appsignature";
 if ($type == 'endorsement')
   $fields = "$citizen_fields, REPLACE(TO_BASE64(endorsement.endorsedSignature), '\\n', '') AS endorsedSignature, endorsement.revoke, endorsement.message, "
            ."endorsement.comment";
