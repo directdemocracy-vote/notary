@@ -8,14 +8,14 @@ However, it has a number of limitations.
 
 ## Limitations
 
-This notary relies on a standard MySQL database which may not scale well with the number of users.
-Moreover a standard database may not be the best way to store directdemocracy data.
-A blockchain distributed ledger may be more appropriate but more complex to implement.
+This notary relies on a standard MySQL database running on a single server which may not scale well with the number of users.
+Moreover a single standard database may not be the best way to store directdemocracy data.
+A distributed data base may be more appropriate but more complex to implement.
 However, this sample implementation aims at providing a simple reference code.
 
 ## Scalable Implementations
 
-Developers and organizations are encouraged to implement their own notaries using more scalable and more robust technologies to handle a very large number of users.
+Developers and organizations are encouraged to implement their own notaries using more scalable and more robust technologies to handle a very large number of users and provide a better resilience of the service.
 
 ## Installation
 
