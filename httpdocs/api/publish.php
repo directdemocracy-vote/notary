@@ -84,13 +84,18 @@ if ($type == 'citizen') {
 }
 if ($type != 'ballot') {
   $publication->signature = '';
+  if (isset($publication->appSignature)) {
+    $appSignature = $publication->appSignature;
+    $publication->appSignature = '';
+  }
   $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-
   $verify = openssl_verify($data, base64_decode($signature), public_key($key), OPENSSL_ALGO_SHA256);
   if ($verify != 1)
     error("Wrong signature for $type:");
   # restore original signatures if needed
   $publication->signature = $signature;
+  if (isset($appSignature))
+    $publication->appSignature = $appSignature;
 }
 
 $version = intval(explode('/', $schema)[4]);
