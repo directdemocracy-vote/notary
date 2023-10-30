@@ -81,12 +81,8 @@ window.onload = function() {
       document.getElementById('picture').src = answer.citizen.picture;
       if (answer.citizen.appKey === APP_PUBLIC_KEY)
         document.getElementById('picture-overlay').style.visibility = 'hidden';
-      else if (answer.citizen.appKey === TEST_PUBLIC_KEY)
-        document.getElementById('picture-overlay').style.visibility = '';
-      else {
-        document.getElementById('picture-overlay').style.visibility = '';
+      else if (answer.citizen.appKey !== TEST_PUBLIC_KEY)
         document.getElementById('picture-overlay').textContent = "ERROR";
-      }
       document.getElementById('given-names').textContent = givenNames;
       document.getElementById('family-name').textContent = familyName;
       document.getElementById('home').innerHTML = `<a href="https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}&zoom=12" target="_blank">${latitude}, ${longitude}</a>`;
@@ -216,8 +212,11 @@ window.onload = function() {
           overlay.style.visibility = 'hidden';
         else if (endorsement.appKey === TEST_PUBLIC_KEY)
           overlay.textContent = 'TEST';
-        else
+        else {
           overlay.textContent = 'ERROR';
+          console.log('answer.citizen.appKey = ' + endorsement.appKey);
+          console.log('TEST_PUBLIC_KEY       = ' + TEST_PUBLIC_KEY);
+        }
         container.appendChild(overlay);
         const div = document.createElement('div');
         column.appendChild(div);
