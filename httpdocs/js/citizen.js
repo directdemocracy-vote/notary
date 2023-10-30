@@ -85,7 +85,7 @@ window.onload = function() {
         document.getElementById('picture-overlay').style.visibility = '';
       else {
         document.getElementById('picture-overlay').style.visibility = '';
-        document.getElementById('picture-overlay').textContent = "UNKNOWN";
+        document.getElementById('picture-overlay').textContent = "ERROR";
       }
       document.getElementById('given-names').textContent = givenNames;
       document.getElementById('family-name').textContent = familyName;
