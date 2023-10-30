@@ -79,10 +79,11 @@ window.onload = function() {
       const latitude = answer.citizen.latitude;
       const longitude = answer.citizen.longitude;
       document.getElementById('picture').src = answer.citizen.picture;
-      if (answer.citizen.appKey === APP_PUBLIC_KEY)
-        document.getElementById('picture-overlay').style.visibility = 'hidden';
-      else if (answer.citizen.appKey !== TEST_PUBLIC_KEY)
-        document.getElementById('picture-overlay').textContent = "ERROR";
+      if (answer.citizen.appKey !== APP_PUBLIC_KEY) {
+        document.getElementById('picture-overlay').style.visibility = '';
+        if (answer.citizen.appKey !== TEST_PUBLIC_KEY) 
+          document.getElementById('picture-overlay').textContent = 'ERROR';
+      }
       document.getElementById('given-names').textContent = givenNames;
       document.getElementById('family-name').textContent = familyName;
       document.getElementById('home').innerHTML = `<a href="https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}&zoom=12" target="_blank">${latitude}, ${longitude}</a>`;
