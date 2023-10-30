@@ -1,5 +1,23 @@
 /* global L */
 
+const APP_PUBLIC_KEY = // public key of the app
+  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvD20QQ18u761ean1+zgq' +
+  'lDFo6H2Emw3mPmBxeU24x4o1M2tcGs+Q7G6xASRf4LmSdO1h67ZN0sy1tasNHH8I' +
+  'k4CN63elBj4ELU70xZeYXIMxxxDqisFgAXQO34lc2EFt+wKs+TNhf8CrDuexeIV5' +
+  'd4YxttwpYT/6Q2wrudTm5wjeK0VIdtXHNU5V01KaxlmoXny2asWIejcAfxHYSKFh' +
+  'zfmkXiVqFrQ5BHAf+/ReYnfc+x7Owrm6E0N51vUHSxVyN/TCUoA02h5UsuvMKR4O' +
+  'tklZbsJjerwz+SjV7578H5FTh0E0sa7zYJuHaYqPevvwReXuggEsfytP/j2B3Iga' +
+  'rQIDAQAB';
+
+const TEST_PUBLIC_KEY = // private key of the emulator and test app
+  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnRhEkRo47vT2Zm4Cquza' +
+  'vyh+S/yFksvZh1eV20bcg+YcCfwzNdvPRs+5WiEmE4eujuGPkkXG6u/DlmQXf2sz' +
+  'MMUwGCkqJSPi6fa90pQKx81QHY8Ab4z69PnvBjt8tt8L8+0NRGOpKkmswzaX4ON3' +
+  'iplBx46yEn00DQ9W2Qzl2EwaIPlYNhkEs24Rt5zQeGUxMGHy1eSR+mR4Ngqp1LXC' +
+  'yGxbXJ8B/B5hV4QIor7U2raCVFSy7sNl080xNLuY0kjHCV+HN0h4EaRdR2FSw9vM' +
+  'yw5UJmWpCFHyQla42Eg1Fxwk9IkHhNe/WobOT1Jiy3Uxz9nUeoCQa5AONAXOaO2w' +
+  'tQIDAQAB';
+
 function findGetParameter(parameterName, result) {
   location.search.substr(1).split('&').forEach(function(item) {
     const tmp = item.split('=');
@@ -61,6 +79,14 @@ window.onload = function() {
       const latitude = answer.citizen.latitude;
       const longitude = answer.citizen.longitude;
       document.getElementById('picture').src = answer.citizen.picture;
+      if (answer.citizen.appKey === APP_PUBLIC_KEY)
+        document.getElementById('picture-overlay').style.visibility = 'hidden';
+      else if (answer.citizen.appKey === TEST_PUBLIC_KEY)
+        document.getElementById('picture-overlay').style.visibility = '';
+      else {
+        document.getElementById('picture-overlay').style.visibility = '';
+        document.getElementById('picture-overlay').textContent = "UNKNOWN";
+      }
       document.getElementById('given-names').textContent = givenNames;
       document.getElementById('family-name').textContent = familyName;
       document.getElementById('home').innerHTML = `<a href="https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}&zoom=12" target="_blank">${latitude}, ${longitude}</a>`;
