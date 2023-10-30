@@ -1,0 +1,22 @@
+.picture-container {
+  position: relative;
+  max-width: 150px;
+}
+
+.picture-test {
+  position: absolute;
+  top: 2%;
+  background: rgba(0, 0, 0, 0.5);
+  right: 3%;
+  width: 30%;
+  color: white;
+  font-size: 20px;
+  padding: 5px;
+  text-align: center;
+  box-sizing: border-box;
+  font-family: Verdana, Geneva, sans-serif;
+  box-shadow: 1px 2px 3px rgba(0,0,0,.3);
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
