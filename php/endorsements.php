@@ -2,6 +2,7 @@
 function endorsements($mysqli, $key) {
   $query = "SELECT UNIX_TIMESTAMP(pe.published) AS published, e.`revoke`, "
           ."REPLACE(TO_BASE64(pc.`signature`), '\\n', '') AS signature, "
+          ."REPLACE(TO_BASE64(c.appKey), '\\n', '') AS appKey, "
           ."c.familyName, c.givenNames, "
           ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(c.picture), '\\n', '')) AS picture, "
           ."ST_Y(c.home) AS latitude, ST_X(c.home) AS longitude "

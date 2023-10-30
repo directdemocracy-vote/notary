@@ -215,8 +215,8 @@ window.onload = function() {
           overlay.textContent = 'TEST';
         else {
           overlay.textContent = 'ERROR';
-          console.log('answer.citizen.appKey = ' + endorsement.appKey);
-          console.log('TEST_PUBLIC_KEY       = ' + TEST_PUBLIC_KEY);
+          console.log('endorsement.appKey = ' + endorsement.appKey);
+          console.log('TEST_PUBLIC_KEY    = ' + TEST_PUBLIC_KEY);
         }
         container.appendChild(overlay);
         const div = document.createElement('div');
