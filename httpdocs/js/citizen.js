@@ -218,6 +218,7 @@ window.onload = function() {
           overlay.textContent = 'TEST';
         else
           overlay.textContent = 'ERROR';
+        container.appendChild(overlay);
         const div = document.createElement('div');
         column.appendChild(div);
         div.classList.add('media-content');
