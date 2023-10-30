@@ -212,8 +212,12 @@ window.onload = function() {
         img.style.width = '75px';
         const overlay = document.createElement('div');
         overlay.classList.add('picture-overlay');
-        overlay.style.visibility = 'hidden';
-        overlay.textContent = 'TEST';
+        if (endorsement.appKey === APP_PUBLIC_KEY)
+          overlay.style.visibility = 'hidden';
+        else if (endorsement.appKey === TEST_PUBLIC_KEY)
+          overlay.textContent = 'TEST';
+        else
+          overlay.textContent = 'ERROR';
         const div = document.createElement('div');
         column.appendChild(div);
         div.classList.add('media-content');
