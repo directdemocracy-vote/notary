@@ -29,7 +29,7 @@ window.onload = function() {
     });
   }
   document.getElementById('proposal').addEventListener('click', function() {
-    const judge = document.getElementById('judge').value.trim();
+    const judge = document.getElementById('judge-input').value.trim();
     window.open(`https://${judge}/propose.html?latitude=${latitude}&longitude=${longitude}`, '_blank');
   });
 
@@ -47,7 +47,7 @@ window.onload = function() {
     if (judge.startsWith('https://'))
       judge = judge.substring(8);
     if (judge.includes('.'))
-      document.getElementById('judge').setAttribute('value', judge);
+      document.getElementById('judge-input').setAttribute('value', judge);
   }
   latitude = parseFloat(findGetParameter('latitude'));
   longitude = parseFloat(findGetParameter('longitude'));
@@ -118,7 +118,7 @@ window.onload = function() {
     searchCitizen.classList.add('is-loading');
     const familyName = document.getElementById('family-name').value;
     const givenNames = document.getElementById('given-names').value;
-    judge = document.getElementById('judge').value;
+    judge = document.getElementById('judge-input').value;
     let parameters = `latitude=${latitude}&longitude=${longitude}&radius=${radius}`;
     if (judge && document.getElementById('endorsed-by-judge').checked)
       parameters += `&judge=https://${encodeURIComponent(judge)}`;

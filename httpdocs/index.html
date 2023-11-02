@@ -37,7 +37,7 @@
         <ul>
           <li id="citizens-tab" class="tab is-active" onclick="openTab(event,'citizens')"><a>Citizens</a></li>
           <li id="proposals-tab" class="tab" onclick="openTab(event,'proposals')"><a>Referendums and Petitions</a></li>
-          <li id="judge-tab" class="tab" onclick="openTab(event,'judge-setting')"><a>Judge</a></li>
+          <li id="judge-tab" class="tab" onclick="openTab(event,'judge')"><a>Judge</a></li>
         </ul>
       </div>
       <div id="citizens" class="content-tab">
@@ -113,11 +113,11 @@
           </div>
         </fieldset>
       </div>
-      <div id="judge-setting" class="content-tab" style="display:none">
+      <div id="judge" class="content-tab" style="display:none">
         <fieldset id="judge-fieldset">
           <div class="field has-addons">
             <div class="control"><a class="button is-static">https://</a></div>
-            <div class="control is-expanded"><input id="judge" class="input" type="text" placeholder="judge.directdemocracy.vote" value="judge.directdemocracy.vote"></div>
+            <div class="control is-expanded"><input id="judge-input" class="input" type="text" placeholder="judge.directdemocracy.vote" value="judge.directdemocracy.vote"></div>
           </div>
           <div class="field">
             <div class="control has-text-centered">
