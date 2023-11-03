@@ -207,10 +207,8 @@ window.onload = async function() {
   document.getElementById('modal-close-button').addEventListener('click', closeModal);
   document.getElementById('action-button').addEventListener('click', function() {
     let binaryFingerprint = new Uint8Array(20);
-    for (let i = 0; i < 20; i += 1) {
-      console.log('adding ' + parseInt(fingerprint.slice(2 * i, 2 * i + 2), 16));
+    for (let i = 0; i < 20; i += 1)
       binaryFingerprint[i] = parseInt(fingerprint.slice(2 * i, 2 * i + 2), 16);
-    }
     const qr = new QRious({
       value: encodeBase128(binaryFingerprint),
       level: 'L',
