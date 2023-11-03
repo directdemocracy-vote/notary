@@ -1,5 +1,38 @@
 /* global L, QRious */
 
+const base128Charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' +
+  'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõøùúûüýÿþ@$*£¢';
+const base128Padding = ''; // FIXME: we could probably remove all the padding stuff
+
+function encodeBase128(byteArray) { // Uint8Array
+  function toBin(byteArray) {
+    let end = '';
+    for (let i in byteArray) {
+      let aux = byteArray[i].toString(2);
+      if (aux.length < 8)
+        aux = '0'.repeat(8 - aux.length) + aux;
+      end += aux;
+    }
+    return end;
+  }
+  const bin = toBin(byteArray);
+  const sevenBits = bin.match(/.{1,7}/g);
+  let paddingCounter = 0;
+  while (sevenBits[sevenBits.length - 1].length < 7) {
+    sevenBits[sevenBits.length - 1] += '0';
+    ++paddingCounter;
+  }
+  let res = [];
+  for (let i in sevenBits) {
+    const interger = parseInt('0' + sevenBits[i], 2);
+    res.push(base128Charset[interger]);
+  }
+  res = res.join('');
+  if (paddingCounter)
+    res += base128Padding.repeat(paddingCounter);
+  return res;
+}
+
 function findGetParameter(parameterName) {
   let result;
   location.search.substr(1).split('&').forEach(function(item) {
@@ -173,11 +206,11 @@ window.onload = async function() {
   }
   document.getElementById('modal-close-button').addEventListener('click', closeModal);
   document.getElementById('action-button').addEventListener('click', function() {
-    let binaryFingerprint = '';
-    for (let i = 0; i < 40; i += 2)
-      binaryFingerprint += String.fromCharCode(parseInt(fingerprint.slice(i, i + 2), 16));
+    let binaryFingerprint = UintArray(20);
+    for (let i = 0; i < 20; i += 2)
+      binaryFingerprint[i] = parseInt(fingerprint.slice(2 * i, 2 * i + 2), 16);
     const qr = new QRious({
-      value: binaryFingerprint,
+      value: encodeBase128(binaryFingerprint),
       level: 'L',
       size: 512,
       padding: 0
