@@ -74,7 +74,7 @@ window.onload = function() {
         document.getElementById('picture-overlay').style.visibility = '';
         if (answer.citizen.appKey !== TEST_APP_KEY) {
           document.getElementById('picture-overlay').textContent = 'ERROR';
-          console..error(answer.citizen.appKey + " !== " + TEST_APP_KEY);
+          console.error(answer.citizen.appKey + " !== " + TEST_APP_KEY);
         }
       }
       document.getElementById('given-names').textContent = givenNames;
