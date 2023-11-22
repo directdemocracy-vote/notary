@@ -27,7 +27,7 @@ function check_app($publication) {
   $verify = openssl_verify($publication->signature, base64_decode("$appSignature=="), public_key($appKey), OPENSSL_ALGO_SHA256);
   if ($verify != 1) {
     $type = get_type(sanitize_field($publication->schema, "url", "schema"));
-    error("Wrong app signature for $type:");
+    error("Wrong app signature for $type: $appSignature==");
   }
   # restore original signature
   $publication->appSignature = $appSignature;
