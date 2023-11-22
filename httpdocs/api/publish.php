@@ -19,7 +19,7 @@ function get_type($schema) {
 function check_app($publication) {
   global $mysqli;
   $appKey = sanitize_field($publication->appKey, 'base64', 'appKey');
-  $result = $mysqli->query("SELECT id FROM webservice WHERE `type`='app' and `key`=FROM_BASE64('$appKey')");
+  $result = $mysqli->query("SELECT id FROM webservice WHERE `type`='app' and `key`=FROM_BASE64('$appKey' + '==')");
   if ($result->num_rows === 0)
     error("Unknown app");
   $appSignature = sanitize_field($publication->appSignature, 'base64', 'appSignature');
@@ -95,7 +95,7 @@ if ($type != 'ballot') {
 
 $version = intval(explode('/', $schema)[4]);
 $query = "INSERT INTO publication(`version`, `type`, `key`, signature, published) "
-        ."VALUES($version, '$type', FROM_BASE64('$key'), FROM_BASE64('$signature'), FROM_UNIXTIME($published))";
+        ."VALUES($version, '$type', FROM_BASE64('$key' + '=='), FROM_BASE64('$signature' + '=='), FROM_UNIXTIME($published))";
 $mysqli->query($query) or error($mysqli->error);
 $id = $mysqli->insert_id;
 
@@ -106,7 +106,7 @@ if ($type == 'citizen') {
   $latitude = sanitize_field($citizen->latitude, "float", "latitude");
   $longitude = sanitize_field($citizen->longitude, "float", "longitude");
   $query = "INSERT INTO citizen(id, appKey, appSignature, familyName, givenNames, picture, home) "
-          ."VALUES($id, FROM_BASE64('$appKey'), FROM_BASE64('$appSignature'), \"$familyName\", \"$givenNames\", "
+          ."VALUES($id, FROM_BASE64('$appKey' + '=='), FROM_BASE64('$appSignature' + '=='), \"$familyName\", \"$givenNames\", "
           ."FROM_BASE64('$citizen_picture'), POINT($longitude, $latitude))";
 } elseif ($type == 'endorsement') {
   $endorsement = &$publication;
@@ -123,7 +123,8 @@ if ($type == 'citizen') {
   if (!property_exists($endorsement, 'comment'))
     $endorsement->comment = '';
   $endorsedSignature = sanitize_field($endorsement->endorsedSignature, "base64", "endorsedSignature");
-  $query = "SELECT id, `type`, REPLACE(TO_BASE64(signature), '\\n', '') AS signature FROM publication WHERE signature = FROM_BASE64('$endorsedSignature')";
+  $query = "SELECT id, `type`, REPLACE(REPLACE(TO_BASE64(signature), '\\n', ''), '=', '') AS signature FROM publication "
+          ."WHERE signature = FROM_BASE64('$endorsedSignature' + '==')";
   $result = $mysqli->query($query) or error($mysqli->error);
   $endorsed = $result->fetch_assoc();
   $result->free();
@@ -134,13 +135,13 @@ if ($type == 'citizen') {
   # mark other endorsements of the same participant by the same endorser as not the latest
   $mysqli->query("UPDATE endorsement INNER JOIN publication ON publication.id = endorsement.id"
                 ." SET endorsement.latest = 0"
-                ." WHERE endorsement.endorsedSignature = FROM_BASE64('$endorsedSignature')"
-                ." AND publication.`key` = FROM_BASE64('$key')") or error($mysli->error);
+                ." WHERE endorsement.endorsedSignature = FROM_BASE64('$endorsedSignature' + '==')"
+                ." AND publication.`key` = FROM_BASE64('$key' + '==')") or error($mysli->error);
   if ($endorsed['type'] == 'proposal') {  # signing a petition
     # increment the number of participants in a petition if the citizen is located inside the petition area and is endorsed by the petition judge
     $endorsed_id = $endorsed['id'];
     $query = "UPDATE proposal "
-            ."INNER JOIN publication AS pc ON pc.`key`=FROM_BASE64('$key') "
+            ."INNER JOIN publication AS pc ON pc.`key`=FROM_BASE64('$key' + '==') "
             ."INNER JOIN citizen ON citizen.id=pc.id "
             ."INNER JOIN publication AS pa ON pa.`signature`=proposal.area "
             ."INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home))) "
@@ -158,7 +159,8 @@ if ($type == 'citizen') {
   $message = $mysqli->escape_string($endorsement->message);
   $comment = $mysqli->escape_string($endorsement->comment);
   $query = "INSERT INTO endorsement(id, appKey, appSignature, `revoke`, `message`, comment, endorsedSignature, latest, accepted) "
-          ."VALUES($id, FROM_BASE64('$appKey'), FROM_BASE64('$appSignature'), $revoke, \"$message\", \"$comment\", FROM_BASE64('$endorsedSignature'), "
+          ."VALUES($id, FROM_BASE64('$appKey' + '=='), FROM_BASE64('$appSignature' + '=='), $revoke, \"$message\", \"$comment\", "
+          ."FROM_BASE64('$endorsedSignature' + '=='), "
           . "1, $accepted)";
 } elseif ($type == 'proposal') {
   $proposal =&$publication;
@@ -184,12 +186,12 @@ if ($type == 'citizen') {
   $description = $mysqli->escape_string($publication->description);
   $deadline = sanitize_field($publication->deadline, "positive_int", "deadline");
   $query = "INSERT INTO proposal(id, area, title, description, question, answers, secret, deadline, website, participants, corpus) "
-          ."VALUES($id, FROM_BASE64('$area'), \"$title\", \"$description\", "
+          ."VALUES($id, FROM_BASE64('$area' + '=='), \"$title\", \"$description\", "
           ."\"$question\", \"$answers\", $secret, $deadline, \"$website\", 0, 0)";
 } elseif ($type == 'registration') {
   list($appKey, $appSignature) = check_app($endorsement);
   $query = "INSERT INTO registration(id, appKey, appSignature, blindKey, encryptedVote) "
-          ."VALUES($id, FROM_BASE64('$appKey'), FROM_BASE64('$appSignature'), FROM_BASE64('$blindKey'), FROM_BASE64('$encryptedVote'))";
+          ."VALUES($id, FROM_BASE64('$appKey' + '=='), FROM_BASE64('$appSignature' + '=='), FROM_BASE64('$blindKey' + '=='), FROM_BASE64('$encryptedVote'))";
 } elseif ($type == 'ballot') {
   if (!isset($publication->answer)) # optional
     $answer = '';
@@ -200,14 +202,14 @@ if ($type == 'citizen') {
     $station_key = sanitize_field($publication->station->key, "base64", "station_key");
     $station_signature = sanitize_field($publication->station->signature, "base64", "station_signature");
     $station_names = " stationKey, stationSignature,";
-    $station_values = " FROM_BASE64('$station_key'), FROM_BASE64('$station_signature'),";
+    $station_values = " FROM_BASE64('$station_key' + '=='), FROM_BASE64('$station_signature' + '=='),";
   } else {
     $station_names = "";
     $station_values = "";
   }
   $publication_proposal = sanitize_field($publication->proposal, "base64", "station_signature");
   $query = "INSERT INTO ballot(id, proposal,$station_names answer) "
-          ."VALUES($id, FROM_BASE64('$publication_proposal'),$station_values \"$answer\")";
+          ."VALUES($id, FROM_BASE64('$publication_proposal' + '=='),$station_values \"$answer\")";
 } elseif ($type == 'area') {
   $polygons = 'ST_GeomFromText("MULTIPOLYGON(';
   $t1 = false;

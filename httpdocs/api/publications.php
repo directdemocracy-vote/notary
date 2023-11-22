@@ -17,10 +17,11 @@ if ($v)
 
 if (!$type)
   error("No type argument provided.");
-$citizen_fields = "REPLACE(TO_BASE64(".$type.".appKey), '\\n', '') AS appKey, REPLACE(TO_BASE64(".$type.".appSignature), '\\n', '') AS appsignature";
+$citizen_fields = "REPLACE(REPLACE(TO_BASE64(".$type.".appKey), '\\n', ''), '=', '') AS appKey, "
+                 ."REPLACE(REPLACE(TO_BASE64(".$type.".appSignature), '\\n', ''), '=', '') AS appsignature";
 if ($type == 'endorsement')
-  $fields = "$citizen_fields, REPLACE(TO_BASE64(endorsement.endorsedSignature), '\\n', '') AS endorsedSignature, endorsement.revoke, endorsement.message, "
-           ."endorsement.comment";
+  $fields = "$citizen_fields, REPLACE(REPLACE(TO_BASE64(endorsement.endorsedSignature), '\\n', ''), '=', '') AS endorsedSignature, "
+           ."endorsement.revoke, endorsement.message, endorsement.comment";
 elseif ($type == 'citizen')
   $fields = "$citizen_fields, citizen.familyName, citizen.givenNames, CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')), "
            ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude";
@@ -37,8 +38,8 @@ if ($published_to)
 $condition .= "p.version=$version AND p.type = '$type'";
 
 $query = "SELECT CONCAT('https://directdemocracy.vote/json-schema/', p.`version`, '/', p.`type`, '.schema.json') AS `schema`, "
-        ."REPLACE(TO_BASE64(p.`key`), '\\n', '') AS `key`, "
-        ."REPLACE(TO_BASE64(p.signature), '\\n', '') AS signature, "
+        ."REPLACE(REPLACE(TO_BASE64(p.`key`), '\\n', ''), '=', '') AS `key`, "
+        ."REPLACE(REPLACE(TO_BASE64(p.signature), '\\n', ''), '=', '') AS signature, "
         ."UNIX_TIMESTAMP(p.published) AS published, $fields "
         ."FROM $type "
         ."LEFT JOIN publication AS p ON p.id=$type.id AND $condition WHERE p.id IS NOT NULL";

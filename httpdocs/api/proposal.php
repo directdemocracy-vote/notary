@@ -19,7 +19,7 @@ elseif (isset($_GET['fingerprint']))
 else
   die('{"error":"Missing fingerprint or signature parameter"}');
 
-$condition = (isset($signature)) ? "publication.signature=FROM_BASE64('$signature')" : "publication.signatureSHA1=UNHEX('$fingerprint')";
+$condition = (isset($signature)) ? "publication.signature=FROM_BASE64('$signature' + '==')" : "publication.signatureSHA1=UNHEX('$fingerprint')";
 
 if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
   $latitude = sanitize_field($_GET["latitude"], "float", "latitude");
@@ -30,10 +30,10 @@ if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
 
 $query = "SELECT "
         ."CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json') AS `schema`, "
-        ."REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, "
-        ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
+        ."REPLACE(REPLACE(TO_BASE64(publication.`key`), '\\n', ''), '=', '') AS `key`, "
+        ."REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature, "
         ."UNIX_TIMESTAMP(publication.published) AS published, "
-        ."REPLACE(TO_BASE64(proposal.area), '\\n', '') AS area, "
+        ."REPLACE(REPLACE(TO_BASE64(proposal.area), '\\n', ''), '=', '') AS area, "
         ."proposal.title, proposal.description, "
         ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
         ."proposal.participants, proposal.corpus, "

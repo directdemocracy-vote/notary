@@ -1,8 +1,8 @@
 <?php
 function endorsements($mysqli, $key) {
   $query = "SELECT UNIX_TIMESTAMP(pe.published) AS published, e.`revoke`, "
-          ."REPLACE(TO_BASE64(pc.`signature`), '\\n', '') AS signature, "
-          ."REPLACE(TO_BASE64(c.appKey), '\\n', '') AS appKey, "
+          ."REPLACE(REPLACE(TO_BASE64(pc.`signature`), '\\n', ''), '=', '') AS signature, "
+          ."REPLACE(REPLACE(TO_BASE64(c.appKey), '\\n', ''), '=', '') AS appKey, "
           ."c.familyName, c.givenNames, "
           ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(c.picture), '\\n', '')) AS picture, "
           ."ST_Y(c.home) AS latitude, ST_X(c.home) AS longitude "
@@ -10,7 +10,7 @@ function endorsements($mysqli, $key) {
           ."INNER JOIN endorsement e ON e.id = pe.id "
           ."INNER JOIN publication pc ON pc.`signature` = e.endorsedSignature "
           ."INNER JOIN citizen c ON pc.id = c.id "
-          ."WHERE pe.`key` = FROM_BASE64('$key') AND e.latest = 1 "
+          ."WHERE pe.`key` = FROM_BASE64('$key' + '==') AND e.latest = 1 "
           ."ORDER BY pe.published DESC";
   $result = $mysqli->query($query);
   if (!$result)
