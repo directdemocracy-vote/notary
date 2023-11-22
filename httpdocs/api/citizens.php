@@ -34,12 +34,12 @@ if ($radius)
 #  $query .= ", (6370.986 * acos(cos(radians($latitude)) * cos(radians(ST_Y(citizen.home))) * cos(radians(ST_X(citizen.home)) - radians($longitude)) "
 #           ."+ sin(radians($latitude)) * sin(radians(ST_Y(citizen.home))))) AS distance";
 
-$query .= ", publication.`version`, publication.`type`,"
-         ." REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`,"
-         ." REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature,"
-         ." UNIX_TIMESTAMP(publication.published) AS published"
-         ." FROM citizen"
-         ." INNER JOIN publication ON publication.id = citizen.id";
+$query .= ", publication.`version`, publication.`type`, "
+         ."REPLACE(REPLACE(TO_BASE64(publication.`key`), '\\n', ''), '=', '') AS `key`, "
+         ."REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature, "
+         ."UNIX_TIMESTAMP(publication.published) AS published "
+         ."FROM citizen "
+         ."INNER JOIN publication ON publication.id = citizen.id";
 if ($key)
   $query .= " INNER JOIN endorsement ON endorsement.endorsedSignature = publication.signature AND endorsement.`revoke` = 0 AND endorsement.latest = 1"
            ." INNER JOIN publication AS pe ON pe.id=endorsement.id AND pe.`key` = FROM_BASE64('$key==')";
