@@ -10,7 +10,7 @@ function endorsements($mysqli, $key) {
           ."INNER JOIN endorsement e ON e.id = pe.id "
           ."INNER JOIN publication pc ON pc.`signature` = e.endorsedSignature "
           ."INNER JOIN citizen c ON pc.id = c.id "
-          ."WHERE pe.`key` = FROM_BASE64('$key' + '==') AND e.latest = 1 "
+          ."WHERE pe.`key` = FROM_BASE64('$key==') AND e.latest = 1 "
           ."ORDER BY pe.published DESC";
   $result = $mysqli->query($query);
   if (!$result)

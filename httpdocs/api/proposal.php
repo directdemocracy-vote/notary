@@ -19,7 +19,7 @@ elseif (isset($_GET['fingerprint']))
 else
   die('{"error":"Missing fingerprint or signature parameter"}');
 
-$condition = (isset($signature)) ? "publication.signature=FROM_BASE64('$signature' + '==')" : "publication.signatureSHA1=UNHEX('$fingerprint')";
+$condition = (isset($signature)) ? "publication.signature=FROM_BASE64('$signature==')" : "publication.signatureSHA1=UNHEX('$fingerprint')";
 
 if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
   $latitude = sanitize_field($_GET["latitude"], "float", "latitude");

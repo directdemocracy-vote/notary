@@ -13,8 +13,8 @@ if (isset($_GET['fingerprint'])) {
   $join_condition = "SHA1(endorsement.endorsedSignature)='$fingerprint'";
 } elseif (isset($_GET['signature'])) {
   $signature = sanitize_field($_GET["signature"], "base64", "signature");
-  $condition = "publication.signature=FROM_BASE64('$signature' + '==')";
-  $join_condition = "endorsement.endorsedSignature=FROM_BASE64('$signature' + '==')";
+  $condition = "publication.signature=FROM_BASE64('$signature==')";
+  $join_condition = "endorsement.endorsedSignature=FROM_BASE64('$signature==')";
 } else
   error("Missing fingerprint or signature parameter");
 

@@ -19,9 +19,9 @@ $query = "SELECT id, CONCAT('https://directdemocracy.vote/json-schema/', `versio
         ."UNIX_TIMESTAMP(published) AS published "
         ."FROM publication WHERE published <= NOW() AND ";
 if (isset($signature))
-  $query .= "signature = FROM_BASE64('$signature' + '==')";
+  $query .= "signature = FROM_BASE64('$signature==')";
 elseif (isset($key))
-  $query .= "`key` = FROM_BASE64('$key' + '==') ORDER BY published ASC";  # take the first publication from the key, e.g., the citizen publication
+  $query .= "`key` = FROM_BASE64('$key==') ORDER BY published ASC";  # take the first publication from the key, e.g., the citizen publication
 elseif (isset($fingerprint))
   $query .= "signatureSHA1 = UNHEX('$fingerprint')";
 else
