@@ -24,7 +24,7 @@ function check_app($publication) {
     error("Unknown app");
   $appSignature = sanitize_field($publication->appSignature, 'base64', 'appSignature');
   $publication->appSignature = '';
-  $verify = openssl_verify($publication->signature, base64_decode($appSignature), public_key($appKey), OPENSSL_ALGO_SHA256);
+  $verify = openssl_verify($publication->signature, base64_decode("$appSignature=="), public_key($appKey), OPENSSL_ALGO_SHA256);
   if ($verify != 1) {
     $type = get_type(sanitize_field($publication->schema, "url", "schema"));
     error("Wrong app signature for $type:");
@@ -84,7 +84,7 @@ if ($type != 'ballot') {
     $publication->appSignature = '';
   }
   $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-  $verify = openssl_verify($data, base64_decode($signature), public_key($key), OPENSSL_ALGO_SHA256);
+  $verify = openssl_verify($data, base64_decode("$signature--"), public_key($key), OPENSSL_ALGO_SHA256);
   if ($verify != 1)
     error("Wrong signature for $type: key=$key\n" . json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
   # restore original signatures if needed
