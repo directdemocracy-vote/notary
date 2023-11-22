@@ -241,7 +241,7 @@ if ($type == 'citizen') {
   $query = "INSERT INTO area(id, name, polygons) VALUES($id, \"$name\", $polygons)";
 } else
   error("Unknown publication type.");
-$mysqli->query($query) or error($mysqli->error);
+$mysqli->query($query) or error($mysqli->error. ' ' . $query);
 if ($type == 'proposal')
   update_corpus($mysqli, $id);
 if ($type == 'endorsement')
