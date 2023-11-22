@@ -19,9 +19,11 @@ if (isset($_POST['signature'])) {
 } else
   die('{"error":"missing key, signature or fingerprint POST argument"}');
 
-$query = "SELECT REPLACE(TO_BASE64(publication.`key`), '\\n', '') AS `key`, UNIX_TIMESTAMP(publication.published) AS published, "
-        ."REPLACE(TO_BASE64(publication.signature), '\\n', '') AS signature, "
-        ."REPLACE(TO_BASE64(citizen.appKey), '\\n', '') AS appKey, "
+$query = "SELECT "
+        ."REPLACE(REPLACE(TO_BASE64(publication.`key`), '\\n', ''), '=', '') AS `key`, "
+        ."UNIX_TIMESTAMP(publication.published) AS published, "
+        ."REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature, "
+        ."REPLACE(REPLACE(TO_BASE64(citizen.appKey), '\\n', ''), '=', '') AS appKey, "
         ."citizen.familyName, citizen.givenNames, "
         ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude "
@@ -34,9 +36,10 @@ settype($citizen['published'], 'int');
 settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
 $endorsements = endorsements($mysqli, $citizen['key']);
-$query = "SELECT REPLACE(TO_BASE64(pc.signature), '\\n', '') AS signature, "
+$query = "SELECT "
+        ."REPLACE(REPLACE(TO_BASE64(pc.signature), '\\n', ''), '=', '') AS signature, "
         ."UNIX_TIMESTAMP(pe.published) AS published, "
-        ."REPLACE(TO_BASE64(c.appKey), '\\n', '') AS appKey, "
+        ."REPLACE(REPLACE(TO_BASE64(c.appKey), '\\n', ''), '=", '') AS appKey, "
         ."e.`revoke`, c.familyName, c.givenNames, "
         ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(c.picture), '\\n', '')) AS picture, "
         ."ST_Y(c.home) AS latitude, ST_X(c.home) AS longitude "
