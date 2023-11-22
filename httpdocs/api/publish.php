@@ -5,6 +5,7 @@ require_once '../../php/database.php';
 require_once '../../php/endorsements.php';
 require_once '../../php/corpus.php';
 require_once '../../php/sanitizer.php';
+require_once '../../php/public_key.php';
 
 use Opis\JsonSchema\{
   Validator, Errors\ErrorFormatter
@@ -13,15 +14,6 @@ use Opis\JsonSchema\{
 function get_type($schema) {
   $p = strrpos($schema, '/', 13);
   return substr($schema, $p + 1, strlen($schema) - $p - 13);  # remove the .schema.json suffix
-}
-
-function public_key($key) {
-  $public_key = "-----BEGIN PUBLIC KEY-----\n";
-  $l = strlen($key);
-  for($i = 0; $i < $l; $i += 64)
-    $public_key .= substr($key, $i, 64) . "\n";
-  $public_key.= "-----END PUBLIC KEY-----";
-  return $public_key;
 }
 
 function check_app($publication) {
