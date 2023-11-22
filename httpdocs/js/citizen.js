@@ -1,22 +1,13 @@
 /* global L */
 
-const APP_PUBLIC_KEY = // public key of the app
-  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvD20QQ18u761ean1+zgq' +
-  'lDFo6H2Emw3mPmBxeU24x4o1M2tcGs+Q7G6xASRf4LmSdO1h67ZN0sy1tasNHH8I' +
-  'k4CN63elBj4ELU70xZeYXIMxxxDqisFgAXQO34lc2EFt+wKs+TNhf8CrDuexeIV5' +
-  'd4YxttwpYT/6Q2wrudTm5wjeK0VIdtXHNU5V01KaxlmoXny2asWIejcAfxHYSKFh' +
-  'zfmkXiVqFrQ5BHAf+/ReYnfc+x7Owrm6E0N51vUHSxVyN/TCUoA02h5UsuvMKR4O' +
-  'tklZbsJjerwz+SjV7578H5FTh0E0sa7zYJuHaYqPevvwReXuggEsfytP/j2B3Iga' +
-  'rQIDAQAB';
-
-const TEST_PUBLIC_KEY = // private key of the emulator and test app
-  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnRhEkRo47vT2Zm4Cquza' +
-  'vyh+S/yFksvZh1eV20bcg+YcCfwzNdvPRs+5WiEmE4eujuGPkkXG6u/DlmQXf2sz' +
-  'MMUwGCkqJSPi6fa90pQKx81QHY8Ab4z69PnvBjt8tt8L8+0NRGOpKkmswzaX4ON3' +
-  'iplBx46yEn00DQ9W2Qzl2EwaIPlYNhkEs24Rt5zQeGUxMGHy1eSR+mR4Ngqp1LXC' +
-  'yGxbXJ8B/B5hV4QIor7U2raCVFSy7sNl080xNLuY0kjHCV+HN0h4EaRdR2FSw9vM' +
-  'yw5UJmWpCFHyQla42Eg1Fxwk9IkHhNe/WobOT1Jiy3Uxz9nUeoCQa5AONAXOaO2w' +
-  'tQIDAQAB';
+const PRODUCTION_APP_KEY = // public key of the genuine app
+  'vD20QQ18u761ean1+zgqlDFo6H2Emw3mPmBxeU24x4o1M2tcGs+Q7G6xASRf4LmSdO1h67ZN0sy1tasNHH8Ik4CN63elBj4ELU70xZeYXIMxxxDqis' +
+  'FgAXQO34lc2EFt+wKs+TNhf8CrDuexeIV5d4YxttwpYT/6Q2wrudTm5wjeK0VIdtXHNU5V01KaxlmoXny2asWIejcAfxHYSKFhzfmkXiVqFrQ5BHAf' +
+  '+/ReYnfc+x7Owrm6E0N51vUHSxVyN/TCUoA02h5UsuvMKR4OtklZbsJjerwz+SjV7578H5FTh0E0sa7zYJuHaYqPevvwReXuggEsfytP/j2B3IgarQ';
+const TEST_APP_KEY = // public key of the test app
+  'nRhEkRo47vT2Zm4Cquzavyh+S/yFksvZh1eV20bcg+YcCfwzNdvPRs+5WiEmE4eujuGPkkXG6u/DlmQXf2szMMUwGCkqJSPi6fa90pQKx81QHY8Ab4' +
+  'z69PnvBjt8tt8L8+0NRGOpKkmswzaX4ON3iplBx46yEn00DQ9W2Qzl2EwaIPlYNhkEs24Rt5zQeGUxMGHy1eSR+mR4Ngqp1LXCyGxbXJ8B/B5hV4QI' +
+  'or7U2raCVFSy7sNl080xNLuY0kjHCV+HN0h4EaRdR2FSw9vMyw5UJmWpCFHyQla42Eg1Fxwk9IkHhNe/WobOT1Jiy3Uxz9nUeoCQa5AONAXOaO2wtQ';
 
 function findGetParameter(parameterName, result) {
   location.search.substr(1).split('&').forEach(function(item) {
@@ -79,9 +70,9 @@ window.onload = function() {
       const latitude = answer.citizen.latitude;
       const longitude = answer.citizen.longitude;
       document.getElementById('picture').src = answer.citizen.picture;
-      if (answer.citizen.appKey !== APP_PUBLIC_KEY) {
+      if (answer.citizen.appKey !== PRODUCTION_APP_KEY) {
         document.getElementById('picture-overlay').style.visibility = '';
-        if (answer.citizen.appKey !== TEST_PUBLIC_KEY) 
+        if (answer.citizen.appKey !== TEST_APP_KEY) 
           document.getElementById('picture-overlay').textContent = 'ERROR';
       }
       document.getElementById('given-names').textContent = givenNames;
@@ -209,14 +200,14 @@ window.onload = function() {
         img.style.width = '75px';
         const overlay = document.createElement('div');
         overlay.classList.add('picture-overlay');
-        if (endorsement.appKey === APP_PUBLIC_KEY)
+        if (endorsement.appKey === PRODUCTION_APP_KEY)
           overlay.style.visibility = 'hidden';
-        else if (endorsement.appKey === TEST_PUBLIC_KEY)
+        else if (endorsement.appKey === TEST_APP_KEY)
           overlay.textContent = 'TEST';
         else {
           overlay.textContent = 'ERROR';
           console.log('endorsement.appKey = ' + endorsement.appKey);
-          console.log('TEST_PUBLIC_KEY    = ' + TEST_PUBLIC_KEY);
+          console.log('TEST_APP_KEY    = ' + TEST_APP_KEY);
         }
         container.appendChild(overlay);
         const div = document.createElement('div');
