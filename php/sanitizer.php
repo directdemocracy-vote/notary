@@ -32,7 +32,7 @@ function sanitize_field($variable, $type, $name) {
         error("Bad characters in base64 field $name.");
       else {
         $b64 = base64_encode($str);
-        if ($variable !== $b64)
+        if (str_replace('=', '', $variable) !== str_replace('=', '', $b64))
           error("Invalid base64 field $name.");
       }
       break;
