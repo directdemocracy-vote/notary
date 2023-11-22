@@ -42,7 +42,7 @@ $query .= ", publication.`version`, publication.`type`,"
          ." INNER JOIN publication ON publication.id = citizen.id";
 if ($key)
   $query .= " INNER JOIN endorsement ON endorsement.endorsedSignature = publication.signature AND endorsement.`revoke` = 0 AND endorsement.latest = 1"
-           ." INNER JOIN publication AS pe ON pe.id=endorsement.id AND pe.`key` = FROM_BASE64('$key')";
+           ." INNER JOIN publication AS pe ON pe.id=endorsement.id AND pe.`key` = FROM_BASE64('$key==')";
 if ($familyName or $givenNames) {
   $query .= " WHERE";
   if ($familyName) {
