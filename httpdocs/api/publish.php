@@ -158,8 +158,15 @@ if ($type == 'citizen') {
   $revoke = $endorsement->revoke ? 1 : 0;
   $message = $mysqli->escape_string($endorsement->message);
   $comment = $mysqli->escape_string($endorsement->comment);
-  $query = "INSERT INTO endorsement(id, appKey, appSignature, `revoke`, `message`, comment, endorsedSignature, latest, accepted) "
-          ."VALUES($id, FROM_BASE64('$appKey=='), FROM_BASE64('$appSignature=='), $revoke, \"$message\", \"$comment\", "
+  if ($appKey) {
+    $appFields = " appKey, appSignature,";
+    $appValues = " FROM_BASE64('$appKey=='), FROM_BASE64('$appSignature=='),";
+  } else {
+    $appFields = '';
+    $appValues = '';
+  }
+  $query = "INSERT INTO endorsement(id,$appFields `revoke`, `message`, comment, endorsedSignature, latest, accepted) "
+          ."VALUES($id,$appValues $revoke, \"$message\", \"$comment\", "
           ."FROM_BASE64('$endorsedSignature=='), "
           . "1, $accepted)";
 } elseif ($type == 'proposal') {
