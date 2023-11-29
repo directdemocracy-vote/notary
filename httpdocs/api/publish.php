@@ -52,6 +52,19 @@ if (isset($publication->blindKey))
 if (isset($publication->encryptedVote))
   $encryptedVote = sanitize_field($publication->encryptedVote, "base64", "signature");
 
+# check field order (important for signature)
+$keys = array_keys($publication);
+if (keys[0] !== 'schema')
+  error('"schema" expected as the first key');
+if (keys[1] !== 'key')
+  error('"key" expected as the second key');
+if (keys[2] !== 'signature')
+  error('"signature" expected as the third key');
+if (keys[3] !== 'published')
+  error('"published" expected as the fourth key');
+$type = get_type($schema);
+# FIXME: this should be done also for all the fields of the different types of publications
+
 $validator = new Validator();
 $result = $validator->validate($publication, file_get_contents($schema));
 if (!$result->isValid()) {
@@ -60,7 +73,6 @@ if (!$result->isValid()) {
   error(implode(". ", $formatter->formatFlat($error)) . ".");
 }
 $now = time();  # UNIX time stamp (seconds)
-$type = get_type($schema);
 if ($type != 'ballot' && $published > $now + 60)  # allowing a 1 minute (60 seconds) error
   error("Publication date in the future for $type: $published > $now");
 if ($type == 'citizen') {
