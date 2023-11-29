@@ -7,7 +7,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 $input = json_decode(file_get_contents("php://input"));
-$judge = sanitize_field($input->judge, "url", "judge");
+$judge = sanitize_field($input->judge, "base64", "judge");
 $area = $mysqli->escape_string($input->area);
 
 if (!$judge)
