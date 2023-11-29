@@ -54,8 +54,8 @@ if (isset($publication->encryptedVote))
 
 # check field order (important for signature)
 $keys = array_keys((array)$publication);
-# if (keys[0] !== 'schema')
-#  error('"schema" expected as the first key');
+if (keys[0] !== 'schema')
+  error('"schema" expected as the first key');
 # if (keys[1] !== 'key')
 #  error('"key" expected as the second key');
 #if (keys[2] !== 'signature')
