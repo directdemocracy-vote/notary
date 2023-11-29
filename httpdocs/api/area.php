@@ -22,8 +22,10 @@ $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
   die("{\"status\":\"area not found\"}");
 $area = $result->fetch_assoc();
-error_log("area = $area");
 $result->free();
 $mysqli->close();
-die("{\"published\":\"$area[published]\"}");
+if ($area)
+  die("{\"published\":\"$area[published]\"}");
+else
+  die('{"published":"never"}');
 ?>
