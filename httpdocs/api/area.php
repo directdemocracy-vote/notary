@@ -8,7 +8,7 @@ header("Access-Control-Allow-Headers: content-type");
 
 $input = json_decode(file_get_contents("php://input"));
 $judge = sanitize_field($input->judge, "base64", "judge");
-error($input->area);
+error_log('Input area = ' . $input->area);
 $area = $mysqli->escape_string($input->area);
 
 if (!$judge)
