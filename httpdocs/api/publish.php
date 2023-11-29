@@ -53,7 +53,7 @@ if (isset($publication->encryptedVote))
   $encryptedVote = sanitize_field($publication->encryptedVote, "base64", "signature");
 
 # check field order (important for signature)
-# $keys = array_keys($publication);
+$keys = array_keys((array)$publication);
 # if (keys[0] !== 'schema')
 #  error('"schema" expected as the first key');
 # if (keys[1] !== 'key')
