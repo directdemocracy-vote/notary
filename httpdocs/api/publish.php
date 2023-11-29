@@ -62,8 +62,8 @@ if (isset($publication->encryptedVote))
 #  error('"signature" expected as the third key');
 #if (keys[3] !== 'published')
 #  error('"published" expected as the fourth key');
-#$type = get_type($schema);
 # FIXME: this should be done also for all the fields of the different types of publications
+$type = get_type($schema);
 
 $validator = new Validator();
 $result = $validator->validate($publication, file_get_contents($schema));
