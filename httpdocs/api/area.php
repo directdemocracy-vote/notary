@@ -8,7 +8,6 @@ header("Access-Control-Allow-Headers: content-type");
 
 $input = json_decode(file_get_contents("php://input"));
 $judge = sanitize_field($input->judge, "base64", "judge");
-error_log('Input area = ' . $input->area);
 $area = $mysqli->escape_string($input->area);
 
 if (!$judge)
@@ -23,6 +22,7 @@ $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
   die("{\"status\":\"area not found\"}");
 $area = $result->fetch_assoc();
+error_log("area = $area");
 $result->free();
 $mysqli->close();
 die("{\"published\":\"$area[published]\"}");
