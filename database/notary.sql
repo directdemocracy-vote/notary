@@ -9,22 +9,6 @@ CREATE TABLE `area` (
   `polygons` multipolygon NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `ballot` (
-  `id` int(11) NOT NULL,
-  `stationKey` blob NOT NULL,
-  `stationSignature` blob NOT NULL,
-  `appKey` blob NOT NULL,
-  `appSignature` blob NOT NULL,
-  `revoke` tinyint(1) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE `ballots` (
-  `referendum` int(11) NOT NULL,
-  `station` int(11) NOT NULL,
-  `key` blob NOT NULL,
-  `revoke` tinyint(1) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 CREATE TABLE `citizen` (
   `id` int(11) NOT NULL,
   `appKey` blob NOT NULL,
@@ -78,30 +62,17 @@ CREATE TABLE `proposal` (
 
 CREATE TABLE `participation` (
   `id` int(11) NOT NULL,
-  `referendum` blob NOT NULL,
-  `blindKey` blob NOT NULL,
-  `station` int(11) NOT NULL,
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE `registration` (
-  `id` int(11) NOT NULL,
   `appKey` blob NOT NULL,
   `appSignature` blob NOT NULL,
-  `blindKey` blob NOT NULL,
-  `encryptedVote` blob NOT NULL
+  `citizen` blob NOT NULL,
+  `referendum` blob NOT NULL,
+  `encryptedVote` blob NOT NULL,
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `results` (
   `proposal` int(11) NOT NULL,
   `answer` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `count` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE `stations` (
-  `id` int(11) NOT NULL,
-  `proposal` int(11) NOT NULL,
-  `registrations_count` int(11) NOT NULL,
-  `ballots_count` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `webservice` (
@@ -113,13 +84,6 @@ CREATE TABLE `webservice` (
 
 ALTER TABLE `area`
   ADD PRIMARY KEY (`id`);
-
-ALTER TABLE `ballot`
-  ADD PRIMARY KEY (`id`);
-
-ALTER TABLE `ballots`
-  ADD KEY `proposal` (`proposal`),
-  ADD KEY `station` (`station`);
 
 ALTER TABLE `citizen`
   ADD PRIMARY KEY (`id`);
@@ -134,7 +98,6 @@ ALTER TABLE `endorsement`
 
 ALTER TABLE `participation`
   ADD PRIMARY KEY `id`,
-  ADD KEY `station` (`station`),
   ADD KEY `referendum` (`referendum`);
 
 ALTER TABLE `publication`
@@ -145,14 +108,7 @@ ALTER TABLE `publication`
 ALTER TABLE `proposal`
   ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `registration`
-  ADD PRIMARY KEY (`id`);
-
 ALTER TABLE `results`
-  ADD KEY `proposal` (`proposal`);
-
-ALTER TABLE `stations`
-  ADD KEY `id` (`id`),
   ADD KEY `proposal` (`proposal`);
 
 ALTER TABLE `webservice`
