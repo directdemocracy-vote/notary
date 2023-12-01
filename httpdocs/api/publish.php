@@ -56,12 +56,12 @@ if (isset($publication->encryptedVote))
 $keys = array_keys((array)$publication);
 if ($keys[0] !== 'schema')
   error('"schema" expected as the first key');
-# if ($keys[1] !== 'key')
-#  error('"key" expected as the second key');
-#if ($keys[2] !== 'signature')
-#  error('"signature" expected as the third key');
-#if ($keys[3] !== 'published')
-#  error('"published" expected as the fourth key');
+if ($keys[1] !== 'key')
+  error('"key" expected as the second key');
+if ($keys[2] !== 'signature')
+  error('"signature" expected as the third key');
+if ($keys[3] !== 'published')
+  error('"published" expected as the fourth key');
 # FIXME: this should be done also for all the fields of the different types of publications
 $type = get_type($schema);
 
