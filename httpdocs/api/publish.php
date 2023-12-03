@@ -77,7 +77,7 @@ for($i = 0; $i < $count; $i++) {
     break;
 }
 if ($i < $count)
-  error("wrong property order for '$keys[$i]' property: ".json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+  error("wrong property order for '$keys[$i]' property");
  
 $now = time();  # UNIX time stamp (seconds)
 $type = get_type($schema);
