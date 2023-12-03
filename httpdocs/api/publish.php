@@ -52,27 +52,49 @@ if (isset($publication->blindKey))
 if (isset($publication->encryptedVote))
   $encryptedVote = sanitize_field($publication->encryptedVote, "base64", "signature");
 
-# check field order (important for signature)
-$keys = array_keys((array)$publication);
-if ($keys[0] !== 'schema')
-  error('"schema" expected as the first key');
-if ($keys[1] !== 'key')
-  error('"key" expected as the second key');
-if ($keys[2] !== 'signature')
-  error('"signature" expected as the third key');
-if ($keys[3] !== 'published')
-  error('"published" expected as the fourth key');
-# FIXME: this should be done also for all the fields of the different types of publications
-$type = get_type($schema);
-
+# validate from json-schema
+$schema_file = file_get_contents($schema);
 $validator = new Validator();
-$result = $validator->validate($publication, file_get_contents($schema));
+$result = $validator->validate($publication, $schema_file);
 if (!$result->isValid()) {
   $error = $result->error();
   $formatter = new ErrorFormatter();
   error(implode(". ", $formatter->formatFlat($error)) . ".");
 }
+
+# check field order (important for signature)
+$schema_json = json_decode($schema_file, true);
+$required = (array)$schema_json['required'];
+$property = array_keys((array)$schema_json['properties']);
+$keys = array_keys((array)$publication);
+$property_counter = 0;
+$required_counter = 0;
+$count = count($keys);
+for($i = 0; $i < $count; $i++) {
+  if ($property[$property_counter] === $keys[$i]) {
+    if ($property[$property_counter] === $required[$required_counter])
+      $required_counter++;
+    $property_counter++;
+    continue;
+  }
+  if ($required[$required_counter] === $keys[$i]) {
+    while ($property[$properties_counter] !== $required[$required_counter])
+      $properties_counter++;
+    $properties_counter++;
+    $required_counter++;
+    continue;
+  }
+  if ($property[$property_counter] !== $required[$required_counter])
+    error("expecting '$property[$property_counter]' or '$required[$required_counter]', but found '$keys[$i]'");
+  else
+    error("expecting '$property[$property_counter]', but found '$keys[$i]'");
+  break;
+}
+if ($required_counter !== count($required))
+  error("missing '".$required[count($required) - 1]."' property");
+
 $now = time();  # UNIX time stamp (seconds)
+$type = get_type($schema);
 if ($type != 'ballot' && $published > $now + 60)  # allowing a 1 minute (60 seconds) error
   error("Publication date in the future for $type: $published > $now");
 if ($type == 'citizen') {
