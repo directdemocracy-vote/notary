@@ -76,7 +76,7 @@ for($i = 0; $i < $count; $i++) {
   if ($property_counter === $property_count)
     break;
 }
-if ($i < $count - 1)
+if ($property_counter === $property_count && $i < $count)
   error("wrong property order for '$keys[$i]' property: $i $count ".json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
  
 $now = time();  # UNIX time stamp (seconds)
