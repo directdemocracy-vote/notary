@@ -67,11 +67,11 @@ $schema_json = json_decode($schema_file, true);
 $properties = array_keys((array)$schema_json['properties']);
 $keys = array_keys((array)$publication);
 $property_counter = 0;
-$property_count = count($property);
+$property_count = count($properties);
 $count = count($keys);
 $break = false;
 for($i = 0; $i < $count; $i++) {
-  while ($property[$property_counter++] !== $keys[$i]) {
+  while ($properties[$property_counter++] !== $keys[$i]) {
     if ($property_counter >= $property_count) {
       $break = true;
       break;
