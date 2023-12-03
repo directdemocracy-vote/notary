@@ -81,7 +81,7 @@ for($i = 0; $i < $count; $i++) {
     break;
 }
 if ($break && $i < $count)
-  error("wrong property order for '$key[$i]' property");
+  error("wrong property order for '$keys[$i]' property");
  
 $now = time();  # UNIX time stamp (seconds)
 $type = get_type($schema);
