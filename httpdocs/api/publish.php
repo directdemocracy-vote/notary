@@ -63,6 +63,7 @@ if (!$result->isValid()) {
 }
 
 # check field order (important for signature)
+if (get_type($schema) === 'proposal') {
 $schema_json = json_decode($schema_file, true);
 $properties = array_keys((array)$schema_json['properties']);
 $keys = array_keys((array)$publication);
@@ -78,7 +79,8 @@ for($i = 0; $i < $count; $i++) {
 }
 if ($i < $count)
   error("wrong property order for '$keys[$i]' property");
-
+}
+ 
 $now = time();  # UNIX time stamp (seconds)
 $type = get_type($schema);
 if ($type != 'ballot' && $published > $now + 60)  # allowing a 1 minute (60 seconds) error
