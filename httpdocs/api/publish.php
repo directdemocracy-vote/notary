@@ -64,34 +64,20 @@ if (!$result->isValid()) {
 
 # check field order (important for signature)
 $schema_json = json_decode($schema_file, true);
-$required = (array)$schema_json['required'];
-$property = array_keys((array)$schema_json['properties']);
+$properties = array_keys((array)$schema_json['properties']);
 $keys = array_keys((array)$publication);
 $property_counter = 0;
-$required_counter = 0;
+$property_count = count($properties);
 $count = count($keys);
 for($i = 0; $i < $count; $i++) {
-  if ($property[$property_counter] === $keys[$i]) {
-    if ($property[$property_counter] === $required[$required_counter])
-      $required_counter++;
-    $property_counter++;
-    continue;
-  }
-  if ($required[$required_counter] === $keys[$i]) {
-    while ($property[$properties_counter] !== $required[$required_counter])
-      $properties_counter++;
-    $properties_counter++;
-    $required_counter++;
-    continue;
-  }
-  if ($property[$property_counter] !== $required[$required_counter])
-    error("expecting '$property[$property_counter]' or '$required[$required_counter]', but found '$keys[$i]'");
-  else
-    error("expecting '$property[$property_counter]', but found '$keys[$i]'");
-  break;
+  while ($properties[$property_counter++] !== $keys[$i])
+    if ($property_counter === $property_count)
+      break;
+  if ($property_counter === $property_count)
+    break;
 }
-if ($required_counter !== count($required))
-  error("missing '".$required[count($required) - 1]."' property");
+if ($i < $count)
+  error("wrong property order for '$keys[$i]' property");
 
 $now = time();  # UNIX time stamp (seconds)
 $type = get_type($schema);
