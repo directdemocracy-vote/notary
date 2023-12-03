@@ -80,12 +80,8 @@ for($i = 0; $i < $count; $i++) {
   if ($break)
     break;
 }
-# if ($break && $i < $count)
-if ($break)
-  $dada = "break";
-else
-  $dada = "Pas break";
-error("wrong property order for property: $i $count $dada");
+if ($break && $i < $count)
+  error("wrong property order for '$key[$i]' property");
  
 $now = time();  # UNIX time stamp (seconds)
 $type = get_type($schema);
