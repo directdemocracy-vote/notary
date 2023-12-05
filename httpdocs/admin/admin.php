@@ -28,8 +28,8 @@ $citizens = $mysqli->escape_string($input->citizens);
 $endorsements = $mysqli->escape_string($input->endorsements);
 $proposals = $mysqli->escape_string($input->proposals);
 $areas = $mysqli->escape_string($input->areas);
-$registrations = $mysqli->escape_string($input->registrations);
-$ballots = $mysqli->escape_string($input->ballots);
+$participations = $mysqli->escape_string($input->participations);
+$votes = $mysqli->escape_string($input->votes);
 
 $results = $mysqli->escape_string($input->results);
 
@@ -49,16 +49,16 @@ if ($proposals)
   $n += delete_publication($mysqli, 'proposal');
 if ($areas)
   $n += delete_publication($mysqli, 'area');
-if ($registrations)
-  $n += delete_publication($mysqli, 'registration');
-if ($ballots)
-  $n += delete_publication($mysqli, 'ballot');
+if ($participations)
+  $n += delete_publication($mysqli, 'participation');
+if ($votes)
+  $n += delete_publication($mysqli, 'vote');
 if ($results) {
   query("DELETE FROM results");
   query("DELETE FROM participation");
   query("DELETE FROM corpus");
-  query("DELETE FROM ballots");
-  query("DELETE FROM registrations");
+  query("DELETE FROM votes");
+  query("DELETE FROM participations");
   query("DELETE FROM stations");
 }
 
@@ -72,21 +72,17 @@ DELETE FROM publication WHERE id NOT IN (
     SELECT id FROM endorsement UNION
     SELECT id FROM area UNION
     SELECT id FROM proposal UNION
-    SELECT id FROM registration UNION
-    SELECT id FROM ballot)
+    SELECT id FROM participation UNION
+    SELECT id FROM vote)
 EOT;
-// FIXME: we should add "participation" and "vote" to the above list
 
 query($query);
 query("DELETE FROM citizen WHERE id NOT IN (SELECT id FROM publication)");
 query("DELETE FROM endorsement WHERE id NOT IN (SELECT id FROM publication)");
 query("DELETE FROM area WHERE id NOT IN (SELECT id FROM publication)");
 query("DELETE FROM proposal WHERE id NOT IN (SELECT id FROM publication)");
-// query("DELETE FROM participation WHERE id NOT IN (SELECT id FROM publication)");
-query("DELETE FROM registration WHERE id NOT IN (SELECT id FROM publication)");
-query("DELETE FROM ballot WHERE id NOT IN (SELECT id FROM publication)");
-// query("DELETE FROM vote WHERE id NOT IN (SELECT id FROM publication)");
-
+query("DELETE FROM participation WHERE id NOT IN (SELECT id FROM publication)");
+query("DELETE FROM vote WHERE id NOT IN (SELECT id FROM publication)");
 
 $result = query("SELECT MAX(id) AS `max` FROM publication");
 if ($result) {
