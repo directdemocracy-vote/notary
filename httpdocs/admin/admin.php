@@ -105,5 +105,5 @@ if ($n_participation)
 if ($n_vote)
   $list += "<li>$n_vote vote(s)</li>";
 $list += '</ul>';
-die("{\"status\":\"Deleted $n publications:$list"}");
+die("{\"status\":\"Deleted $n publications:$list\"}");
  ?>
