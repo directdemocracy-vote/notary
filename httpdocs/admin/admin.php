@@ -40,25 +40,26 @@ function delete_publication($mysqli, $type) {
   return $mysqli->affected_rows / 2;
 }
 
-$n = 0;
 if ($citizens)
-  $n += delete_publication($mysqli, 'citizen');
+  $n_citizen = delete_publication($mysqli, 'citizen');
 if ($endorsements)
-  $n += delete_publication($mysqli, 'endorsement');
+  $n_endorsement = delete_publication($mysqli, 'endorsement');
 if ($proposals)
-  $n += delete_publication($mysqli, 'proposal');
+  $n_proposal = delete_publication($mysqli, 'proposal');
 if ($areas)
-  $n += delete_publication($mysqli, 'area');
+  $n_area = delete_publication($mysqli, 'area');
 if ($participations)
-  $n += delete_publication($mysqli, 'participation');
+  $n_participation = delete_publication($mysqli, 'participation');
 if ($votes)
-  $n += delete_publication($mysqli, 'vote');
+  $n_vote = delete_publication($mysqli, 'vote');
 if ($results) {
   query("DELETE FROM results");
   query("DELETE FROM participation");
   query("DELETE FROM corpus");
   query("DELETE FROM vote");
 }
+
+$n = $n_citizen + $n_endorsement + $n_proposal + $n_area + $n_participation + $n_vote;
 
 # clean-up orphan endorsements
 query("DELETE FROM endorsement WHERE endorsement.endorsedSignature NOT IN (SELECT signature FROM publication)");
@@ -90,5 +91,19 @@ if ($result) {
 } else
   query("ALTER TABLE publication AUTO_INCREMENT=1");
 
-die("{\"status\":\"Deleted $n publications.\"}");
+$list = '<ul>';
+if ($n_citizen)
+  $list += "<li>$n_citizen citizen(s)</li>";
+if ($n_endorsement)
+  $list += "<li>$n_endorsement endorsement(s)</li>";
+if ($n_proposal)
+  $list += "<li>$n_proposal proposal(s)</li>";
+if ($n_area)
+  $list += "<li>$n_area area(s)</li>";
+if ($n_participation)
+  $list += "<li>$n_participation participation(s)</li>";
+if ($n_vote)
+  $list += "<li>$n_vote vote(s)</li>";
+$list += '</ul>';
+die("{\"status\":\"Deleted $n publications:$list"}");
  ?>
