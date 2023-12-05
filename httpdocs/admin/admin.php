@@ -85,19 +85,22 @@ if ($result) {
 } else
   query("ALTER TABLE publication AUTO_INCREMENT=1");
 
-$list = '<ul>';
+$list = '';
+if ($n)
+  $list .= ':<ul>';
 if ($n_citizen)
-  $list .= "<li>$n_citizen citizen(s)</li>";
+  $list .= "<li>citizen: $n_citizen</li>";
 if ($n_endorsement)
-  $list .= "<li>$n_endorsement endorsement(s)</li>";
+  $list .= "<li>endorsement: $n_endorsement</li>";
 if ($n_proposal)
-  $list .= "<li>$n_proposal proposal(s)</li>";
+  $list .= "<li>proposal: $n_proposal</li>";
 if ($n_area)
-  $list .= "<li>$n_area area(s)</li>";
+  $list .= "<li>area: $n_area</li>";
 if ($n_participation)
-  $list .= "<li>$n_participation participation(s)</li>";
+  $list .= "<li>participation: $n_participation</li>";
 if ($n_vote)
-  $list .= "<li>$n_vote vote(s)</li>";
-$list .= '</ul>';
-die("{\"status\":\"Deleted $n publications:$list\"}");
+  $list .= "<li>vote: $n_vote</li>";
+if ($n)
+  $list .= '</ul>';
+die("{\"status\":\"Deleted $n publications$list\"}");
  ?>
