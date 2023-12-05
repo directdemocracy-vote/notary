@@ -25,11 +25,11 @@ elseif (isset($key))
 elseif (isset($fingerprint))
   $query .= "signatureSHA1 = UNHEX('$fingerprint')";
 else
-  error("No fingerprint or key argument provided.");
+  error("no fingerprint or key argument provided");
 $result = $mysqli->query($query) or error($mysqli->error);
 $publication = $result->fetch_assoc();
 if (!$publication)
-  error("Publication not found. $query");
+  error("publication not found");
 $result->free();
 $publication_id = intval($publication['id']);
 unset($publication['id']);
@@ -91,13 +91,13 @@ if ($type == 'citizen') {
   $area = $result->fetch_assoc();
   $polygons = json_decode($area['polygons']);
   if ($polygons->type !== 'MultiPolygon')
-    error("Area without MultiPolygon: $polygons->type");
+    error("area without MultiPolygon: $polygons->type");
   $area['polygons'] = &$polygons->coordinates;
   $result->free();
   $area = $publication + $area;
   echo json_encode($area, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } else {
-  error('Publication type not supported: ' + $type);
+  error('publication type not supported: ' + $type);
 }
 $mysqli->close();
 ?>
