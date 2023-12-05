@@ -58,7 +58,6 @@ if ($results) {
   query("DELETE FROM participation");
   query("DELETE FROM corpus");
   query("DELETE FROM vote");
-  query("DELETE FROM stations");
 }
 
 # clean-up orphan endorsements
