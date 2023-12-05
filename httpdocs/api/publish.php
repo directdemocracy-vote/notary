@@ -85,7 +85,7 @@ if ($break && $i < $count)
  
 $now = time();  # UNIX time stamp (seconds)
 $type = get_type($schema);
-if ($type != 'ballot' && $published > $now + 60)  # allowing a 1 minute (60 seconds) error
+if ($type != 'vote' && $published > $now + 60)  # allowing a 1 minute (60 seconds) error
   error("Publication date in the future for $type: $published > $now");
 if ($type == 'citizen') {
   $citizen = &$publication;
@@ -101,7 +101,7 @@ if ($type == 'citizen') {
     error("Cannot determine picture size");
   }
 }
-if ($type != 'ballot') {
+if ($type != 'vote') {
   $publication->signature = '';
   if (isset($publication->appSignature)) {
     $appSignature = $publication->appSignature;
@@ -219,11 +219,12 @@ if ($type == 'citizen') {
   $query = "INSERT INTO proposal(id, area, title, description, question, answers, secret, deadline, website, participants, corpus) "
           ."VALUES($id, FROM_BASE64('$area=='), \"$title\", \"$description\", "
           ."\"$question\", \"$answers\", $secret, $deadline, \"$website\", 0, 0)";
-} elseif ($type == 'registration') {
-  list($appKey, $appSignature) = check_app($endorsement);
-  $query = "INSERT INTO registration(id, appKey, appSignature, blindKey, encryptedVote) "
-          ."VALUES($id, FROM_BASE64('$appKey=='), FROM_BASE64('$appSignature=='), FROM_BASE64('$blindKey=='), FROM_BASE64('$encryptedVote'))";
-} elseif ($type == 'ballot') {
+} elseif ($type == 'participation') {
+  $participation =&$publication;
+  list($appKey, $appSignature) = check_app($participation);
+  $query = "INSERT INTO participation(id, appKey, appSignature, referendum, encryptedVote) "
+          ."VALUES($id, FROM_BASE64('$appKey=='), FROM_BASE64('$appSignature=='), FROM_BASE64('$participation->referendum=='), FROM_BASE64('$encryptedVote'))";
+} elseif ($type == 'vote') {
   if (!isset($publication->answer)) # optional
     $answer = '';
   else
@@ -239,7 +240,7 @@ if ($type == 'citizen') {
     $station_values = "";
   }
   $publication_proposal = sanitize_field($publication->proposal, "base64", "station_signature");
-  $query = "INSERT INTO ballot(id, proposal,$station_names answer) "
+  $query = "INSERT INTO vote(id, proposal,$station_names answer) "
           ."VALUES($id, FROM_BASE64('$publication_proposal=='),$station_values \"$answer\")";
 } elseif ($type == 'area') {
   $polygons = 'ST_GeomFromText("MULTIPOLYGON(';

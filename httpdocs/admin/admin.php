@@ -28,8 +28,8 @@ $citizens = $mysqli->escape_string($input->citizens);
 $endorsements = $mysqli->escape_string($input->endorsements);
 $proposals = $mysqli->escape_string($input->proposals);
 $areas = $mysqli->escape_string($input->areas);
-$registrations = $mysqli->escape_string($input->registrations);
-$ballots = $mysqli->escape_string($input->ballots);
+$participations = $mysqli->escape_string($input->participations);
+$votes = $mysqli->escape_string($input->votes);
 
 $results = $mysqli->escape_string($input->results);
 
@@ -40,27 +40,20 @@ function delete_publication($mysqli, $type) {
   return $mysqli->affected_rows / 2;
 }
 
-$n = 0;
-if ($citizens)
-  $n += delete_publication($mysqli, 'citizen');
-if ($endorsements)
-  $n += delete_publication($mysqli, 'endorsement');
-if ($proposals)
-  $n += delete_publication($mysqli, 'proposal');
-if ($areas)
-  $n += delete_publication($mysqli, 'area');
-if ($registrations)
-  $n += delete_publication($mysqli, 'registration');
-if ($ballots)
-  $n += delete_publication($mysqli, 'ballot');
+$n_citizen = $citizens ? delete_publication($mysqli, 'citizen') : 0;
+$n_endorsement = $endorsements ? delete_publication($mysqli, 'endorsement') : 0;
+$n_proposal = $proposals ? delete_publication($mysqli, 'proposal') : 0;
+$n_area = $areas ? delete_publication($mysqli, 'area') : 0;
+$n_participation = $participations ? delete_publication($mysqli, 'participation') : 0;
+$n_vote = $votes ? delete_publication($mysqli, 'vote') : 0;
 if ($results) {
   query("DELETE FROM results");
   query("DELETE FROM participation");
   query("DELETE FROM corpus");
-  query("DELETE FROM ballots");
-  query("DELETE FROM registrations");
-  query("DELETE FROM stations");
+  query("DELETE FROM vote");
 }
+
+$n = $n_citizen + $n_endorsement + $n_proposal + $n_area + $n_participation + $n_vote;
 
 # clean-up orphan endorsements
 query("DELETE FROM endorsement WHERE endorsement.endorsedSignature NOT IN (SELECT signature FROM publication)");
@@ -72,21 +65,17 @@ DELETE FROM publication WHERE id NOT IN (
     SELECT id FROM endorsement UNION
     SELECT id FROM area UNION
     SELECT id FROM proposal UNION
-    SELECT id FROM registration UNION
-    SELECT id FROM ballot)
+    SELECT id FROM participation UNION
+    SELECT id FROM vote)
 EOT;
-// FIXME: we should add "participation" and "vote" to the above list
 
 query($query);
 query("DELETE FROM citizen WHERE id NOT IN (SELECT id FROM publication)");
 query("DELETE FROM endorsement WHERE id NOT IN (SELECT id FROM publication)");
 query("DELETE FROM area WHERE id NOT IN (SELECT id FROM publication)");
 query("DELETE FROM proposal WHERE id NOT IN (SELECT id FROM publication)");
-// query("DELETE FROM participation WHERE id NOT IN (SELECT id FROM publication)");
-query("DELETE FROM registration WHERE id NOT IN (SELECT id FROM publication)");
-query("DELETE FROM ballot WHERE id NOT IN (SELECT id FROM publication)");
-// query("DELETE FROM vote WHERE id NOT IN (SELECT id FROM publication)");
-
+query("DELETE FROM participation WHERE id NOT IN (SELECT id FROM publication)");
+query("DELETE FROM vote WHERE id NOT IN (SELECT id FROM publication)");
 
 $result = query("SELECT MAX(id) AS `max` FROM publication");
 if ($result) {
@@ -96,5 +85,22 @@ if ($result) {
 } else
   query("ALTER TABLE publication AUTO_INCREMENT=1");
 
-die("{\"status\":\"Deleted $n publications.\"}");
+$list = '';
+if ($n)
+  $list .= ':<ul>';
+if ($n_citizen)
+  $list .= "<li>citizen: $n_citizen</li>";
+if ($n_endorsement)
+  $list .= "<li>endorsement: $n_endorsement</li>";
+if ($n_proposal)
+  $list .= "<li>proposal: $n_proposal</li>";
+if ($n_area)
+  $list .= "<li>area: $n_area</li>";
+if ($n_participation)
+  $list .= "<li>participation: $n_participation</li>";
+if ($n_vote)
+  $list .= "<li>vote: $n_vote</li>";
+if ($n)
+  $list .= '</ul>';
+die("{\"status\":\"Deleted $n publications$list\"}");
  ?>
