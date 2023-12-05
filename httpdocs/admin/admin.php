@@ -40,18 +40,12 @@ function delete_publication($mysqli, $type) {
   return $mysqli->affected_rows / 2;
 }
 
-if ($citizens)
-  $n_citizen = delete_publication($mysqli, 'citizen');
-if ($endorsements)
-  $n_endorsement = delete_publication($mysqli, 'endorsement');
-if ($proposals)
-  $n_proposal = delete_publication($mysqli, 'proposal');
-if ($areas)
-  $n_area = delete_publication($mysqli, 'area');
-if ($participations)
-  $n_participation = delete_publication($mysqli, 'participation');
-if ($votes)
-  $n_vote = delete_publication($mysqli, 'vote');
+$n_citizen = $citizens ? delete_publication($mysqli, 'citizen') : 0;
+$n_endorsement = $endorsements ? delete_publication($mysqli, 'endorsement') : 0;
+$n_proposal = $proposals ? delete_publication($mysqli, 'proposal') : 0;
+$n_area = $areas ? delete_publication($mysqli, 'area') : 0;
+$n_participation = $participations ? delete_publication($mysqli, 'participation') : 0;
+$n_vote = $votes ? delete_publication($mysqli, 'vote') : 0;
 if ($results) {
   query("DELETE FROM results");
   query("DELETE FROM participation");
@@ -93,17 +87,17 @@ if ($result) {
 
 $list = '<ul>';
 if ($n_citizen)
-  $list += "<li>$n_citizen citizen(s)</li>";
+  $list .= "<li>$n_citizen citizen(s)</li>";
 if ($n_endorsement)
-  $list += "<li>$n_endorsement endorsement(s)</li>";
+  $list .= "<li>$n_endorsement endorsement(s)</li>";
 if ($n_proposal)
-  $list += "<li>$n_proposal proposal(s)</li>";
+  $list .= "<li>$n_proposal proposal(s)</li>";
 if ($n_area)
-  $list += "<li>$n_area area(s)</li>";
+  $list .= "<li>$n_area area(s)</li>";
 if ($n_participation)
-  $list += "<li>$n_participation participation(s)</li>";
+  $list .= "<li>$n_participation participation(s)</li>";
 if ($n_vote)
-  $list += "<li>$n_vote vote(s)</li>";
-$list += '</ul>';
+  $list .= "<li>$n_vote vote(s)</li>";
+$list .= '</ul>';
 die("{\"status\":\"Deleted $n publications:$list\"}");
  ?>
