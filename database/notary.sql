@@ -39,7 +39,7 @@ CREATE TABLE `endorsement` (
 CREATE TABLE `publication` (
   `id` int(11) NOT NULL,
   `version` smallint(6) NOT NULL,
-  `type` enum('citizen','endorsement','area','proposal','participation','registration','ballot','vote') NOT NULL,
+  `type` enum('citizen','endorsement','area','proposal','participation','vote') NOT NULL,
   `published` datetime NOT NULL,
   `signature` blob NOT NULL COMMENT 'signature of the publication by the author',
   `key` blob NOT NULL COMMENT 'public key of author'
