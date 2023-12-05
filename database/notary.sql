@@ -39,7 +39,7 @@ CREATE TABLE `endorsement` (
 CREATE TABLE `publication` (
   `id` int(11) NOT NULL,
   `version` smallint(6) NOT NULL,
-  `type` enum('citizen','endorsement','area','proposal','participation','registration','ballot','vote') NOT NULL,
+  `type` enum('citizen','endorsement','area','proposal','participation','vote') NOT NULL,
   `published` datetime NOT NULL,
   `signature` blob NOT NULL COMMENT 'signature of the publication by the author',
   `key` blob NOT NULL COMMENT 'public key of author'
@@ -64,9 +64,18 @@ CREATE TABLE `participation` (
   `id` int(11) NOT NULL,
   `appKey` blob NOT NULL,
   `appSignature` blob NOT NULL,
-  `citizen` blob NOT NULL,
   `referendum` blob NOT NULL,
   `encryptedVote` blob NOT NULL,
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `vote` (
+  `id` int(11) NOT NULL,
+  `appKey` blob NOT NULL,
+  `appSignature` blob NOT NULL,
+  `referendum` blob NOT NULL,
+  `number` int(11) NOT NULL,
+  `ballot` binary(32) NOT NULL,
+  `answer` text COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `results` (
@@ -99,6 +108,13 @@ ALTER TABLE `endorsement`
 ALTER TABLE `participation`
   ADD PRIMARY KEY `id`,
   ADD KEY `referendum` (`referendum`);
+
+ALTER TABLE `vote`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `referendum` (`referendum`,`ballot`) USING HASH;
+
+ALTER TABLE `vote`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `publication`
   ADD PRIMARY KEY (`id`),
