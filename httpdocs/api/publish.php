@@ -218,7 +218,7 @@ if ($type == 'citizen') {
   $deadline = sanitize_field($publication->deadline, "positive_int", "deadline");
   $query = "INSERT INTO proposal(id, area, title, description, question, answers, secret, deadline, website, participants, corpus) "
           ."VALUES($id, FROM_BASE64('$area=='), \"$title\", \"$description\", "
-          ."\"$question\", \"$answers\", $secret, $deadline, \"$website\", 0, 0)";
+          ."\"$question\", \"$answers\", $secret, FROM_UNIXTIME($deadline), \"$website\", 0, 0)";
 } elseif ($type == 'participation') {
   $participation =&$publication;
   list($appKey, $appSignature) = check_app($participation);
