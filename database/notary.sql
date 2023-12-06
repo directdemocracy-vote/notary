@@ -53,8 +53,8 @@ CREATE TABLE `proposal` (
   `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `question` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `answers` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `secret` tinyint(1) NOT NULL
-  `deadline` bigint(15) NOT NULL,
+  `secret` tinyint(1) NOT NULL,
+  `deadline` datetime NOT NULL,
   `website` varchar(2048) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `participants` int(11) NOT NULL,
   `corpus` int(11) NOT NULL
