@@ -45,9 +45,9 @@ else # assuming 0 or 1
 if ($open == 2)
   $open = '';
 elseif ($open == 0)
-  $open = "FROM_UNIXTIME(proposal.deadline) <= NOW() AND ";
+  $open = "proposal.deadline <= NOW() AND ";
 else # assuming 1
-  $open = "FROM_UNIXTIME(proposal.deadline) > NOW() AND ";
+  $open = "proposal.deadline > NOW() AND ";
 if ($search !== '')
   $search = "(title LIKE \"%$search%\" OR description LIKE \"%$search%\") AND ";
 
@@ -56,7 +56,7 @@ $query_common_part = "FROM proposal "
                     ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
                     ."LEFT JOIN area ON area.id = area_p.id "
                     ."WHERE $secret$open$search"
-                    ."YEAR(FROM_UNIXTIME(proposal.deadline)) = $year "
+                    ."YEAR(proposal.deadline) = $year "
                     ."AND ST_Intersects(area.polygons, ST_Buffer(POINT($longitude, $latitude), $radius))";
 $query = "SELECT "
         ."CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json') AS `schema`, "
@@ -65,7 +65,7 @@ $query = "SELECT "
         ."UNIX_TIMESTAMP(publication.published) AS published, "
         ."REPLACE(REPLACE(TO_BASE64(proposal.area), '\\n', ''), '=', '') as area, "
         ."proposal.title, proposal.description, "
-        ."proposal.question, proposal.answers, proposal.secret, proposal.deadline, proposal.website, "
+        ."proposal.question, proposal.answers, proposal.secret, UNIX_TIMESTAMP(proposal.deadline) AS deadline, proposal.website, "
         ."area.name AS areas "
         .$query_common_part
         ."LIMIT $offset, $limit";
