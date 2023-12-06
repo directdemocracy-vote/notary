@@ -63,7 +63,7 @@ if ($type == 'citizen') {
   $endorsement = $publication + $endorsement;
   echo json_encode($endorsement, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type == 'proposal') {
-  $query = "SELECT judge, area, title, description, question, answers, deadline, website FROM proposal WHERE id=$publication_id";
+  $query = "SELECT judge, area, title, description, question, answers, UNIX_TIMESTAMP(deadline) AS deadline, website FROM proposal WHERE id=$publication_id";
   # id AS areas is just a placeholder for having areas in the right order of fields
   $result = $mysqli->query($query) or error($mysqli->error);
   $proposal = $result->fetch_assoc();
