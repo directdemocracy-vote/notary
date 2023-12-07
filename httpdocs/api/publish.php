@@ -26,7 +26,7 @@ function check_app($publication) {
   $publication->appSignature = '';
   $verify = openssl_verify($publication->signature, base64_decode("$appSignature=="), public_key($appKey), OPENSSL_ALGO_SHA256);
   if ($verify != 1) {
-    $type = get_type(sanitize_field($publication->schema, "url", "schema"));
+    $type = get_type(sanitize_field($publication->schema, 'url', 'schema'));
     error("Wrong app signature for $type: $appKey");
   }
   # restore original signature
@@ -43,14 +43,14 @@ if (!$publication)
   error("Unable to parse JSON post");
 if (!isset($publication->schema))
   error("Unable to read schema field");
-$schema = sanitize_field($publication->schema, "url", "schema");
-$key = sanitize_field($publication->key, "base64", "key");
-$published = sanitize_field($publication->published, "positive_int", "published");
-$signature = sanitize_field($publication->signature, "base64", "signature");
+$schema = sanitize_field($publication->schema, 'url', 'schema');
+$key = sanitize_field($publication->key, 'base64', 'key');
+$published = sanitize_field($publication->published, 'positive_int', 'published');
+$signature = sanitize_field($publication->signature, 'base64', 'signature');
 if (isset($publication->blindKey))
-  $blindKey = sanitize_field($publication->blindKey, "base64", "signature");
+  $blindKey = sanitize_field($publication->blindKey, 'base64', 'signature');
 if (isset($publication->encryptedVote))
-  $encryptedVote = sanitize_field($publication->encryptedVote, "base64", "signature");
+  $encryptedVote = sanitize_field($publication->encryptedVote, 'base64', 'signature');
 
 # validate from json-schema
 $schema_file = file_get_contents($schema);
@@ -59,7 +59,7 @@ $result = $validator->validate($publication, $schema_file);
 if (!$result->isValid()) {
   $error = $result->error();
   $formatter = new ErrorFormatter();
-  error(implode(". ", $formatter->formatFlat($error)) . ".");
+  error(implode('. ', $formatter->formatFlat($error)) . '.');
 }
 
 # check field order (important for signature)
@@ -85,9 +85,9 @@ if ($break && $i < $count)
  
 $now = time();  # UNIX time stamp (seconds)
 $type = get_type($schema);
-if ($type != 'vote' && $published > $now + 60)  # allowing a 1 minute (60 seconds) error
+if ($type !== 'vote' && $published > $now + 60)  # allowing a 1 minute (60 seconds) error
   error("Publication date in the future for $type: $published > $now");
-if ($type == 'citizen') {
+if ($type === 'citizen') {
   $citizen = &$publication;
   $citizen_picture = substr($citizen->picture, strlen('data:image/jpeg;base64,'));
   $data = base64_decode($citizen_picture);
@@ -101,21 +101,20 @@ if ($type == 'citizen') {
     error("Cannot determine picture size");
   }
 }
-if ($type != 'vote') {
-  $publication->signature = '';
-  if (isset($publication->appSignature)) {
-    $appSignature = $publication->appSignature;
-    $publication->appSignature = '';
-  }
-  $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-  $verify = openssl_verify($data, base64_decode("$signature=="), public_key($key), OPENSSL_ALGO_SHA256);
-  if ($verify != 1)
-    error("Wrong signature for $type: key=$key\n" . json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-  # restore original signatures if needed
-  $publication->signature = $signature;
-  if (isset($appSignature))
-    $publication->appSignature = $appSignature;
+
+$publication->signature = '';
+if ($type !== 'vote' && isset($publication->appSignature)) {
+  $appSignature = $publication->appSignature;
+   $publication->appSignature = '';
 }
+$data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+$verify = openssl_verify($data, base64_decode("$signature=="), public_key($key), OPENSSL_ALGO_SHA256);
+if ($verify != 1)
+  error("Wrong signature for $type: key=$key\n" . json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+# restore original signatures if needed
+$publication->signature = $signature;
+if ($type !== 'vote' && isset($appSignature))
+  $publication->appSignature = $appSignature;
 
 $version = intval(explode('/', $schema)[4]);
 $query = "INSERT INTO publication(`version`, `type`, `key`, signature, published) "
@@ -123,16 +122,16 @@ $query = "INSERT INTO publication(`version`, `type`, `key`, signature, published
 $mysqli->query($query) or error($mysqli->error);
 $id = $mysqli->insert_id;
 
-if ($type == 'citizen') {
+if ($type === 'citizen') {
   list($appKey, $appSignature) = check_app($citizen);
   $familyName = $mysqli->escape_string($publication->familyName);
   $givenNames = $mysqli->escape_string($publication->givenNames);
-  $latitude = sanitize_field($citizen->latitude, "float", "latitude");
-  $longitude = sanitize_field($citizen->longitude, "float", "longitude");
+  $latitude = sanitize_field($citizen->latitude, 'float', 'latitude');
+  $longitude = sanitize_field($citizen->longitude, 'float', 'longitude');
   $query = "INSERT INTO citizen(id, appKey, appSignature, familyName, givenNames, picture, home) "
           ."VALUES($id, FROM_BASE64('$appKey=='), FROM_BASE64('$appSignature=='), \"$familyName\", \"$givenNames\", "
           ."FROM_BASE64('$citizen_picture'), POINT($longitude, $latitude))";
-} elseif ($type == 'endorsement') {
+} elseif ($type === 'endorsement') {
   $endorsement = &$publication;
   if (isset($endorsement->appKey))
     list($appKey, $appSignature) = check_app($endorsement);
@@ -146,7 +145,7 @@ if ($type == 'citizen') {
     $endorsement->message = '';
   if (!property_exists($endorsement, 'comment'))
     $endorsement->comment = '';
-  $endorsedSignature = sanitize_field($endorsement->endorsedSignature, "base64", "endorsedSignature");
+  $endorsedSignature = sanitize_field($endorsement->endorsedSignature, 'base64', 'endorsedSignature');
   $query = "SELECT id, `type`, REPLACE(REPLACE(TO_BASE64(signature), '\\n', ''), '=', '') AS signature FROM publication "
           ."WHERE signature = FROM_BASE64('$endorsedSignature==')";
   $result = $mysqli->query($query) or error($mysqli->error);
@@ -193,12 +192,12 @@ if ($type == 'citizen') {
           ."VALUES($id,$appValues $revoke, \"$message\", \"$comment\", "
           ."FROM_BASE64('$endorsedSignature=='), "
           . "1, $accepted)";
-} elseif ($type == 'proposal') {
+} elseif ($type === 'proposal') {
   $proposal =&$publication;
   if (!isset($proposal->website))  # optional
     $website = '';
   else
-    $website = sanitize_field($publication->website, "url", "website");
+    $website = sanitize_field($publication->website, 'url', 'website');
 
   if (!isset($proposal->question))  # optional
     $question = '';
@@ -212,37 +211,27 @@ if ($type == 'citizen') {
   $answers = implode("\n", $answers);
   $answers = $mysqli->escape_string($answers);
   $secret = ($proposal->secret) ? 1 : 0;
-  $area = sanitize_field($publication->area, "base64", "area");
+  $area = sanitize_field($publication->area, 'base64', 'area');
   $title = $mysqli->escape_string($publication->title);
   $description = $mysqli->escape_string($publication->description);
-  $deadline = sanitize_field($publication->deadline, "positive_int", "deadline");
+  $deadline = sanitize_field($publication->deadline, 'positive_int', 'deadline');
   $query = "INSERT INTO proposal(id, area, title, description, question, answers, secret, deadline, website, participants, corpus) "
           ."VALUES($id, FROM_BASE64('$area=='), \"$title\", \"$description\", "
           ."\"$question\", \"$answers\", $secret, FROM_UNIXTIME($deadline), \"$website\", 0, 0)";
-} elseif ($type == 'participation') {
+} elseif ($type === 'participation') {
   $participation =&$publication;
   list($appKey, $appSignature) = check_app($participation);
   $query = "INSERT INTO participation(id, appKey, appSignature, referendum, encryptedVote) "
           ."VALUES($id, FROM_BASE64('$appKey=='), FROM_BASE64('$appSignature=='), FROM_BASE64('$participation->referendum=='), FROM_BASE64('$encryptedVote'))";
-} elseif ($type == 'vote') {
-  if (!isset($publication->answer)) # optional
-    $answer = '';
-  else
-    $answer = $mysqli->escape_string($publication->answer);
-
-  if (isset($publication->station)) {
-    $station_key = sanitize_field($publication->station->key, "base64", "station_key");
-    $station_signature = sanitize_field($publication->station->signature, "base64", "station_signature");
-    $station_names = " stationKey, stationSignature,";
-    $station_values = " FROM_BASE64('$station_key=='), FROM_BASE64('$station_signature=='),";
-  } else {
-    $station_names = "";
-    $station_values = "";
-  }
-  $publication_proposal = sanitize_field($publication->proposal, "base64", "station_signature");
-  $query = "INSERT INTO vote(id, proposal,$station_names answer) "
-          ."VALUES($id, FROM_BASE64('$publication_proposal=='),$station_values \"$answer\")";
-} elseif ($type == 'area') {
+} elseif ($type === 'vote') {
+  $vote = &$publication;
+  $referendum = sanitize_field($vote->referendum, 'base64', 'referendum');
+  $number = sanitize_field($vote->number, 'positive_int', 'number');
+  $ballot = sanitize_field($vote->ballot, 'base64', 'ballot');
+  $answer = $mysqli->escape_string($vote->answer);  
+  $query = "INSERT INTO vote(id, referendum, number, ballot, answer) "
+          ."VALUES($id, FROM_BASE64('$referendum=='), $number, FROM_BASE64('$ballot'), \"$answer\")";
+} elseif ($type === 'area') {
   $polygons = 'ST_GeomFromText("MULTIPOLYGON(';
   $t1 = false;
   foreach($publication->polygons as $polygon1) {
@@ -274,9 +263,9 @@ if ($type == 'citizen') {
 } else
   error("Unknown publication type.");
 $mysqli->query($query) or error($mysqli->error);
-if ($type == 'proposal')
+if ($type === 'proposal')
   update_corpus($mysqli, $id);
-if ($type == 'endorsement')
+if ($type === 'endorsement')
   echo json_encode(endorsements($mysqli, $key), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 else
   echo("{\"signature\":\"$signature\"}");
