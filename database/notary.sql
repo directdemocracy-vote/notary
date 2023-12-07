@@ -19,11 +19,6 @@ CREATE TABLE `citizen` (
   `home` point NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `corpus` (
-  `referendum` int(11) NOT NULL,
-  `citizen` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 CREATE TABLE `endorsement` (
   `id` int(11) NOT NULL,
   `appKey` blob NOT NULL,
@@ -96,10 +91,6 @@ ALTER TABLE `area`
 
 ALTER TABLE `citizen`
   ADD PRIMARY KEY (`id`);
-
-ALTER TABLE `corpus`
-  ADD KEY `proposal` (`proposal`),
-  ADD KEY `citizen` (`citizen`);
 
 ALTER TABLE `endorsement`
   ADD PRIMARY KEY (`id`),
