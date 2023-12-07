@@ -21,7 +21,7 @@ function check_app($publication, $vote=false) {
   $appKey = sanitize_field($publication->appKey, 'base64', 'appKey');
   $result = $mysqli->query("SELECT id FROM webservice WHERE `type`='app' and `key`=FROM_BASE64('$appKey==')");
   if ($result->num_rows === 0)
-    error("Unknown app");
+    error("unknown app");
   $appSignature = sanitize_field($publication->appSignature, 'base64', 'appSignature');
   $publication->appSignature = '';
   if ($vote) {
@@ -30,7 +30,7 @@ function check_app($publication, $vote=false) {
     $verify = openssl_verify($publication->signature, base64_decode("$appSignature=="), public_key($appKey), OPENSSL_ALGO_SHA256);
     if ($verify != 1) {
       $type = get_type(sanitize_field($publication->schema, 'url', 'schema'));
-      error("Wrong app signature for $type: $appKey");
+      error("wrong app signature for $type: $appKey");
     }
   }
   # restore original signature
@@ -44,9 +44,9 @@ header("Access-Control-Allow-Headers: content-type");
 
 $publication = json_decode(file_get_contents("php://input"));
 if (!$publication)
-  error("Unable to parse JSON post");
+  error("unable to parse JSON post");
 if (!isset($publication->schema))
-  error("Unable to read schema field");
+  error("unable to read schema field");
 $schema = sanitize_field($publication->schema, 'url', 'schema');
 $key = sanitize_field($publication->key, 'base64', 'key');
 $published = sanitize_field($publication->published, 'positive_int', 'published');
@@ -90,7 +90,7 @@ if ($break && $i < $count)
 $now = time();  # UNIX time stamp (seconds)
 $type = get_type($schema);
 if ($type !== 'vote' && $published > $now + 60)  # allowing a 1 minute (60 seconds) error
-  error("Publication date in the future for $type: $published > $now");
+  error("publication date in the future for $type: $published > $now");
 if ($type === 'citizen') {
   $citizen = &$publication;
   $citizen_picture = substr($citizen->picture, strlen('data:image/jpeg;base64,'));
@@ -98,11 +98,11 @@ if ($type === 'citizen') {
   try {
     $size = @getimagesizefromstring($data);
     if ($size['mime'] != 'image/jpeg')
-      error("Wrong picture MIME type: '$size[mime]' (expecting 'image/jpeg')");
+      error("wrong picture MIME type: '$size[mime]' (expecting 'image/jpeg')");
     if ($size[0] != 150 || $size[1] != 200)
-      error("Wrong picture size: $size[0]x$size[1] (expecting 150x200)");
+      error("wrong picture size: $size[0]x$size[1] (expecting 150x200)");
   } catch(Exception $e) {
-    error("Cannot determine picture size");
+    error("cannot determine picture size");
   }
 }
 
@@ -114,16 +114,18 @@ if ($type !== 'vote' && isset($publication->appSignature)) {
 $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 $verify = openssl_verify($data, base64_decode("$signature=="), public_key($key), OPENSSL_ALGO_SHA256);
 if ($verify != 1)
-  error("Wrong signature for $type: key=$key\n" . json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+  error("wrong signature for $type: key=$key\n" . json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 # restore original signatures if needed
 $publication->signature = $signature;
 if ($type !== 'vote' && isset($appSignature))
   $publication->appSignature = $appSignature;
 
 $version = intval(explode('/', $schema)[4]);
-$query = "INSERT INTO publication(`version`, `type`, `key`, signature, published) "
+$query = "INSERT IGNORE INTO publication(`version`, `type`, `key`, signature, published) "
         ."VALUES($version, '$type', FROM_BASE64('$key=='), FROM_BASE64('$signature=='), FROM_UNIXTIME($published))";
 $mysqli->query($query) or error($mysqli->error);
+if ($mysqli->affected_rows === 0)
+  error("already existing publication");
 $id = $mysqli->insert_id;
 
 if ($type === 'citizen') {
@@ -156,9 +158,9 @@ if ($type === 'citizen') {
   $endorsed = $result->fetch_assoc();
   $result->free();
   if (!$endorsed)
-    error("Endorsed signature not found: $endorsedSignature");
+    error("endorsed signature not found: $endorsedSignature");
   if ($endorsed['signature'] != $endorsedSignature)
-    error("Endorsed signature mismatch.");
+    error("endorsed signature mismatch.");
   # mark other endorsements of the same participant by the same endorser as not the latest
   $mysqli->query("UPDATE endorsement INNER JOIN publication ON publication.id = endorsement.id"
                 ." SET endorsement.latest = 0"
@@ -272,7 +274,7 @@ if ($type === 'citizen') {
   $name = $mysqli->escape_string($name);
   $query = "INSERT INTO area(id, name, polygons) VALUES($id, \"$name\", $polygons)";
 } else
-  error("Unknown publication type.");
+  error("unknown publication type.");
 $mysqli->query($query) or error($mysqli->error);
 if ($type === 'proposal')
   update_corpus($mysqli, $id);
