@@ -52,7 +52,8 @@ CREATE TABLE `proposal` (
   `deadline` datetime NOT NULL,
   `website` varchar(2048) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `participants` int(11) NOT NULL,
-  `corpus` int(11) NOT NULL
+  `corpus` int(11) NOT NULL,
+  `results` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `participation` (
@@ -74,7 +75,7 @@ CREATE TABLE `vote` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `results` (
-  `proposal` int(11) NOT NULL,
+  `referendum` int(11) NOT NULL,
   `answer` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `count` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
