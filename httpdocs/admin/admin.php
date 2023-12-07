@@ -48,9 +48,7 @@ $n_participation = $participations ? delete_publication($mysqli, 'participation'
 $n_vote = $votes ? delete_publication($mysqli, 'vote') : 0;
 if ($results) {
   query("DELETE FROM results");
-  query("DELETE FROM participation");
   query("DELETE FROM corpus");
-  query("DELETE FROM vote");
 }
 
 $n = $n_citizen + $n_endorsement + $n_proposal + $n_area + $n_participation + $n_vote;
