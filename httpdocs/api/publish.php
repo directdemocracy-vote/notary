@@ -234,7 +234,7 @@ if ($type === 'citizen') {
   $number = sanitize_field($vote->number, 'positive_int', 'number');
   $ballot = sanitize_field($vote->ballot, 'base64', 'ballot');
   $answer = $mysqli->escape_string($vote->answer);
-  $query = "INSERT INTO vote(id, appKey, appSignature, referendum, number, ballot, answer) VALUES("$id, "
+  $query = "INSERT INTO vote(id, appKey, appSignature, referendum, number, ballot, answer) VALUES($id, "
           ."FROM_BASE64('$appKey=='), "
           ."FROM_BASE64('$appSignature=='), "
           ."FROM_BASE64('$referendum=='), "
