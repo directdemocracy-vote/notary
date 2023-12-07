@@ -16,7 +16,7 @@ function get_type($schema) {
   return substr($schema, $p + 1, strlen($schema) - $p - 13);  # remove the .schema.json suffix
 }
 
-function check_app($publication) {
+function check_app($publication, $vote=false) {
   global $mysqli;
   $appKey = sanitize_field($publication->appKey, 'base64', 'appKey');
   $result = $mysqli->query("SELECT id FROM webservice WHERE `type`='app' and `key`=FROM_BASE64('$appKey==')");
@@ -24,10 +24,14 @@ function check_app($publication) {
     error("Unknown app");
   $appSignature = sanitize_field($publication->appSignature, 'base64', 'appSignature');
   $publication->appSignature = '';
-  $verify = openssl_verify($publication->signature, base64_decode("$appSignature=="), public_key($appKey), OPENSSL_ALGO_SHA256);
-  if ($verify != 1) {
-    $type = get_type(sanitize_field($publication->schema, 'url', 'schema'));
-    error("Wrong app signature for $type: $appKey");
+  if ($vote) {
+    # FIXME: check blind signature
+  } else {
+    $verify = openssl_verify($publication->signature, base64_decode("$appSignature=="), public_key($appKey), OPENSSL_ALGO_SHA256);
+    if ($verify != 1) {
+      $type = get_type(sanitize_field($publication->schema, 'url', 'schema'));
+      error("Wrong app signature for $type: $appKey");
+    }
   }
   # restore original signature
   $publication->appSignature = $appSignature;
@@ -225,12 +229,19 @@ if ($type === 'citizen') {
           ."VALUES($id, FROM_BASE64('$appKey=='), FROM_BASE64('$appSignature=='), FROM_BASE64('$participation->referendum=='), FROM_BASE64('$encryptedVote'))";
 } elseif ($type === 'vote') {
   $vote = &$publication;
+  list($appKey, $appSignature) = check_app($vote, true);
   $referendum = sanitize_field($vote->referendum, 'base64', 'referendum');
   $number = sanitize_field($vote->number, 'positive_int', 'number');
   $ballot = sanitize_field($vote->ballot, 'base64', 'ballot');
-  $answer = $mysqli->escape_string($vote->answer);  
-  $query = "INSERT INTO vote(id, referendum, number, ballot, answer) "
-          ."VALUES($id, FROM_BASE64('$referendum=='), $number, FROM_BASE64('$ballot'), \"$answer\")";
+  $answer = $mysqli->escape_string($vote->answer);
+  $query = "INSERT INTO vote(id, appKey, appSignature, referendum, number, ballot, answer) VALUES("$id, 
+          ."FROM_BASE64('$appKey=='), "
+          ."FROM_BASE64('$appSignature=='), "
+          ."FROM_BASE64('$referendum=='), "
+          ."$number, "
+          ."FROM_BASE64('$ballot'), "
+          ."\"$answer\") "
+          ."ON DUPLICATE KEY UPDATE appSignature=FROM_BASE64('$appSignature=='), number=$number, answer=\"$answer\";";
 } elseif ($type === 'area') {
   $polygons = 'ST_GeomFromText("MULTIPOLYGON(';
   $t1 = false;
