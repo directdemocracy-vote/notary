@@ -40,11 +40,12 @@ window.onload = function() {
         console.error(answer.error);
         return;
       }
+      const type = answer.type.charAt(0).toUpperCase() + answer.type.slice(1);
       const subtitle = document.getElementById('subtitle');
       if (corpus)
-        subtitle.textContent = 'Petition corpus';
+        subtitle.textContent = `${type} corpus`;
       else
-        subtitle.textContent = 'Petition participants';
+        subtitle.textContent = `${type} participants`;
       const panel = document.getElementById('panel');
       const title = document.createElement('p');
       panel.appendChild(title);
@@ -58,7 +59,7 @@ window.onload = function() {
         block.classList.add('panel-block');
         panel.appendChild(block);
         const p = document.createElement('p');
-        p.textContent = 'Nobody signed this petition yet.';
+        p.textContent = answer.type === 'petition' ? 'Nobody signed this petition yet.' : 'No referendum results are available yet.';
         block.appendChild(p);
       } else {
         for (const participant of answer.participants) {
@@ -82,7 +83,7 @@ window.onload = function() {
             const d = new Date(parseInt(participant.published) * 1000);
             p.appendChild(document.createElement('br'));
             const small = document.createElement('small');
-            small.textContent = `Signed on: ${d.toLocaleString()}`;
+            small.textContent = answer.type === 'petition' ? `Signed on: ${d.toLocaleString()}` : 'Has voted';
             p.appendChild(small);
           }
           block.appendChild(p);
