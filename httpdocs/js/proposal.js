@@ -110,7 +110,7 @@ window.onload = async function() {
           table.appendChild(tr);
           const a = document.createElement('td');
           tr.appendChild(a);
-          a.textContent = answer.answers[i];
+          a.textContent = answer.answers[i] === '' ? 'Abstention' : answer.answers[i];
           const c = document.createElement('td');
           tr.appendChild(c);
           c.textContent = answer.results[i];
