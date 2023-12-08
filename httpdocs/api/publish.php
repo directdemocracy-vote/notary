@@ -278,6 +278,13 @@ if ($type === 'citizen') {
 $mysqli->query($query) or error($mysqli->error);
 if ($type === 'proposal')
   update_corpus($mysqli, $id);
+if ($type === 'vote') {
+  $query = "INSERT INTO results VALUE(referendum, answer, `count`) VALUES(FROM_BASE64('$referendum=='), \"$answer\", 1) "
+          ."ON DUPLICATE KEY UPDATE `count`=`count`+1";
+  $mysqli->query($query) or error($mysqli->error);
+  $query = "UPDATE proposal SET participants=participants+1 LEFT JOIN publication ON publication.id=proposal.id WHERE publication.signature=FROM_BASE64('$referendum==')";
+  $mysqli->query($query) or error($mysqli->error);
+}
 if ($type === 'endorsement')
   echo json_encode(endorsements($mysqli, $key), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 else
