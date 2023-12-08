@@ -114,8 +114,8 @@ window.onload = async function() {
           tr.appendChild(c);
           c.textContent = answer.results[i];
           const p = document.createElement('td');
-          const percent = Math.floor((answer.results[i] / total) * 10000) / 100;
-          p.textContent = percent + "%";
+          const percent = total ? (Math.floor((answer.results[i] / total) * 10000) / 100) + '%' : 'N/A';
+          p.textContent = percent;
         }
       }
       const deadline = new Date(answer.deadline * 1000);
