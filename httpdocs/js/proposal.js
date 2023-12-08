@@ -98,7 +98,25 @@ window.onload = async function() {
         document.getElementById('question-block').style.display = '';
         document.getElementById('question').textContent = answer.question;
         document.getElementById('answers-block').style.display = '';
-        document.getElementById('answers').textContent = answer.answers.join(' / ');
+        const table = document.createElement('table');
+        document.getElementById('answers').appendChild(table);
+        const max = answer.answers.length;
+        let total = 0;
+        for(let i = 0; i < max; i++)
+          total += answer.results[i];
+        for(let i = 0; i < max; i++) {
+          const tr = document.createElement('tr');
+          table.appendChild(tr);
+          const a = document.createElement('td');
+          tr.appendChild(a);
+          a.textContent = answer.answers[i];
+          const c = document.createElement('td');
+          tr.appendChild(c);
+          c.textContent = answer.results[i];
+          const p = document.createElement('td');
+          const percent = Math.floor((answer.results[i] / total) * 10000)) / 100;
+          p.textContent = percent + "%";
+        }
       }
       const deadline = new Date(answer.deadline * 1000);
       const published = new Date(answer.published * 1000);
