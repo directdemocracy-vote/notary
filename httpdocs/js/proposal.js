@@ -99,7 +99,7 @@ window.onload = async function() {
         document.getElementById('question').textContent = answer.question;
         document.getElementById('answers-block').style.display = '';
         const table = document.createElement('table');
-        table.classList.add('table');
+        table.classList.add('table', 'is-bordered');
         document.getElementById('answers').appendChild(table);
         const max = answer.answers.length;
         let total = 0;
