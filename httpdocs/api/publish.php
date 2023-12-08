@@ -279,7 +279,7 @@ $mysqli->query($query) or error($mysqli->error);
 if ($type === 'proposal')
   update_corpus($mysqli, $id);
 if ($type === 'vote') {
-  $query = "INSERT INTO results(referendum, answer, `count`) VALUES(FROM_BASE64('$referendum=='), \"$answer\", 1) "
+  $query = "INSERT INTO results(referendum, answer, `count`) VALUES($id, \"$answer\", 1) "
           ."ON DUPLICATE KEY UPDATE `count`=`count`+1";
   $mysqli->query($query) or error($mysqli->error);
   $query = "UPDATE proposal LEFT JOIN publication ON publication.id=proposal.id SET participants=participants+1 WHERE publication.signature=FROM_BASE64('$referendum==')";
