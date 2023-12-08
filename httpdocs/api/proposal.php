@@ -76,7 +76,7 @@ if (!isset($latitude)) {
 }
 if ($proposal['secret']) {
   $proposal['results'] = [];
-  foreach($proposal['answer'] as $key => $value) {
+  foreach($proposal['answers'] as $key => $value) {
     $query = "SELECT `count` FROM results WHERE referendum=FROM_BASE64('$signature==') AND answer=\"$value\"";
     $r = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
     $c = r->fetch_assoc();
