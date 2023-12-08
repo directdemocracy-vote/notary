@@ -73,13 +73,15 @@ if (!isset($latitude)) {
   $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
   $proposal['inside'] = $result->fetch_assoc() ? true : false;
   unset($proposal['area_id']);
+  $result->free();
 }
 if ($proposal['secret']) {
   $proposal['results'] = [];
   foreach($proposal['answers'] as $key => $value) {
     $query = "SELECT `count` FROM results WHERE referendum=FROM_BASE64('$signature==') AND answer=\"$value\"";
     $r = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
-    $c = r->fetch_assoc();
+    $c = $r->fetch_assoc();
+    $r->free();
     $proposal['results'][] = $c ? intval($c['count']) : 0;
   }
 }
