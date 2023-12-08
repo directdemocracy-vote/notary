@@ -114,6 +114,7 @@ window.onload = async function() {
           tr.appendChild(c);
           c.textContent = answer.results[i];
           const p = document.createElement('td');
+          tr.appendChild(p);
           const percent = total ? (Math.floor((answer.results[i] / total) * 10000) / 100) + '%' : 'N/A';
           p.textContent = percent;
         }
