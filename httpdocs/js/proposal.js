@@ -119,13 +119,13 @@ window.onload = async function() {
           c.textContent = answer.results[i];
           const p = document.createElement('td');
           tr.appendChild(p);
-          const percent = total ? (Math.floor((answer.results[i] / total) * 10000) / 100) + '%' : 'N/A';
+          const percent = total ? (Math.floor(10000 * answer.results[i] / total) / 100) + '%' : 'N/A';
           p.textContent = percent;
           if (i !== max - 1) {
             const e = document.createElement('td');
             e.style.fontWeight = 'bold';
             tr.appendChild(e);
-            const ec = expressed ? (Math.floor((answer.results[i] / expressed * 10000) / 100) + '%' : 'N/A';
+            const ec = expressed ? (Math.floor(10000 * answer.results[i] / expressed) / 100) + '%' : 'N/A';
             e.textContent = ec;
           }
         }
