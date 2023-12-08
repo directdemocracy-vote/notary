@@ -1,4 +1,4 @@
-<?php
+e<?php
 
 require_once '../../vendor/autoload.php';
 require_once '../../php/database.php';
@@ -282,7 +282,7 @@ if ($type === 'vote') {
   $query = "SELECT id FROM publication WHERE signature=FROM_BASE64('$referendum==')";
   $i = $mysqli->query($query) or error($mysqli->error);
   $j = $i->fetch_assoc();
-  $id = intval(j['id']);
+  $id = intval($j['id']);
   $query = "INSERT INTO results(referendum, answer, `count`) VALUES($id, \"$answer\", 1) "
           ."ON DUPLICATE KEY UPDATE `count`=`count`+1";
   $mysqli->query($query) or error($mysqli->error);
