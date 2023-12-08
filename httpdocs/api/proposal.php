@@ -37,11 +37,13 @@ $query = "SELECT "
         ."proposal.title, proposal.description, "
         ."proposal.question, proposal.answers, proposal.secret, UNIX_TIMESTAMP(proposal.deadline) AS deadline, proposal.website, "
         ."proposal.participants, proposal.corpus, UNIX_TIMESTAMP(proposal.results) AS results, "
+        ."webservice.url AS judge, "
         ."area.name AS areas, $extra "
         ."FROM proposal "
         ."LEFT JOIN publication ON publication.id = proposal.id "
         ."LEFT JOIN publication AS pa ON pa.signature = proposal.area "
         ."LEFT JOIN area ON area.id = pa.id "
+        ."LEFT JOIN webservice ON webservice.`key` = publication.`key` AND webservice.type='judge' "
         ."WHERE $condition";
 
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
