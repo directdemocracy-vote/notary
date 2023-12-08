@@ -105,6 +105,9 @@ window.onload = async function() {
         let total = 0;
         for(let i = 0; i < max; i++)
           total += answer.results[i];
+        let expressed = 0;
+        for(let i = 0; i < max - 1; i++)
+          expressed += answer.results[i];
         for(let i = 0; i < max; i++) {
           const tr = document.createElement('tr');
           table.appendChild(tr);
@@ -118,6 +121,13 @@ window.onload = async function() {
           tr.appendChild(p);
           const percent = total ? (Math.floor((answer.results[i] / total) * 10000) / 100) + '%' : 'N/A';
           p.textContent = percent;
+          if (i !== max - 1) {
+            const e = document.createElement('td');
+            e.style.fontWeight = 'bold';
+            tr.appendChild(e);
+            const ec = expressed ? (Math.floor((answer.results[i] / expressed * 10000) / 100) + '%' : 'N/A';
+            e.textContent = ec;
+          }
         }
       }
       const deadline = new Date(answer.deadline * 1000);
