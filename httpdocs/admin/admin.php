@@ -30,7 +30,6 @@ $proposals = $mysqli->escape_string($input->proposals);
 $areas = $mysqli->escape_string($input->areas);
 $participations = $mysqli->escape_string($input->participations);
 $votes = $mysqli->escape_string($input->votes);
-
 $results = $mysqli->escape_string($input->results);
 
 $query = "";
@@ -46,10 +45,8 @@ $n_proposal = $proposals ? delete_publication($mysqli, 'proposal') : 0;
 $n_area = $areas ? delete_publication($mysqli, 'area') : 0;
 $n_participation = $participations ? delete_publication($mysqli, 'participation') : 0;
 $n_vote = $votes ? delete_publication($mysqli, 'vote') : 0;
-if ($results) {
+if ($results)
   query("DELETE FROM results");
-  query("DELETE FROM corpus");
-}
 
 $n = $n_citizen + $n_endorsement + $n_proposal + $n_area + $n_participation + $n_vote;
 
