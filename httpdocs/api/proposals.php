@@ -54,7 +54,8 @@ if ($search !== '')
 $query_common_part = "FROM proposal "
                     ."LEFT JOIN publication ON publication.id = proposal.id "
                     ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
-                    ."LEFT JOIN area ON area.id = area_p.id "
+                    ."LEFT JOIN area ON area.id = area_p.id, "
+                    ."LEFT JOIN webservice ON webservice.`key` = publication.`key` AND webservice.type='judge' "
                     ."WHERE $secret$open$search"
                     ."YEAR(proposal.deadline) = $year "
                     ."AND ST_Intersects(area.polygons, ST_Buffer(POINT($longitude, $latitude), $radius))";
@@ -66,7 +67,8 @@ $query = "SELECT "
         ."REPLACE(REPLACE(TO_BASE64(proposal.area), '\\n', ''), '=', '') as area, "
         ."proposal.title, proposal.description, "
         ."proposal.question, proposal.answers, proposal.secret, UNIX_TIMESTAMP(proposal.deadline) AS deadline, proposal.website, "
-        ."area.name AS areas "
+        ."area.name AS areas, "
+        ."webservice.url AS judge "
         .$query_common_part
         ."LIMIT $offset, $limit";
 
