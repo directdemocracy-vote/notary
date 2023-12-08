@@ -54,7 +54,7 @@ if ($search !== '')
 $query_common_part = "FROM proposal "
                     ."LEFT JOIN publication ON publication.id = proposal.id "
                     ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
-                    ."LEFT JOIN area ON area.id = area_p.id, "
+                    ."LEFT JOIN area ON area.id = area_p.id "
                     ."LEFT JOIN webservice ON webservice.`key` = publication.`key` AND webservice.type='judge' "
                     ."WHERE $secret$open$search"
                     ."YEAR(proposal.deadline) = $year "
