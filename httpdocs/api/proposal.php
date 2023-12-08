@@ -79,6 +79,7 @@ if (!isset($latitude)) {
 }
 if ($proposal['secret']) {
   $proposal['results'] = [];
+  $proposal['answers'][] = ''; // abstention
   foreach($proposal['answers'] as $key => $value) {
     $query = "SELECT `count` FROM results WHERE referendum=$id AND answer=\"$value\"";
     $r = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
