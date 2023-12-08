@@ -28,7 +28,7 @@ if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
 } else
   $extra = 'ST_AsGeoJSON(area.polygons) AS polygons';
 
-$query = "SELECT "
+$query = "SELECT proposal.id, "
         ."CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json') AS `schema`, "
         ."REPLACE(REPLACE(TO_BASE64(publication.`key`), '\\n', ''), '=', '') AS `key`, "
         ."REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature, "
@@ -51,6 +51,8 @@ $proposal = $result->fetch_assoc();
 $result->free();
 if (!$proposal)
   die('{"error":"Proposal not found"}');
+$id = intval($proposal['id']);
+unset($proposal['id']);
 settype($proposal['published'], 'int');
 settype($proposal['secret'], 'bool');
 settype($proposal['deadline'], 'int');
@@ -78,8 +80,7 @@ if (!isset($latitude)) {
 if ($proposal['secret']) {
   $proposal['results'] = [];
   foreach($proposal['answers'] as $key => $value) {
-    $c = isset($signature) ? "referendum=FROM_BASE64('$signature==')" : "SHA1(referendum)='$fingerprint'";
-    $query = "SELECT `count` FROM results WHERE $c AND answer=\"$value\"";
+    $query = "SELECT `count` FROM results WHERE referendum=$id AND answer=\"$value\"";
     $r = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
     $c = $r->fetch_assoc();
     $r->free();
