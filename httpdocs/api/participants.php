@@ -62,7 +62,7 @@ elseif ($secret === 0)
            ." INNER JOIN publication AS ps ON ps.id=signature.id AND ps.`key`=pc.`key`";
 else
   $query .= " INNER JOIN participation ON $join4_condition"
-           ." INNER JOIN publication AS pa ON pa.id=participation.id AND pa.`key`=pc.`key`";
+           ." INNER JOIN publication AS ps ON ps.id=participation.id AND ps.`key`=pc.`key`";
 $query .= " ORDER BY citizen.familyName, citizen.givenNames";
 
 $result = $mysqli->query($query) or error($mysqli->error);
