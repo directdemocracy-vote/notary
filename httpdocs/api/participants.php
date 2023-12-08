@@ -12,12 +12,14 @@ if (isset($_GET['signature'])) {
   $join1_condition = "pp.signature=FROM_BASE64('$signature==')";
   $join2_condition = "e.endorsedSignature=FROM_BASE64('$signature==')";
   $join3_condition = "signature.endorsedSignature=FROM_BASE64('$signature==')";
+  $join4_condition = "participation.referendum=FROM_BASE64('$signature==')";
 } elseif (isset($_GET['fingerprint'])) {
   $fingerprint = sanitize_field($_GET["fingerprint"], "hex", "fingerprint");
   $condition = "publication.signatureSHA1=UNHEX('$fingerprint')";
   $join1_condition = "pp.signatureSHA1=UNHEX('$fingerprint')";
   $join2_condition = "SHA1(e.endorsedSignature)='$fingerprint'";
   $join3_condition = "SHA1(signature.endorsedSignature)='$fingerprint'";
+  $join4_condition = "SHA1(participation.referendum)='$fingerprint'";
 } else
   error("Missing fingerprint or signature GET parameter");
 
@@ -26,14 +28,16 @@ if (isset($_GET['corpus']))
 else
   $corpus = false;
 
-$query = "SELECT title FROM proposal INNER JOIN publication ON publication.id=proposal.id AND $condition";
+$query = "SELECT title, secret FROM proposal INNER JOIN publication ON publication.id=proposal.id AND $condition";
 $result = $mysqli->query($query) or error($mysqli->error);
-$title = $result->fetch_assoc();
+$proposal = $result->fetch_assoc();
 $result->free();
-if (!$title)
+if (!$proposal)
   error("Proposal not found");
 $answer = array();
-$answer['title'] = $title['title'];
+$answer['title'] = $proposal['title'];
+$secret = intval($proposal['secret']);
+$answer['type'] = $secret === 0 ? 'petition' : 'referendum';
 $query = "SELECT REPLACE(REPLACE(TO_BASE64(pc.signature), '\\n', ''), '=', '') AS signature, "
         ."citizen.givenNames, citizen.familyName, "
         ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture";
@@ -53,9 +57,12 @@ if ($corpus)
          ." EXISTS(SELECT pep.id FROM publication AS pep"
          ." INNER JOIN endorsement AS e ON e.id=pep.id AND $join2_condition AND e.accepted=1"
          ." WHERE pep.`key`=pc.`key`))";
-else
+elseif ($secret === 0)
   $query .= " INNER JOIN endorsement AS signature ON $join3_condition AND signature.accepted=1"
            ." INNER JOIN publication AS ps ON ps.id=signature.id AND ps.`key`=pc.`key`";
+else
+  $query .= " INNER JOIN participation ON $join4_condition"
+           ." INNER JOIN publication AS pa ON pa.id=participation.id AND pa.`key`=pc.`key`";
 $query .= " ORDER BY citizen.familyName, citizen.givenNames";
 
 $result = $mysqli->query($query) or error($mysqli->error);
