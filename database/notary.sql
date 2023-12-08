@@ -117,7 +117,7 @@ ALTER TABLE `proposal`
   ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `results`
-  ADD KEY `proposal` (`proposal`);
+  ADD UNIQUE KEY `referendum` (`referendum`,`answer`) USING HASH;
 
 ALTER TABLE `webservice`
   ADD PRIMARY KEY (`id`);
