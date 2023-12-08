@@ -78,7 +78,7 @@ if (!isset($latitude)) {
 if ($proposal['secret']) {
   $proposal['results'] = [];
   foreach($proposal['answers'] as $key => $value) {
-    $c = isset($signature) ? "referendum=FROM_BASE64('$signature==')" : "SHA1(referendum)=$fingerprint";
+    $c = isset($signature) ? "referendum=FROM_BASE64('$signature==')" : "SHA1(referendum)='$fingerprint'";
     $query = "SELECT `count` FROM results WHERE $c AND answer=\"$value\"";
     die($query);
     $r = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
