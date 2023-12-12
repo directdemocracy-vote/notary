@@ -1,6 +1,7 @@
 <?php
-# This API entry returns a proposal with many information
-# The fingerprint is a mandatory parameter
+# This API entry is called from the app (client)
+# It returns a proposal with many information
+# The fingerprint or signature is a mandatory parameter
 # The latitude and longiture are optional parameters. If they are provided, the answer will not contain the polygons field,
 # but instead will contain a boolean field named inside that is true if the provided latitude longitude point is inside the
 # proposal area.
