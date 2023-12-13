@@ -159,9 +159,9 @@ window.onload = async function() {
         `Participation: ${participation}%`;
       document.getElementById('result').innerHTML = line;
       const areaName = document.getElementById('area-name');
-      const areas = answer.areas[0].split('=');
+      const areas = answer.areaName[0].split('=');
       let query = '';
-      answer.areas.forEach(function(line) {
+      answer.areaName.forEach(function(line) {
         const eq = line.indexOf('=');
         let type = line.substr(0, eq);
         if (['village', 'town', 'municipality'].includes(type))
@@ -203,12 +203,12 @@ window.onload = async function() {
       }).addTo(map);
       map.whenReady(function() { setTimeout(() => { this.invalidateSize(); }, 0); });
       map.on('contextmenu', function(event) { return false; });
-      L.geoJSON({ type: 'MultiPolygon', coordinates: answer.polygons }).addTo(map);
+      L.geoJSON({ type: 'MultiPolygon', coordinates: answer.areaPolygons }).addTo(map);
       let maxLon = -1000;
       let minLon = 1000;
       let maxLat = -1000;
       let minLat = 1000;
-      answer.polygons.forEach(function(polygons) {
+      answer.areaPolygons.forEach(function(polygons) {
         polygons.forEach(function(polygon) {
           polygon.forEach(function(point) {
             if (point[0] > maxLon)
