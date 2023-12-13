@@ -1,4 +1,4 @@
-<?php
+e<?php
 # This API entry is called from the app (client)
 # It returns a proposal with many information
 # The fingerprint or signature is a mandatory parameter
@@ -32,7 +32,7 @@ $query = "SELECT proposal.id, "
         ."REPLACE(REPLACE(TO_BASE64(pa.`key`), '\\n', ''), '=', '') AS areaKey, "
         ."UNIX_TIMESTAMP(pa.published) AS areaPublished, "
         ."area.name AS areaName, "
-        ."ST_AsGeoJSON(area.polygons) AS polygons " # areaPolygons
+        ."ST_AsGeoJSON(area.polygons) AS areaPolygons "
         ."FROM proposal "
         ."LEFT JOIN publication ON publication.id = proposal.id "
         ."LEFT JOIN publication AS pa ON pa.signature = proposal.area "
@@ -59,10 +59,10 @@ else
 if ($proposal['question'] === '')
   unset($proposal['question']);
 $proposal['areaName'] = explode("\n", $proposal['areaName']);
-$polygons = json_decode($proposal['polygons']);
+$polygons = json_decode($proposal['areaPolygons']);
 if ($polygons->type !== 'MultiPolygon')
   die("{\"error\":\"Area without MultiPolygon: $polygons->type\"}");
-$proposal['polygons'] = &$polygons->coordinates;
+$proposal['areaPolygons'] = &$polygons->coordinates;
 if ($proposal['secret']) {
   $proposal['results'] = [];
   $proposal['answers'][] = ''; // abstention
