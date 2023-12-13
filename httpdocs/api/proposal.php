@@ -48,6 +48,7 @@ if (!$proposal)
 $id = intval($proposal['id']);
 unset($proposal['id']);
 settype($proposal['published'], 'int');
+settype($proposal['areaPublished'], 'int');
 settype($proposal['secret'], 'bool');
 settype($proposal['deadline'], 'int');
 settype($proposal['participants'], 'int');
