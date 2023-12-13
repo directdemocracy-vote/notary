@@ -24,12 +24,15 @@ $query = "SELECT proposal.id, "
         ."REPLACE(REPLACE(TO_BASE64(publication.`key`), '\\n', ''), '=', '') AS `key`, "
         ."REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature, "
         ."UNIX_TIMESTAMP(publication.published) AS published, "
-        ."REPLACE(REPLACE(TO_BASE64(proposal.area), '\\n', ''), '=', '') AS area, "
         ."proposal.title, proposal.description, "
         ."proposal.question, proposal.answers, proposal.secret, UNIX_TIMESTAMP(proposal.deadline) AS deadline, proposal.website, "
         ."proposal.participants, proposal.corpus, UNIX_TIMESTAMP(proposal.results) AS results, "
         ."webservice.url AS judge, "
-        ."area.name AS areas, ST_AsGeoJSON(area.polygons) AS polygons "
+        ."REPLACE(REPLACE(TO_BASE64(proposal.area), '\\n', ''), '=', '') AS area, "
+        ."REPLACE(REPLACE(TO_BASE64(pa.`key`), '\\n', ''), '=', '') AS areaKey, "
+        ."UNIX_TIMESTAMP(pa.published) AS areaPublished, "
+        ."area.name AS areaName, "
+        ."ST_AsGeoJSON(area.polygons) AS polygons " # areaPolygons
         ."FROM proposal "
         ."LEFT JOIN publication ON publication.id = proposal.id "
         ."LEFT JOIN publication AS pa ON pa.signature = proposal.area "
@@ -55,7 +58,7 @@ else
   $proposal['answers'] = explode("\n", $proposal['answers']);
 if ($proposal['question'] === '')
   unset($proposal['question']);
-$proposal['areas'] = explode("\n", $proposal['areas']);
+$proposal['areaName'] = explode("\n", $proposal['areaName']);
 $polygons = json_decode($proposal['polygons']);
 if ($polygons->type !== 'MultiPolygon')
   die("{\"error\":\"Area without MultiPolygon: $polygons->type\"}");
