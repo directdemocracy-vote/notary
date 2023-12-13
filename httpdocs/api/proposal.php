@@ -1,4 +1,4 @@
-e<?php
+<?php
 # This API entry is called from the app (client)
 # It returns a proposal with many information
 # The fingerprint or signature is a mandatory parameter
