@@ -71,6 +71,12 @@ if ($type === 'citizen') {
     unset($proposal['website']);
   $proposal['deadline'] = intval($proposal['deadline']);
   $proposal['secret'] = ($proposal['secret'] !== 0);
+  if ($proposal['question'] === '')
+    unset($proposal['question']);
+  if ($proposal['answers'] === '')
+    unset($proposal['answers']);
+  else
+    $proposal['answers'] = explode("\n", $proposal['answers']);
   $proposal = $publication + $proposal;
   echo json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type === 'ballot') {
