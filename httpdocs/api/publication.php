@@ -36,7 +36,7 @@ unset($publication['id']);
 $publication['published'] = intval($publication['published']);
 $type = $publication['type'];
 unset($publication['type']);
-if ($type == 'citizen') {
+if ($type === 'citizen') {
   $query = "SELECT "
           ."REPLACE(REPLACE(TO_BASE64(appKey), '\\n', ''), '=', '') AS appKey, "
           ."REPLACE(REPLACE(TO_BASE64(appSignature), '\\n', ''), '=', '') AS appSignature, "
@@ -50,7 +50,7 @@ if ($type == 'citizen') {
   $citizen['longitude'] = floatval($citizen['longitude']);
   $citizen = $publication + $citizen;
   echo json_encode($citizen, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-} elseif ($type == 'endorsement') {
+} elseif ($type === 'endorsement') {
   $query = "SELECT "
           ."REPLACE(REPLACE(TO_BASE64(appKey), '\\n', ''), '=', '') AS appKey, "
           ."REPLACE(REPLACE(TO_BASE64(appSignature), '\\n', ''), '=', '') AS appSignature, "
@@ -62,18 +62,19 @@ if ($type == 'citizen') {
   $endorsement['revoke'] = (intval($endorsement['revoke']) === 1);
   $endorsement = $publication + $endorsement;
   echo json_encode($endorsement, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-} elseif ($type == 'proposal') {
+} elseif ($type === 'proposal') {
+  die('proposal');
   $query = "SELECT area, title, description, question, answers, UNIX_TIMESTAMP(deadline) AS deadline, website FROM proposal WHERE id=$publication_id";
   # id AS areas is just a placeholder for having areas in the right order of fields
   $result = $mysqli->query($query) or error($mysqli->error);
   $proposal = $result->fetch_assoc();
   $result->free();
-  if ($proposal['website'] == '')
+  if ($proposal['website'] === '')
     unset($proposal['website']);
   $proposal['deadline'] = intval($proposal['deadline']);
   $proposal = $publication + $proposal;
   echo json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-} elseif ($type == 'ballot') {
+} elseif ($type === 'ballot') {
   $query = "SELECT "
           ."REPLACE(REPLACE(TO_BASE64(appKey), '\\n', ''), '=', '') AS appKey, "
           ."REPLACE(REPLACE(TO_BASE64(appSignature), '\\n', ''), '=', ''= AS appSignature, "
@@ -85,7 +86,7 @@ if ($type == 'citizen') {
   $result->free();
   $ballot = $publication + $ballot;
   echo json_encode($ballot, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-} elseif ($type == 'area') {
+} elseif ($type === 'area') {
   $query = "SELECT name, ST_AsGeoJSON(polygons) AS polygons FROM area WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $area = $result->fetch_assoc();
@@ -96,8 +97,7 @@ if ($type == 'citizen') {
   $result->free();
   $area = $publication + $area;
   echo json_encode($area, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-} else {
+} else
   error('publication type not supported: ' + $type);
-}
 $mysqli->close();
 ?>
