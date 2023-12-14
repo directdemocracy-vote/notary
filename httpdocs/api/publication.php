@@ -72,10 +72,7 @@ if ($type === 'citizen') {
   $proposal['deadline'] = intval($proposal['deadline']);
   $proposal['secret'] = ($proposal['secret'] !== 0);
   $proposal = $publication + $proposal;
-  # die('{"Hello":"ahah"}');
-  $encoded = json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-  // die(json_last_error_msg());
-  echo json_encode($encoded);
+  echo json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type === 'ballot') {
   $query = "SELECT "
           ."REPLACE(REPLACE(TO_BASE64(appKey), '\\n', ''), '=', '') AS appKey, "
