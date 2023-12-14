@@ -66,7 +66,6 @@ if ($type === 'citizen') {
   $query = "SELECT area, title, description, question, answers, secret, UNIX_TIMESTAMP(deadline) AS deadline, website FROM proposal WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $proposal = $result->fetch_assoc();
-  die($proposal['title']);
   $result->free();
   if ($proposal['website'] === '')
     unset($proposal['website']);
@@ -74,7 +73,8 @@ if ($type === 'citizen') {
   $proposal['secret'] = ($proposal['secret'] !== 0);
   $proposal = $publication + $proposal;
   # die('{"Hello":"ahah"}');
-  die(json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+  $encoded = json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+  die(json_last_error_msg());
   echo json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type === 'ballot') {
   $query = "SELECT "
