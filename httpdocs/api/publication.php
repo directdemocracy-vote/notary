@@ -66,6 +66,7 @@ if ($type === 'citizen') {
   $query = "SELECT area, title, description, question, answers, secret, UNIX_TIMESTAMP(deadline) AS deadline, website FROM proposal WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $proposal = $result->fetch_assoc();
+  die($proposal['title']);
   $result->free();
   if ($proposal['website'] === '')
     unset($proposal['website']);
