@@ -73,9 +73,9 @@ if ($type === 'citizen') {
   $proposal['secret'] = ($proposal['secret'] !== 0);
   $proposal = $publication + $proposal;
   # die('{"Hello":"ahah"}');
-  $encoded = json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-  die(json_last_error_msg());
-  echo json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+  $encoded = json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE  | JSON_INVALID_UTF8_IGNORE);
+  // die(json_last_error_msg());
+  echo json_encode($encoded);
 } elseif ($type === 'ballot') {
   $query = "SELECT "
           ."REPLACE(REPLACE(TO_BASE64(appKey), '\\n', ''), '=', '') AS appKey, "
