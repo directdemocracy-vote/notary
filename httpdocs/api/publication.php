@@ -63,8 +63,7 @@ if ($type === 'citizen') {
   $endorsement = $publication + $endorsement;
   echo json_encode($endorsement, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type === 'proposal') {
-  die('proposal');
-  $query = "SELECT area, title, description, question, answers, UNIX_TIMESTAMP(deadline) AS deadline, website FROM proposal WHERE id=$publication_id";
+  $query = "SELECT area, title, description, question, answers, secret, UNIX_TIMESTAMP(deadline) AS deadline, website FROM proposal WHERE id=$publication_id";
   # id AS areas is just a placeholder for having areas in the right order of fields
   $result = $mysqli->query($query) or error($mysqli->error);
   $proposal = $result->fetch_assoc();
@@ -72,6 +71,7 @@ if ($type === 'citizen') {
   if ($proposal['website'] === '')
     unset($proposal['website']);
   $proposal['deadline'] = intval($proposal['deadline']);
+  $proposal['secret'] = ($proposal['secret'] !== 0);
   $proposal = $publication + $proposal;
   echo json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type === 'ballot') {
