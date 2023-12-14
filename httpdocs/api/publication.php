@@ -63,7 +63,7 @@ if ($type === 'citizen') {
   $endorsement = $publication + $endorsement;
   echo json_encode($endorsement, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type === 'proposal') {
-  $query = "SELECT area, title, description, question, answers, secret, UNIX_TIMESTAMP(deadline) AS deadline, website FROM proposal WHERE id=$publication_id";
+  $query = "SELECT REPLACE(REPLACE(TO_BASE64(area), '\\n', ''), '=', '') AS area, title, description, question, answers, secret, UNIX_TIMESTAMP(deadline) AS deadline, website FROM proposal WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $proposal = $result->fetch_assoc();
   $result->free();
@@ -73,7 +73,7 @@ if ($type === 'citizen') {
   $proposal['secret'] = ($proposal['secret'] !== 0);
   $proposal = $publication + $proposal;
   # die('{"Hello":"ahah"}');
-  $encoded = json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE  | JSON_INVALID_UTF8_IGNORE);
+  $encoded = json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
   // die(json_last_error_msg());
   echo json_encode($encoded);
 } elseif ($type === 'ballot') {
