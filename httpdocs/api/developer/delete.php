@@ -15,16 +15,16 @@ if ($type === 'citizen') {
     die("Citizen not found");
   $key = $entry['key'];
   $id = intval($entry['id']);
-  $query = "SELECT id FROM publication WHERE `key`=FROM_BASE64('$key==') AND `type`='endorsement'";
+  $query = "SELECT id FROM publication WHERE `key`=FROM_BASE64('$key==') AND `type`='commitment'";
   $result = $mysqli->query($query) or die($mysqli->error);
-  $endorsement_ids = array();
+  $commitment_ids = array();
   while($row = $result->fetch_assoc())
-    $endorsement_ids[] = intval($row['id']);
-  $query = "SELECT id FROM endorsement WHERE endorsedSignature=FROM_BASE64('$signature==')";
+    $commitment_ids[] = intval($row['id']);
+  $query = "SELECT id FROM commitment WHERE publication=FROM_BASE64('$signature==')";
   $result = $mysqli->query($query) or die($mysqli->error);
   while($row = $result->fetch_assoc())
-    $endorsement_ids[] = intval($row['id']);
-  $endorsements = implode(',', $endorsement_ids);
+    $commitment_ids[] = intval($row['id']);
+  $commitments = implode(',', $commitment_ids);
   $query = "SELECT id FROM publication WHERE `key`=FROM_BASE64('$key==') AND `type`='registration'";
   $result = $mysqli->query($query) or die($mysqli->error);
   $registration_ids = array();
@@ -35,9 +35,9 @@ if ($type === 'citizen') {
     $mysqli->query("DELETE FROM registration WHERE id IN ($registrations)") or die($mysqli->error);
     $mysqli->query("DELETE FROM publication WHERE id IN ($registrations)") or die($mysqli->error);
   }
-  if ($endorsements !== '') {
-    $mysqli->query("DELETE FROM endorsement WHERE id IN ($endorsements)") or die($mysqli->error);
-    $mysqli->query("DELETE FROM publication WHERE id IN ($endorsements)") or die($mysqli->error);
+  if ($commitments !== '') {
+    $mysqli->query("DELETE FROM commitment WHERE id IN ($commitments)") or die($mysqli->error);
+    $mysqli->query("DELETE FROM publication WHERE id IN ($commitments)") or die($mysqli->error);
   }
   $mysqli->query("DELETE FROM citizen WHERE id=$id") or die($mysqli->error);
   $mysqli->query("DELETE FROM publication WHERE id=$id") or die($mysqli->error);
@@ -49,18 +49,18 @@ if ($type === 'citizen') {
   if (!$entry)
     die("Proposal not found");
   $id = intval($entry['id']);
-  $query = "SELECT id FROM endorsement WHERE endorsedSignature=FROM_BASE64('$signature==')";
+  $query = "SELECT id FROM commitment WHERE publication=FROM_BASE64('$signature==')";
   $result = $mysqli->query($query) or die($mysqli->error);
-  $endorsement_ids = array();
+  $commitment_ids = array();
   while($row = $result->fetch_assoc())
-    $endorsement_ids[] = intval($row['id']);
-  $endorsements = implode(',', $endorsement_ids);
+    $commitment_ids[] = intval($row['id']);
+  $commitments = implode(',', $commitment_ids);
 
   # FIXME: we should also delete the referendum participations, registrations, ballots and votes
 
-  if ($endorsements !== '') {
-    $mysqli->query("DELETE FROM endorsement WHERE id IN ($endorsements)") or die($mysqli->error);
-    $mysqli->query("DELETE FROM publication WHERE id IN ($endorsements)") or die($mysqli->error);
+  if ($commitments !== '') {
+    $mysqli->query("DELETE FROM commitment WHERE id IN ($commitments)") or die($mysqli->error);
+    $mysqli->query("DELETE FROM publication WHERE id IN ($commitments)") or die($mysqli->error);
   }
   $mysqli->query("DELETE FROM publication WHERE id=$id") or die($msqli->error);
   $mysqli->query("DELETE FROM proposal WHERE id=$id") or die($msqli->error);
