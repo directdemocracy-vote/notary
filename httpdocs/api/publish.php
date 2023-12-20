@@ -178,7 +178,7 @@ if ($type === 'citizen') {
   $result->free();
   if (!$commited)
     error("commited publication not found: $publication");
-  if ($commited['signature'] != $publication)
+  if ($commited['signature'] != $p)
     error("commited publication signature mismatch.");
   # mark other commitments on the same publication by the same participant as not the latest
   $mysqli->query("UPDATE commitment INNER JOIN publication ON publication.id = commitment.id"
