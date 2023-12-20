@@ -186,23 +186,11 @@ if ($type === 'citizen') {
                 ." WHERE commitment.publication = FROM_BASE64('$p==')"
                 ." AND publication.`key` = FROM_BASE64('$key==')") or error($mysli->error);
   if ($commited['type'] == 'proposal') {  # signing a petition
-    # increment the number of participants in a petition if the citizen is located inside the petition area and is endorsed by the petition judge
+    # increment the number of participants in a petition
     $commited_id = $commited['id'];
-    $query = "UPDATE proposal "
-            ."INNER JOIN publication AS pc ON pc.`key`=FROM_BASE64('$key==') "
-            ."INNER JOIN citizen ON citizen.id=pc.id "
-            ."INNER JOIN publication AS pa ON pa.`signature`=proposal.area "
-            ."INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home))) "
-            ."INNER JOIN publication AS pp ON pp.id=proposal.id "
-            ."INNER JOIN webservice AS judge ON judge.`type`='judge' AND judge.`key`=pp.`key` "
-            ."INNER JOIN publication AS pe ON pe.`key`=pp.`key` "
-            ."INNER JOIN commitment ON commitment.id = pe.id AND commitment.`type`=êndorse' AND commitment.latest=1 AND commitment.publication=pc.signature "
-            ."SET participants=participants+1 "
-            ."WHERE proposal.id=$commited_id AND proposal.`secret`=0";
+    $query = "UPDATE proposal SET participants=participants+1 WHERE proposal.id=$commited_id AND proposal.`secret`=0";
     $mysqli->query($query) or error($msqli->error);
-    $accepted = $mysqli->affected_rows;
-  } else
-    $accepted = 0;
+  }
   $type = $mysqli->escape_string($commitment->type);
   $message = $mysqli->escape_string($commitment->message);
   $comment = $mysqli->escape_string($commitment->comment);
@@ -213,8 +201,8 @@ if ($type === 'citizen') {
     $appFields = '';
     $appValues = '';
   }
-  $query = "INSERT INTO commitment(id,$appFields `type`, `message`, comment, publication, latest, accepted) "
-          ."VALUES($id,$appValues \"$type\", \"$message\", \"$comment\", FROM_BASE64('$p=='), 1, $accepted)";
+  $query = "INSERT INTO commitment(id,$appFields `type`, `message`, comment, publication, latest) "
+          ."VALUES($id,$appValues \"$type\", \"$message\", \"$comment\", FROM_BASE64('$p=='), 1)";
 } elseif ($type === 'proposal') {
   $proposal =&$publication;
   if (!isset($proposal->website))  # optional

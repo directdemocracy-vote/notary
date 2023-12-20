@@ -55,10 +55,10 @@ if ($corpus)
          ." INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home)))"
          ." WHERE commitment.type='endorse' OR (commitment.type='report' AND"
          ." EXISTS(SELECT pep.id FROM publication AS pep"
-         ." INNER JOIN commitment AS e ON e.id=pep.id AND $join2_condition AND e.accepted=1"
+         ." INNER JOIN commitment AS e ON e.id=pep.id AND $join2_condition"
          ." WHERE pep.`key`=pc.`key`))";
 elseif ($secret === 0)
-  $query .= " INNER JOIN commitment AS signature ON $join3_condition AND signature.accepted=1"
+  $query .= " INNER JOIN commitment AS signature ON $join3_condition"
            ." INNER JOIN publication AS ps ON ps.id=signature.id AND ps.`key`=pc.`key`";
 else
   $query .= " INNER JOIN participation ON $join4_condition"
