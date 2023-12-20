@@ -191,7 +191,7 @@ if ($type === 'citizen') {
     $query = "UPDATE proposal SET participants=participants+1 WHERE proposal.id=$commited_id AND proposal.`secret`=0";
     $mysqli->query($query) or error($msqli->error);
   }
-  $type = $mysqli->escape_string($commitment->type);
+  $ctype = $mysqli->escape_string($commitment->type);
   $message = $mysqli->escape_string($commitment->message);
   $comment = $mysqli->escape_string($commitment->comment);
   if ($appKey) {
@@ -202,7 +202,7 @@ if ($type === 'citizen') {
     $appValues = '';
   }
   $query = "INSERT INTO commitment(id,$appFields `type`, `message`, comment, publication, latest) "
-          ."VALUES($id,$appValues \"$type\", \"$message\", \"$comment\", FROM_BASE64('$p=='), 1)";
+          ."VALUES($id,$appValues \"$ctype\", \"$message\", \"$comment\", FROM_BASE64('$p=='), 1)";
 } elseif ($type === 'proposal') {
   $proposal =&$publication;
   if (!isset($proposal->website))  # optional
