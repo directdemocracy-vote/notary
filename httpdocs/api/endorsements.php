@@ -10,11 +10,11 @@ header("Access-Control-Allow-Headers: content-type");
 if (isset($_GET['fingerprint'])) {
   $fingerprint = sanitize_field($_GET["fingerprint"], "hex", "fingerprint");
   $condition = "publication.signatureSHA1=UNHEX('$fingerprint')";
-  $join_condition = "SHA1(endorsement.endorsedSignature)='$fingerprint'";
+  $join_condition = "SHA1(commitment.publication)='$fingerprint'";
 } elseif (isset($_GET['signature'])) {
   $signature = sanitize_field($_GET["signature"], "base64", "signature");
   $condition = "publication.signature=FROM_BASE64('$signature==')";
-  $join_condition = "endorsement.endorsedSignature=FROM_BASE64('$signature==')";
+  $join_condition = "commitment.publication=FROM_BASE64('$signature==')";
 } else
   error("Missing fingerprint or signature parameter");
 
@@ -33,15 +33,14 @@ $result->free();
 $answer = array();
 $answer['givenNames'] = $citizen['givenNames'];
 $answer['familyName'] = $citizen['familyName'];
-$query = "SELECT UNIX_TIMESTAMP(publication.published) AS published, endorsement.`revoke`, endorsement.latest FROM publication"
+$query = "SELECT UNIX_TIMESTAMP(publication.published) AS published, commitment.type, commitment.latest FROM publication"
         ." INNER JOIN webservice AS judge ON judge.`type`='judge' AND judge.`key`=publication.`key` AND judge.url='$judge'"
-        ." INNER JOIN endorsement ON endorsement.id=publication.id AND $join_condition"
+        ." INNER JOIN commitment ON commitment.id=publication.id AND $join_condition"
         ." ORDER BY publication.published DESC";
 $result = $mysqli->query($query) or error($mysqli->error);
 $endorsements = array();
 while ($endorsement = $result->fetch_assoc()) {
   settype($endorsement['published'], 'int');
-  settype($endorsement['revoke'], 'int');
   settype($endorsement['latest'], 'int');
   $endorsements[] = $endorsement;
 }

@@ -158,38 +158,36 @@ if ($type === 'citizen') {
   $query = "INSERT INTO citizen(id, appKey, appSignature, familyName, givenNames, picture, home) "
           ."VALUES($id, FROM_BASE64('$appKey=='), FROM_BASE64('$appSignature=='), \"$familyName\", \"$givenNames\", "
           ."FROM_BASE64('$citizen_picture'), POINT($longitude, $latitude))";
-} elseif ($type === 'endorsement') {
-  $endorsement = &$publication;
-  if (isset($endorsement->appKey))
-    list($appKey, $appSignature) = check_app($endorsement);
+} elseif ($type === 'commitment') {
+  $commitment = &$publication;
+  if (isset($commitment->appKey))
+    list($appKey, $appSignature) = check_app($commitment);
   else {
     $appKey = '';
     $appSignature = '';
   }
-  if (!property_exists($endorsement, 'revoke'))
-    $endorsement->revoke = false;
-  if (!property_exists($endorsement, 'message'))
-    $endorsement->message = '';
-  if (!property_exists($endorsement, 'comment'))
-    $endorsement->comment = '';
-  $endorsedSignature = sanitize_field($endorsement->endorsedSignature, 'base64', 'endorsedSignature');
+  if (!property_exists($commitment, 'comment'))
+    $commitment->comment = '';
+  if (!property_exists($commitment, 'message'))
+    $commitment->message = '';
+  $p = sanitize_field($commitment->publication, 'base64', 'publication');
   $query = "SELECT id, `type`, REPLACE(REPLACE(TO_BASE64(signature), '\\n', ''), '=', '') AS signature FROM publication "
-          ."WHERE signature = FROM_BASE64('$endorsedSignature==')";
+          ."WHERE signature = FROM_BASE64('$p==')";
   $result = $mysqli->query($query) or error($mysqli->error);
-  $endorsed = $result->fetch_assoc();
+  $commited = $result->fetch_assoc();
   $result->free();
-  if (!$endorsed)
-    error("endorsed signature not found: $endorsedSignature");
-  if ($endorsed['signature'] != $endorsedSignature)
-    error("endorsed signature mismatch.");
-  # mark other endorsements of the same participant by the same endorser as not the latest
-  $mysqli->query("UPDATE endorsement INNER JOIN publication ON publication.id = endorsement.id"
-                ." SET endorsement.latest = 0"
-                ." WHERE endorsement.endorsedSignature = FROM_BASE64('$endorsedSignature==')"
+  if (!$commited)
+    error("commited publication not found: $publication");
+  if ($commited['signature'] != $publication)
+    error("commited publication signature mismatch.");
+  # mark other commitments on the same publication by the same participant as not the latest
+  $mysqli->query("UPDATE commitment INNER JOIN publication ON publication.id = commitment.id"
+                ." SET commitment.latest = 0"
+                ." WHERE commitment.publication = FROM_BASE64('$p==')"
                 ." AND publication.`key` = FROM_BASE64('$key==')") or error($mysli->error);
-  if ($endorsed['type'] == 'proposal') {  # signing a petition
+  if ($commited['type'] == 'proposal') {  # signing a petition
     # increment the number of participants in a petition if the citizen is located inside the petition area and is endorsed by the petition judge
-    $endorsed_id = $endorsed['id'];
+    $commited_id = $commited['id'];
     $query = "UPDATE proposal "
             ."INNER JOIN publication AS pc ON pc.`key`=FROM_BASE64('$key==') "
             ."INNER JOIN citizen ON citizen.id=pc.id "
@@ -198,16 +196,16 @@ if ($type === 'citizen') {
             ."INNER JOIN publication AS pp ON pp.id=proposal.id "
             ."INNER JOIN webservice AS judge ON judge.`type`='judge' AND judge.`key`=pp.`key` "
             ."INNER JOIN publication AS pe ON pe.`key`=pp.`key` "
-            ."INNER JOIN endorsement ON endorsement.id = pe.id AND endorsement.`revoke`=0 AND endorsement.latest=1 AND endorsement.endorsedSignature=pc.signature "
+            ."INNER JOIN commitment ON commitment.id = pe.id AND commitment.`type`=êndorse' AND commitment.latest=1 AND commitment.publication=pc.signature "
             ."SET participants=participants+1 "
-            ."WHERE proposal.id=$endorsed_id AND proposal.`secret`=0";
+            ."WHERE proposal.id=$commited_id AND proposal.`secret`=0";
     $mysqli->query($query) or error($msqli->error);
     $accepted = $mysqli->affected_rows;
   } else
     $accepted = 0;
-  $revoke = $endorsement->revoke ? 1 : 0;
-  $message = $mysqli->escape_string($endorsement->message);
-  $comment = $mysqli->escape_string($endorsement->comment);
+  $type = $mysqli->escape_string($commitment->type);
+  $message = $mysqli->escape_string($commitment->message);
+  $comment = $mysqli->escape_string($commitment->comment);
   if ($appKey) {
     $appFields = " appKey, appSignature,";
     $appValues = " FROM_BASE64('$appKey=='), FROM_BASE64('$appSignature=='),";
@@ -215,10 +213,8 @@ if ($type === 'citizen') {
     $appFields = '';
     $appValues = '';
   }
-  $query = "INSERT INTO endorsement(id,$appFields `revoke`, `message`, comment, endorsedSignature, latest, accepted) "
-          ."VALUES($id,$appValues $revoke, \"$message\", \"$comment\", "
-          ."FROM_BASE64('$endorsedSignature=='), "
-          . "1, $accepted)";
+  $query = "INSERT INTO commitment(id,$appFields `type`, `message`, comment, publication, latest, accepted) "
+          ."VALUES($id,$appValues \"$type\", \"$message\", \"$comment\", FROM_BASE64('$p=='), 1, $accepted)";
 } elseif ($type === 'proposal') {
   $proposal =&$publication;
   if (!isset($proposal->website))  # optional
@@ -310,7 +306,7 @@ if ($type === 'vote') {
   $query = "UPDATE proposal SET participants=participants+1 WHERE id=$id";
   $mysqli->query($query) or error($mysqli->error);
 }
-if ($type === 'endorsement')
+if ($type === 'commitment')
   echo json_encode(endorsements($mysqli, $key), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 else
   echo("{\"signature\":\"$signature\"}");

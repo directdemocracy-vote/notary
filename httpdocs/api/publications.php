@@ -19,9 +19,9 @@ if (!$type)
   error("No type argument provided.");
 $citizen_fields = "REPLACE(REPLACE(TO_BASE64(".$type.".appKey), '\\n', ''), '=', '') AS appKey, "
                  ."REPLACE(REPLACE(TO_BASE64(".$type.".appSignature), '\\n', ''), '=', '') AS appsignature";
-if ($type == 'endorsement')
-  $fields = "$citizen_fields, REPLACE(REPLACE(TO_BASE64(endorsement.endorsedSignature), '\\n', ''), '=', '') AS endorsedSignature, "
-           ."endorsement.revoke, endorsement.message, endorsement.comment";
+if ($type == 'commitment')
+  $fields = "$citizen_fields, REPLACE(REPLACE(TO_BASE64(commitment.publication), '\\n', ''), '=', '') AS publication, "
+           ."commitment.type, commitment.comment, commitment.message";
 elseif ($type == 'citizen')
   $fields = "$citizen_fields, citizen.familyName, citizen.givenNames, CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')), "
            ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude";
@@ -52,7 +52,7 @@ if ($result) {
     if ($type == 'citizen') {
       $publication->latitude = floatval($publication->latitude);
       $publication->longitude = floatval($publication->longitude);
-    } elseif ($type == 'endorsement') {
+    } elseif ($type == 'commitment') {
       $publication->revoke = (intval($publication->revoke) === 1);
       if ($publication->message == '')
         unset($publication->message);

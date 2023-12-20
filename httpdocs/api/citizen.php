@@ -44,10 +44,10 @@ $query = "SELECT "
         ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(c.picture), '\\n', '')) AS picture, "
         ."ST_Y(c.home) AS latitude, ST_X(c.home) AS longitude "
         ."FROM publication pe "
-        ."INNER JOIN endorsement e ON e.id = pe.id "
+        ."INNER JOIN commitment e ON e.id = pe.id AND e.type='endorse' "
         ."INNER JOIN publication pc ON pc.`key` = pe.`key` "
         ."INNER JOIN citizen c ON pc.id = c.id "
-        ."WHERE e.endorsedSignature = FROM_BASE64('$citizen[signature]==') AND e.latest = 1 "
+        ."WHERE e.publication = FROM_BASE64('$citizen[signature]==') AND e.latest = 1 "
         ."ORDER BY pe.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 if (!$result)

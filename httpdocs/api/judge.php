@@ -25,20 +25,19 @@ if (!$webservice) {
   $judge_key = $webservice['key'];
 
 $query = "SELECT "
-        ."UNIX_TIMESTAMP(endorsement_p.published) AS published, "
-        ."endorsement.revoke, endorsement.latest, citizen.familyName, citizen.givenNames, "
+        ."UNIX_TIMESTAMP(commitment_p.published) AS published, "
+        ."commitment.type, commitment.latest, citizen.familyName, citizen.givenNames, "
         ."REPLACE(REPLACE(TO_BASE64(citizen_p.signature), '\\n', ''), '=', '') AS signature "
-        ."FROM publication AS endorsement_p "
-        ."INNER JOIN endorsement ON endorsement.id = endorsement_p.id "
-        ."INNER JOIN publication AS citizen_p ON citizen_p.signature = endorsement.endorsedSignature "
+        ."FROM publication AS commitment_p "
+        ."INNER JOIN commitment ON commitment.id = commitment_p.id "
+        ."INNER JOIN publication AS citizen_p ON citizen_p.signature = commitment.publication "
         ."INNER JOIN citizen ON citizen.id = citizen_p.id "
-        ."WHERE endorsement_p.`key` = FROM_BASE64('$judge_key==') "
-        ."ORDER BY endorsement_p.published DESC";
+        ."WHERE commitment_p.`key` = FROM_BASE64('$judge_key==') AND (commitment.type='endorse' OR commitment.type='report') "
+        ."ORDER BY commitment_p.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $endorsements = array();
 while ($endorsement = $result->fetch_assoc()) {
   settype($endorsement['published'], 'int');
-  settype($endorsement['revoke'], 'bool');
   settype($endorsement['latest'], 'bool');
   $endorsements[] = $endorsement;
 }

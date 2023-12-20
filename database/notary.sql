@@ -25,8 +25,8 @@ CREATE TABLE `commitment` (
   `appSignature` blob NOT NULL,
   `type` enum('endorse', 'report', 'update', 'transfer', 'lost', 'sign') NOT NULL,
   `publication` blob NOT NULL,
-  `message` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
   `comment` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `message` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
   `latest` tinyint(1) NOT NULL,
   `accepted` tinyint(1) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

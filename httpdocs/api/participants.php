@@ -10,15 +10,15 @@ if (isset($_GET['signature'])) {
   $signature = sanitize_field($_GET["signature"], "base64", "signature");
   $condition = "publication.signature=FROM_BASE64('$signature==')";
   $join1_condition = "pp.signature=FROM_BASE64('$signature==')";
-  $join2_condition = "e.endorsedSignature=FROM_BASE64('$signature==')";
-  $join3_condition = "signature.endorsedSignature=FROM_BASE64('$signature==')";
+  $join2_condition = "e.publication=FROM_BASE64('$signature==')";
+  $join3_condition = "signature.publication=FROM_BASE64('$signature==')";
   $join4_condition = "participation.referendum=FROM_BASE64('$signature==')";
 } elseif (isset($_GET['fingerprint'])) {
   $fingerprint = sanitize_field($_GET["fingerprint"], "hex", "fingerprint");
   $condition = "publication.signatureSHA1=UNHEX('$fingerprint')";
   $join1_condition = "pp.signatureSHA1=UNHEX('$fingerprint')";
-  $join2_condition = "SHA1(e.endorsedSignature)='$fingerprint'";
-  $join3_condition = "SHA1(signature.endorsedSignature)='$fingerprint'";
+  $join2_condition = "SHA1(e.publication)='$fingerprint'";
+  $join3_condition = "SHA1(signature.publication)='$fingerprint'";
   $join4_condition = "SHA1(participation.referendum)='$fingerprint'";
 } else
   error("Missing fingerprint or signature GET parameter");
@@ -50,15 +50,15 @@ $query .= " FROM citizen"
 if ($corpus)
   $query .= " INNER JOIN webservice AS judge ON judge.`type`='judge' AND judge.`key`=pp.`key`"
          ." INNER JOIN publication AS pe ON pe.`key`=judge.`key`"
-         ." INNER JOIN endorsement ON endorsement.id=pe.id AND endorsement.latest=1 AND endorsement.endorsedSignature=pc.signature"
+         ." INNER JOIN commitment ON commitment.id=pe.id AND commitment.latest=1 AND commitment.publication=pc.signature"
          ." INNER JOIN publication AS pa ON proposal.area=pa.`signature`"
          ." INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home)))"
-         ." WHERE endorsement.`revoke`=0 OR (endorsement.`revoke`=1 AND"
+         ." WHERE commitment.type='endorse' OR (commitment.type='report' AND"
          ." EXISTS(SELECT pep.id FROM publication AS pep"
-         ." INNER JOIN endorsement AS e ON e.id=pep.id AND $join2_condition AND e.accepted=1"
+         ." INNER JOIN commitment AS e ON e.id=pep.id AND $join2_condition AND e.accepted=1"
          ." WHERE pep.`key`=pc.`key`))";
 elseif ($secret === 0)
-  $query .= " INNER JOIN endorsement AS signature ON $join3_condition AND signature.accepted=1"
+  $query .= " INNER JOIN commitment AS signature ON $join3_condition AND signature.accepted=1"
            ." INNER JOIN publication AS ps ON ps.id=signature.id AND ps.`key`=pc.`key`";
 else
   $query .= " INNER JOIN participation ON $join4_condition"
