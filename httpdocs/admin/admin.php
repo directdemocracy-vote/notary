@@ -25,7 +25,7 @@ if ($password !== $admin_password)
   error('Wrong password.');
 
 $citizens = $mysqli->escape_string($input->citizens);
-$endorsements = $mysqli->escape_string($input->endorsements);
+$commitments = $mysqli->escape_string($input->commitments);
 $proposals = $mysqli->escape_string($input->proposals);
 $areas = $mysqli->escape_string($input->areas);
 $participations = $mysqli->escape_string($input->participations);
@@ -40,7 +40,7 @@ function delete_publication($mysqli, $type) {
 }
 
 $n_citizen = $citizens ? delete_publication($mysqli, 'citizen') : 0;
-$n_endorsement = $endorsements ? delete_publication($mysqli, 'endorsement') : 0;
+$n_commitment = $commitments ? delete_publication($mysqli, 'commitment') : 0;
 $n_proposal = $proposals ? delete_publication($mysqli, 'proposal') : 0;
 $n_area = $areas ? delete_publication($mysqli, 'area') : 0;
 $n_participation = $participations ? delete_publication($mysqli, 'participation') : 0;
@@ -48,16 +48,16 @@ $n_vote = $votes ? delete_publication($mysqli, 'vote') : 0;
 if ($results)
   query("DELETE FROM results");
 
-$n = $n_citizen + $n_endorsement + $n_proposal + $n_area + $n_participation + $n_vote;
+$n = $n_citizen + $n_commitment + $n_proposal + $n_area + $n_participation + $n_vote;
 
-# clean-up orphan endorsements
-query("DELETE FROM endorsement WHERE endorsement.endorsedSignature NOT IN (SELECT signature FROM publication)");
+# clean-up orphan commitments
+query("DELETE FROM commitment WHERE commitment.publication NOT IN (SELECT signature FROM publication)");
 
 # clean-up orphan publications
 $query = <<<EOT
 DELETE FROM publication WHERE id NOT IN (
     SELECT id FROM citizen UNION
-    SELECT id FROM endorsement UNION
+    SELECT id FROM commitment UNION
     SELECT id FROM area UNION
     SELECT id FROM proposal UNION
     SELECT id FROM participation UNION
@@ -66,7 +66,7 @@ EOT;
 
 query($query);
 query("DELETE FROM citizen WHERE id NOT IN (SELECT id FROM publication)");
-query("DELETE FROM endorsement WHERE id NOT IN (SELECT id FROM publication)");
+query("DELETE FROM commitment WHERE id NOT IN (SELECT id FROM publication)");
 query("DELETE FROM area WHERE id NOT IN (SELECT id FROM publication)");
 query("DELETE FROM proposal WHERE id NOT IN (SELECT id FROM publication)");
 query("DELETE FROM participation WHERE id NOT IN (SELECT id FROM publication)");
@@ -85,8 +85,8 @@ if ($n)
   $list .= ':<ul>';
 if ($n_citizen)
   $list .= "<li>citizen: $n_citizen</li>";
-if ($n_endorsement)
-  $list .= "<li>endorsement: $n_endorsement</li>";
+if ($n_commitment)
+  $list .= "<li>commitment: $n_commitment</li>";
 if ($n_proposal)
   $list .= "<li>proposal: $n_proposal</li>";
 if ($n_area)
