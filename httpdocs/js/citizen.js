@@ -35,6 +35,53 @@ window.onload = function() {
   document.getElementById('panel-heading').appendChild(a);
   a.addEventListener('click', function(event) {
     console.log('Yeah');
+    let binaryFingerprint = new Uint8Array(20);
+    for (let i = 0; i < 20; i += 1)
+      binaryFingerprint[i] = parseInt(fingerprint.slice(2 * i, 2 * i + 2), 16);
+    const qr = new QRious({
+      value: encodeBase128(binaryFingerprint),
+      level: 'L',
+      size: 512,
+      padding: 0
+    });
+    const div = document.createElement('div');
+    const img = document.createElement('img');
+    div.appendChild(img);
+    img.src = qr.toDataURL();
+    div.classList.add('content', 'has-text-centered');
+    const field = document.createElement('div');
+    div.appendChild(field);
+    field.classList.add('field', 'has-addons');
+    let control = document.createElement('div');
+    field.appendChild(control);
+    control.classList.add('control');
+    control.style.width = '100%';
+    const input = document.createElement('input');
+    control.appendChild(input);
+    input.classList.add('input');
+    input.setAttribute('readonly', '');
+    input.setAttribute('value', fingerprint);
+    control = document.createElement('div');
+    field.appendChild(control);
+    const a = document.createElement('a');
+    control.appendChild(a);
+    a.classList.add('button', 'is-info');
+    a.textContent = 'Copy';
+    const message = document.createElement('div');
+    div.appendChild(message);
+    message.innerHTML = 'From the <i>directdemocracy</i> app, scan this QR code or copy and paste it.';
+    a.addEventListener('click', function() {
+      input.select();
+      input.setSelectionRange(0, 99999);
+      document.execCommand('copy');
+      input.setSelectionRange(0, 0);
+      input.blur();
+      message.innerHTML = 'Copied in clipboard! You can now paste in the <i>directdemocracy</i> app.';
+    });
+    const content = document.getElementById('modal-content');
+    content.innerHTML = '';
+    content.appendChild(div);
+    document.getElementById('modal').classList.add('is-active');
   });
   if (localStorage.getItem('password')) {
     let a = document.createElement('a');
