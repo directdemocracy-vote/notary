@@ -32,8 +32,9 @@ window.onload = function() {
   a.classList.add('level-right');
   a.setAttribute('id', 'delete-link');
   a.textContent = me ? "That's me" : 'Report';
+  document.getElementById('panel-heading').appendChild(a);
   a.addEventListener('click', function(event) {
-    
+    console.log('Yeah');
   }
   if (localStorage.getItem('password')) {
     let a = document.createElement('a');
