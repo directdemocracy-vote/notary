@@ -41,6 +41,9 @@ window.onload = async function() {
   document.getElementById('modal-close-button').addEventListener('click', function() {
     document.getElementById('modal').classList.remove('is-active');
   });
+  document.querySelector('.modal-background).addEventListener('click', function() {
+    document.getElementById('modal').classList.remove('is-active');
+  });
   const a = document.createElement('a');
   a.classList.add('level-right');
   a.setAttribute('id', 'delete-link');
