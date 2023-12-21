@@ -199,7 +199,7 @@ window.onload = async function() {
   document.getElementById('modal-close-button').addEventListener('click', function() {
     document.getElementById('modal').classList.remove('is-active');
   });
-  document.querySelector('.modal-backgroundi').addEventListener('click', function() {
+  document.querySelector('.modal-background').addEventListener('click', function() {
     document.getElementById('modal').classList.remove('is-active');
   });
   document.getElementById('action-button').addEventListener('click', function() {
