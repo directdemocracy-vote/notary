@@ -18,7 +18,7 @@ function findGetParameter(parameterName, result) {
   return result;
 }
 
-window.onload = function() {
+window.onload = async function() {
   let judge = findGetParameter('judge', 'https://judge.directdemocracy.vote');
   document.getElementById('judge').value = judge.substring(8);
   let fingerprint = findGetParameter('fingerprint');
