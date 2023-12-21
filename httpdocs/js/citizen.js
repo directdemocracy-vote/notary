@@ -38,7 +38,7 @@ window.onload = async function() {
     const bytesArray = await crypto.subtle.digest('SHA-1', bytes);
     fingerprint = Array.from(new Uint8Array(bytesArray), byte => ('0' + (byte & 0xFF).toString(16)).slice(-2)).join('');
   }
-  a = document.createElement('a');
+  const a = document.createElement('a');
   a.classList.add('level-right');
   a.setAttribute('id', 'delete-link');
   a.textContent = me ? "That's me" : 'Report';
