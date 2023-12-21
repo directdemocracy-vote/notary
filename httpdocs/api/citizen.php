@@ -40,7 +40,7 @@ $query = "SELECT "
         ."REPLACE(REPLACE(TO_BASE64(pc.signature), '\\n', ''), '=', '') AS signature, "
         ."UNIX_TIMESTAMP(pe.published) AS published, "
         ."REPLACE(REPLACE(TO_BASE64(c.appKey), '\\n', ''), '=', '') AS appKey, "
-        ."e.`revoke`, c.familyName, c.givenNames, "
+        ."e.`type`, c.familyName, c.givenNames, "
         ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(c.picture), '\\n', '')) AS picture, "
         ."ST_Y(c.home) AS latitude, ST_X(c.home) AS longitude "
         ."FROM publication pe "
@@ -57,7 +57,6 @@ while($e = $result->fetch_assoc()) {
   settype($e['published'], 'int');
   settype($e['latitude'], 'float');
   settype($e['longitude'], 'float');
-  $e['revoke'] = (intval($e['revoke']) == 1);
   $citizen_endorsements[] = $e;
 }
 $result->free();
