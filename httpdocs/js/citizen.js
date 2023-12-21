@@ -23,9 +23,17 @@ window.onload = function() {
   document.getElementById('judge').value = judge.substring(8);
   const fingerprint = findGetParameter('fingerprint');
   const signature = findGetParameter('signature');
+  const me = findGetParameter('me') === 'true';
   if (!fingerprint && !signature) {
     console.error('Missing fingerprint or signature GET argument.');
     return;
+  }
+  a = document.createElement('a');
+  a.classList.add('level-right');
+  a.setAttribute('id', 'delete-link');
+  a.textContent = me ? "That's me" : 'Report';
+  a.addEventListener('click', function(event) {
+    
   }
   if (localStorage.getItem('password')) {
     let a = document.createElement('a');
