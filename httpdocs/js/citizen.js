@@ -21,12 +21,20 @@ function findGetParameter(parameterName, result) {
 window.onload = function() {
   let judge = findGetParameter('judge', 'https://judge.directdemocracy.vote');
   document.getElementById('judge').value = judge.substring(8);
-  const fingerprint = findGetParameter('fingerprint');
+  let fingerprint = findGetParameter('fingerprint');
   const signature = findGetParameter('signature');
   const me = findGetParameter('me') === 'true';
   if (!fingerprint && !signature) {
     console.error('Missing fingerprint or signature GET argument.');
     return;
+  }
+  if (!fingerprint) {
+    const binaryString = atob(signature);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++)
+      bytes[i] = binaryString.charCodeAt(i);
+    const bytesArray = await crypto.subtle.digest('SHA-1', bytes);
+    fingerprint = Array.from(new Uint8Array(bytesArray), byte => ('0' + (byte & 0xFF).toString(16)).slice(-2)).join('');
   }
   a = document.createElement('a');
   a.classList.add('level-right');
