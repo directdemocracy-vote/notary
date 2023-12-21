@@ -1,6 +1,6 @@
 /* global L, QRious */
 
-import encodeBase128 from './base128.js';
+import {encodeBase128} from './base128.js';
 
 const PRODUCTION_APP_KEY = // public key of the genuine app
   'vD20QQ18u761ean1+zgqlDFo6H2Emw3mPmBxeU24x4o1M2tcGs+Q7G6xASRf4LmSdO1h67ZN0sy1tasNHH8Ik4CN63elBj4ELU70xZeYXIMxxxDqis' +
