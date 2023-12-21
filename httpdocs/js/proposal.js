@@ -197,11 +197,9 @@ window.onload = async function() {
       });
       map.fitBounds([[minLat, minLon], [maxLat, maxLon]]);
     });
-
-  function closeModal() {
+  document.getElementById('modal-close-button').addEventListener('click', function() {
     document.getElementById('modal').classList.remove('is-active');
-  }
-  document.getElementById('modal-close-button').addEventListener('click', closeModal);
+  });
   document.getElementById('action-button').addEventListener('click', function() {
     let binaryFingerprint = new Uint8Array(20);
     for (let i = 0; i < 20; i += 1)
