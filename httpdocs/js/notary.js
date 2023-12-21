@@ -35,13 +35,14 @@ window.onload = function() {
 
   document.getElementById('proposal-year').setAttribute('value', new Date().getFullYear());
 
-  let tab = findGetParameter('tab');
-  if (tab) {
+  const tab = findGetParameter('tab');
+  if (tab && tab !== 'citizens') {
     document.getElementById('citizens-tab').classList.remove('is-active');
     document.getElementById('citizens').style.display = 'none';
     document.getElementById(`${tab}-tab`).classList.add('is-active');
     document.getElementById(tab).style.display = 'block';
   }
+  const me = findGetParameter('me') === 'true';
   let judge = findGetParameter('judge');
   if (judge) {
     if (judge.startsWith('https://'))
@@ -133,8 +134,9 @@ window.onload = function() {
         markers = [];
         answer.forEach(function(citizen) {
           const name = `${citizen.givenNames} ${citizen.familyName}`;
+          const searchMe = me ? '&me=true' : '';
           const label = '<div style="text-align:center">' +
-            `<a target="_blank" href="/citizen.html?signature=${encodeURIComponent(citizen.signature)}">` +
+            `<a target="_blank" href="/citizen.html?signature=${encodeURIComponent(citizen.signature)}${searchMe}">` +
             `<img src="${citizen.picture}" width="60" height="80"><br>${name}</a></div>`;
           markers.push(L.marker([citizen.latitude, citizen.longitude], { icon: greenIcon }).addTo(map).bindPopup(label));
         });
