@@ -199,6 +199,9 @@ window.onload = async function() {
   document.getElementById('modal-close-button').addEventListener('click', function() {
     document.getElementById('modal').classList.remove('is-active');
   });
+  document.querySelector('.modal-background).addEventListener('click', function() {
+    document.getElementById('modal').classList.remove('is-active');
+  });
   document.getElementById('action-button').addEventListener('click', function() {
     let binaryFingerprint = new Uint8Array(20);
     for (let i = 0; i < 20; i += 1)
