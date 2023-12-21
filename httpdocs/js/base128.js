@@ -1,4 +1,6 @@
-function encodeBase128(byteArray) { // Uint8Array
+'use strict';
+
+export function encodeBase128(byteArray) { // Uint8Array
   const base128Charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' +
     'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõøùúûüýÿþ@$*£¢';
   function toBin(byteArray) {
