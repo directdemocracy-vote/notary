@@ -56,7 +56,9 @@ window.onload = async function() {
     const bytesArray = await crypto.subtle.digest('SHA-1', bytes);
     fingerprint = Array.from(new Uint8Array(bytesArray), byte => ('0' + (byte & 0xFF).toString(16)).slice(-2)).join('');
   }
-
+  document.getElementById('modal-close-button').addEventListener('click', function() {
+    document.getElementById('modal').classList.remove('is-active');
+  });
   const payload = signature ? `signature=${encodeURIComponent(signature)}` : `fingerprint=${fingerprint}`;
   fetch(`/api/proposal.php?${payload}`)
     .then(response => response.json())
