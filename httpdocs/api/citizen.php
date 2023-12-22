@@ -20,11 +20,13 @@ if (isset($_POST['signature'])) {
   die('{"error":"missing key, signature or fingerprint POST argument"}');
 
 $query = "SELECT "
+        ."CONCAT('https://directdemocracy.vote/json-schema/', `version`, '/', `type`, '.schema.json') AS `schema`, "
         ."REPLACE(REPLACE(TO_BASE64(publication.`key`), '\\n', ''), '=', '') AS `key`, "
-        ."UNIX_TIMESTAMP(publication.published) AS published, "
         ."REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature, "
+        ."UNIX_TIMESTAMP(publication.published) AS published, "
         ."REPLACE(REPLACE(TO_BASE64(citizen.appKey), '\\n', ''), '=', '') AS appKey, "
-        ."citizen.familyName, citizen.givenNames, "
+        ."REPLACE(REPLACE(TO_BASE64(citizen.appSignature). '\\n', ''), '=', '') AS appSignature, "
+        ."citizen.givenNames, citizen.familyName, "
         ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude "
         ."FROM publication INNER JOIN citizen ON publication.id = citizen.id "
