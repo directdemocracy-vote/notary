@@ -25,15 +25,15 @@ if (!$webservice) {
   $judge_key = $webservice['key'];
 
 $query = "SELECT "
-        ."UNIX_TIMESTAMP(commitment_p.published) AS published, "
-        ."commitment.type, commitment.latest, citizen.familyName, citizen.givenNames, "
+        ."UNIX_TIMESTAMP(certificate_p.published) AS published, "
+        ."certificate.type, certificate.latest, citizen.familyName, citizen.givenNames, "
         ."REPLACE(REPLACE(TO_BASE64(citizen_p.signature), '\\n', ''), '=', '') AS signature "
-        ."FROM publication AS commitment_p "
-        ."INNER JOIN commitment ON commitment.id = commitment_p.id "
-        ."INNER JOIN publication AS citizen_p ON citizen_p.signature = commitment.publication "
+        ."FROM publication AS certificate_p "
+        ."INNER JOIN certificate ON certificate.id = certificate_p.id "
+        ."INNER JOIN publication AS citizen_p ON citizen_p.signature = certificate.publication "
         ."INNER JOIN citizen ON citizen.id = citizen_p.id "
-        ."WHERE commitment_p.`key` = FROM_BASE64('$judge_key==') AND (commitment.type='endorse' OR commitment.type='report') "
-        ."ORDER BY commitment_p.published DESC";
+        ."WHERE certificate_p.`key` = FROM_BASE64('$judge_key==') AND (certificate.type='endorse' OR certificate.type='report') "
+        ."ORDER BY certificate_p.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $endorsements = array();
 while ($endorsement = $result->fetch_assoc()) {
