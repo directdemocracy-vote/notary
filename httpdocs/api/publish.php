@@ -158,19 +158,19 @@ if ($type === 'citizen') {
   $query = "INSERT INTO citizen(id, appKey, appSignature, familyName, givenNames, picture, home) "
           ."VALUES($id, FROM_BASE64('$appKey=='), FROM_BASE64('$appSignature=='), \"$familyName\", \"$givenNames\", "
           ."FROM_BASE64('$citizen_picture'), POINT($longitude, $latitude))";
-} elseif ($type === 'commitment') {
-  $commitment = &$publication;
-  if (isset($commitment->appKey))
-    list($appKey, $appSignature) = check_app($commitment);
+} elseif ($type === 'certificate') {
+  $certificate = &$publication;
+  if (isset($certificate->appKey))
+    list($appKey, $appSignature) = check_app($certificate);
   else {
     $appKey = '';
     $appSignature = '';
   }
-  if (!property_exists($commitment, 'comment'))
-    $commitment->comment = '';
-  if (!property_exists($commitment, 'message'))
-    $commitment->message = '';
-  $p = sanitize_field($commitment->publication, 'base64', 'publication');
+  if (!property_exists($certificate, 'comment'))
+    $certificate->comment = '';
+  if (!property_exists($certificate, 'message'))
+    $certificate->message = '';
+  $p = sanitize_field($certificate->publication, 'base64', 'publication');
   $query = "SELECT id, `type`, REPLACE(REPLACE(TO_BASE64(signature), '\\n', ''), '=', '') AS signature FROM publication "
           ."WHERE signature = FROM_BASE64('$p==')";
   $result = $mysqli->query($query) or error($mysqli->error);
@@ -180,10 +180,10 @@ if ($type === 'citizen') {
     error("commited publication not found: $publication");
   if ($commited['signature'] != $p)
     error("commited publication signature mismatch.");
-  # mark other commitments on the same publication by the same participant as not the latest
-  $mysqli->query("UPDATE commitment INNER JOIN publication ON publication.id = commitment.id"
-                ." SET commitment.latest = 0"
-                ." WHERE commitment.publication = FROM_BASE64('$p==')"
+  # mark other certificates on the same publication by the same participant as not the latest
+  $mysqli->query("UPDATE certificate INNER JOIN publication ON publication.id = certificate.id"
+                ." SET certificate.latest = 0"
+                ." WHERE certificate.publication = FROM_BASE64('$p==')"
                 ." AND publication.`key` = FROM_BASE64('$key==')") or error($mysli->error);
   if ($commited['type'] == 'proposal') {  # signing a petition
     # increment the number of participants in a petition
@@ -191,9 +191,9 @@ if ($type === 'citizen') {
     $query = "UPDATE proposal SET participants=participants+1 WHERE proposal.id=$commited_id AND proposal.`secret`=0";
     $mysqli->query($query) or error($msqli->error);
   }
-  $ctype = $mysqli->escape_string($commitment->type);
-  $message = $mysqli->escape_string($commitment->message);
-  $comment = $mysqli->escape_string($commitment->comment);
+  $ctype = $mysqli->escape_string($certificate->type);
+  $message = $mysqli->escape_string($certificate->message);
+  $comment = $mysqli->escape_string($certificate->comment);
   if ($appKey) {
     $appFields = " appKey, appSignature,";
     $appValues = " FROM_BASE64('$appKey=='), FROM_BASE64('$appSignature=='),";
@@ -201,7 +201,7 @@ if ($type === 'citizen') {
     $appFields = '';
     $appValues = '';
   }
-  $query = "INSERT INTO commitment(id,$appFields `type`, `message`, comment, publication, latest) "
+  $query = "INSERT INTO certificate(id,$appFields `type`, `message`, comment, publication, latest) "
           ."VALUES($id,$appValues \"$ctype\", \"$message\", \"$comment\", FROM_BASE64('$p=='), 1)";
 } elseif ($type === 'proposal') {
   $proposal =&$publication;
@@ -294,7 +294,7 @@ if ($type === 'vote') {
   $query = "UPDATE proposal SET participants=participants+1 WHERE id=$id";
   $mysqli->query($query) or error($mysqli->error);
 }
-if ($type === 'commitment')
+if ($type === 'certificate')
   echo json_encode(endorsements($mysqli, $key), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 else
   echo("{\"signature\":\"$signature\"}");
