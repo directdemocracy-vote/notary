@@ -1,6 +1,6 @@
 function update() {
   if (document.querySelector('input[name="citizens"]').checked) {
-    document.querySelector('input[name="commitments"]').checked = true;
+    document.querySelector('input[name="certificates"]').checked = true;
     document.querySelector('input[name="participations"]').checked = true;
     document.querySelector('input[name="votes"]').checked = true;
     document.querySelector('input[name="results"]').checked = true;
@@ -21,7 +21,7 @@ function wipeout() {
   var data = {
     password: document.querySelector('input[type="password"]').value,
     citizens: document.querySelector('input[name="citizens"]').checked,
-    commitments: document.querySelector('input[name="commitments"]').checked,
+    certificates: document.querySelector('input[name="certificates"]').checked,
     proposals: document.querySelector('input[name="proposals"]').checked,
     areas: document.querySelector('input[name="areas"]').checked,
     participations: document.querySelector('input[name="participations"]').checked,
