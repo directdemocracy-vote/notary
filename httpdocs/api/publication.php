@@ -50,17 +50,17 @@ if ($type === 'citizen') {
   $citizen['longitude'] = floatval($citizen['longitude']);
   $citizen = $publication + $citizen;
   echo json_encode($citizen, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-} elseif ($type === 'commitment') {
+} elseif ($type === 'certificate') {
   $query = "SELECT "
           ."REPLACE(REPLACE(TO_BASE64(appKey), '\\n', ''), '=', '') AS appKey, "
           ."REPLACE(REPLACE(TO_BASE64(appSignature), '\\n', ''), '=', '') AS appSignature, "
           ."type, publication, comment, message "
-          ."FROM commitment WHERE id=$publication_id";
+          ."FROM certificate WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
-  $commitment = $result->fetch_assoc();
+  $certificate = $result->fetch_assoc();
   $result->free();
-  $commitment = $publication + $commitment;
-  echo json_encode($commitment, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+  $certificate = $publication + $certificate;
+  echo json_encode($certificate, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type === 'proposal') {
   $query = "SELECT REPLACE(REPLACE(TO_BASE64(area), '\\n', ''), '=', '') AS area, title, description, question, answers, secret, UNIX_TIMESTAMP(deadline) AS deadline, website FROM proposal WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
