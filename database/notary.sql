@@ -19,7 +19,7 @@ CREATE TABLE `citizen` (
   `home` point NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `commitment` (
+CREATE TABLE `certificate` (
   `id` int(11) NOT NULL,
   `appKey` blob NOT NULL,
   `appSignature` blob NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE `commitment` (
 CREATE TABLE `publication` (
   `id` int(11) NOT NULL,
   `version` smallint(6) NOT NULL,
-  `type` enum('citizen','commitment','area','proposal','participation','vote') NOT NULL,
+  `type` enum('citizen','certificate','area','proposal','participation','vote') NOT NULL,
   `published` datetime NOT NULL,
   `signature` blob NOT NULL COMMENT 'signature of the publication by the author',
   `key` blob NOT NULL COMMENT 'public key of author'
@@ -92,7 +92,7 @@ ALTER TABLE `area`
 ALTER TABLE `citizen`
   ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `commitment`
+ALTER TABLE `certificate`
   ADD PRIMARY KEY (`id`),
   ADD KEY `type` (`type`),
   ADD KEY `publication` (`publication`);
