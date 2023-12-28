@@ -7,7 +7,7 @@ function endorsements($mysqli, $key) {
           ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(c.picture), '\\n', '')) AS picture, "
           ."ST_Y(c.home) AS latitude, ST_X(c.home) AS longitude "
           ."FROM publication pe "
-          ."INNER JOIN commitment e ON e.id = pe.id AND e.type = 'endorse' "
+          ."INNER JOIN certificate e ON e.id = pe.id AND e.type = 'endorse' "
           ."INNER JOIN publication pc ON pc.`signature` = e.publication "
           ."INNER JOIN citizen c ON pc.id = c.id "
           ."WHERE pe.`key` = FROM_BASE64('$key==') AND e.latest = 1 "
