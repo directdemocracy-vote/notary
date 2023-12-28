@@ -41,8 +41,8 @@ $query .= ", publication.`version`, publication.`type`, "
          ."FROM citizen "
          ."INNER JOIN publication ON publication.id = citizen.id";
 if ($key)
-  $query .= " INNER JOIN commitment ON commitment.publication = publication.signature AND commitment.type = 'endorse' AND commitment.latest = 1"
-           ." INNER JOIN publication AS pe ON pe.id=commitment.id AND pe.`key` = FROM_BASE64('$key==')";
+  $query .= " INNER JOIN certificate ON certificate.publication = publication.signature AND certificate.type = 'endorse' AND certificate.latest = 1"
+           ." INNER JOIN publication AS pe ON pe.id=certificate.id AND pe.`key` = FROM_BASE64('$key==')";
 if ($familyName or $givenNames) {
   $query .= " WHERE";
   if ($familyName) {
