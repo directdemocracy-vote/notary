@@ -226,9 +226,10 @@ if ($type === 'citizen') {
   $title = $mysqli->escape_string($publication->title);
   $description = $mysqli->escape_string($publication->description);
   $deadline = sanitize_field($publication->deadline, 'positive_int', 'deadline');
-  $query = "INSERT INTO proposal(id, area, title, description, question, answers, secret, deadline, website, participants, corpus) "
+  $trust = sanitize_field($publication->trust, 'positive_int', 'trust');
+  $query = "INSERT INTO proposal(id, area, title, description, question, answers, secret, deadline, trust, website, participants, corpus) "
           ."VALUES($id, FROM_BASE64('$area=='), \"$title\", \"$description\", "
-          ."\"$question\", \"$answers\", $secret, FROM_UNIXTIME($deadline), \"$website\", 0, 0)";
+          ."\"$question\", \"$answers\", $secret, FROM_UNIXTIME($deadline), $trust, \"$website\", 0, 0)";
 } elseif ($type === 'participation') {
   $participation =&$publication;
   list($appKey, $appSignature) = check_app($participation);
