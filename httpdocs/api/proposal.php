@@ -25,7 +25,7 @@ $query = "SELECT proposal.id, "
         ."REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature, "
         ."UNIX_TIMESTAMP(publication.published) AS published, "
         ."proposal.title, proposal.description, "
-        ."proposal.question, proposal.answers, proposal.secret, UNIX_TIMESTAMP(proposal.deadline) AS deadline, proposal.website, "
+        ."proposal.question, proposal.answers, proposal.secret, UNIX_TIMESTAMP(proposal.deadline) AS deadline, proposal.trust, proposal.website, "
         ."proposal.participants, proposal.corpus, UNIX_TIMESTAMP(proposal.results) AS results, "
         ."webservice.url AS judge, "
         ."REPLACE(REPLACE(TO_BASE64(proposal.area), '\\n', ''), '=', '') AS area, "
@@ -51,6 +51,7 @@ settype($proposal['published'], 'int');
 settype($proposal['areaPublished'], 'int');
 settype($proposal['secret'], 'bool');
 settype($proposal['deadline'], 'int');
+settype($proposal['trust'], 'int');
 settype($proposal['participants'], 'int');
 settype($proposal['corpus'], 'int');
 if ($proposal['answers'] === '')
