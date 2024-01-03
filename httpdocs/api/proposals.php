@@ -66,7 +66,7 @@ $query = "SELECT "
         ."UNIX_TIMESTAMP(publication.published) AS published, "
         ."REPLACE(REPLACE(TO_BASE64(proposal.area), '\\n', ''), '=', '') as area, "
         ."proposal.title, proposal.description, "
-        ."proposal.question, proposal.answers, proposal.secret, UNIX_TIMESTAMP(proposal.deadline) AS deadline, proposal.website, "
+        ."proposal.question, proposal.answers, proposal.secret, UNIX_TIMESTAMP(proposal.deadline) AS deadline, proposal.trust, proposal.website, "
         ."area.name AS areas, "
         ."webservice.url AS judge "
         .$query_common_part
@@ -78,6 +78,7 @@ while ($proposal = $result->fetch_assoc()) {
   settype($proposal['published'], 'int');
   settype($proposal['secret'], 'bool');
   settype($proposal['deadline'], 'int');
+  settype($proposal['trust'], 'int');
   settype($proposal['participation'], 'int');
   settype($proposal['corpus'], 'int');
   $proposal['areas'] = explode("\n", $proposal['areas']);
