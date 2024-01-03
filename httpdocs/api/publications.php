@@ -26,7 +26,7 @@ elseif ($type == 'citizen')
   $fields = "$citizen_fields, citizen.familyName, citizen.givenNames, CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')), "
            ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude";
 elseif ($type == 'proposal')
-  $fields = 'proposal.judge, proposal.area, proposal.title, proposal.description, proposal.question, proposal.answers, UNIX_TIMESTAMP(proposal.deadline) AS deadline, proposal.website';
+  $fields = 'proposal.judge, proposal.area, proposal.title, proposal.description, proposal.question, proposal.answers, UNIX_TIMESTAMP(proposal.deadline) AS deadline, proposal.trust, proposal.website';
 else
   error("Unsupported type argument: $type.");
 
@@ -60,6 +60,7 @@ if ($result) {
         unset($publication->comment);
     } elseif ($type == 'proposal') {
       $publication->deadline = intval($publication->deadline);
+      $publication->trust = intval($publication->trust);
       if ($publication->website == '')
         unset($publication->website);
     }
