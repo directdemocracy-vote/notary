@@ -26,7 +26,7 @@ if ($id) {
   die('{"transferred":true}');
 }
 $counter = 0;
-while(file_exist($filename)) {
+while(file_exists($filename)) {
   usleep(250000); # wait for 0.25 seconds
   $counter += 0.25;
   if ($counter >= 60) {
