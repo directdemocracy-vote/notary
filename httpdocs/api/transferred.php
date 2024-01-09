@@ -4,9 +4,17 @@
 # 3. if not, monitor the created file until it gets deleted, then return true.
 # 4. if the file was not deleted after 1 minute, delete it and return false.
 
-$filename = $_GET['fingerprint'];
+header("Content-Type: application/json");
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: content-type");
 
-$file = fopen("../../transfer/$filename", "w");
+require_once '../../php/sanitizer.php';
+if (isset($_POST['fingerprint']))
+  $fingerprint = sanitize_field($_POST['fingerprint'], 'hex', 'fingerprint');
+else
+  die('{"error":"missing fingerprint parameter"}');
+$file = fopen("../../transfer/$fingerprint", "w");
 fclose($file);
+
 
 ?>
