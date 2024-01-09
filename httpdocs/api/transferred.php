@@ -10,7 +10,7 @@ header("Access-Control-Allow-Headers: content-type");
 
 require_once '../../php/sanitizer.php';
 if (isset($_GET['fingerprint']))
-  $fingerprint = sanitize_field($_POST['fingerprint'], 'hex', 'fingerprint');
+  $fingerprint = sanitize_field($_GET['fingerprint'], 'hex', 'fingerprint');
 else
   die('{"error":"missing fingerprint parameter"}');
 $filename = "../../transfer/$fingerprint";
