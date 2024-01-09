@@ -295,9 +295,15 @@ if ($type === 'vote') {
   $query = "UPDATE proposal SET participants=participants+1 WHERE id=$id";
   $mysqli->query($query) or error($mysqli->error);
 }
-if ($type === 'certificate')
+if ($type === 'certificate') {
+  if ($ctype === 'report' && $comment === 'transferred') {
+    $fingerprint = sha1(base64_decode("$p=="));
+    $filename = "../../transfers/$fingerprint";
+    if (file_exists($filename))
+      unlink($filename);
+  }
   echo json_encode(endorsements($mysqli, $key), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-else
+} else
   echo("{\"signature\":\"$signature\"}");
 $mysqli->close();
 ?>
