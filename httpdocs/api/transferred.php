@@ -13,8 +13,26 @@ if (isset($_POST['fingerprint']))
   $fingerprint = sanitize_field($_POST['fingerprint'], 'hex', 'fingerprint');
 else
   die('{"error":"missing fingerprint parameter"}');
-$file = fopen("../../transfer/$fingerprint", "w");
+$filename = "../../transfer/$fingerprint";
+$file = fopen($filename, "w");
 fclose($file);
 
-
+require_once '../../php/database.php';
+$query = "SELECT id FROM certificate WHERE type='report' AND comment='transferred' AND SHA1(publication)='$fingerprint'";
+$result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
+$id = $result->fetch_assoc();
+if ($id) {
+  unlink($filename);
+  die('{"transferred":true}');
+}
+counter = 0;
+while(file_exist($filename)) {
+  usleep(250000); # wait for 0.25 seconds
+  counter += 0.25;
+  if (counter >= 60) {
+    unlink($filename);
+    die('{"transferred":false}');
+  }
+}
+die('{"transferred":true}');
 ?>
