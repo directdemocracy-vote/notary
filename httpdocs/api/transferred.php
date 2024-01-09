@@ -13,7 +13,7 @@ if (isset($_GET['fingerprint']))
   $fingerprint = sanitize_field($_GET['fingerprint'], 'hex', 'fingerprint');
 else
   die('{"error":"missing fingerprint parameter"}');
-$filename = "../../transfer/$fingerprint";
+$filename = "../../transfers/$fingerprint";
 $file = fopen($filename, "w");
 fclose($file);
 
