@@ -9,7 +9,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 require_once '../../php/sanitizer.php';
-if (isset($_POST['fingerprint']))
+if (isset($_GET['fingerprint']))
   $fingerprint = sanitize_field($_POST['fingerprint'], 'hex', 'fingerprint');
 else
   die('{"error":"missing fingerprint parameter"}');
