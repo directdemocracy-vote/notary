@@ -4,4 +4,9 @@
 # 3. if not, monitor the created file until it gets deleted, then return true.
 # 4. if the file was not deleted after 1 minute, delete it and return false.
 
+$filename = $_GET['fingerprint'];
+
+$file = fopen("../../transfer/$filename", "w");
+fclose($file);
+
 ?>
