@@ -26,6 +26,7 @@ elseif (isset($fingerprint))
   $query .= "signatureSHA1 = UNHEX('$fingerprint')";
 else
   error("no fingerprint or key argument provided");
+die("ok");
 $result = $mysqli->query($query) or error($mysqli->error);
 $publication = $result->fetch_assoc();
 if (!$publication)
@@ -37,7 +38,6 @@ $publication['published'] = intval($publication['published']);
 $type = $publication['type'];
 unset($publication['type']);
 if ($type === 'citizen') {
-  die('citizen');
   $query = "SELECT "
           ."REPLACE(REPLACE(TO_BASE64(appKey), '\\n', ''), '=', '') AS appKey, "
           ."REPLACE(REPLACE(TO_BASE64(appSignature), '\\n', ''), '=', '') AS appSignature, "
