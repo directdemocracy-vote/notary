@@ -62,7 +62,7 @@ if ($type === 'citizen') {
   $certificate = $result->fetch_assoc();
   $result->free();
   $certificate = $publication + $certificate;
-  echo json_encode($certificate, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODES);
+  echo json_encode($certificate, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type === 'proposal') {
   $query = "SELECT REPLACE(REPLACE(TO_BASE64(area), '\\n', ''), '=', '') AS area, title, description, question, answers, secret, UNIX_TIMESTAMP(deadline) AS deadline, trust, website FROM proposal WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
