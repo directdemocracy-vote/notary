@@ -26,8 +26,8 @@ elseif (isset($fingerprint))
   $query .= "signatureSHA1 = UNHEX('$fingerprint')";
 else
   error("no fingerprint or key argument provided");
-die("ok");
 $result = $mysqli->query($query) or error($mysqli->error);
+die($query);
 $publication = $result->fetch_assoc();
 if (!$publication)
   error("publication not found");
