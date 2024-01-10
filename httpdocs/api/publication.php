@@ -54,16 +54,15 @@ if ($type === 'citizen') {
   $query = "SELECT "
           ."REPLACE(REPLACE(TO_BASE64(appKey), '\\n', ''), '=', '') AS appKey, "
           ."REPLACE(REPLACE(TO_BASE64(appSignature), '\\n', ''), '=', '') AS appSignature, "
-          ."type, publication, comment, message "
+          ."type, "
+          ."REPLACE(REPLACE(TO_BASE64(publication), '\\n, ''), '=', '') AS publication, "
+          ."comment, message "
           ."FROM certificate WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $certificate = $result->fetch_assoc();
   $result->free();
-  print_r($certificate);
-  die();
   $certificate = $publication + $certificate;
-  $test = json_encode($certificate, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-  echo(json_encode($certificate, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+  echo json_encode($certificate, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODES);
 } elseif ($type === 'proposal') {
   $query = "SELECT REPLACE(REPLACE(TO_BASE64(area), '\\n', ''), '=', '') AS area, title, description, question, answers, secret, UNIX_TIMESTAMP(deadline) AS deadline, trust, website FROM proposal WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
