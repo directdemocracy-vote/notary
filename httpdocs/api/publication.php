@@ -59,7 +59,7 @@ if ($type === 'citizen') {
   $result = $mysqli->query($query) or error($mysqli->error);
   $certificate = $result->fetch_assoc();
   $result->free();
-  die($query);
+  die($certificate['appKey']);
   $certificate = $publication + $certificate;
   $test = json_encode($certificate, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
   echo(json_encode($certificate, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
