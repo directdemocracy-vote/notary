@@ -27,7 +27,6 @@ elseif (isset($fingerprint))
 else
   error("no fingerprint or key argument provided");
 $result = $mysqli->query($query) or error($mysqli->error);
-die($query);
 $publication = $result->fetch_assoc();
 if (!$publication)
   error("publication not found");
@@ -36,6 +35,8 @@ $publication_id = intval($publication['id']);
 unset($publication['id']);
 $publication['published'] = intval($publication['published']);
 $type = $publication['type'];
+echo($type);
+die($query);
 unset($publication['type']);
 if ($type === 'citizen') {
   $query = "SELECT "
