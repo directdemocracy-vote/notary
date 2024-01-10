@@ -55,7 +55,7 @@ if ($type === 'citizen') {
           ."REPLACE(REPLACE(TO_BASE64(appKey), '\\n', ''), '=', '') AS appKey, "
           ."REPLACE(REPLACE(TO_BASE64(appSignature), '\\n', ''), '=', '') AS appSignature, "
           ."type, "
-          ."REPLACE(REPLACE(TO_BASE64(publication), '\\n, ''), '=', '') AS publication, "
+          ."REPLACE(REPLACE(TO_BASE64(publication), '\\n', ''), '=', '') AS publication, "
           ."comment, message "
           ."FROM certificate WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
