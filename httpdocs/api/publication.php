@@ -61,6 +61,10 @@ if ($type === 'citizen') {
   $result = $mysqli->query($query) or error($mysqli->error);
   $certificate = $result->fetch_assoc();
   $result->free();
+  if ($certificate['comment'] === '')
+    unset($certificate['comment'];
+  if ($certificate['message'] === '')
+    unset($certificate['message'];
   $certificate = $publication + $certificate;
   echo json_encode($certificate, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type === 'proposal') {
