@@ -37,6 +37,7 @@ $publication['published'] = intval($publication['published']);
 $type = $publication['type'];
 unset($publication['type']);
 if ($type === 'citizen') {
+  die('citizen');
   $query = "SELECT "
           ."REPLACE(REPLACE(TO_BASE64(appKey), '\\n', ''), '=', '') AS appKey, "
           ."REPLACE(REPLACE(TO_BASE64(appSignature), '\\n', ''), '=', '') AS appSignature, "
