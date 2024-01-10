@@ -35,8 +35,6 @@ $publication_id = intval($publication['id']);
 unset($publication['id']);
 $publication['published'] = intval($publication['published']);
 $type = $publication['type'];
-echo($type);
-die($query);
 unset($publication['type']);
 if ($type === 'citizen') {
   $query = "SELECT "
@@ -59,6 +57,7 @@ if ($type === 'citizen') {
           ."type, publication, comment, message "
           ."FROM certificate WHERE id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
+  die($query);
   $certificate = $result->fetch_assoc();
   $result->free();
   $certificate = $publication + $certificate;
