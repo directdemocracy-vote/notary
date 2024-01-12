@@ -46,7 +46,7 @@ $query_start = "SELECT "
               ."ST_Y(c.home) AS latitude, ST_X(c.home) AS longitude "
               ."FROM publication pe "
               ."INNER JOIN certificate e ON e.id = pe.id AND e.type = 'endorse' "
-              ."INNER JOIN citizen c ON pc.id = c.id "
+              ."INNER JOIN citizen c ON pc.id = c.id ";
 $query_end = "AND e.latest = 1 ORDER BY pe.published DESC";
 $query = $query_start
         ."INNER JOIN publication pc ON pc.`key` = pe.`key` WHERE e.publication = FROM_BASE64('$citizen[signature]==') "
