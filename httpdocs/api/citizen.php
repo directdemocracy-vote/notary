@@ -72,7 +72,7 @@ $query = "SELECT pc.id, "
         ."WHERE pe.`key` = FROM_BASE64('$key==') "
         ."AND e.latest = 1 ORDER BY pe.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
-while($e = $results->fetch_assoc()) {
+while($e = $result->fetch_assoc()) {
   settype($e['id'], 'int');
   settype($e['published'], 'int');
   $id = $e['id'];
