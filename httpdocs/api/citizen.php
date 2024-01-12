@@ -58,7 +58,7 @@ while($e = $result->fetch_assoc()) {
   settype($e['published'], 'int');
   settype($e['latitude'], 'float');
   settype($e['longitude'], 'float');
-  $citizen_endorsements[] = $e;
+  $endorsements[] = $e;
 }
 $result->free();
 $mysqli->close();
