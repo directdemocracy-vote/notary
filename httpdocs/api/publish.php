@@ -302,7 +302,7 @@ if ($type === 'certificate') {
     if (file_exists($filename))
       unlink($filename);
   }
-  echo json_encode(endorsements($mysqli, $key), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+  echo json_encode(endorsements($mysqli, $key), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); # FIXME: this is probably not needed
 } else
   echo("{\"signature\":\"$signature\"}");
 $mysqli->close();
