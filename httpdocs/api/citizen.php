@@ -76,9 +76,10 @@ while($e = $result->fetch_assoc()) {
   settype($e['id'], 'int');
   settype($e['published'], 'int');
   $id = $e['id'];
+  $endorse = ($e['type'] === 'endorse');
   foreach ($endorsements as &$endorsement) {
-    if ($endorsement['id'] == $id) {
-      if (e.type == 'endorse')
+    if ($endorsement['id'] === $id) {
+      if ($endorse)
         $endorsement['endorsedYou'] = $e['published'];
       else # report/revoke
         $endorsement['reportedYou'] = $e['published'];
