@@ -1,6 +1,5 @@
 <?php
 require_once '../../php/database.php';
-require_once '../../php/endorsements.php';
 require_once '../../php/sanitizer.php';
 
 header("Content-Type: application/json");
