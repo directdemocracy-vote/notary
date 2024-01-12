@@ -36,39 +36,56 @@ $result->free();
 settype($citizen['published'], 'int');
 settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
-$query_1 = "SELECT "
-          ."REPLACE(REPLACE(TO_BASE64(pc.`key`), '\\n', ''), '=', '') AS `key`, "
-          ."REPLACE(REPLACE(TO_BASE64(pc.signature), '\\n', ''), '=', '') AS signature, "
-          ."REPLACE(REPLACE(TO_BASE64(c.appKey), '\\n', ''), '=', '') AS appKey, "
-          ."UNIX_TIMESTAMP(pe.published) AS published, "
-          ."c.familyName, c.givenNames, "
-          ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(c.picture), '\\n', '')) AS picture, "
-          ."ST_Y(c.home) AS latitude, ST_X(c.home) AS longitude "
-          ."FROM publication pe "
-          ."INNER JOIN certificate e ON e.id = pe.id AND e.type = 'endorse' ";
-$query_2 = "INNER JOIN citizen c ON pc.id = c.id ";
-$query_3 = "AND e.latest = 1 ORDER BY pe.published DESC";
-$query = $query_1
+$query = "SELECT pc.id, "
+        ."REPLACE(REPLACE(TO_BASE64(pc.`key`), '\\n', ''), '=', '') AS `key`, "
+        ."REPLACE(REPLACE(TO_BASE64(pc.signature), '\\n', ''), '=', '') AS signature, "
+        ."REPLACE(REPLACE(TO_BASE64(c.appKey), '\\n', ''), '=', '') AS appKey, "
+        ."UNIX_TIMESTAMP(pe.published) AS published, "
+        ."c.familyName, c.givenNames, "
+        ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(c.picture), '\\n', '')) AS picture, "
+        ."ST_Y(c.home) AS latitude, ST_X(c.home) AS longitude "
+        ."FROM publication pe "
+        ."INNER JOIN certificate e ON e.id = pe.id AND e.type = 'endorse' "
         ."INNER JOIN publication pc ON pc.`key` = pe.`key` "
-        .$query_2
+        ."INNER JOIN citizen c ON pc.id = c.id "
         ."WHERE e.publication = FROM_BASE64('$citizen[signature]==') "
-        .$query_3;
+        ."AND e.latest = 1 ORDER BY pe.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 if (!$result)
   die("{\"error\":\"$mysqli->error\"}");
 $endorsements = array();
 while($e = $result->fetch_assoc()) {
+  settype($e['id'], 'int');
   settype($e['published'], 'int');
   settype($e['latitude'], 'float');
   settype($e['longitude'], 'float');
   $endorsements[] = $e;
 }
 $result->free();
-$query = $query_1
+$query = "SELECT pc.id, "
+        ."UNIX_TIMESTAMP(pe.published) AS published, "
+        ."e.type "
+        ."FROM publication pe "
+        ."INNER JOIN certificate e ON e.id = pe.id AND (e.type = 'endorse' OR (e.type = 'report' and e.comment = 'revoke')) "
         ."INNER JOIN publication pc ON pc.`signature` = e.publication "
-        .$query_2
+        ."INNER JOIN citizen c ON pc.id = c.id "
         ."WHERE pe.`key` = FROM_BASE64('$key==') "
-        .$query_3;
+        ."AND e.latest = 1 ORDER BY pe.published DESC";
+$result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
+while($e = $results->fetch_assoc()) {
+  settype($e['id'], 'int');
+  settype($e['published'], 'int');
+  $id = $e['id'];
+  foreach ($endorsements as &$endorsement) {
+    if ($endorsement['id'] == $id) {
+      if (e.type == 'endorse')
+        $endorsement['endorsedYou'] = $e['published'];
+      else # report/revoke
+        $endorsement['reportedYou'] = $e['published'];
+      break;
+    }
+  }
+}
 $mysqli->close();
 $answer = array();
 $answer['citizen'] = $citizen;
