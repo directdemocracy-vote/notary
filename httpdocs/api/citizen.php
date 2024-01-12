@@ -40,7 +40,7 @@ settype($citizen['longitude'], 'float');
 $endorsements = endorsements($mysqli, $citizen['key']);
 $query = "SELECT "
         ."REPLACE(REPLACE(TO_BASE64(pc.signature), '\\n', ''), '=', '') AS signature, "
-        ."REPLACE(REPLACE(TO_BASE64(pc.key), '\\n', ''), '=', '') AS key, "
+        ."REPLACE(REPLACE(TO_BASE64(pc.`key`), '\\n', ''), '=', '') AS `key`, "
         ."UNIX_TIMESTAMP(pe.published) AS published, "
         ."REPLACE(REPLACE(TO_BASE64(c.appKey), '\\n', ''), '=', '') AS appKey, "
         ."e.`type`, c.familyName, c.givenNames, "
