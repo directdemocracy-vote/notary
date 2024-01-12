@@ -36,20 +36,21 @@ $result->free();
 settype($citizen['published'], 'int');
 settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
-$query = "SELECT "
-        ."REPLACE(REPLACE(TO_BASE64(pc.signature), '\\n', ''), '=', '') AS signature, "
-        ."REPLACE(REPLACE(TO_BASE64(pc.`key`), '\\n', ''), '=', '') AS `key`, "
-        ."REPLACE(REPLACE(TO_BASE64(c.appKey), '\\n', ''), '=', '') AS appKey, "
-        ."UNIX_TIMESTAMP(pe.published) AS published, "
-        ."c.familyName, c.givenNames, "
-        ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(c.picture), '\\n', '')) AS picture, "
-        ."ST_Y(c.home) AS latitude, ST_X(c.home) AS longitude "
-        ."FROM publication pe "
-        ."INNER JOIN certificate e ON e.id = pe.id AND e.type='endorse' "
-        ."INNER JOIN publication pc ON pc.`key` = pe.`key` "
-        ."INNER JOIN citizen c ON pc.id = c.id "
-        ."WHERE e.publication = FROM_BASE64('$citizen[signature]==') AND e.latest = 1 "
-        ."ORDER BY pe.published DESC";
+$query_start = "SELECT "
+              ."REPLACE(REPLACE(TO_BASE64(pc.`key`), '\\n', ''), '=', '') AS `key`, "
+              ."REPLACE(REPLACE(TO_BASE64(pc.signature), '\\n', ''), '=', '') AS signature, "
+              ."REPLACE(REPLACE(TO_BASE64(c.appKey), '\\n', ''), '=', '') AS appKey, "
+              ."UNIX_TIMESTAMP(pe.published) AS published, "
+              ."c.familyName, c.givenNames, "
+              ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(c.picture), '\\n', '')) AS picture, "
+              ."ST_Y(c.home) AS latitude, ST_X(c.home) AS longitude "
+              ."FROM publication pe "
+              ."INNER JOIN certificate e ON e.id = pe.id AND e.type = 'endorse' "
+              ."INNER JOIN citizen c ON pc.id = c.id "
+$query_end = "AND e.latest = 1 ORDER BY pe.published DESC";
+$query = $query_start
+        ."INNER JOIN publication pc ON pc.`key` = pe.`key` WHERE e.publication = FROM_BASE64('$citizen[signature]==') "
+        .$query_end;
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 if (!$result)
   die("{\"error\":\"$mysqli->error\"}");
@@ -61,6 +62,9 @@ while($e = $result->fetch_assoc()) {
   $endorsements[] = $e;
 }
 $result->free();
+$query = $query_start
+        ."INNER JOIN publication pc ON pc.`signature` = e.publication WHERE pe.`key` = FROM_BASE64('$key==') "
+        .$query_end;
 $mysqli->close();
 $answer = array();
 $answer['citizen'] = $citizen;
