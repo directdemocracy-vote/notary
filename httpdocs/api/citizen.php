@@ -1,6 +1,5 @@
 <?php
 require_once '../../php/database.php';
-require_once '../../php/endorsements.php';
 require_once '../../php/sanitizer.php';
 
 header("Content-Type: application/json");
@@ -37,7 +36,6 @@ $result->free();
 settype($citizen['published'], 'int');
 settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
-$endorsements = endorsements($mysqli, $citizen['key']);
 $query = "SELECT "
         ."REPLACE(REPLACE(TO_BASE64(pc.signature), '\\n', ''), '=', '') AS signature, "
         ."REPLACE(REPLACE(TO_BASE64(pc.`key`), '\\n', ''), '=', '') AS `key`, "
@@ -55,7 +53,7 @@ $query = "SELECT "
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 if (!$result)
   die("{\"error\":\"$mysqli->error\"}");
-$citizen_endorsements = array();
+$endorsements = array();
 while($e = $result->fetch_assoc()) {
   settype($e['published'], 'int');
   settype($e['latitude'], 'float');
@@ -67,6 +65,5 @@ $mysqli->close();
 $answer = array();
 $answer['citizen'] = $citizen;
 $answer['endorsements'] = $endorsements;
-$answer['citizen_endorsements'] = $citizen_endorsements;
 die(json_encode($answer, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
