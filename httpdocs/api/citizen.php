@@ -64,9 +64,11 @@ while($e = $result->fetch_assoc()) {
   $endorsements[] = $e;
 }
 $result->free();
-$query = $query_start
-        ."INNER JOIN publication pc ON pc.`signature` = e.publication WHERE pe.`key` = FROM_BASE64('$key==') "
-        .$query_end;
+$query = $query_1
+        ."INNER JOIN publication pc ON pc.`signature` = e.publication "
+        .$query_2
+        ."WHERE pe.`key` = FROM_BASE64('$key==') "
+        .$query_3;
 $mysqli->close();
 $answer = array();
 $answer['citizen'] = $citizen;
