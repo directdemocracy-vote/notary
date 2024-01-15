@@ -206,8 +206,8 @@ if ($type === 'citizen') {
     $app_fields = '';
     $app_values = '';
   }
-  $query = "INSERT INTO certificate(id,$app_fields `type`, `message`, comment, publication, publicationId, latest) "
-          ."VALUES($id,$app_values \"$ctype\", \"$message\", \"$comment\", FROM_BASE64('$p=='), $publication_id, 1)";
+  $query = "INSERT INTO certificate(id,$app_fields `type`, `message`, comment, publicationId, latest) "
+          ."VALUES($id,$app_values \"$ctype\", \"$message\", \"$comment\", $publication_id, 1)";
 } elseif ($type === 'proposal') {
   $proposal =&$publication;
   if (!isset($proposal->website))  # optional
