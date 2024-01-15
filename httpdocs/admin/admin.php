@@ -80,6 +80,9 @@ if ($result) {
 } else
   query("ALTER TABLE publication AUTO_INCREMENT=1");
 
+if ($n_citizen)
+  query("DELETE FROM participant WHERE id > 5");
+
 $list = '';
 if ($n)
   $list .= ':<ul>';
