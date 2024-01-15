@@ -13,7 +13,7 @@ elseif (isset($_GET['key']))
 elseif (isset($_GET['fingerprint']))
   $fingerprint = sanitize_field($_GET['fingerprint'], 'hex', 'fingerprint');
 
-$query = "SELECT publication.id, CONCAT('https://directdemocracy.vote/json-schema/', `version`, '/', `type`, '.schema.json') AS `schema`, `type`, "
+$query = "SELECT publication.id, CONCAT('https://directdemocracy.vote/json-schema/', `version`, '/', publication.`type`, '.schema.json') AS `schema`, publication.`type`, "
         ."REPLACE(REPLACE(TO_BASE64(participant.`key`), '\\n', ''), '=', '') AS `key`, "
         ."REPLACE(REPLACE(TO_BASE64(signature), '\\n', ''), '=', '') AS signature, "
         ."UNIX_TIMESTAMP(published) AS published "
