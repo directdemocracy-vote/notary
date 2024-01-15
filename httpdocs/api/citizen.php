@@ -79,7 +79,7 @@ $query = "SELECT pc.id, "
         ."INNER JOIN certificate e ON e.id=pe.id AND e.latest=1 AND (e.type='endorse' OR (e.type='report' and e.comment='revoke')) "
         ."INNER JOIN publication pc ON pc.id = e.publicationId "
         ."INNER JOIN citizen c ON pc.id = c.id "
-        ."WHERE pe.id=$id ORDER BY pe.published DESC";
+        ."WHERE pe.id=$alice_id ORDER BY pe.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 while($e = $result->fetch_assoc()) {
   settype($e['id'], 'int');
