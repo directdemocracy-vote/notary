@@ -22,9 +22,12 @@ function check_app($publication, $vote=false) {
 
   $appKey = sanitize_field($publication->appKey, 'base64', 'appKey');
   $result = $mysqli->query("SELECT id FROM participant WHERE `type`='app' and `key`=FROM_BASE64('$appKey==')");
-  if ($result->num_rows === 0)
+  $participant = $result->fetch_assoc();
+  if (!$participant)
     error("unknown app");
-  $appSignature = sanitize_field($publication->appSignature, 'base64', 'appSignature');
+  $app_id = intval($participant['id']);
+  $result->free();
+  $app_signature = sanitize_field($publication->appSignature, 'base64', 'appSignature');
   $publication->appSignature = '';
   if ($vote) {
     $voteBytes = base64_decode("$publication->referendum==");
@@ -35,19 +38,19 @@ function check_app($publication, $vote=false) {
     $details = openssl_pkey_get_details($publicKey);
     $n = gmp_import($details['rsa']['n'], 1, GMP_BIG_ENDIAN | GMP_MSW_FIRST);
     $e = gmp_import($details['rsa']['e'], 1, GMP_BIG_ENDIAN | GMP_MSW_FIRST);
-    $error = blind_verify($n, $e, $voteBytes, base64_decode("$appSignature=="));
+    $error = blind_verify($n, $e, $voteBytes, base64_decode("$app_signature=="));
     if ($error !== '')
       error("failed to verify app signature: $error");
   } else {
-    $verify = openssl_verify($publication->signature, base64_decode("$appSignature=="), public_key($appKey), OPENSSL_ALGO_SHA256);
+    $verify = openssl_verify($publication->signature, base64_decode("$app_signature=="), public_key($appKey), OPENSSL_ALGO_SHA256);
     if ($verify != 1) {
       $type = get_type(sanitize_field($publication->schema, 'url', 'schema'));
       error("wrong app signature for $type: $appKey");
     }
   }
   # restore original signature
-  $publication->appSignature = $appSignature;
-  return array($appKey, $appSignature);
+  $publication->appSignature = $app_signature;
+  return array($app_id, $app_signature);
 }
 
 header("Content-Type: application/json");
@@ -120,7 +123,7 @@ if ($type === 'citizen') {
 
 $publication->signature = '';
 if ($type !== 'vote' && isset($publication->appSignature)) {
-  $appSignature = $publication->appSignature;
+  $app_signature = $publication->appSignature;
    $publication->appSignature = '';
 }
 $data = json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
@@ -129,36 +132,43 @@ if ($verify != 1)
   error("wrong signature for $type: key=$key\n" . json_encode($publication, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 # restore original signatures if needed
 $publication->signature = $signature;
-if ($type !== 'vote' && isset($appSignature))
-  $publication->appSignature = $appSignature;
+if ($type !== 'vote' && isset($app_signature))
+  $publication->appSignature = $app_signature;
 
-$query = "SELECT id, `type` FROM participant WHERE `key`=FROM_BASE64('$key==')";
-
-
+$result = $mysqli->query("SELECT id, `type` FROM participant WHERE `key`=FROM_BASE64('$key==')") or error($mysqli->error);
+$participant = $result->fetch_assoc();
+if ($participant)
+  $participant_id = intval($participant['id']);
+else {
+  if ($type !== 'citizen')
+    error("unknown $type publisher"); 
+  $msqli->query("INSERT INTO participant(`type`, `key`) VALUES('citizen', FROM_BASE64('$key=='))") or error($mysqli->error);
+  $participant_id = $mysqli->insert_id;
+}
 $version = intval(explode('/', $schema)[4]);
-$query = "INSERT IGNORE INTO publication(`version`, `type`, `key`, signature, published) "
-        ."VALUES($version, '$type', FROM_BASE64('$key=='), FROM_BASE64('$signature=='), FROM_UNIXTIME($published))";
+$query = "INSERT IGNORE INTO publication(`version`, `type`, participantId, signature, published) "
+        ."VALUES($version, '$type', $participantId, FROM_BASE64('$signature=='), FROM_UNIXTIME($published))";
 $mysqli->query($query) or error($mysqli->error);
 if ($mysqli->affected_rows === 0)
   error("already existing publication");
 $id = $mysqli->insert_id;
 
 if ($type === 'citizen') {
-  list($appKey, $appSignature) = check_app($citizen);
-  $familyName = $mysqli->escape_string($publication->familyName);
-  $givenNames = $mysqli->escape_string($publication->givenNames);
+  list($app_id, $app_signature) = check_app($citizen);
+  $family_name = $mysqli->escape_string($publication->familyName);
+  $given_names = $mysqli->escape_string($publication->givenNames);
   $latitude = sanitize_field($citizen->latitude, 'float', 'latitude');
   $longitude = sanitize_field($citizen->longitude, 'float', 'longitude');
-  $query = "INSERT INTO citizen(id, appKey, appSignature, familyName, givenNames, picture, home) "
-          ."VALUES($id, FROM_BASE64('$appKey=='), FROM_BASE64('$appSignature=='), \"$familyName\", \"$givenNames\", "
+  $query = "INSERT INTO citizen(id, appId, appSignature, familyName, givenNames, picture, home) "
+          ."VALUES($id, $app_id, FROM_BASE64('$app_signature=='), \"$family_name\", \"$given_names\", "
           ."FROM_BASE64('$citizen_picture'), POINT($longitude, $latitude))";
 } elseif ($type === 'certificate') {
   $certificate = &$publication;
   if (isset($certificate->appKey))
-    list($appKey, $appSignature) = check_app($certificate);
+    list($app_id, $app_signature) = check_app($certificate);
   else {
-    $appKey = '';
-    $appSignature = '';
+    $app_id = '';
+    $app_signature = '';
   }
   if (!property_exists($certificate, 'comment'))
     $certificate->comment = '';
@@ -174,12 +184,12 @@ if ($type === 'citizen') {
     error("committed publication not found: $publication");
   if ($committed['signature'] != $p)
     error("committed publication signature mismatch.");
-  $publicationId = intval($committed['id']);
+  $publication_id = intval($committed['id']);
   # mark other certificates on the same publication by the same participant as not the latest
   $mysqli->query("UPDATE certificate INNER JOIN publication ON publication.id = certificate.id"
                 ." SET certificate.latest = 0"
-                ." WHERE certificate.publicationId = $publicationId"
-                ." AND publication.`key` = FROM_BASE64('$key==')") or error($mysli->error);
+                ." WHERE certificate.publicationId = $publication_id"
+                ." AND publication.participantId = $participant_id") or error($mysli->error);
   if ($committed['type'] == 'proposal') {  # signing a petition
     # increment the number of participants in a petition
     $committed_id = $committed['id'];
@@ -189,15 +199,15 @@ if ($type === 'citizen') {
   $ctype = $mysqli->escape_string($certificate->type);
   $message = $mysqli->escape_string($certificate->message);
   $comment = $mysqli->escape_string($certificate->comment);
-  if ($appKey) {
-    $appFields = " appKey, appSignature,";
-    $appValues = " FROM_BASE64('$appKey=='), FROM_BASE64('$appSignature=='),";
+  if ($app_id) {
+    $app_fields = " appId, appSignature,";
+    $app_values = " $app_id, FROM_BASE64('$app_signature=='),";
   } else {
-    $appFields = '';
-    $appValues = '';
+    $app_fields = '';
+    $app_values = '';
   }
-  $query = "INSERT INTO certificate(id,$appFields `type`, `message`, comment, publication, publicationId, latest) "
-          ."VALUES($id, $appValues \"$ctype\", \"$message\", \"$comment\", FROM_BASE64('$p=='), $publicationId, 1)";
+  $query = "INSERT INTO certificate(id,$app_fields `type`, `message`, comment, publication, publicationId, latest) "
+          ."VALUES($id,$app_values \"$ctype\", \"$message\", \"$comment\", FROM_BASE64('$p=='), $publication_id, 1)";
 } elseif ($type === 'proposal') {
   $proposal =&$publication;
   if (!isset($proposal->website))  # optional
@@ -227,24 +237,24 @@ if ($type === 'citizen') {
           ."\"$question\", \"$answers\", $secret, FROM_UNIXTIME($deadline), $trust, \"$website\", 0, 0)";
 } elseif ($type === 'participation') {
   $participation =&$publication;
-  list($appKey, $appSignature) = check_app($participation);
+  list($appKey, $app_signature) = check_app($participation);
   $query = "INSERT INTO participation(id, appKey, appSignature, referendum, encryptedVote) "
-          ."VALUES($id, FROM_BASE64('$appKey=='), FROM_BASE64('$appSignature=='), FROM_BASE64('$participation->referendum=='), FROM_BASE64('$encryptedVote'))";
+          ."VALUES($id, FROM_BASE64('$appKey=='), FROM_BASE64('$app_signature=='), FROM_BASE64('$participation->referendum=='), FROM_BASE64('$encryptedVote'))";
 } elseif ($type === 'vote') {
   $vote = &$publication;
-  list($appKey, $appSignature) = check_app($vote, true);
+  list($appKey, $app_signature) = check_app($vote, true);
   $referendum = sanitize_field($vote->referendum, 'base64', 'referendum');
   $number = sanitize_field($vote->number, 'positive_int', 'number');
   $ballot = sanitize_field($vote->ballot, 'base64', 'ballot');
   $answer = $mysqli->escape_string($vote->answer);
   $query = "INSERT INTO vote(id, appKey, appSignature, referendum, number, ballot, answer) VALUES($id, "
           ."FROM_BASE64('$appKey=='), "
-          ."FROM_BASE64('$appSignature=='), "
+          ."FROM_BASE64('$app_signature=='), "
           ."FROM_BASE64('$referendum=='), "
           ."$number, "
           ."FROM_BASE64('$ballot'), "
           ."\"$answer\") "
-          ."ON DUPLICATE KEY UPDATE appSignature=FROM_BASE64('$appSignature=='), number=$number, answer=\"$answer\";";
+          ."ON DUPLICATE KEY UPDATE appSignature=FROM_BASE64('$app_signature=='), number=$number, answer=\"$answer\";";
 } elseif ($type === 'area') {
   $polygons = 'ST_GeomFromText("MULTIPOLYGON(';
   $t1 = false;
