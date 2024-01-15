@@ -56,7 +56,7 @@ $query_common_part = "FROM proposal "
                     ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
                     ."LEFT JOIN area ON area.id = area_p.id "
                     ."LEFT JOIN participant ON participant.`key` = publication.`key` AND particpant.type='judge' "
-                    ."LEFT JOIN webservice ON webservice.id=participant.id "
+                    ."LEFT JOIN webservice ON webservice.participantId=participant.id "
                     ."WHERE $secret$open$search"
                     ."YEAR(proposal.deadline) = $year "
                     ."AND ST_Intersects(area.polygons, ST_Buffer(POINT($longitude, $latitude), $radius))";
