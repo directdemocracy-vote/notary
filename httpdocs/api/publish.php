@@ -8,15 +8,6 @@ require_once '../../php/sanitizer.php';
 require_once '../../php/public_key.php';
 require_once '../../php/blind-sign.php';
 
-$PRODUCTION_APP_KEY = // public key of the genuine app
-  'vD20QQ18u761ean1+zgqlDFo6H2Emw3mPmBxeU24x4o1M2tcGs+Q7G6xASRf4LmSdO1h67ZN0sy1tasNHH8Ik4CN63elBj4ELU70xZeYXIMxxxDqis'.
-  'FgAXQO34lc2EFt+wKs+TNhf8CrDuexeIV5d4YxttwpYT/6Q2wrudTm5wjeK0VIdtXHNU5V01KaxlmoXny2asWIejcAfxHYSKFhzfmkXiVqFrQ5BHAf'.
-  '+/ReYnfc+x7Owrm6E0N51vUHSxVyN/TCUoA02h5UsuvMKR4OtklZbsJjerwz+SjV7578H5FTh0E0sa7zYJuHaYqPevvwReXuggEsfytP/j2B3IgarQ';
-$TEST_APP_KEY = // public key of the test app
-  'nRhEkRo47vT2Zm4Cquzavyh+S/yFksvZh1eV20bcg+YcCfwzNdvPRs+5WiEmE4eujuGPkkXG6u/DlmQXf2szMMUwGCkqJSPi6fa90pQKx81QHY8Ab4'.
-  'z69PnvBjt8tt8L8+0NRGOpKkmswzaX4ON3iplBx46yEn00DQ9W2Qzl2EwaIPlYNhkEs24Rt5zQeGUxMGHy1eSR+mR4Ngqp1LXCyGxbXJ8B/B5hV4QI'.
-  'or7U2raCVFSy7sNl080xNLuY0kjHCV+HN0h4EaRdR2FSw9vMyw5UJmWpCFHyQla42Eg1Fxwk9IkHhNe/WobOT1Jiy3Uxz9nUeoCQa5AONAXOaO2wtQ';
-
 use Opis\JsonSchema\{
   Validator, Errors\ErrorFormatter
 };
@@ -140,6 +131,9 @@ if ($verify != 1)
 $publication->signature = $signature;
 if ($type !== 'vote' && isset($appSignature))
   $publication->appSignature = $appSignature;
+
+$query = "SELECT id, `type` FROM participant WHERE `key`=FROM_BASE64('$key==')";
+
 
 $version = intval(explode('/', $schema)[4]);
 $query = "INSERT IGNORE INTO publication(`version`, `type`, `key`, signature, published) "
