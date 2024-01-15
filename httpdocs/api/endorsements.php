@@ -34,7 +34,8 @@ $answer = array();
 $answer['givenNames'] = $citizen['givenNames'];
 $answer['familyName'] = $citizen['familyName'];
 $query = "SELECT UNIX_TIMESTAMP(publication.published) AS published, certificate.type, certificate.latest FROM publication"
-        ." INNER JOIN webservice AS judge ON judge.`type`='judge' AND judge.`key`=publication.`key` AND judge.url='$judge'"
+        ." INNER JOIN participant AS judge ON judge.`type`='judge' AND judge.`key`=publication.`key`
+        ." INNER JOIN webservice ON webservice.participantId=participant.id AND webservice.url='$judge'"
         ." INNER JOIN certificate ON certificate.id=publication.id AND $join_condition"
         ." ORDER BY publication.published DESC";
 $result = $mysqli->query($query) or error($mysqli->error);
