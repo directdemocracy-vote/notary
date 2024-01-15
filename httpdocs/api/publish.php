@@ -142,7 +142,7 @@ if ($participant)
 else {
   if ($type !== 'citizen')
     error("unknown $type publisher"); 
-  $msqli->query("INSERT INTO participant(`type`, `key`) VALUES('citizen', FROM_BASE64('$key=='))") or error($mysqli->error);
+  $mysqli->query("INSERT INTO participant(`type`, `key`) VALUES('citizen', FROM_BASE64('$key=='))") or error($mysqli->error);
   $participant_id = $mysqli->insert_id;
 }
 $version = intval(explode('/', $schema)[4]);
