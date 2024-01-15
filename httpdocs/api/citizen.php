@@ -20,15 +20,18 @@ if (isset($_POST['signature'])) {
 
 $query = "SELECT publication.id, "
         ."CONCAT('https://directdemocracy.vote/json-schema/', `version`, '/', `type`, '.schema.json') AS `schema`, "
-        ."REPLACE(REPLACE(TO_BASE64(publication.`key`), '\\n', ''), '=', '') AS `key`, "
+        ."REPLACE(REPLACE(TO_BASE64(participant.`key`), '\\n', ''), '=', '') AS `key`, "
         ."REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature, "
         ."UNIX_TIMESTAMP(publication.published) AS published, "
-        ."REPLACE(REPLACE(TO_BASE64(citizen.appKey), '\\n', ''), '=', '') AS appKey, "
+        ."REPLACE(REPLACE(TO_BASE64(app.`key`), '\\n', ''), '=', '') AS appKey, "
         ."REPLACE(REPLACE(TO_BASE64(citizen.appSignature), '\\n', ''), '=', '') AS appSignature, "
         ."citizen.givenNames, citizen.familyName, "
         ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude "
-        ."FROM publication INNER JOIN citizen ON publication.id = citizen.id "
+        ."FROM publication "
+        ."INNER JOIN citizen ON publication.id = citizen.id "
+        ."INNER JOIN participant ON participant.id = publication.participantId "
+        ."INNER JOIN participant AS app ON app.id = citizen.appId "
         ."WHERE $condition";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $citizen = $result->fetch_assoc() or die("{\"error\":\"citizen not found: $condition\"}");
