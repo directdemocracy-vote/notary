@@ -48,7 +48,7 @@ $query .= " FROM citizen"
          ." INNER JOIN publication AS pp ON $join1_condition"
          ." INNER JOIN proposal ON proposal.id=pp.id";
 if ($corpus)
-  $query .= " INNER JOIN webservice AS judge ON judge.`type`='judge' AND judge.`key`=pp.`key`"
+  $query .= " INNER JOIN participant AS judge ON judge.`type`='judge' AND judge.`key`=pp.`key`"
          ." INNER JOIN publication AS pe ON pe.`key`=judge.`key`"
          ." INNER JOIN certificate ON certificate.id=pe.id AND certificate.latest=1 AND certificate.publication=pc.signature"
          ." INNER JOIN publication AS pa ON proposal.area=pa.`signature`"
