@@ -18,7 +18,7 @@ $file = fopen($filename, "w");
 fclose($file);
 
 require_once '../../php/database.php';
-$query = "SELECT id FROM publication "
+$query = "SELECT publication.id FROM publication "
         ."INNER JOIN certificate ON certificate.publicationId=publication.id AND certificate.`type`='report' AND certificate.comment='transferred' "
         ."WHERE publication.type='certificate' AND SHA1(publication.signature)='$fingerprint'";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
