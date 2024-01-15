@@ -14,10 +14,12 @@ elseif (isset($_GET['fingerprint']))
   $fingerprint = sanitize_field($_GET['fingerprint'], 'hex', 'fingerprint');
 
 $query = "SELECT id, CONCAT('https://directdemocracy.vote/json-schema/', `version`, '/', `type`, '.schema.json') AS `schema`, `type`, "
-        ."REPLACE(REPLACE(TO_BASE64(`key`), '\\n', ''), '=', '') AS `key`, "
+        ."REPLACE(REPLACE(TO_BASE64(participant.`key`), '\\n', ''), '=', '') AS `key`, "
         ."REPLACE(REPLACE(TO_BASE64(signature), '\\n', ''), '=', '') AS signature, "
         ."UNIX_TIMESTAMP(published) AS published "
-        ."FROM publication WHERE published <= NOW() AND ";
+        ."FROM publication "
+        ."INNER JOIN participant ON participant.id=publication.participantId "
+        ."WHERE published <= NOW() AND ";
 if (isset($signature))
   $query .= "signature = FROM_BASE64('$signature==')";
 elseif (isset($key))
