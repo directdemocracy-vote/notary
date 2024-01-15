@@ -33,11 +33,6 @@ $query = "SELECT publication.id, "
         ."INNER JOIN participant ON participant.id = publication.participantId "
         ."INNER JOIN participant AS app ON app.id = citizen.appId "
         ."WHERE $condition";
-
-
-$query_copy = $query;
-
-
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $citizen = $result->fetch_assoc() or die("{\"error\":\"citizen not found: $condition\"}");
 $result->free();
@@ -65,6 +60,9 @@ $query = "SELECT bob.id, "
         ."INNER JOIN participant AS participant_bob ON participant_bob.id=publication_bob.participantId "
         ."INNER JOIN participant AS app ON app.id=bob.appId " 
         ."WHERE pe.type='certificate' AND pe.participantId=$alice_id ORDER BY pe.published DESC";
+
+$query_copy = $query;
+
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 if (!$result)
   die("{\"error\":\"$mysqli->error\"}");
