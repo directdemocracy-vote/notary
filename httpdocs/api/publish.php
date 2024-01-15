@@ -30,7 +30,7 @@ function check_app($publication, $vote=false) {
   global $mysqli;
 
   $appKey = sanitize_field($publication->appKey, 'base64', 'appKey');
-  $result = $mysqli->query("SELECT id FROM webservice WHERE `type`='app' and `key`=FROM_BASE64('$appKey==')");
+  $result = $mysqli->query("SELECT id FROM participant WHERE `type`='app' and `key`=FROM_BASE64('$appKey==')");
   if ($result->num_rows === 0)
     error("unknown app");
   $appSignature = sanitize_field($publication->appSignature, 'base64', 'appSignature');
