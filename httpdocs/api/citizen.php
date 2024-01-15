@@ -18,7 +18,7 @@ if (isset($_POST['signature'])) {
 } else
   die('{"error":"missing key, signature or fingerprint POST argument"}');
 
-$query = "SELECT "
+$query = "SELECT id "
         ."CONCAT('https://directdemocracy.vote/json-schema/', `version`, '/', `type`, '.schema.json') AS `schema`, "
         ."REPLACE(REPLACE(TO_BASE64(publication.`key`), '\\n', ''), '=', '') AS `key`, "
         ."REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature, "
@@ -33,6 +33,8 @@ $query = "SELECT "
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $citizen = $result->fetch_assoc() or die("{\"error\":\"citizen not found: $condition\"}");
 $result->free();
+$id = intval($citizen['id']);
+unset($citizen['id']);
 settype($citizen['published'], 'int');
 settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
@@ -48,8 +50,7 @@ $query = "SELECT pc.id, "
         ."INNER JOIN certificate e ON e.id = pe.id AND e.type = 'endorse' "
         ."INNER JOIN publication pc ON pc.`key` = pe.`key` "
         ."INNER JOIN citizen c ON pc.id = c.id "
-        ."WHERE e.publication = FROM_BASE64('$citizen[signature]==') "
-        ."AND e.latest = 1 ORDER BY pe.published DESC";
+        ."WHERE e.publicationId = $id AND e.latest = 1 ORDER BY pe.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 if (!$result)
   die("{\"error\":\"$mysqli->error\"}");
@@ -67,7 +68,7 @@ $query = "SELECT pc.id, "
         ."e.type "
         ."FROM publication pe "
         ."INNER JOIN certificate e ON e.id = pe.id AND (e.type = 'endorse' OR (e.type = 'report' and e.comment = 'revoke')) "
-        ."INNER JOIN publication pc ON pc.`signature` = e.publication "
+        ."INNER JOIN publication pc ON pc.id = e.publicationId "
         ."INNER JOIN citizen c ON pc.id = c.id "
         ."WHERE pe.`key` = FROM_BASE64('$key==') "
         ."AND e.latest = 1 ORDER BY pe.published DESC";
