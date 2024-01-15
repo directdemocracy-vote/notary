@@ -147,7 +147,7 @@ else {
 }
 $version = intval(explode('/', $schema)[4]);
 $query = "INSERT IGNORE INTO publication(`version`, `type`, participantId, signature, published) "
-        ."VALUES($version, '$type', $participantId, FROM_BASE64('$signature=='), FROM_UNIXTIME($published))";
+        ."VALUES($version, '$type', $participant_id, FROM_BASE64('$signature=='), FROM_UNIXTIME($published))";
 $mysqli->query($query) or error($mysqli->error);
 if ($mysqli->affected_rows === 0)
   error("already existing publication");
