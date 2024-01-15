@@ -11,7 +11,7 @@ if (isset($_POST['judge']))
 else
   $judge = "https://judge.directdemocracy.vote";
 
-$query = "SELECT REPLACE(REPLACE(TO_BASE64(`key`), '\\n', ''), '=', '') AS `key` FROM webservice WHERE `type`='judge' AND url=\"$judge\"";
+$query = "SELECT REPLACE(REPLACE(TO_BASE64(`key`), '\\n', ''), '=', '') AS `key` FROM participant INNER JOIN webservice ON webservice.id=participant.id WHERE participant.`type`='judge' AND webservice.url=\"$judge\"";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $webservice = $result->fetch_assoc();
 $result->free();
