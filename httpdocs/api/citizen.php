@@ -36,27 +36,29 @@ $query = "SELECT publication.id, "
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $citizen = $result->fetch_assoc() or die("{\"error\":\"citizen not found: $condition\"}");
 $result->free();
-$id = intval($citizen['id']);
+$alice_id = intval($citizen['id']);
 unset($citizen['id']);
 settype($citizen['published'], 'int');
 settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
-$query = "SELECT pc.id, "
-        ."REPLACE(REPLACE(TO_BASE64(participant_e.`key`), '\\n', ''), '=', '') AS `key`, "
-        ."REPLACE(REPLACE(TO_BASE64(pc.signature), '\\n', ''), '=', '') AS signature, "
+# list all the bobs endorsed by alice
+$query = "SELECT bob.id, "
+        ."REPLACE(REPLACE(TO_BASE64(participant_bob.`key`), '\\n', ''), '=', '') AS `key`, "
+        ."REPLACE(REPLACE(TO_BASE64(publication_bob.signature), '\\n', ''), '=', '') AS signature, "
+        ."UNIX_TIMESTAMP(publication_bob.published) AS published, "
         ."REPLACE(REPLACE(TO_BASE64(app.key), '\\n', ''), '=', '') AS appKey, "
-        ."UNIX_TIMESTAMP(pe.published) AS published, "
-        ."c.familyName, c.givenNames, "
-        ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(c.picture), '\\n', '')) AS picture, "
-        ."ST_Y(c.home) AS latitude, ST_X(c.home) AS longitude "
+        ."REPLACE(REPLACE(TO_BASE64(bob.appSignature), '\\n', ''), '=', '') AS appSignature, "
+        ."bob.familyName, bob.givenNames, "
+        ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(bob.picture), '\\n', '')) AS picture, "
+        ."ST_Y(bob.home) AS latitude, ST_X(bob.home) AS longitude "
+        ."REPLACE(REPLACE(TO_BASE64(pe.signature), '\\n', ''), '=', '') AS endorsementSignature, "
+        ."UNIX_TIMESTAMP(pe.published) AS endorsementPublished "
         ."FROM publication pe "
-        ."INNER JOIN certificate e ON e.id=pe.id AND e.type='endorse' AND e.latest=1 "
-        ."INNER JOIN participant AS participant_c ON pc.participantId=participant_c.id "
-        ."INNER JOIN publication AS pc ON participant_c.`key`=participant_e.`key` "
-        ."INNER JOIN participant AS participant_e ON participant_e.id=publication.participantId "
-        ."INNER JOIN participant AS app ON app.id=certificate.appId "
-        ."INNER JOIN citizen c ON pc.id=c.id "
-        ."WHERE e.publicationId=$id ORDER BY pe.published DESC";
+        ."INNER JOIN certificate AS e ON e.id=pe.id AND e.type='endorse' AND e.latest=1 "
+        ."INNER JOIN publication AS publication_bob ON e.publicationId=publication.id "
+        ."INNER JOIN bob AS bob.id=publication_bob.id "
+        ."INNER JOIN participant AS app ON app.id=bob.appId " 
+        ."WHERE pe.participantId=$alice_id ORDER BY pe.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 if (!$result)
   die("{\"error\":\"$mysqli->error\"}");
