@@ -33,6 +33,11 @@ $query = "SELECT publication.id, "
         ."INNER JOIN participant ON participant.id = publication.participantId "
         ."INNER JOIN participant AS app ON app.id = citizen.appId "
         ."WHERE $condition";
+
+
+$query_copy = $query;
+
+
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $citizen = $result->fetch_assoc() or die("{\"error\":\"citizen not found: $condition\"}");
 $result->free();
@@ -100,5 +105,6 @@ $mysqli->close();
 $answer = array();
 $answer['citizen'] = $citizen;
 $answer['endorsements'] = $endorsements;
+$answer['query'] = $query_copy;
 die(json_encode($answer, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
