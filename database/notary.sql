@@ -11,7 +11,7 @@ CREATE TABLE `area` (
 
 CREATE TABLE `citizen` (
   `id` int(11) NOT NULL,
-  `appKey` blob NOT NULL,
+  `appId` int(11) NOT NULL,
   `appSignature` blob NOT NULL,
   `givenNames` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `familyName` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE `citizen` (
 
 CREATE TABLE `certificate` (
   `id` int(11) NOT NULL,
-  `appKey` blob NOT NULL,
+  `appId` int(11) NOT NULL,
   `appSignature` blob NOT NULL,
   `type` enum('endorse', 'report', 'update', 'transfer', 'lost', 'sign') NOT NULL,
   `publicationId` int(11) NOT NULL,
@@ -58,7 +58,7 @@ CREATE TABLE `proposal` (
 
 CREATE TABLE `participation` (
   `id` int(11) NOT NULL,
-  `appKey` blob NOT NULL,
+  `appId` int(11) NOT NULL,
   `appSignature` blob NOT NULL,
   `referendum` blob NOT NULL,
   `encryptedVote` blob NOT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE `participation` (
 
 CREATE TABLE `vote` (
   `id` int(11) NOT NULL,
-  `appKey` blob NOT NULL,
+  `appId` int(11) NOT NULL,
   `appSignature` blob NOT NULL,
   `referendum` blob NOT NULL,
   `number` int(11) NOT NULL,
@@ -91,20 +91,24 @@ ALTER TABLE `area`
   ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `citizen`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `appId` (`appId`);
 
 ALTER TABLE `certificate`
   ADD PRIMARY KEY (`id`),
   ADD KEY `type` (`type`),
-  ADD KEY `publicationId` (`publicationId`);
+  ADD KEY `publicationId` (`publicationId`),
+  ADD KEY `appId` (`appId`);
 
 ALTER TABLE `participation`
   ADD PRIMARY KEY `id`,
-  ADD KEY `referendum` (`referendum`);
+  ADD KEY `referendum` (`referendum`),
+  ADD KEY `appId` (`appId`);
 
 ALTER TABLE `vote`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `referendum` (`referendum`,`ballot`) USING HASH;
+  ADD UNIQUE KEY `referendum` (`referendum`,`ballot`) USING HASH,
+  ADD KEY `appId` (`appId`);
 
 ALTER TABLE `vote`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
