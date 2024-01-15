@@ -69,7 +69,7 @@ $signature = sanitize_field($publication->signature, 'base64', 'signature');
 if (isset($publication->blindKey))
   $blindKey = sanitize_field($publication->blindKey, 'base64', 'signature');
 if (isset($publication->encryptedVote))
-  $encryptedVote = sanitize_field($publication->encryptedVote, 'base64', 'signature');
+  $encrypted_vote = sanitize_field($publication->encryptedVote, 'base64', 'signature');
 
 # validate from json-schema
 $schema_file = file_get_contents($schema);
@@ -232,25 +232,36 @@ if ($type === 'citizen') {
   $description = $mysqli->escape_string($publication->description);
   $deadline = sanitize_field($publication->deadline, 'positive_int', 'deadline');
   $trust = sanitize_field($publication->trust, 'positive_int', 'trust');
-  $query = "INSERT INTO proposal(id, area, title, description, question, answers, secret, deadline, trust, website, participants, corpus) "
-          ."VALUES($id, FROM_BASE64('$area=='), \"$title\", \"$description\", "
-          ."\"$question\", \"$answers\", $secret, FROM_UNIXTIME($deadline), $trust, \"$website\", 0, 0)";
+  $result = $mysqli->query("SELECT id FROM publication WHERE `signature`=FROM_BASE64('$area==') AND `type`='area'") or error($mysqli->error);
+  $area_publication = $result->fetch_assoc();
+  $result->free();
+  if (!$area_publication)
+    die("could not find area");
+  $area_id = $area_publication['id'];
+  $query = "INSERT INTO proposal(id, areaId, title, description, question, answers, secret, deadline, trust, website, participants, corpus) "
+          ."VALUES($id, $area_id, \"$title\", \"$description\", \"$question\", \"$answers\", $secret, FROM_UNIXTIME($deadline), $trust, \"$website\", 0, 0)";
 } elseif ($type === 'participation') {
   $participation =&$publication;
-  list($appKey, $app_signature) = check_app($participation);
-  $query = "INSERT INTO participation(id, appKey, appSignature, referendum, encryptedVote) "
-          ."VALUES($id, FROM_BASE64('$appKey=='), FROM_BASE64('$app_signature=='), FROM_BASE64('$participation->referendum=='), FROM_BASE64('$encryptedVote'))";
+  list($app_id, $app_signature) = check_app($participation);
+  $query = "INSERT INTO participation(id, appId, appSignature, referendum, encryptedVote) "
+          ."VALUES($id, $app_id, FROM_BASE64('$app_signature=='), FROM_BASE64('$participation->referendum=='), FROM_BASE64('$encrypted_vote'))";
 } elseif ($type === 'vote') {
   $vote = &$publication;
-  list($appKey, $app_signature) = check_app($vote, true);
+  list($app_id, $app_signature) = check_app($vote, true);
   $referendum = sanitize_field($vote->referendum, 'base64', 'referendum');
   $number = sanitize_field($vote->number, 'positive_int', 'number');
   $ballot = sanitize_field($vote->ballot, 'base64', 'ballot');
   $answer = $mysqli->escape_string($vote->answer);
-  $query = "INSERT INTO vote(id, appKey, appSignature, referendum, number, ballot, answer) VALUES($id, "
-          ."FROM_BASE64('$appKey=='), "
+  $result = $mysqli->query("SELECT id FROM publication WHERE `signature`=FROM_BASE64('$referendum==') AND `type`='proposal')") or error($mysqli->error);
+  $referendum_publication = $result->fetch_assoc();
+  $result->free();
+  if (!$referendum_publication)
+    error("referendum not found");
+  $referendum_id = $referendum_publication['id'];
+  $query = "INSERT INTO vote(id, appId, appSignature, referendumId, number, ballot, answer) VALUES($id, "
+          ."$app_id, "
           ."FROM_BASE64('$app_signature=='), "
-          ."FROM_BASE64('$referendum=='), "
+          ."$referendum_id, "
           ."$number, "
           ."FROM_BASE64('$ballot'), "
           ."\"$answer\") "
@@ -290,11 +301,7 @@ $mysqli->query($query) or error($mysqli->error);
 if ($type === 'proposal')
   update_corpus($mysqli, $id);
 if ($type === 'vote') {
-  $query = "SELECT id FROM publication WHERE signature=FROM_BASE64('$referendum==')";
-  $i = $mysqli->query($query) or error($mysqli->error);
-  $j = $i->fetch_assoc();
-  $id = intval($j['id']);
-  $query = "INSERT INTO results(referendum, answer, `count`) VALUES($id, \"$answer\", 1) "
+  $query = "INSERT INTO results(referendum, answer, `count`) VALUES($referendum_id, \"$answer\", 1) "
           ."ON DUPLICATE KEY UPDATE `count`=`count`+1";
   $mysqli->query($query) or error($mysqli->error);
   $query = "UPDATE proposal SET participants=participants+1 WHERE id=$id";
