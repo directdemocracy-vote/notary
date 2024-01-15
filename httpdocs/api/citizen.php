@@ -57,6 +57,7 @@ $query = "SELECT bob.id, "
         ."INNER JOIN certificate AS e ON e.id=pe.id AND e.type='endorse' AND e.latest=1 "
         ."INNER JOIN publication AS publication_bob ON publication_bob.id=e.publicationId "
         ."INNER JOIN citizen AS bob ON bob.id=publication_bob.id "
+        ."INNER JOIN participant AS participant_bob ON participant_bob.id=publication_bob.participantId "
         ."INNER JOIN participant AS app ON app.id=bob.appId " 
         ."WHERE pe.type='certificate' AND pe.participantId=$alice_id ORDER BY pe.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
