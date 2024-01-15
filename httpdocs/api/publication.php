@@ -40,11 +40,14 @@ $type = $publication['type'];
 unset($publication['type']);
 if ($type === 'citizen') {
   $query = "SELECT "
-          ."REPLACE(REPLACE(TO_BASE64(appKey), '\\n', ''), '=', '') AS appKey, "
+          ."REPLACE(REPLACE(TO_BASE64(app.`key`), '\\n', ''), '=', '') AS appKey, "
           ."REPLACE(REPLACE(TO_BASE64(appSignature), '\\n', ''), '=', '') AS appSignature, "
           ."givenNames, familyName, "
           ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(picture), '\\n', '')) AS picture, "
-          ."ST_Y(home) AS latitude, ST_X(home) AS longitude FROM citizen WHERE id=$publication_id";
+          ."ST_Y(home) AS latitude, ST_X(home) AS longitude "
+          ."FROM citizen "
+          ."INNER JOIN participant AS app WHERE app.id=citizen.appId"
+          ."WHERE citizen.id=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $citizen = $result->fetch_assoc();
   $result->free();
