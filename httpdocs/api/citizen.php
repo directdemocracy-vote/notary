@@ -11,7 +11,7 @@ if (isset($_POST['signature'])) {
   $condition = "publication.signature = FROM_BASE64('$signature==')";
 } elseif (isset($_POST['key'])) {
   $key = sanitize_field($_POST['key'], 'base64', 'key');
-  $condition = "publication.`key`=FROM_BASE64('$key==')";
+  $condition = "participant.`key`=FROM_BASE64('$key==')";
 } elseif (isset($_POST['fingerprint'])) {
   $fingerprint = sanitize_field($_POST['fingerprint'], 'hex', 'fingerprint');
   $condition = "publication.signatureSHA1 = UNHEX('$fingerprint')";
