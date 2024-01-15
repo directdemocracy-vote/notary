@@ -39,7 +39,7 @@ $query .= ", publication.`version`, publication.`type`, "
          ."REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature, "
          ."UNIX_TIMESTAMP(publication.published) AS published "
          ."FROM citizen "
-         ."INNER JOIN publication ON publication.id = citizen.id"
+         ."INNER JOIN publication ON publication.id = citizen.id "
          ."INNER JOIN participant ON participant.id=publication.participantId";
 if ($key)
   $query .= " INNER JOIN certificate ON certificate.publication = publication.signature AND certificate.type = 'endorse' AND certificate.latest = 1"
