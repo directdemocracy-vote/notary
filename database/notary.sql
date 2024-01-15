@@ -24,7 +24,7 @@ CREATE TABLE `certificate` (
   `appKey` blob NOT NULL,
   `appSignature` blob NOT NULL,
   `type` enum('endorse', 'report', 'update', 'transfer', 'lost', 'sign') NOT NULL,
-  `publication` blob NOT NULL,
+  `publicationId` int(11) NOT NULL,
   `comment` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
   `message` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
   `latest` tinyint(1) NOT NULL
@@ -96,7 +96,7 @@ ALTER TABLE `citizen`
 ALTER TABLE `certificate`
   ADD PRIMARY KEY (`id`),
   ADD KEY `type` (`type`),
-  ADD KEY `publication` (`publication`);
+  ADD KEY `publicationId` (`publicationId`);
 
 ALTER TABLE `participation`
   ADD PRIMARY KEY `id`,
