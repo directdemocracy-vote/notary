@@ -38,7 +38,7 @@ $query = "SELECT proposal.id, "
         ."LEFT JOIN publication AS pa ON pa.signature = proposal.area "
         ."LEFT JOIN area ON area.id = pa.id "
         ."LEFT JOIN participant ON participant.`key` = publication.`key` AND participant.type='judge' "
-        ."LEFT JOIN webservice ON webservice.id=participant.id "
+        ."LEFT JOIN webservice ON webservice.participantId=participant.id "
         ."WHERE $condition";
 
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
