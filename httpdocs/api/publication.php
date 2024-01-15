@@ -23,7 +23,7 @@ $query = "SELECT publication.id, CONCAT('https://directdemocracy.vote/json-schem
 if (isset($signature))
   $query .= "signature = FROM_BASE64('$signature==')";
 elseif (isset($key))
-  $query .= "`key` = FROM_BASE64('$key==') AND `type`='citizen'";
+  $query .= "participant.`key` = FROM_BASE64('$key==') AND publication.`type`='citizen'";
 elseif (isset($fingerprint))
   $query .= "signatureSHA1 = UNHEX('$fingerprint')";
 else
