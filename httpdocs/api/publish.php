@@ -174,21 +174,22 @@ if ($type === 'citizen') {
   $query = "SELECT id, `type`, REPLACE(REPLACE(TO_BASE64(signature), '\\n', ''), '=', '') AS signature FROM publication "
           ."WHERE signature = FROM_BASE64('$p==')";
   $result = $mysqli->query($query) or error($mysqli->error);
-  $commited = $result->fetch_assoc();
+  $committed = $result->fetch_assoc();
   $result->free();
-  if (!$commited)
-    error("commited publication not found: $publication");
-  if ($commited['signature'] != $p)
-    error("commited publication signature mismatch.");
+  if (!$committed)
+    error("committed publication not found: $publication");
+  if ($committed['signature'] != $p)
+    error("committed publication signature mismatch.");
+  $publicationId = intval($committed['id']);
   # mark other certificates on the same publication by the same participant as not the latest
   $mysqli->query("UPDATE certificate INNER JOIN publication ON publication.id = certificate.id"
                 ." SET certificate.latest = 0"
-                ." WHERE certificate.publication = FROM_BASE64('$p==')"
+                ." WHERE certificate.publicationId = $publicationId"
                 ." AND publication.`key` = FROM_BASE64('$key==')") or error($mysli->error);
-  if ($commited['type'] == 'proposal') {  # signing a petition
+  if ($committed['type'] == 'proposal') {  # signing a petition
     # increment the number of participants in a petition
-    $commited_id = $commited['id'];
-    $query = "UPDATE proposal SET participants=participants+1 WHERE proposal.id=$commited_id AND proposal.`secret`=0";
+    $committed_id = $committed['id'];
+    $query = "UPDATE proposal SET participants=participants+1 WHERE proposal.id=$committed_id AND proposal.`secret`=0";
     $mysqli->query($query) or error($msqli->error);
   }
   $ctype = $mysqli->escape_string($certificate->type);
@@ -201,8 +202,8 @@ if ($type === 'citizen') {
     $appFields = '';
     $appValues = '';
   }
-  $query = "INSERT INTO certificate(id,$appFields `type`, `message`, comment, publication, latest) "
-          ."VALUES($id,$appValues \"$ctype\", \"$message\", \"$comment\", FROM_BASE64('$p=='), 1)";
+  $query = "INSERT INTO certificate(id,$appFields `type`, `message`, comment, publication, publicationId, latest) "
+          ."VALUES($id, $appValues \"$ctype\", \"$message\", \"$comment\", FROM_BASE64('$p=='), $publicationId, 1)";
 } elseif ($type === 'proposal') {
   $proposal =&$publication;
   if (!isset($proposal->website))  # optional
