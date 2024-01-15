@@ -20,7 +20,7 @@ $judge = isset($_GET["judge"]) ? sanitize_field($_GET["judge"], "url", "judge") 
 
 $key = '';
 if ($judge) {
-  $result = $mysqli->query("SELECT REPLACE(REPLACE(TO_BASE64(`key`), '\\n', ''), '=', '') AS `key` FROM webservice WHERE `type`='judge' AND url='$judge'") or error($mysqli->error);
+  $result = $mysqli->query("SELECT REPLACE(REPLACE(TO_BASE64(`key`), '\\n', ''), '=', '') AS `key` FROM participant INNER JOIN webservice ON webservice.id=participant.id WHERE participant.`type`='judge' AND webservice.url='$judge'") or error($mysqli->error);
   if ($j = $result->fetch_assoc())
     $key = $j['key'];
   $result->free();
