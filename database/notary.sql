@@ -35,9 +35,9 @@ CREATE TABLE `publication` (
   `version` smallint(6) NOT NULL,
   `type` enum('citizen','certificate','area','proposal','participation','vote') NOT NULL,
   `published` datetime NOT NULL,
-  `signature` blob NOT NULL COMMENT 'signature of the publication by the author',
-  `key` blob NOT NULL COMMENT 'public key of author'
+  `authorId` int(11) not NULL COMMENT 'participant id of the author',
   `signatureSHA1` binary(20) GENERATED ALWAYS AS (unhex(sha(`signature`))) STORED,
+  `signature` blob NOT NULL COMMENT 'signature of the publication by the author'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `proposal` (
@@ -56,6 +56,12 @@ CREATE TABLE `proposal` (
   `results` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE `participant` (
+  `id` int(11) NOT NULL,
+  `type` enum('app', 'citizen', 'judge', 'notary', 'station') NOT NULL,
+  `key` blob NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  
 CREATE TABLE `participation` (
   `id` int(11) NOT NULL,
   `appId` int(11) NOT NULL,
@@ -82,8 +88,6 @@ CREATE TABLE `results` (
 
 CREATE TABLE `webservice` (
   `id` int(11) NOT NULL,
-  `type` enum('app', 'judge', 'notary', 'station') NOT NULL,
-  `key` blob NOT NULL,
   `url` varchar(2048) CHARACTER SET ascii COLLATE ascii_bin NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -116,7 +120,7 @@ ALTER TABLE `vote`
 ALTER TABLE `publication`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `signatureSHA1` (`signatureSHA1`),
-  ADD KEY `key` (`key`);
+  ADD KEY `authorId` (`authorId`);
 
 ALTER TABLE `proposal`
   ADD PRIMARY KEY (`id`);
@@ -125,10 +129,7 @@ ALTER TABLE `results`
   ADD UNIQUE KEY `referendum` (`referendum`,`answer`) USING HASH;
 
 ALTER TABLE `webservice`
-  ADD PRIMARY KEY (`id`);
-
-ALTER TABLE `webservice`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  ADD KEY `id` (`id`);
 
 ALTER TABLE `area`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
