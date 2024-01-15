@@ -42,7 +42,7 @@ settype($citizen['published'], 'int');
 settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
 $query = "SELECT pc.id, "
-        ."REPLACE(REPLACE(TO_BASE64(participant.`key`), '\\n', ''), '=', '') AS `key`, "
+        ."REPLACE(REPLACE(TO_BASE64(participant_e.`key`), '\\n', ''), '=', '') AS `key`, "
         ."REPLACE(REPLACE(TO_BASE64(pc.signature), '\\n', ''), '=', '') AS signature, "
         ."REPLACE(REPLACE(TO_BASE64(app.key), '\\n', ''), '=', '') AS appKey, "
         ."UNIX_TIMESTAMP(pe.published) AS published, "
