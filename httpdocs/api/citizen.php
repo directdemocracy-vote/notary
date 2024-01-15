@@ -42,9 +42,9 @@ settype($citizen['published'], 'int');
 settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
 $query = "SELECT pc.id, "
-        ."REPLACE(REPLACE(TO_BASE64(pc.`key`), '\\n', ''), '=', '') AS `key`, "
+        ."REPLACE(REPLACE(TO_BASE64(participant.`key`), '\\n', ''), '=', '') AS `key`, "
         ."REPLACE(REPLACE(TO_BASE64(pc.signature), '\\n', ''), '=', '') AS signature, "
-        ."REPLACE(REPLACE(TO_BASE64(c.appKey), '\\n', ''), '=', '') AS appKey, "
+        ."REPLACE(REPLACE(TO_BASE64(app.key), '\\n', ''), '=', '') AS appKey, "
         ."UNIX_TIMESTAMP(pe.published) AS published, "
         ."c.familyName, c.givenNames, "
         ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(c.picture), '\\n', '')) AS picture, "
@@ -52,6 +52,8 @@ $query = "SELECT pc.id, "
         ."FROM publication pe "
         ."INNER JOIN certificate e ON e.id=pe.id AND e.type='endorse' AND e.latest=1 "
         ."INNER JOIN publication pc ON pc.`key`=pe.`key` "
+        ."INNER JOIN participant ON participant.id=publication.participantId "
+        ."INNER JOIN participant AS app ON app.id=certificate.appId "
         ."INNER JOIN citizen c ON pc.id=c.id "
         ."WHERE e.publicationId=$id ORDER BY pe.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
