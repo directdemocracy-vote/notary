@@ -11,7 +11,7 @@ if (isset($_POST['judge']))
 else
   $judge = "https://judge.directdemocracy.vote";
 
-$query = "SELECT REPLACE(REPLACE(TO_BASE64(`key`), '\\n', ''), '=', '') AS `key` FROM participant INNER JOIN webservice ON webservice.id=participant.id WHERE participant.`type`='judge' AND webservice.url=\"$judge\"";
+$query = "SELECT id, REPLACE(REPLACE(TO_BASE64(`key`), '\\n', ''), '=', '') AS `key` FROM participant INNER JOIN webservice ON webservice.participantId=participant.id WHERE participant.`type`='judge' AND webservice.url=\"$judge\"";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $webservice = $result->fetch_assoc();
 $result->free();
@@ -19,19 +19,20 @@ if (!$webservice) {
   $file = file_get_contents("$judge/api/key.php");
   $j = json_decode($file);
   $judge_key = sanitize_field($j->key, "base64", "judge_key");
-  $mysqli->query("INSERT INTO webservice(`type`, `key`, url) VALUES('judge', FROM_BASE64('$judge_key=='), '$judge')") or die($mysqli->error);
+  $mysqli->query("INSERT INTO participant(`type`, `key`) VALUE('judge', FROM_BASE64('$judge_key=='))";
+  $judge_id = $mysqli->insert_id;
+  $mysqli->query("INSERT INTO webservice(participantId, url) VALUES($participantId, '$judge')") or die($mysqli->error);
 } else
-  $judge_key = $webservice['key'];
-
+  $judge_id = intval($webservice['id']);
 $query = "SELECT "
         ."UNIX_TIMESTAMP(certificate_p.published) AS published, "
         ."certificate.type, certificate.latest, citizen.familyName, citizen.givenNames, "
         ."REPLACE(REPLACE(TO_BASE64(citizen_p.signature), '\\n', ''), '=', '') AS signature "
         ."FROM publication AS certificate_p "
         ."INNER JOIN certificate ON certificate.id = certificate_p.id "
-        ."INNER JOIN publication AS citizen_p ON citizen_p.signature = certificate.publication "
+        ."INNER JOIN publication AS citizen_p ON citizen_p.id = certificate.publicationId "
         ."INNER JOIN citizen ON citizen.id = citizen_p.id "
-        ."WHERE certificate_p.`key` = FROM_BASE64('$judge_key==') AND (certificate.type='endorse' OR certificate.type='report') "
+        ."WHERE certificate_p.participantId = $judge_id AND (certificate.type='endorse' OR certificate.type='report') "
         ."ORDER BY certificate_p.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $endorsements = array();
