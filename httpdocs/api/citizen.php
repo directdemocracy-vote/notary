@@ -56,6 +56,7 @@ $query = "SELECT bob.id, "
         ."FROM publication pe "
         ."INNER JOIN certificate AS e ON e.id=pe.id AND e.type='endorse' AND e.latest=1 "
         ."INNER JOIN publication AS publication_bob ON e.publicationId=publication.id "
+        ."INNER JOIN participant AS participant_bob ON participant_bob.id=publication_bob.participantId "
         ."INNER JOIN citizen AS bob ON bob.id=publication_bob.id "
         ."INNER JOIN participant AS app ON app.id=bob.appId " 
         ."WHERE pe.participantId=$alice_id ORDER BY pe.published DESC";
