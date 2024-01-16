@@ -139,5 +139,6 @@ $mysqli->close();
 $answer = array();
 $answer['citizen'] = $citizen;
 $answer['endorsements'] = $endorsements;
+$answer['query'] = $query; # FIXME
 die(json_encode($answer, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
