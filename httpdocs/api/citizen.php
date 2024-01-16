@@ -124,8 +124,16 @@ while($e = $result->fetch_assoc()) {
       break;
     }
   }
-  if (!$found)
-    $endorsements[] = $e;
+
+
+
+
+  
+  # if (!$found)
+  #  $endorsements[] = $e;
+
+
+  
 }
 $mysqli->close();
 $answer = array();
