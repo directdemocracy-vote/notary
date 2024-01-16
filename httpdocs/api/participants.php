@@ -28,7 +28,7 @@ if (isset($_GET['corpus']))
 else
   $corpus = false;
 
-$query = "SELECT title, secret FROM proposal INNER JOIN publication ON publication.id=proposal.id AND $condition";
+$query = "SELECT title, secret FROM proposal INNER JOIN publication ON publication.id=proposal.publication AND $condition";
 $result = $mysqli->query($query) or error($mysqli->error);
 $proposal = $result->fetch_assoc();
 $result->free();
@@ -44,25 +44,25 @@ $query = "SELECT REPLACE(REPLACE(TO_BASE64(pc.signature), '\\n', ''), '=', '') A
 if (!$corpus)
   $query .= ", UNIX_TIMESTAMP(ps.published) AS published";
 $query .= " FROM citizen"
-         ." INNER JOIN publication AS pc ON pc.id=citizen.id"
+         ." INNER JOIN publication AS pc ON pc.id=citizen.publication"
          ." INNER JOIN publication AS pp ON $join1_condition"
-         ." INNER JOIN proposal ON proposal.id=pp.id";
+         ." INNER JOIN proposal ON proposal.publication=pp.id";
 if ($corpus)
   $query .= " INNER JOIN participant AS judge ON judge.`type`='judge' AND judge.`key`=pp.`key`"
          ." INNER JOIN publication AS pe ON pe.`key`=judge.`key`"
-         ." INNER JOIN certificate ON certificate.id=pe.id AND certificate.latest=1 AND certificate.publication=pc.signature"
+         ." INNER JOIN certificate ON certificate.publication=pe.id AND certificate.latest=1 AND certificate.publication=pc.signature"
          ." INNER JOIN publication AS pa ON proposal.area=pa.`signature`"
-         ." INNER JOIN area ON area.id=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home)))"
+         ." INNER JOIN area ON area.publication=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home)))"
          ." WHERE certificate.type='endorse' OR (certificate.type='report' AND"
          ." EXISTS(SELECT pep.id FROM publication AS pep"
-         ." INNER JOIN certificate AS e ON e.id=pep.id AND $join2_condition"
+         ." INNER JOIN certificate AS e ON e.publication=pep.id AND $join2_condition"
          ." WHERE pep.`key`=pc.`key`))";
 elseif ($secret === 0)
   $query .= " INNER JOIN certificate AS signature ON $join3_condition"
-           ." INNER JOIN publication AS ps ON ps.id=signature.id AND ps.`key`=pc.`key`";
+           ." INNER JOIN publication AS ps ON ps.id=signature.publication AND ps.`key`=pc.`key`";
 else
   $query .= " INNER JOIN participation ON $join4_condition"
-           ." INNER JOIN publication AS ps ON ps.id=participation.id AND ps.`key`=pc.`key`";
+           ." INNER JOIN publication AS ps ON ps.id=participation.publication AND ps.`key`=pc.`key`";
 $query .= " ORDER BY citizen.familyName, citizen.givenNames";
 
 $result = $mysqli->query($query) or error($mysqli->error);
@@ -76,7 +76,7 @@ $result->free();
 if ($corpus) {
   $count = sizeof($participants);
   $query = "UPDATE proposal "
-         ." INNER JOIN publication ON publication.id=proposal.id AND $condition"
+         ." INNER JOIN publication ON publication.id=proposal.publication AND $condition"
          ." SET corpus=$count";
   $mysqli->query($query) or error($mysqli->error);
 }
