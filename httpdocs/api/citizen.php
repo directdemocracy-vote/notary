@@ -114,12 +114,11 @@ while($e = $result->fetch_assoc()) {
     }
   }
   if (!$found)
-    $endorsement[] = $e;
+    $endorsements[] = $e;
 }
 $mysqli->close();
 $answer = array();
 $answer['citizen'] = $citizen;
 $answer['endorsements'] = $endorsements;
-$answer['query'] = $query_copy;
 die(json_encode($answer, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
