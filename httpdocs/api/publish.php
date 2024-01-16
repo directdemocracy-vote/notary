@@ -258,7 +258,7 @@ if ($type === 'citizen') {
   if (!$referendum_publication)
     error("referendum not found");
   $referendum_id = $referendum_publication['id'];
-  $query = "INSERT INTO vote(publication, app, appSignature, referendumId, number, ballot, answer) VALUES($id, "
+  $query = "INSERT INTO vote(publication, app, appSignature, referendum, number, ballot, answer) VALUES($id, "
           ."$app, "
           ."FROM_BASE64('$app_signature=='), "
           ."$referendum_id, "
