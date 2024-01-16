@@ -19,7 +19,7 @@ else
 
 $condition = (isset($signature)) ? "publication.signature=FROM_BASE64('$signature==')" : "publication.signatureSHA1=UNHEX('$fingerprint')";
 
-$query = "SELECT proposal.id, "
+$query = "SELECT publication.id, "
         ."CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json') AS `schema`, "
         ."REPLACE(REPLACE(TO_BASE64(publication.`key`), '\\n', ''), '=', '') AS `key`, "
         ."REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature, "
@@ -34,9 +34,9 @@ $query = "SELECT proposal.id, "
         ."area.name AS areaName, "
         ."ST_AsGeoJSON(area.polygons) AS areaPolygons "
         ."FROM proposal "
-        ."LEFT JOIN publication ON publication.id = proposal.id "
+        ."LEFT JOIN publication ON publication.id = proposal.publication "
         ."LEFT JOIN publication AS pa ON pa.signature = proposal.area "
-        ."LEFT JOIN area ON area.id = pa.id "
+        ."LEFT JOIN area ON area.publication = pa.id "
         ."LEFT JOIN participant ON participant.`key` = publication.`key` AND participant.type='judge' "
         ."LEFT JOIN webservice ON webservice.participant=participant.id "
         ."WHERE $condition";
