@@ -56,7 +56,7 @@ if ($type === 'citizen') {
     $certificate_ids[] = intval($row['id']);
   $certificates = implode(',', $certificate_ids);
 
-  # FIXME: we should also delete the referendum participations, registrations, ballots and votes
+  # FIXME: we should also delete the referendum participations and votes
 
   if ($certificates !== '') {
     $mysqli->query("DELETE FROM certificate WHERE id IN ($certificates)") or die($mysqli->error);
