@@ -30,7 +30,7 @@ $query = "SELECT publication.id, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude "
         ."FROM publication "
         ."INNER JOIN citizen ON publication.id = citizen.id "
-        ."INNER JOIN participant ON participant.id = publication.participantId "
+        ."INNER JOIN participant ON participant.id = publication.participant "
         ."INNER JOIN participant AS app ON app.id = citizen.appId "
         ."WHERE $condition";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
@@ -57,9 +57,9 @@ $query = "SELECT bob.id, "
         ."INNER JOIN certificate AS e ON e.id=pe.id AND e.type='endorse' AND e.latest=1 "
         ."INNER JOIN publication AS publication_bob ON publication_bob.id=e.publicationId "
         ."INNER JOIN citizen AS bob ON bob.id=publication_bob.id "
-        ."INNER JOIN participant AS participant_bob ON participant_bob.id=publication_bob.participantId "
+        ."INNER JOIN participant AS participant_bob ON participant_bob.id=publication_bob.participant "
         ."INNER JOIN participant AS app ON app.id=bob.appId " 
-        ."WHERE pe.type='certificate' AND pe.participantId=$alice_id ORDER BY pe.published DESC";
+        ."WHERE pe.type='certificate' AND pe.participant=$alice_id ORDER BY pe.published DESC";
 #                                                          ^^^^^^^^^ that is wrong
 $query_copy = $query;
 
