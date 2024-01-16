@@ -18,7 +18,7 @@ $query = "SELECT publication.id, CONCAT('https://directdemocracy.vote/json-schem
         ."REPLACE(REPLACE(TO_BASE64(signature), '\\n', ''), '=', '') AS signature, "
         ."UNIX_TIMESTAMP(published) AS published "
         ."FROM publication "
-        ."INNER JOIN participant ON participant.id=publication.participantId "
+        ."INNER JOIN participant ON participant.id=publication.participant "
         ."WHERE published <= NOW() AND ";
 if (isset($signature))
   $query .= "signature = FROM_BASE64('$signature==')";
