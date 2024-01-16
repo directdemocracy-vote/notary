@@ -57,11 +57,11 @@ $bob_query = "SELECT publication_bob.id, "
             ."e.type, e.comment, "
             ."UNIX_TIMESTAMP(pe.published) AS certificatePublished "
             ."FROM publication pe "
-            ."INNER JOIN certificate AS e ON e.publication=pe.id AND (e.type='endorse' OR (e.type='report' AND e.comment LIKE \"revoked+%\")) AND e.latest=1 "
+            ."INNER JOIN certificate AS e ON e.publication=pe.id AND (e.type='endorse' OR (e.type='report' AND e.comment LIKE \"revoked+%\")) AND e.latest=1 ";
 $query = $bob_query
         ."INNER JOIN publication AS publication_bob ON publication_bob.id=e.certifiedPublication "
         ."INNER JOIN citizen AS bob ON bob.publication=publication_bob.id "
-        ."INNER JOIN participant AS participant_bob ON participant_bob.id=publication_bob.participant ";
+        ."INNER JOIN participant AS participant_bob ON participant_bob.id=publication_bob.participant "
         ."INNER JOIN participant AS app ON app.id=bob.app "
         ."WHERE pe.participant=$alice_id ORDER BY pe.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
