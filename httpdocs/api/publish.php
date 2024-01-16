@@ -146,7 +146,7 @@ else {
   $participant_id = $mysqli->insert_id;
 }
 $version = intval(explode('/', $schema)[4]);
-$query = "INSERT IGNORE INTO publication(`version`, `type`, participantId, signature, published) "
+$query = "INSERT IGNORE INTO publication(`version`, `type`, participant, signature, published) "
         ."VALUES($version, '$type', $participant_id, FROM_BASE64('$signature=='), FROM_UNIXTIME($published))";
 $mysqli->query($query) or error($mysqli->error);
 if ($mysqli->affected_rows === 0)
@@ -189,7 +189,7 @@ if ($type === 'citizen') {
   $mysqli->query("UPDATE certificate INNER JOIN publication ON publication.id = certificate.id"
                 ." SET certificate.latest = 0"
                 ." WHERE certificate.publicationId = $publication_id"
-                ." AND publication.participantId = $participant_id") or error($mysli->error);
+                ." AND publication.participant = $participant_id") or error($mysli->error);
   if ($committed['type'] == 'proposal') {  # signing a petition
     # increment the number of participants in a petition
     $committed_id = $committed['id'];
