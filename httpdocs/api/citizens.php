@@ -20,7 +20,7 @@ $judge = isset($_GET["judge"]) ? sanitize_field($_GET["judge"], "url", "judge") 
 
 $key = '';
 if ($judge) {
-  $result = $mysqli->query("SELECT REPLACE(REPLACE(TO_BASE64(`key`), '\\n', ''), '=', '') AS `key` FROM participant INNER JOIN webservice ON webservice.participantId=participant.id WHERE participant.`type`='judge' AND webservice.url='$judge'") or error($mysqli->error);
+  $result = $mysqli->query("SELECT REPLACE(REPLACE(TO_BASE64(`key`), '\\n', ''), '=', '') AS `key` FROM participant INNER JOIN webservice ON webservice.participant=participant.id WHERE participant.`type`='judge' AND webservice.url='$judge'") or error($mysqli->error);
   if ($j = $result->fetch_assoc())
     $key = $j['key'];
   $result->free();
@@ -40,7 +40,7 @@ $query .= ", publication.`version`, publication.`type`, "
          ."UNIX_TIMESTAMP(publication.published) AS published "
          ."FROM citizen "
          ."INNER JOIN publication ON publication.id = citizen.id "
-         ."INNER JOIN participant ON participant.id=publication.participantId";
+         ."INNER JOIN participant ON participant.id=publication.participant";
 if ($key)
   $query .= " INNER JOIN certificate ON certificate.publication = publication.signature AND certificate.type = 'endorse' AND certificate.latest = 1"
            ." INNER JOIN publication AS pe ON pe.id=certificate.id AND pe.`key` = FROM_BASE64('$key==')";
