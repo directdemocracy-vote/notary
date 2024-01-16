@@ -29,7 +29,7 @@ $query = "SELECT publication.id, "
         ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude "
         ."FROM publication "
-        ."INNER JOIN citizen ON publication.id = citizen.id "
+        ."INNER JOIN citizen ON publication.id = citizen.publication "
         ."INNER JOIN participant ON participant.id = publication.participant "
         ."INNER JOIN participant AS app ON app.id = citizen.appId "
         ."WHERE $condition";
@@ -42,7 +42,7 @@ settype($citizen['published'], 'int');
 settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
 # list all the bobs endorsed by alice
-$query = "SELECT bob.id, "
+$query = "SELECT publication_bob.id, "
         ."REPLACE(REPLACE(TO_BASE64(participant_bob.`key`), '\\n', ''), '=', '') AS `key`, "
         ."REPLACE(REPLACE(TO_BASE64(publication_bob.signature), '\\n', ''), '=', '') AS signature, "
         ."UNIX_TIMESTAMP(publication_bob.published) AS published, "
@@ -54,9 +54,9 @@ $query = "SELECT bob.id, "
         ."REPLACE(REPLACE(TO_BASE64(pe.signature), '\\n', ''), '=', '') AS endorsementSignature, "
         ."UNIX_TIMESTAMP(pe.published) AS endorsementPublished "
         ."FROM publication pe "
-        ."INNER JOIN certificate AS e ON e.id=pe.id AND e.type='endorse' AND e.latest=1 "
+        ."INNER JOIN certificate AS e ON e.publication=pe.id AND e.type='endorse' AND e.latest=1 "
         ."INNER JOIN publication AS publication_bob ON publication_bob.id=e.certifiedPublication "
-        ."INNER JOIN citizen AS bob ON bob.id=publication_bob.id "
+        ."INNER JOIN citizen AS bob ON bob.publication=publication_bob.id "
         ."INNER JOIN participant AS participant_bob ON participant_bob.id=publication_bob.participant "
         ."INNER JOIN participant AS app ON app.id=bob.appId " 
         ."WHERE pe.type='certificate' AND pe.participant=$alice_id ORDER BY pe.published DESC";
@@ -68,7 +68,7 @@ if (!$result)
   die("{\"error\":\"$mysqli->error\"}");
 $endorsements = array();
 while($e = $result->fetch_assoc()) {
-  settype($e['id'], 'int');
+  settype($e['publication'], 'int');
   settype($e['published'], 'int');
   settype($e['latitude'], 'float');
   settype($e['longitude'], 'float');
@@ -79,9 +79,9 @@ $query = "SELECT pc.id, "
         ."UNIX_TIMESTAMP(pe.published) AS published, "
         ."e.type "
         ."FROM publication pe "
-        ."INNER JOIN certificate e ON e.id=pe.id AND e.latest=1 AND (e.type='endorse' OR (e.type='report' and e.comment='revoke')) "
+        ."INNER JOIN certificate e ON e.publication=pe.id AND e.latest=1 AND (e.type='endorse' OR (e.type='report' and e.comment='revoke')) "
         ."INNER JOIN publication pc ON pc.id = e.certifiedPublication "
-        ."INNER JOIN citizen c ON pc.id = c.id "
+        ."INNER JOIN citizen c ON c.publication = pc.id "
         ."WHERE pe.id=$alice_id ORDER BY pe.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 while($e = $result->fetch_assoc()) {
