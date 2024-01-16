@@ -238,7 +238,7 @@ if ($type === 'citizen') {
   if (!$area_publication)
     die("could not find area");
   $area_id = $area_publication['id'];
-  $query = "INSERT INTO proposal(publication, areaId, title, description, question, answers, secret, deadline, trust, website, participants, corpus) "
+  $query = "INSERT INTO proposal(publication, area, title, description, question, answers, secret, deadline, trust, website, participants, corpus) "
           ."VALUES($id, $area_id, \"$title\", \"$description\", \"$question\", \"$answers\", $secret, FROM_UNIXTIME($deadline), $trust, \"$website\", 0, 0)";
 } elseif ($type === 'participation') {
   $participation =&$publication;
