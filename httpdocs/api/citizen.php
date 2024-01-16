@@ -18,7 +18,7 @@ if (isset($_POST['signature'])) {
 } else
   die('{"error":"missing key, signature or fingerprint POST argument"}');
 
-$query = "SELECT publication.id, "
+$query = "SELECT participant.id, "
         ."CONCAT('https://directdemocracy.vote/json-schema/', `version`, '/', publication.`type`, '.schema.json') AS `schema`, "
         ."REPLACE(REPLACE(TO_BASE64(participant.`key`), '\\n', ''), '=', '') AS `key`, "
         ."REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature, "
