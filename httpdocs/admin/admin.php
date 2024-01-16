@@ -51,7 +51,7 @@ if ($results)
 $n = $n_citizen + $n_certificate + $n_proposal + $n_area + $n_participation + $n_vote;
 
 # clean-up obsolete certificates
-query("DELETE FROM certificate WHERE certificate.publicationId NOT IN (SELECT id FROM publication)");
+query("DELETE FROM certificate WHERE certificate.certifiedPublication NOT IN (SELECT id FROM publication)");
 
 # clean-up orphan publications
 $query = <<<EOT
