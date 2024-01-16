@@ -42,7 +42,7 @@ $query = "SELECT CONCAT('https://directdemocracy.vote/json-schema/', p.`version`
         ."REPLACE(REPLACE(TO_BASE64(p.signature), '\\n', ''), '=', '') AS signature, "
         ."UNIX_TIMESTAMP(p.published) AS published, $fields "
         ."FROM $type "
-        ."LEFT JOIN publication AS p ON p.id=$type.id AND $condition WHERE p.id IS NOT NULL";
+        ."LEFT JOIN publication AS p ON p.id=$type.publication AND $condition WHERE p.id IS NOT NULL";
 
 $result = $mysqli->query($query) or error($mysqli->error);
 $publications = array();
