@@ -159,7 +159,7 @@ if ($type === 'citizen') {
   $given_names = $mysqli->escape_string($publication->givenNames);
   $latitude = sanitize_field($citizen->latitude, 'float', 'latitude');
   $longitude = sanitize_field($citizen->longitude, 'float', 'longitude');
-  $query = "INSERT INTO citizen(id, appId, appSignature, familyName, givenNames, picture, home) "
+  $query = "INSERT INTO citizen(publication, appId, appSignature, familyName, givenNames, picture, home) "
           ."VALUES($id, $app_id, FROM_BASE64('$app_signature=='), \"$family_name\", \"$given_names\", "
           ."FROM_BASE64('$citizen_picture'), POINT($longitude, $latitude))";
 } elseif ($type === 'certificate') {
@@ -186,14 +186,14 @@ if ($type === 'citizen') {
     error("committed publication signature mismatch.");
   $publication_id = intval($committed['id']);
   # mark other certificates on the same publication by the same participant as not the latest
-  $mysqli->query("UPDATE certificate INNER JOIN publication ON publication.id = certificate.id"
+  $mysqli->query("UPDATE certificate INNER JOIN publication ON publication.id = certificate.publication"
                 ." SET certificate.latest = 0"
                 ." WHERE certificate.certifiedPublication = $publication_id"
                 ." AND publication.participant = $participant_id") or error($mysli->error);
   if ($committed['type'] == 'proposal') {  # signing a petition
     # increment the number of participants in a petition
     $committed_id = $committed['id'];
-    $query = "UPDATE proposal SET participants=participants+1 WHERE proposal.id=$committed_id AND proposal.`secret`=0";
+    $query = "UPDATE proposal SET participants=participants+1 WHERE proposal.publication=$committed_id AND proposal.`secret`=0";
     $mysqli->query($query) or error($msqli->error);
   }
   $ctype = $mysqli->escape_string($certificate->type);
@@ -206,7 +206,7 @@ if ($type === 'citizen') {
     $app_fields = '';
     $app_values = '';
   }
-  $query = "INSERT INTO certificate(id,$app_fields `type`, `message`, comment, certifiedPublication, latest) "
+  $query = "INSERT INTO certificate(publication,$app_fields `type`, `message`, comment, certifiedPublication, latest) "
           ."VALUES($id,$app_values \"$ctype\", \"$message\", \"$comment\", $publication_id, 1)";
 } elseif ($type === 'proposal') {
   $proposal =&$publication;
@@ -238,12 +238,12 @@ if ($type === 'citizen') {
   if (!$area_publication)
     die("could not find area");
   $area_id = $area_publication['id'];
-  $query = "INSERT INTO proposal(id, areaId, title, description, question, answers, secret, deadline, trust, website, participants, corpus) "
+  $query = "INSERT INTO proposal(publication, areaId, title, description, question, answers, secret, deadline, trust, website, participants, corpus) "
           ."VALUES($id, $area_id, \"$title\", \"$description\", \"$question\", \"$answers\", $secret, FROM_UNIXTIME($deadline), $trust, \"$website\", 0, 0)";
 } elseif ($type === 'participation') {
   $participation =&$publication;
   list($app_id, $app_signature) = check_app($participation);
-  $query = "INSERT INTO participation(id, appId, appSignature, referendum, encryptedVote) "
+  $query = "INSERT INTO participation(publication, appId, appSignature, referendum, encryptedVote) "
           ."VALUES($id, $app_id, FROM_BASE64('$app_signature=='), FROM_BASE64('$participation->referendum=='), FROM_BASE64('$encrypted_vote'))";
 } elseif ($type === 'vote') {
   $vote = &$publication;
@@ -258,7 +258,7 @@ if ($type === 'citizen') {
   if (!$referendum_publication)
     error("referendum not found");
   $referendum_id = $referendum_publication['id'];
-  $query = "INSERT INTO vote(id, appId, appSignature, referendumId, number, ballot, answer) VALUES($id, "
+  $query = "INSERT INTO vote(publication, appId, appSignature, referendumId, number, ballot, answer) VALUES($id, "
           ."$app_id, "
           ."FROM_BASE64('$app_signature=='), "
           ."$referendum_id, "
@@ -294,7 +294,7 @@ if ($type === 'citizen') {
   $polygons .= ')")';
   $name = implode("\n", $publication->name);
   $name = $mysqli->escape_string($name);
-  $query = "INSERT INTO area(id, name, polygons) VALUES($id, \"$name\", $polygons)";
+  $query = "INSERT INTO area(publication, name, polygons) VALUES($id, \"$name\", $polygons)";
 } else
   error("unknown publication type.");
 $mysqli->query($query) or error($mysqli->error);
