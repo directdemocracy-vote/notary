@@ -35,7 +35,7 @@ $results = $mysqli->escape_string($input->results);
 $query = "";
 
 function delete_publication($mysqli, $type) {
-  query("DELETE publication, $type FROM publication INNER JOIN $type ON $type.id=publication.id");
+  query("DELETE publication, $type FROM publication INNER JOIN $type ON $type.publication=publication.id");
   return $mysqli->affected_rows / 2;
 }
 
@@ -56,21 +56,21 @@ query("DELETE FROM certificate WHERE certificate.certifiedPublication NOT IN (SE
 # clean-up orphan publications
 $query = <<<EOT
 DELETE FROM publication WHERE id NOT IN (
-    SELECT id FROM citizen UNION
-    SELECT id FROM certificate UNION
-    SELECT id FROM area UNION
-    SELECT id FROM proposal UNION
-    SELECT id FROM participation UNION
-    SELECT id FROM vote)
+    SELECT publication FROM citizen UNION
+    SELECT publication FROM certificate UNION
+    SELECT publication FROM area UNION
+    SELECT publication FROM proposal UNION
+    SELECT publication FROM participation UNION
+    SELECT publication FROM vote)
 EOT;
 
 query($query);
-query("DELETE FROM citizen WHERE id NOT IN (SELECT id FROM publication)");
-query("DELETE FROM certificate WHERE id NOT IN (SELECT id FROM publication)");
-query("DELETE FROM area WHERE id NOT IN (SELECT id FROM publication)");
-query("DELETE FROM proposal WHERE id NOT IN (SELECT id FROM publication)");
-query("DELETE FROM participation WHERE id NOT IN (SELECT id FROM publication)");
-query("DELETE FROM vote WHERE id NOT IN (SELECT id FROM publication)");
+query("DELETE FROM citizen WHERE publication NOT IN (SELECT id FROM publication)");
+query("DELETE FROM certificate WHERE publication NOT IN (SELECT id FROM publication)");
+query("DELETE FROM area WHERE publication NOT IN (SELECT id FROM publication)");
+query("DELETE FROM proposal WHERE publication NOT IN (SELECT id FROM publication)");
+query("DELETE FROM participation WHERE publication NOT IN (SELECT id FROM publication)");
+query("DELETE FROM vote WHERE publication NOT IN (SELECT id FROM publication)");
 
 $result = query("SELECT MAX(id) AS `max` FROM publication");
 if ($result) {
