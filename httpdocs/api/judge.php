@@ -29,9 +29,9 @@ $query = "SELECT "
         ."certificate.type, certificate.latest, citizen.familyName, citizen.givenNames, "
         ."REPLACE(REPLACE(TO_BASE64(citizen_p.signature), '\\n', ''), '=', '') AS signature "
         ."FROM publication AS certificate_p "
-        ."INNER JOIN certificate ON certificate.id = certificate_p.id "
+        ."INNER JOIN certificate ON certificate.publication = certificate_p.id "
         ."INNER JOIN publication AS citizen_p ON citizen_p.id = certificate.certifiedPublication "
-        ."INNER JOIN citizen ON citizen.id = citizen_p.id "
+        ."INNER JOIN citizen ON citizen.publication = citizen_p.id "
         ."WHERE certificate_p.participant = $judge_id AND (certificate.type='endorse' OR certificate.type='report') "
         ."ORDER BY certificate_p.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
