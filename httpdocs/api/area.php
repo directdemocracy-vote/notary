@@ -16,7 +16,7 @@ if (!$area)
   error("Missing area argument");
 
 $query = "SELECT UNIX_TIMESTAMP(publication.published) AS published FROM area "
-        ."LEFT JOIN publication ON publication.id=area.id "
+        ."LEFT JOIN publication ON publication.id=area.publication "
         ."WHERE publication.`key`='$judge' AND area.name='$area' AND publication.published <= NOW()";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
