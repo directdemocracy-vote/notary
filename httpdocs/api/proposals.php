@@ -52,9 +52,9 @@ if ($search !== '')
   $search = "(title LIKE \"%$search%\" OR description LIKE \"%$search%\") AND ";
 
 $query_common_part = "FROM proposal "
-                    ."LEFT JOIN publication ON publication.id = proposal.id "
+                    ."LEFT JOIN publication ON publication.id = proposal.publication "
                     ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
-                    ."LEFT JOIN area ON area.id = area_p.id "
+                    ."LEFT JOIN area ON area.publication = area_p.id "
                     ."LEFT JOIN participant ON participant.`key` = publication.`key` AND particpant.type='judge' "
                     ."LEFT JOIN webservice ON webservice.participant=participant.id "
                     ."WHERE $secret$open$search"
