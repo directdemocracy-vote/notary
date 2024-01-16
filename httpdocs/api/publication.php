@@ -46,7 +46,7 @@ if ($type === 'citizen') {
           ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(picture), '\\n', '')) AS picture, "
           ."ST_Y(home) AS latitude, ST_X(home) AS longitude "
           ."FROM citizen "
-          ."INNER JOIN participant AS app ON app.id=citizen.appId "
+          ."INNER JOIN participant AS app ON app.id=citizen.app "
           ."WHERE citizen.publication=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $citizen = $result->fetch_assoc();
