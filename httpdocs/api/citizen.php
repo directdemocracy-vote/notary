@@ -54,13 +54,13 @@ $bob_query = "SELECT publication_bob.id, "
             ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(bob.picture), '\\n', '')) AS picture, "
             ."ST_Y(bob.home) AS latitude, ST_X(bob.home) AS longitude, "
             ."REPLACE(REPLACE(TO_BASE64(pe.signature), '\\n', ''), '=', '') AS endorsementSignature, "
-            ."e.type, "
-            ."UNIX_TIMESTAMP(pe.published) AS endorsementPublished "
+            ."e.type, e.comment, "
+            ."UNIX_TIMESTAMP(pe.published) AS certificatePublished "
             ."FROM publication pe "
-            ."INNER JOIN certificate AS e ON e.publication=pe.id AND (e.type='endorse' OR (type='report' AND comment LIKE \"revoked+%\")) AND e.latest=1 "
+            ."INNER JOIN certificate AS e ON e.publication=pe.id AND (e.type='endorse' OR (e.type='report' AND e.comment LIKE \"revoked+%\")) AND e.latest=1 "
             ."INNER JOIN publication AS publication_bob ON publication_bob.id=e.certifiedPublication "
             ."INNER JOIN citizen AS bob ON bob.publication=publication_bob.id "
-            ."INNER JOIN participant AS app ON app.id=bob.app " 
+            ."INNER JOIN participant AS app ON app.id=bob.app "
             ."INNER JOIN participant AS participant_bob ON participant_bob.id=publication_bob.participant ";
 $query = $bob_query
         ."WHERE pe.participant=$alice_id ORDER BY pe.published DESC";
@@ -73,6 +73,14 @@ while($e = $result->fetch_assoc()) {
   settype($e['published'], 'int');
   settype($e['latitude'], 'float');
   settype($e['longitude'], 'float');
+  if ($e['type'] === 'report') {
+    $e['reported'] = $e['certificatePublished'];
+    $e['reportedComment'] = $e['comment'];
+  } else # endorse
+    $e['endorsed'] = $e['certificatePublished'];
+  unset($e['comment']);
+  unset($e['certificatePublished']);
+  unset($e['type']);
   $endorsements[] = $e;
 }
 $result->free();
@@ -84,17 +92,29 @@ while($e = $result->fetch_assoc()) {
   settype($e['published'], 'int');
   settype($e['latitude'], 'float');
   settype($e['longitude'], 'float');
+  if ($e['type'] === 'report') {
+    $e['reportedYou'] = $e['certificatePublished'];
+    $e['reportedYouComment'] = $e['comment'];
+  } else # endorse
+    $e['endorsedYou'] = $e['certificatePublished'];
+  unset($e['comment']);
+  unset($e['certificatePublished']);
+  unset($e['type']);
   $id = $e['id'];
-  $endorse = ($e['type'] === 'endorse');
+  $found = false;
   foreach ($endorsements as &$endorsement) {
     if ($endorsement['id'] === $id) {
-      if ($endorse)
-        $endorsement['endorsedYou'] = $e['published'];
-      else # report/revoke
-        $endorsement['reportedYou'] = $e['published'];
+      $found = true;
+      if ($e['reportedYou']) {
+        $endorsement['reportedYou'] = $e['reportedYou'];
+        $endorsement['reportedYouComment'] = $e['reportedYouComment'];
+      } else # endorsedYou
+        $endorsement['endorsedYou'] = $e['endorsedYou'];
       break;
     }
   }
+  if (!$found)
+    $endorsement[] = $e;
 }
 $mysqli->close();
 $answer = array();
