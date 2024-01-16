@@ -188,7 +188,7 @@ if ($type === 'citizen') {
   # mark other certificates on the same publication by the same participant as not the latest
   $mysqli->query("UPDATE certificate INNER JOIN publication ON publication.id = certificate.id"
                 ." SET certificate.latest = 0"
-                ." WHERE certificate.publicationId = $publication_id"
+                ." WHERE certificate.certifiedPublication = $publication_id"
                 ." AND publication.participant = $participant_id") or error($mysli->error);
   if ($committed['type'] == 'proposal') {  # signing a petition
     # increment the number of participants in a petition
@@ -206,7 +206,7 @@ if ($type === 'citizen') {
     $app_fields = '';
     $app_values = '';
   }
-  $query = "INSERT INTO certificate(id,$app_fields `type`, `message`, comment, publicationId, latest) "
+  $query = "INSERT INTO certificate(id,$app_fields `type`, `message`, comment, certifiedPublication, latest) "
           ."VALUES($id,$app_values \"$ctype\", \"$message\", \"$comment\", $publication_id, 1)";
 } elseif ($type === 'proposal') {
   $proposal =&$publication;
