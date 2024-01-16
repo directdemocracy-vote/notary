@@ -31,7 +31,7 @@ $query = "SELECT publication.id, "
         ."FROM publication "
         ."INNER JOIN citizen ON publication.id = citizen.publication "
         ."INNER JOIN participant ON participant.id = publication.participant "
-        ."INNER JOIN participant AS app ON app.id = citizen.appId "
+        ."INNER JOIN participant AS app ON app.id = citizen.app "
         ."WHERE $condition";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $citizen = $result->fetch_assoc() or die("{\"error\":\"citizen not found: $condition\"}");
@@ -58,7 +58,7 @@ $query = "SELECT publication_bob.id, "
         ."INNER JOIN publication AS publication_bob ON publication_bob.id=e.certifiedPublication "
         ."INNER JOIN citizen AS bob ON bob.publication=publication_bob.id "
         ."INNER JOIN participant AS participant_bob ON participant_bob.id=publication_bob.participant "
-        ."INNER JOIN participant AS app ON app.id=bob.appId " 
+        ."INNER JOIN participant AS app ON app.id=bob.app " 
         ."WHERE pe.type='certificate' AND pe.participant=$alice_id ORDER BY pe.published DESC";
 #                                                          ^^^^^^^^^ that is wrong
 $query_copy = $query;
