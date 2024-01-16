@@ -118,7 +118,7 @@ while($e = $result->fetch_assoc()) {
   foreach ($endorsements as &$endorsement) {
     if ($endorsement['id'] === $id) {
       $found = true;
-      if ($e['reportedYou']) {
+      if (isset($e['reportedYou'])) {
         $endorsement['reportedYou'] = $e['reportedYou'];
         $endorsement['reportedYouComment'] = $e['reportedYouComment'];
         $endorsement['reportedYouSignature'] = $e['reportedYouSignature'];
