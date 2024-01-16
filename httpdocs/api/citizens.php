@@ -39,11 +39,11 @@ $query .= ", publication.`version`, publication.`type`, "
          ."REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature, "
          ."UNIX_TIMESTAMP(publication.published) AS published "
          ."FROM citizen "
-         ."INNER JOIN publication ON publication.id = citizen.id "
+         ."INNER JOIN publication ON publication.id = citizen.publication "
          ."INNER JOIN participant ON participant.id=publication.participant";
 if ($key)
   $query .= " INNER JOIN certificate ON certificate.publication = publication.signature AND certificate.type = 'endorse' AND certificate.latest = 1"
-           ." INNER JOIN publication AS pe ON pe.id=certificate.id AND pe.`key` = FROM_BASE64('$key==')";
+           ." INNER JOIN publication AS pe ON pe.id=certificate.publication AND pe.`key` = FROM_BASE64('$key==')";
 if ($familyName or $givenNames) {
   $query .= " WHERE";
   if ($familyName) {
