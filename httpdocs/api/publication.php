@@ -63,7 +63,7 @@ if ($type === 'citizen') {
           ."REPLACE(REPLACE(TO_BASE64(p.signature), '\\n', ''), '=', '') AS publication, "
           ."comment, message "
           ."FROM certificate WHERE id=$publication_id "
-          ."INNER JOIN publication as p WHERE p.id = certificate.publicationId";
+          ."INNER JOIN publication as p WHERE p.id = certificate.certifiedPublication";
   $result = $mysqli->query($query) or error($mysqli->error);
   $certificate = $result->fetch_assoc();
   $result->free();
