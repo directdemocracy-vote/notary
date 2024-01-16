@@ -84,7 +84,7 @@ while($e = $result->fetch_assoc()) {
   unset($e['comment']);
   unset($e['certificatePublished']);
   unset($e['type']);
-  unset($e['certificateSignature'];
+  unset($e['certificateSignature']);
   $endorsements[] = $e;
 }
 $result->free();
@@ -107,7 +107,7 @@ while($e = $result->fetch_assoc()) {
   unset($e['comment']);
   unset($e['certificatePublished']);
   unset($e['type']);
-  unset($e['certificateSignature'];
+  unset($e['certificateSignature']);
   $id = $e['id'];
   $found = false;
   foreach ($endorsements as &$endorsement) {
