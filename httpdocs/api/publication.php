@@ -47,7 +47,7 @@ if ($type === 'citizen') {
           ."ST_Y(home) AS latitude, ST_X(home) AS longitude "
           ."FROM citizen "
           ."INNER JOIN participant AS app ON app.id=citizen.appId "
-          ."WHERE citizen.id=$publication_id";
+          ."WHERE citizen.publication=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $citizen = $result->fetch_assoc();
   $result->free();
@@ -62,7 +62,7 @@ if ($type === 'citizen') {
           ."type, "
           ."REPLACE(REPLACE(TO_BASE64(p.signature), '\\n', ''), '=', '') AS publication, "
           ."comment, message "
-          ."FROM certificate WHERE id=$publication_id "
+          ."FROM certificate WHERE publication=$publication_id "
           ."INNER JOIN publication as p WHERE p.id = certificate.certifiedPublication";
   $result = $mysqli->query($query) or error($mysqli->error);
   $certificate = $result->fetch_assoc();
@@ -74,7 +74,7 @@ if ($type === 'citizen') {
   $certificate = $publication + $certificate;
   echo json_encode($certificate, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type === 'proposal') {
-  $query = "SELECT REPLACE(REPLACE(TO_BASE64(area), '\\n', ''), '=', '') AS area, title, description, question, answers, secret, UNIX_TIMESTAMP(deadline) AS deadline, trust, website FROM proposal WHERE id=$publication_id";
+  $query = "SELECT REPLACE(REPLACE(TO_BASE64(area), '\\n', ''), '=', '') AS area, title, description, question, answers, secret, UNIX_TIMESTAMP(deadline) AS deadline, trust, website FROM proposal WHERE publication=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $proposal = $result->fetch_assoc();
   $result->free();
@@ -91,20 +91,8 @@ if ($type === 'citizen') {
     $proposal['answers'] = explode("\n", $proposal['answers']);
   $proposal = $publication + $proposal;
   echo json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-} elseif ($type === 'ballot') {
-  $query = "SELECT "
-          ."REPLACE(REPLACE(TO_BASE64(appKey), '\\n', ''), '=', '') AS appKey, "
-          ."REPLACE(REPLACE(TO_BASE64(appSignature), '\\n', ''), '=', ''= AS appSignature, "
-          ."REPLACE(REPLACE(TO_BASE64(stationKey), '\\n', ''), '=', '') AS stationKey, "
-          ."REPLACE(REPLACE(TO_BASE64(stationSignature), '\\n', ''), '=', '') AS stationSignature, "
-          ."answer from ballot WHERE id=$publication_id";
-  $result = $mysqli->query($query) or error($mysqli->error);
-  $ballot = $result->fetch_assoc();
-  $result->free();
-  $ballot = $publication + $ballot;
-  echo json_encode($ballot, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type === 'area') {
-  $query = "SELECT name, ST_AsGeoJSON(polygons) AS polygons FROM area WHERE id=$publication_id";
+  $query = "SELECT name, ST_AsGeoJSON(polygons) AS polygons FROM area WHERE publication=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $area = $result->fetch_assoc();
   $polygons = json_decode($area['polygons']);
