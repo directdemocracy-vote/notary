@@ -53,7 +53,7 @@ $bob_query = "SELECT publication_bob.id, "
             ."bob.familyName, bob.givenNames, "
             ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(bob.picture), '\\n', '')) AS picture, "
             ."ST_Y(bob.home) AS latitude, ST_X(bob.home) AS longitude, "
-            ."REPLACE(REPLACE(TO_BASE64(pe.signature), '\\n', ''), '=', '') AS endorsementSignature, "
+            ."REPLACE(REPLACE(TO_BASE64(pe.signature), '\\n', ''), '=', '') AS certificateSignature, "
             ."e.type, e.comment, "
             ."UNIX_TIMESTAMP(pe.published) AS certificatePublished "
             ."FROM publication pe "
@@ -76,11 +76,15 @@ while($e = $result->fetch_assoc()) {
   if ($e['type'] === 'report') {
     $e['reported'] = $e['certificatePublished'];
     $e['reportedComment'] = $e['comment'];
-  } else # endorse
+    $e['reportedSignature'] = $e['certificateSignature'];
+  } else { # endorse
     $e['endorsed'] = $e['certificatePublished'];
+    $e['endorsedSignature'] = $e['certificateSignature'];
+  }
   unset($e['comment']);
   unset($e['certificatePublished']);
   unset($e['type']);
+  unset($e['certificateSignature'];
   $endorsements[] = $e;
 }
 $result->free();
@@ -95,11 +99,15 @@ while($e = $result->fetch_assoc()) {
   if ($e['type'] === 'report') {
     $e['reportedYou'] = $e['certificatePublished'];
     $e['reportedYouComment'] = $e['comment'];
-  } else # endorse
+    $e['reportedYouSignature'] = $e['certificateSignature'];
+  } else { # endorse
     $e['endorsedYou'] = $e['certificatePublished'];
+    $e['endorsedYouSignature'] = $e['certificateSignature'];
+  }
   unset($e['comment']);
   unset($e['certificatePublished']);
   unset($e['type']);
+  unset($e['certificateSignature'];
   $id = $e['id'];
   $found = false;
   foreach ($endorsements as &$endorsement) {
@@ -108,8 +116,11 @@ while($e = $result->fetch_assoc()) {
       if ($e['reportedYou']) {
         $endorsement['reportedYou'] = $e['reportedYou'];
         $endorsement['reportedYouComment'] = $e['reportedYouComment'];
-      } else # endorsedYou
+        $endorsement['reportedYouSignature'] = $e['reportedYouSignature'];
+      } else { # endorsedYou
         $endorsement['endorsedYou'] = $e['endorsedYou'];
+        $endorsement['endorsedYouSignature'] = $e['endorsedYouSignature'];
+      }
       break;
     }
   }
