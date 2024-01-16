@@ -18,7 +18,7 @@ if (isset($_POST['signature'])) {
 } else
   die('{"error":"missing key, signature or fingerprint POST argument"}');
 
-$query = "SELECT participant.id, "
+$query = "SELECT participant.id, publication.id AS publication "
         ."CONCAT('https://directdemocracy.vote/json-schema/', `version`, '/', publication.`type`, '.schema.json') AS `schema`, "
         ."REPLACE(REPLACE(TO_BASE64(participant.`key`), '\\n', ''), '=', '') AS `key`, "
         ."REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature, "
@@ -37,56 +37,53 @@ $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $citizen = $result->fetch_assoc() or die("{\"error\":\"citizen not found: $condition\"}");
 $result->free();
 $alice_id = intval($citizen['id']);
+$alice_publication = intval($citizen['publication']);
 unset($citizen['id']);
+unset($citizen['publication']);
 settype($citizen['published'], 'int');
 settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
 # list all the bobs endorsed by alice
-$query = "SELECT publication_bob.id, "
-        ."REPLACE(REPLACE(TO_BASE64(participant_bob.`key`), '\\n', ''), '=', '') AS `key`, "
-        ."REPLACE(REPLACE(TO_BASE64(publication_bob.signature), '\\n', ''), '=', '') AS signature, "
-        ."UNIX_TIMESTAMP(publication_bob.published) AS published, "
-        ."REPLACE(REPLACE(TO_BASE64(app.key), '\\n', ''), '=', '') AS appKey, "
-        ."REPLACE(REPLACE(TO_BASE64(bob.appSignature), '\\n', ''), '=', '') AS appSignature, "
-        ."bob.familyName, bob.givenNames, "
-        ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(bob.picture), '\\n', '')) AS picture, "
-        ."ST_Y(bob.home) AS latitude, ST_X(bob.home) AS longitude, "
-        ."REPLACE(REPLACE(TO_BASE64(pe.signature), '\\n', ''), '=', '') AS endorsementSignature, "
-        ."UNIX_TIMESTAMP(pe.published) AS endorsementPublished "
-        ."FROM publication pe "
-        ."INNER JOIN certificate AS e ON e.publication=pe.id AND e.type='endorse' AND e.latest=1 "
-        ."INNER JOIN publication AS publication_bob ON publication_bob.id=e.certifiedPublication "
-        ."INNER JOIN citizen AS bob ON bob.publication=publication_bob.id "
-        ."INNER JOIN participant AS participant_bob ON participant_bob.id=publication_bob.participant "
-        ."INNER JOIN participant AS app ON app.id=bob.app " 
-        ."WHERE pe.type='certificate' AND pe.participant=$alice_id ORDER BY pe.published DESC";
-#                                                          ^^^^^^^^^ that is wrong
-$query_copy = $query;
-
+$bob_query = "SELECT publication_bob.id, "
+            ."REPLACE(REPLACE(TO_BASE64(participant_bob.`key`), '\\n', ''), '=', '') AS `key`, "
+            ."REPLACE(REPLACE(TO_BASE64(publication_bob.signature), '\\n', ''), '=', '') AS signature, "
+            ."UNIX_TIMESTAMP(publication_bob.published) AS published, "
+            ."REPLACE(REPLACE(TO_BASE64(app.key), '\\n', ''), '=', '') AS appKey, "
+            ."REPLACE(REPLACE(TO_BASE64(bob.appSignature), '\\n', ''), '=', '') AS appSignature, "
+            ."bob.familyName, bob.givenNames, "
+            ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(bob.picture), '\\n', '')) AS picture, "
+            ."ST_Y(bob.home) AS latitude, ST_X(bob.home) AS longitude, "
+            ."REPLACE(REPLACE(TO_BASE64(pe.signature), '\\n', ''), '=', '') AS endorsementSignature, "
+            ."e.type, "
+            ."UNIX_TIMESTAMP(pe.published) AS endorsementPublished "
+            ."FROM publication pe "
+            ."INNER JOIN certificate AS e ON e.publication=pe.id AND (e.type='endorse' OR (type='report' AND comment LIKE \"revoked+%\")) AND e.latest=1 "
+            ."INNER JOIN publication AS publication_bob ON publication_bob.id=e.certifiedPublication "
+            ."INNER JOIN citizen AS bob ON bob.publication=publication_bob.id "
+            ."INNER JOIN participant AS app ON app.id=bob.app " 
+            ."INNER JOIN participant AS participant_bob ON participant_bob.id=publication_bob.participant ";
+$query = $bob_query
+        ."WHERE pe.participant=$alice_id ORDER BY pe.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 if (!$result)
   die("{\"error\":\"$mysqli->error\"}");
 $endorsements = array();
 while($e = $result->fetch_assoc()) {
-  settype($e['publication'], 'int');
+  settype($e['id'], 'int');
   settype($e['published'], 'int');
   settype($e['latitude'], 'float');
   settype($e['longitude'], 'float');
   $endorsements[] = $e;
 }
 $result->free();
-$query = "SELECT pc.id, "
-        ."UNIX_TIMESTAMP(pe.published) AS published, "
-        ."e.type "
-        ."FROM publication pe "
-        ."INNER JOIN certificate e ON e.publication=pe.id AND e.latest=1 AND (e.type='endorse' OR (e.type='report' and e.comment='revoke')) "
-        ."INNER JOIN publication pc ON pc.id = e.certifiedPublication "
-        ."INNER JOIN citizen c ON c.publication = pc.id "
-        ."WHERE pe.id=$alice_id ORDER BY pe.published DESC";
+$query = $bob_query
+        ."WHERE e.certifiedPublication=$alice_publication ORDER BY pe.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 while($e = $result->fetch_assoc()) {
   settype($e['id'], 'int');
   settype($e['published'], 'int');
+  settype($e['latitude'], 'float');
+  settype($e['longitude'], 'float');
   $id = $e['id'];
   $endorse = ($e['type'] === 'endorse');
   foreach ($endorsements as &$endorsement) {
