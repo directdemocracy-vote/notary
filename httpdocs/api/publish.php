@@ -25,7 +25,7 @@ function check_app($publication, $vote=false) {
   $participant = $result->fetch_assoc();
   if (!$participant)
     error("unknown app");
-  $app_id = intval($participant['id']);
+  $app = intval($participant['id']);
   $result->free();
   $app_signature = sanitize_field($publication->appSignature, 'base64', 'appSignature');
   $publication->appSignature = '';
@@ -50,7 +50,7 @@ function check_app($publication, $vote=false) {
   }
   # restore original signature
   $publication->appSignature = $app_signature;
-  return array($app_id, $app_signature);
+  return array($app, $app_signature);
 }
 
 header("Content-Type: application/json");
@@ -154,20 +154,20 @@ if ($mysqli->affected_rows === 0)
 $id = $mysqli->insert_id;
 
 if ($type === 'citizen') {
-  list($app_id, $app_signature) = check_app($citizen);
+  list($app, $app_signature) = check_app($citizen);
   $family_name = $mysqli->escape_string($publication->familyName);
   $given_names = $mysqli->escape_string($publication->givenNames);
   $latitude = sanitize_field($citizen->latitude, 'float', 'latitude');
   $longitude = sanitize_field($citizen->longitude, 'float', 'longitude');
-  $query = "INSERT INTO citizen(publication, appId, appSignature, familyName, givenNames, picture, home) "
-          ."VALUES($id, $app_id, FROM_BASE64('$app_signature=='), \"$family_name\", \"$given_names\", "
+  $query = "INSERT INTO citizen(publication, app, appSignature, familyName, givenNames, picture, home) "
+          ."VALUES($id, $app, FROM_BASE64('$app_signature=='), \"$family_name\", \"$given_names\", "
           ."FROM_BASE64('$citizen_picture'), POINT($longitude, $latitude))";
 } elseif ($type === 'certificate') {
   $certificate = &$publication;
   if (isset($certificate->appKey))
-    list($app_id, $app_signature) = check_app($certificate);
+    list($app, $app_signature) = check_app($certificate);
   else {
-    $app_id = '';
+    $app = '';
     $app_signature = '';
   }
   if (!property_exists($certificate, 'comment'))
@@ -199,9 +199,9 @@ if ($type === 'citizen') {
   $ctype = $mysqli->escape_string($certificate->type);
   $message = $mysqli->escape_string($certificate->message);
   $comment = $mysqli->escape_string($certificate->comment);
-  if ($app_id) {
-    $app_fields = " appId, appSignature,";
-    $app_values = " $app_id, FROM_BASE64('$app_signature=='),";
+  if ($app) {
+    $app_fields = " app, appSignature,";
+    $app_values = " $app, FROM_BASE64('$app_signature=='),";
   } else {
     $app_fields = '';
     $app_values = '';
@@ -242,12 +242,12 @@ if ($type === 'citizen') {
           ."VALUES($id, $area_id, \"$title\", \"$description\", \"$question\", \"$answers\", $secret, FROM_UNIXTIME($deadline), $trust, \"$website\", 0, 0)";
 } elseif ($type === 'participation') {
   $participation =&$publication;
-  list($app_id, $app_signature) = check_app($participation);
-  $query = "INSERT INTO participation(publication, appId, appSignature, referendum, encryptedVote) "
-          ."VALUES($id, $app_id, FROM_BASE64('$app_signature=='), FROM_BASE64('$participation->referendum=='), FROM_BASE64('$encrypted_vote'))";
+  list($app, $app_signature) = check_app($participation);
+  $query = "INSERT INTO participation(publication, app, appSignature, referendum, encryptedVote) "
+          ."VALUES($id, $app, FROM_BASE64('$app_signature=='), FROM_BASE64('$participation->referendum=='), FROM_BASE64('$encrypted_vote'))";
 } elseif ($type === 'vote') {
   $vote = &$publication;
-  list($app_id, $app_signature) = check_app($vote, true);
+  list($app, $app_signature) = check_app($vote, true);
   $referendum = sanitize_field($vote->referendum, 'base64', 'referendum');
   $number = sanitize_field($vote->number, 'positive_int', 'number');
   $ballot = sanitize_field($vote->ballot, 'base64', 'ballot');
@@ -258,8 +258,8 @@ if ($type === 'citizen') {
   if (!$referendum_publication)
     error("referendum not found");
   $referendum_id = $referendum_publication['id'];
-  $query = "INSERT INTO vote(publication, appId, appSignature, referendumId, number, ballot, answer) VALUES($id, "
-          ."$app_id, "
+  $query = "INSERT INTO vote(publication, app, appSignature, referendumId, number, ballot, answer) VALUES($id, "
+          ."$app, "
           ."FROM_BASE64('$app_signature=='), "
           ."$referendum_id, "
           ."$number, "
