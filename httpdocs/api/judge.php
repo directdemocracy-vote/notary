@@ -30,7 +30,7 @@ $query = "SELECT "
         ."REPLACE(REPLACE(TO_BASE64(citizen_p.signature), '\\n', ''), '=', '') AS signature "
         ."FROM publication AS certificate_p "
         ."INNER JOIN certificate ON certificate.id = certificate_p.id "
-        ."INNER JOIN publication AS citizen_p ON citizen_p.id = certificate.publicationId "
+        ."INNER JOIN publication AS citizen_p ON citizen_p.id = certificate.certifiedPublication "
         ."INNER JOIN citizen ON citizen.id = citizen_p.id "
         ."WHERE certificate_p.participant = $judge_id AND (certificate.type='endorse' OR certificate.type='report') "
         ."ORDER BY certificate_p.published DESC";
