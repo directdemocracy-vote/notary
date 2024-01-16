@@ -11,7 +11,7 @@ if (isset($_POST['judge']))
 else
   $judge = "https://judge.directdemocracy.vote";
 
-$query = "SELECT id, REPLACE(REPLACE(TO_BASE64(`key`), '\\n', ''), '=', '') AS `key` FROM participant INNER JOIN webservice ON webservice.participantId=participant.id WHERE participant.`type`='judge' AND webservice.url=\"$judge\"";
+$query = "SELECT id, REPLACE(REPLACE(TO_BASE64(`key`), '\\n', ''), '=', '') AS `key` FROM participant INNER JOIN webservice ON webservice.participant=participant.id WHERE participant.`type`='judge' AND webservice.url=\"$judge\"";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $webservice = $result->fetch_assoc();
 $result->free();
@@ -21,7 +21,7 @@ if (!$webservice) {
   $judge_key = sanitize_field($j->key, "base64", "judge_key");
   $mysqli->query("INSERT INTO participant(`type`, `key`) VALUE('judge', FROM_BASE64('$judge_key=='))";
   $judge_id = $mysqli->insert_id;
-  $mysqli->query("INSERT INTO webservice(participantId, url) VALUES($participantId, '$judge')") or die($mysqli->error);
+  $mysqli->query("INSERT INTO webservice(participant, url) VALUES($judge_id, '$judge')") or die($mysqli->error);
 } else
   $judge_id = intval($webservice['id']);
 $query = "SELECT "
@@ -32,7 +32,7 @@ $query = "SELECT "
         ."INNER JOIN certificate ON certificate.id = certificate_p.id "
         ."INNER JOIN publication AS citizen_p ON citizen_p.id = certificate.publicationId "
         ."INNER JOIN citizen ON citizen.id = citizen_p.id "
-        ."WHERE certificate_p.participantId = $judge_id AND (certificate.type='endorse' OR certificate.type='report') "
+        ."WHERE certificate_p.participant = $judge_id AND (certificate.type='endorse' OR certificate.type='report') "
         ."ORDER BY certificate_p.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $endorsements = array();
