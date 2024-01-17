@@ -133,6 +133,8 @@ while($e = $result->fetch_assoc()) {
   if (!$found)
     $endorsements[] = $e;
 }
+foreach ($endorsements as &$endorsement)
+  unset($endorsement['id']);
 $mysqli->close();
 $answer = array();
 $answer['citizen'] = $citizen;
