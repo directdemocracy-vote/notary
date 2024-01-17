@@ -30,12 +30,14 @@ $result->free();
 $answer = array();
 $answer['givenNames'] = $citizen['givenNames'];
 $answer['familyName'] = $citizen['familyName'];
-$query = "SELECT UNIX_TIMESTAMP(publication.published) AS published, certificate.type, certificate.latest FROM publication"
-        ." INNER JOIN participant ON participant.`type`='judge' AND participant.id=publication.participant"
-        ." INNER JOIN webservice ON webservice.participant=participant.id AND webservice.url='$judge'"
-        ." INNER JOIN certificate ON certificate.certifiedPublication=publication.id AND $join_condition"
-        ." WHERE $condition"
-        ." ORDER BY publication.published DESC";
+
+$query = "SELECT UNIX_TIMESTAMP(pc.published) AS published, certificate.type, certificate.latest FROM publication "
+        ."INNER JOIN certificate ON certificate.certifiedPublication = publication.id "
+        ."INNER JOIN publication AS pc ON pc.id = certificate.publication "
+        ."INNER JOIN participant ON participant.`type`='judge' AND participant.id=pc.participant "
+        ."INNER JOIN webservice ON webservice.participant=participant.id # AND webservice.url='$judge' "  
+        ."WHERE $condition "
+        ."ORDER BY publication.published DESC";
 $result = $mysqli->query($query) or error($mysqli->error);
 $endorsements = array();
 while ($endorsement = $result->fetch_assoc()) {
