@@ -34,6 +34,7 @@ $query = "SELECT CONCAT('https://directdemocracy.vote/json-schema/', publication
         ."REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature, "
         ."UNIX_TIMESTAMP(publication.published) AS published, "
         .$app_fields
+        .$certificate_fields
         ."FROM $type "
         ."INNER JOIN publication ON publication.id=$type.publication AND $condition "
         ."INNER JOIN participant ON participant.id=publication.participant "
