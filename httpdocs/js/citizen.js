@@ -303,17 +303,7 @@ window.onload = async function() {
         return new Date(seconds * 1000).toISOString().slice(0, 10);
       }
 
-      let count = 0;
-      answer.citizen_endorsements.forEach(function(endorsement) {
-        if (!endorsement.revoke)
-          count++;
-      });
-      document.getElementById('endorsed-by-header').textContent = answer.citizen_endorsements.length
-        ? `Endorsed by ${count} / ${answer.citizen_endorsements.length}:`
-        : `Not endorsed by anyone.`;
-      answer.citizen_endorsements.forEach(function(endorsement) {
-        addEndorsement(endorsement, 'endorsed-by');
-      });
+      document.getElementById('endorsed-by-header').textContent = `Endorsed by ${count}`;
       count = 0;
       answer.endorsements.forEach(function(endorsement) {
         if (!endorsement.revoke)
