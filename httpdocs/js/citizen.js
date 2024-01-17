@@ -271,7 +271,7 @@ window.onload = async function() {
         img.style.float = 'left';
         img.style.marginRight = '10px';
         img.style.marginBottom = '10px';
-        img.style.width = '75px';
+        img.style.width = '100px';
         const overlay = document.createElement('div');
         overlay.classList.add('picture-overlay');
         if (endorsement.appKey === PRODUCTION_APP_KEY)
