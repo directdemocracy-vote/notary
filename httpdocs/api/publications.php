@@ -24,8 +24,7 @@ if ($since)
   $condition .="UNIX_TIMESTAMP(publication.published) >= $since AND ";
 if ($until)
   $condition .="UNIX_TIMESTAMP(publication.published) <= $until AND ";
-$condition .= "p.version=$version AND p.type = '$type'";
-
+$condition .= "publication.version=$version AND publication.type='$type'";
 $app_fields = "REPLACE(REPLACE(TO_BASE64(app.`key`), '\\n', ''), '=', '') AS appKey, REPLACE(REPLACE(TO_BASE64($type.appSignature), '\\n', ''), '=', '') AS appSignature, ";
 $app_join = "INNER JOIN participant AS app ON app.id=$type.app ";
 $certificate_fields = "certificate.type, REPLACE(REPLACE(TO_BASE64(certifiedPublication.`signature`), '\\n', ''), '=', '') AS publication, certificiate.comment, certificate.message ";
