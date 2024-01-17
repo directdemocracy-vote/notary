@@ -17,7 +17,7 @@ $since = isset($_GET['since']) ? sanitize_field($_GET['since'], 'positive_int', 
 $until = isset($_GET['until']) ? sanitize_field($_GET['until'], 'positive_int', 'until') : null;
 
 if ($type !== 'certificate' || $certificate_type !== 'endorse+report')
-  error('supportint only type=certificate&certificate_type=endorse+report)
+  error('supportint only type=certificate&certificate_type=endorse+report');
 
 $condition = '';
 if ($since)
