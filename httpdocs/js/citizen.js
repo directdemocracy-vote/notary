@@ -332,9 +332,9 @@ window.onload = async function() {
             otherDay = new Date(endorsement.endorsedYou * 1000).toISOString().slice(0, 10);
           }
         }
-        let dates = `<i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${color}">${icon}</i> ` + day, true);
+        let dates = `<i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${color}">${icon}</i> ${day}`;
         if (otherDay)
-          dates += `<br><i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${otherColor}">${otherIcon}</i> ` + otherDay, true);
+          dates += `<br><i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${otherColor}">${otherIcon}</i> ${otherDay}`;
         content.innerHTML =
           `<a href="/citizen.html?signature=${encodeURIComponent(endorsement.signature)}"><b>${endorsement.givenNames}<br>` +
           `${endorsement.familyName}</b></a><br><small>Distance: ${distance} m.<br>${dates}</small>`;
