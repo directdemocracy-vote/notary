@@ -39,6 +39,7 @@ $query = "SELECT CONCAT('https://directdemocracy.vote/json-schema/', publication
         ."INNER JOIN participant ON participant.id=publication.participant "
         .$app_join
         .$certificate_join;
+error($query);
 $result = $mysqli->query($query) or error($mysqli->error);
 $publications = [];
 if ($result) {
