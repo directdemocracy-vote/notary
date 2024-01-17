@@ -176,13 +176,13 @@ window.onload = async function() {
         reputation.innerHTML = '...';
         reputation.style.color = 'black';
         loadReputation();
-        updateJudgeEndorsements();
+        updateJudgeCertificates();
       });
 
       function loadReputation() {
         fetch(`${judge}/api/reputation.php?key=${encodeURIComponent(answer.citizen.key)}`)
           .then((response) => {
-            if (document.getElementById('judge-endorsements').innerHTML !== '<b>...</b>')
+            if (document.getElementById('judge-certificates').innerHTML !== '<b>...</b>')
               enableJudgeReloadButton();
             return response.json();
           })
@@ -200,8 +200,8 @@ window.onload = async function() {
 
       loadReputation();
 
-      function updateJudgeEndorsements() {
-        let div = document.getElementById('judge-endorsements');
+      function updateJudgeCertificates() {
+        let div = document.getElementById('judge-certificates');
         div.innerHTML = '<b>...</b>';
         const payload = signature ? `signature=${encodeURIComponent(signature)}` : `fingerprint=${fingerprint}`;
         fetch(`/api/endorsements.php?${payload}&judge=${judge}`)
@@ -232,7 +232,7 @@ window.onload = async function() {
           });
       }
 
-      updateJudgeEndorsements();
+      updateJudgeCertificates();
 
       function enableJudgeReloadButton() {
         let button = document.getElementById('reload');
@@ -257,8 +257,8 @@ window.onload = async function() {
         return d;
       }
 
-      function addEndorsement(endorsement, name) {
-        const columns = document.getElementById(name);
+      function addEndorsement(endorsement) {
+        const columns = document.getElementById('endorsements');
         const column = document.createElement('div');
         columns.appendChild(column);
         column.style.overflow = 'hidden';
@@ -303,17 +303,14 @@ window.onload = async function() {
         return new Date(seconds * 1000).toISOString().slice(0, 10);
       }
 
-      document.getElementById('endorsed-by-header').textContent = `Endorsed by ${count}`;
+      document.getElementById('endorsements').textContent = `Endorsed by ${count}`;
       count = 0;
       answer.endorsements.forEach(function(endorsement) {
         if (!endorsement.revoke)
           count++;
       });
-      document.getElementById('has-endorsed-header').textContent = answer.endorsements.length
-        ? `Has endorsed ${count} / ${answer.endorsements.length}:`
-        : 'Has not endorsed anyone.';
       answer.endorsements.forEach(function(endorsement) {
-        addEndorsement(endorsement, 'has-endorsed');
+        addEndorsement(endorsement);
       });
     });
 };
