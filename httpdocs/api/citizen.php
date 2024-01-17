@@ -88,6 +88,7 @@ while($e = $result->fetch_assoc()) {
   $endorsements[] = $e;
 }
 $result->free();
+# list all the bobs who endorsed alice
 $query = $bob_query
         ."INNER JOIN publication AS pe_bob ON pe_bob.id=e.publication "
         ."INNER JOIN participant AS participant_bob ON participant_bob.id=pe_bob.participant "
@@ -113,7 +114,7 @@ while($e = $result->fetch_assoc()) {
   unset($e['certificatePublished']);
   unset($e['type']);
   unset($e['certificateSignature']);
-  $id = $e['id'];
+  $id = intval($e['id']);
   $found = false;
   foreach ($endorsements as &$endorsement) {
     if ($endorsement['id'] === $id) {
