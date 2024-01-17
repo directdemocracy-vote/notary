@@ -204,7 +204,7 @@ window.onload = async function() {
         let div = document.getElementById('judge-certificates');
         div.innerHTML = '<b>...</b>';
         const payload = signature ? `signature=${encodeURIComponent(signature)}` : `fingerprint=${fingerprint}`;
-        fetch(`/api/endorsements.php?${payload}&judge=${judge}`)
+        fetch(`/api/trusts.php?${payload}&judge=${judge}`)
           .then(response => {
             const reputation = document.getElementById('reputation');
             if (reputation.textContent !== '..')
