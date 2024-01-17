@@ -16,7 +16,7 @@ $certificate_type = isset($_GET['certificate_type']) ? $mysqli->escape_string($_
 $since = isset($_GET['since']) ? sanitize_field($_GET['since'], 'positive_int', 'since') : null;
 $until = isset($_GET['until']) ? sanitize_field($_GET['until'], 'positive_int', 'until') : null;
 
-if ($type !== 'certificate' || $certificate_type !== 'endorse+report')
+if ($type !== 'certificate' || $certificate_type !== 'endorse report')
   error('supportint only type=certificate&certificate_type=endorse+report');
 
 $condition = '';
