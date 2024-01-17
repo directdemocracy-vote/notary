@@ -303,12 +303,12 @@ window.onload = async function() {
         return new Date(seconds * 1000).toISOString().slice(0, 10);
       }
 
-      document.getElementById('endorsements').textContent = `Endorsed by ${count}`;
-      count = 0;
+      let count = 0;
       answer.endorsements.forEach(function(endorsement) {
         if (!endorsement.revoke)
           count++;
       });
+      document.getElementById('endorsements').textContent = `Endorsed by ?/${count}`;
       answer.endorsements.forEach(function(endorsement) {
         addEndorsement(endorsement);
       });
