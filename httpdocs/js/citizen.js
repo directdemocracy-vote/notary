@@ -289,14 +289,55 @@ window.onload = async function() {
         div.classList.add('media-content');
         const content = document.createElement('div');
         div.appendChild(content);
-        content.style.minWidth = '250px';
-        const label = (endorsement.revoke) ? '<span style="font-weight:bold;color:red">Revoked</span>' : 'Endorsed';
-        const published = publishedDate(endorsement.published);
-        const distance = Math.round(
-          distanceFromLatitudeLongitude(latitude, longitude, endorsement.latitude, endorsement.longitude));
+        content.style.minWidth = '250px';        
+        const distance = Math.round(distanceFromLatitudeLongitude(latitude, longitude, endorsement.latitude, endorsement.longitude));
+        let icon;
+        let day;
+        let color;
+        let otherIcon;
+        let otherDay;
+        let otherColor;
+        if (endorsement.hasOwnProperty('endorsed') && endorsement.hasOwnProperty('endorsedYou')) {
+          day = new Date(endorsement.endorsed * 1000).toISOString().slice(0, 10);
+          otherDay = new Date(endorsement.endorsedYou * 1000).toISOString().slice(0, 10);
+          if (day === otherDay) {
+            icon = 'arrow_right_arrow_left';
+            color = 'green';
+            otherDay = false;
+            otherIcon = false;
+            otherColor = false;
+          } else {
+            icon = 'arrow_left';
+            color = 'green';
+            otherIcon = 'arrow_right';
+            otherColor = 'green';
+          }
+        } else {
+          if (endorsement.hasOwnProperty('reported')) {
+            icon = 'xmark';
+            color = 'red';
+            day = new Date(endorsement.reported * 1000).toISOString().slice(0, 10);
+          } else if (endorsement.hasOwnProperty('endorsed')) {
+            icon = 'arrow_left';
+            color = 'green';
+            day = new Date(endorsement.endorsed * 1000).toISOString().slice(0, 10);
+          }
+          if (endorsement.hasOwnProperty('reportedYou')) {
+            otherIcon = 'xmark';
+            otherColor = 'red';
+            otherDay = new Date(endorsement.reportedYou * 1000).toISOString().slice(0, 10);
+          } else if (endorsement.hasOwnProperty('endorsedYou')) {
+            otherIcon = 'arrow_right';
+            otherColor = 'green';
+            otherDay = new Date(endorsement.endorsedYou * 1000).toISOString().slice(0, 10);
+          }
+        }
+        let dates = `<i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${color}">${icon}</i> ` + day, true);
+        if (otherDay)
+          dates += `<br><i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${otherColor}">${otherIcon}</i> ` + otherDay, true);
         content.innerHTML =
           `<a href="/citizen.html?signature=${encodeURIComponent(endorsement.signature)}"><b>${endorsement.givenNames}<br>` +
-          `${endorsement.familyName}</b></a><br><small>Distance: ${distance} m.<br>${label}: ${published}</small>`;
+          `${endorsement.familyName}</b></a><br><small>Distance: ${distance} m.<br>${dates}</small>`;
       }
 
       function publishedDate(seconds) {
