@@ -192,7 +192,7 @@ window.onload = async function() {
               reputation.style.color = 'red';
               reputation.textContent = answer.error;
             } else {
-              reputation.style.color = answer.endorsed ? 'green' : 'red';
+              reputation.style.color = answer.trusted ? 'green' : 'red';
               reputation.textContent = `${answer.reputation}`;
             }
           });
