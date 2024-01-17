@@ -347,7 +347,7 @@ window.onload = async function() {
       let count = 0;
       let total = 0;
       answer.endorsements.forEach(function(endorsement) {
-        if (endorsement.hasOwnProperty('endorsed')
+        if (endorsement.hasOwnProperty('endorsed'))
           count++;
         total++;
       });
