@@ -35,7 +35,7 @@ $query = "SELECT UNIX_TIMESTAMP(pc.published) AS published, certificate.type, ce
         ."INNER JOIN certificate ON certificate.certifiedPublication = publication.id "
         ."INNER JOIN publication AS pc ON pc.id = certificate.publication "
         ."INNER JOIN participant ON participant.`type`='judge' AND participant.id=pc.participant "
-        ."INNER JOIN webservice ON webservice.participant=participant.id # AND webservice.url='$judge' "  
+        ."INNER JOIN webservice ON webservice.participant=participant.id AND webservice.url='$judge' "  
         ."WHERE $condition "
         ."ORDER BY publication.published DESC";
 $result = $mysqli->query($query) or error($mysqli->error);
