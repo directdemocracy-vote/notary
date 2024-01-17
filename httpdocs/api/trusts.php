@@ -37,7 +37,7 @@ $query = "SELECT UNIX_TIMESTAMP(pc.published) AS published, certificate.type, ce
         ."INNER JOIN participant ON participant.`type`='judge' AND participant.id=pc.participant "
         ."INNER JOIN webservice ON webservice.participant=participant.id AND webservice.url='$judge' "  
         ."WHERE $condition "
-        ."ORDER BY publication.published DESC";
+        ."ORDER BY publication.published ASC";
 $result = $mysqli->query($query) or error($mysqli->error);
 $endorsements = array();
 while ($endorsement = $result->fetch_assoc()) {
