@@ -19,7 +19,7 @@ if (!$webservice) {
   $file = file_get_contents("$judge/api/key.php");
   $j = json_decode($file);
   $judge_key = sanitize_field($j->key, "base64", "judge_key");
-  $mysqli->query("INSERT INTO participant(`type`, `key`) VALUE('judge', FROM_BASE64('$judge_key=='))";
+  $mysqli->query("INSERT INTO participant(`type`, `key`) VALUE('judge', FROM_BASE64('$judge_key=='))");
   $judge_id = $mysqli->insert_id;
   $mysqli->query("INSERT INTO webservice(participant, url) VALUES($judge_id, '$judge')") or die($mysqli->error);
 } else
