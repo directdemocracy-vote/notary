@@ -27,7 +27,7 @@ if ($until)
 $condition .= "publication.version=$version AND publication.type='$type'";
 $app_fields = "REPLACE(REPLACE(TO_BASE64(app.`key`), '\\n', ''), '=', '') AS appKey, REPLACE(REPLACE(TO_BASE64($type.appSignature), '\\n', ''), '=', '') AS appSignature, ";
 $app_join = "INNER JOIN participant AS app ON app.id=$type.app ";
-$certificate_fields = "certificate.type, REPLACE(REPLACE(TO_BASE64(certifiedPublication.`signature`), '\\n', ''), '=', '') AS publication, certificiate.comment, certificate.message ";
+$certificate_fields = "certificate.type, REPLACE(REPLACE(TO_BASE64(certifiedPublication.`signature`), '\\n', ''), '=', '') AS publication, certificate.comment, certificate.message ";
 $certificate_join = "INNER JOIN publication AS certifiedPublication ON certifiedPublication.id=certificate.certifiedPublication ";
 $query = "SELECT CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json') AS `schema`, "
         ."REPLACE(REPLACE(TO_BASE64(participant.`key`), '\\n', ''), '=', '') AS `key`, "
