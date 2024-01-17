@@ -345,11 +345,13 @@ window.onload = async function() {
       }
 
       let count = 0;
+      let total = 0;
       answer.endorsements.forEach(function(endorsement) {
-        if (!endorsement.revoke)
+        if (endorsement.hasOwnProperty('endorsed')
           count++;
+        total++;
       });
-      document.getElementById('endorsements-header').textContent = `Endorsed by ?/${count}`;
+      document.getElementById('endorsements-header').textContent = `Endorsed by ${count}/${total}`;
       answer.endorsements.forEach(function(endorsement) {
         addEndorsement(endorsement);
       });
