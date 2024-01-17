@@ -1,4 +1,7 @@
 <?php
+# used by the judge to retrive the new endorse and report certificates
+# currently only support this use case
+
 require_once '../../php/database.php';
 require_once '../../php/sanitizer.php';
 
@@ -8,63 +11,47 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-$type = $mysqli->escape_string($_GET["type"]);
-$published_from = isset($_GET["published_from"]) ? sanitize_field($_GET["published_from"], "positive_int", "published_from") : null;
-$published_to = isset($_GET["published_to"]) ? sanitize_field($_GET["published_to"], "positive_int", "published_to") : null;
-$v = isset($_GET["version"]) ? sanitize_field($_GET["version"], "positive_int", "version") : null;
-if ($v)
-  $version = $v;
+$type = isset($_GET['type']) ? $mysqli->escape_string($_GET["type"]) : null;
+$certificate_type = isset($_GET['certificate_type']) ? $mysqli->escape_string($_GET['certificate_type']) : null;
+$since = isset($_GET['since']) ? sanitize_field($_GET['since'], 'positive_int', 'since') : null;
+$until = isset($_GET['until']) ? sanitize_field($_GET['until'], 'positive_int', 'until') : null;
 
-if (!$type)
-  error("No type argument provided.");
-$citizen_fields = "REPLACE(REPLACE(TO_BASE64(".$type.".appKey), '\\n', ''), '=', '') AS appKey, "
-                 ."REPLACE(REPLACE(TO_BASE64(".$type.".appSignature), '\\n', ''), '=', '') AS appsignature";
-if ($type == 'certificate')
-  $fields = "$citizen_fields, REPLACE(REPLACE(TO_BASE64(certificate.publication), '\\n', ''), '=', '') AS publication, "
-           ."certificate.type, certificate.comment, certificate.message";
-elseif ($type == 'citizen')
-  $fields = "$citizen_fields, citizen.familyName, citizen.givenNames, CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')), "
-           ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude";
-elseif ($type == 'proposal')
-  $fields = 'proposal.judge, proposal.area, proposal.title, proposal.description, proposal.question, proposal.answers, UNIX_TIMESTAMP(proposal.deadline) AS deadline, proposal.trust, proposal.website';
-else
-  error("Unsupported type argument: $type.");
+if ($type !== 'certificate' || $certificate_type !== 'endorse+report')
+  error('supportint only type=certificate&certificate_type=endorse+report)
 
 $condition = '';
-if ($published_from)
-  $condition .="UNIX_TIMESTAMP(p.published) >= $published_from AND ";
-if ($published_to)
-  $condition .="UNIX_TIMESTAMP(p.published) <= $published_to AND ";
+if ($since)
+  $condition .="UNIX_TIMESTAMP(publication.published) >= $since AND ";
+if ($until)
+  $condition .="UNIX_TIMESTAMP(publication.published) <= $until AND ";
 $condition .= "p.version=$version AND p.type = '$type'";
 
-$query = "SELECT CONCAT('https://directdemocracy.vote/json-schema/', p.`version`, '/', p.`type`, '.schema.json') AS `schema`, "
-        ."REPLACE(REPLACE(TO_BASE64(p.`key`), '\\n', ''), '=', '') AS `key`, "
-        ."REPLACE(REPLACE(TO_BASE64(p.signature), '\\n', ''), '=', '') AS signature, "
-        ."UNIX_TIMESTAMP(p.published) AS published, $fields "
+$app_fields = "REPLACE(REPLACE(TO_BASE64(app.`key`), '\\n', ''), '=', '') AS appKey, REPLACE(REPLACE(TO_BASE64($type.appSignature), '\\n', ''), '=', '') AS appSignature, ";
+$app_join = "INNER JOIN participant AS app ON app.id=$type.app ";
+$certificate_fields = "certificate.type, REPLACE(REPLACE(TO_BASE64(certifiedPublication.`signature`), '\\n', ''), '=', '') AS publication, certificiate.comment, certificate.message ";
+$certificate_join = "INNER JOIN publication AS certificatePublication ON certificatePublication.id=certificate.certificatePublication ";
+$query = "SELECT CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json') AS `schema`, "
+        ."REPLACE(REPLACE(TO_BASE64(participant.`key`), '\\n', ''), '=', '') AS `key`, "
+        ."REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature, "
+        ."UNIX_TIMESTAMP(publication.published) AS published, "
+        .$app_fields
         ."FROM $type "
-        ."LEFT JOIN publication AS p ON p.id=$type.publication AND $condition WHERE p.id IS NOT NULL";
-
+        ."INNER JOIN publication ON publication.id=$type.publication AND $condition "
+        ."INNER JOIN participant ON participant.id=publication.participant "
+        .$app_join
+        .$certificate_join;
 $result = $mysqli->query($query) or error($mysqli->error);
-$publications = array();
+$publications = [];
 if ($result) {
   while($publication = $result->fetch_object()) {
     $publication->published = intval($publication->published);
-    if ($type == 'citizen') {
-      $publication->latitude = floatval($publication->latitude);
-      $publication->longitude = floatval($publication->longitude);
-    } elseif ($type == 'certificate') {
-      $publication->revoke = (intval($publication->revoke) === 1);
+    if ($type == 'certificate') {
       if ($publication->message == '')
         unset($publication->message);
       if ($publication->comment == '')
         unset($publication->comment);
-    } elseif ($type == 'proposal') {
-      $publication->deadline = intval($publication->deadline);
-      $publication->trust = intval($publication->trust);
-      if ($publication->website == '')
-        unset($publication->website);
     }
-    array_push($publications, $publication);
+    $publications[] = $publication;
   }
   $result->free();
 }
