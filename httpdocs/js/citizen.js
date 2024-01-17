@@ -308,7 +308,7 @@ window.onload = async function() {
         if (!endorsement.revoke)
           count++;
       });
-      document.getElementById('endorsements').textContent = `Endorsed by ?/${count}`;
+      document.getElementById('endorsements-header').textContent = `Endorsed by ?/${count}`;
       answer.endorsements.forEach(function(endorsement) {
         addEndorsement(endorsement);
       });
