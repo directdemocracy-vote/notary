@@ -25,7 +25,7 @@ if (!$webservice) {
 } else
   $judge_id = intval($webservice['id']);
 $query = "SELECT "
-        ."UNIX_TIMESTAMP(certificate_p.published), "
+        ."UNIX_TIMESTAMP(certificate_p.published) AS published, "
         ."certificate.type, certificate.latest, "
         ."citizen.familyName, citizen.givenNames, "
         ."REPLACE(REPLACE(TO_BASE64(citizen_p.signature), '\\n', ''), '=', '') AS signature "
