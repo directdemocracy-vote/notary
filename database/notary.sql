@@ -98,6 +98,13 @@ CREATE TABLE `webservice` (
   `url` varchar(2048) CHARACTER SET ascii COLLATE ascii_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+INSERT INTO `webservice` (`participant`, `url`) VALUES
+(1, 'https://app.directdemocracy.vote'),
+(2, 'https://app.directdemocracy.vote/test'),
+(3, 'https://notary.directdemocracy.vote'),
+(4, 'https://judge.directdemocracy.vote'),
+(5, 'https://station.directdemocracy.vote');
+
 
 ALTER TABLE `area`
   ADD PRIMARY KEY (`publication`);
