@@ -34,7 +34,7 @@ $query = "SELECT "
         ."INNER JOIN publication AS citizen_p ON citizen_p.id = certificate.certifiedPublication "
         ."INNER JOIN citizen ON citizen.publication = citizen_p.id "
         ."WHERE certificate_p.participant = $judge_id "
-        ."ORDER BY certificate.latest, certificate_p.published DESC";
+        ."ORDER BY certificate.latest DESC, certificate_p.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $certificates = array();
 while ($certificate = $result->fetch_assoc()) {
