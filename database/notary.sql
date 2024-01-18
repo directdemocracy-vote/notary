@@ -6,7 +6,7 @@ CREATE TABLE `area` (
   `publication` int(11) NOT NULL,
   `name` varchar(1024) NOT NULL,
   `polygons` multipolygon NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `certificate` (
   `publication` int(11) NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE `certificate` (
   `comment` varchar(2048) NOT NULL,
   `message` varchar(2048) NOT NULL,
   `latest` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `citizen` (
   `publication` int(11) NOT NULL,
@@ -27,13 +27,13 @@ CREATE TABLE `citizen` (
   `familyName` varchar(256) NOT NULL,
   `picture` blob NOT NULL,
   `home` point NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `participant` (
   `id` int(11) NOT NULL,
   `type` enum('app','citizen','judge','notary','station') NOT NULL,
   `key` blob NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `participation` (
   `publication` int(11) NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE `participation` (
   `appSignature` blob NOT NULL,
   `referendum` int(11) NOT NULL,
   `encryptedVote` blob NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `proposal` (
   `publication` int(11) NOT NULL,
@@ -57,7 +57,7 @@ CREATE TABLE `proposal` (
   `participants` int(11) NOT NULL,
   `corpus` int(11) NOT NULL,
   `results` datetime NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `publication` (
   `id` int(11) NOT NULL,
@@ -67,13 +67,13 @@ CREATE TABLE `publication` (
   `signature` blob NOT NULL COMMENT 'signature of the publication by the author',
   `signatureSHA1` binary(20) GENERATED ALWAYS AS (unhex(sha(`signature`))) STORED,
   `participant` int(11) NOT NULL COMMENT 'participant id of the author'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `results` (
   `referendum` int(11) NOT NULL,
   `answer` text NOT NULL,
   `count` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `vote` (
   `publication` int(11) NOT NULL,
@@ -83,12 +83,12 @@ CREATE TABLE `vote` (
   `number` int(11) NOT NULL,
   `ballot` binary(32) NOT NULL,
   `answer` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `webservice` (
   `participant` int(11) NOT NULL,
   `url` varchar(2048) CHARACTER SET ascii COLLATE ascii_bin NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 ALTER TABLE `area`
