@@ -12,12 +12,11 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 $type = isset($_GET['type']) ? $mysqli->escape_string($_GET["type"]) : null;
-$certificate_type = isset($_GET['certificate_type']) ? $mysqli->escape_string($_GET['certificate_type']) : null;
 $since = isset($_GET['since']) ? sanitize_field($_GET['since'], 'positive_int', 'since') : null;
 $until = isset($_GET['until']) ? sanitize_field($_GET['until'], 'positive_int', 'until') : null;
 
-if ($type !== 'certificate' || $certificate_type !== 'endorse report')
-  error('supportint only type=certificate&certificate_type=endorse+report');
+if ($type !== 'certificate')
+  error('supporting only certificate type');
 
 $condition = '';
 if ($since)
