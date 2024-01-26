@@ -290,7 +290,7 @@ window.onload = function() {
   function updatePosition() {
     marker.setLatLng([latitude, longitude]);
     circle.setLatLng([latitude, longitude]);
-    fetch(`https://nominatim.openstreetmap.org/reverse.php?format=json&lat=${latitude}&lon=${longitude}&zoom=10`)
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10`)
       .then(response => response.json())
       .then(answer => {
         address = answer.display_name;
