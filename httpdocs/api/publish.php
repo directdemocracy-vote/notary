@@ -294,7 +294,8 @@ if ($type === 'citizen') {
   $polygons .= ')")';
   $name = implode("\n", $publication->name);
   $name = $mysqli->escape_string($name);
-  $query = "INSERT INTO area(publication, name, polygons) VALUES($id, \"$name\", $polygons)";
+  $local = $publication->local ? 1 : 0;
+  $query = "INSERT INTO area(publication, name, polygons, local) VALUES($id, \"$name\", $polygons, $local)";
 } else
   error("unknown publication type.");
 $mysqli->query($query) or error($mysqli->error);
