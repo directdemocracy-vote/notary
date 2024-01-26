@@ -162,7 +162,7 @@ window.onload = async function() {
       marker.bindPopup(`<b>${givenNames} ${familyName}</b><br>[${latitude}, ${longitude}]`);
       map.setView([latitude, longitude], 18);
       map.on('contextmenu', function(event) { return false; });
-      fetch(`https://nominatim.openstreetmap.org/reverse.php?format=json&lat=${latitude}&lon=${longitude}&zoom=20`)
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=20`)
         .then(response => response.json())
         .then(answer => {
           const address = answer.display_name;
