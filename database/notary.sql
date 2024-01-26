@@ -58,6 +58,7 @@ CREATE TABLE `proposal` (
   `description` text NOT NULL,
   `question` varchar(128) NOT NULL,
   `answers` text NOT NULL,
+  `type` enum('petition','referendum','election') NOT NULL,
   `secret` tinyint(1) NOT NULL,
   `deadline` datetime NOT NULL,
   `trust` bigint(20) NOT NULL,
