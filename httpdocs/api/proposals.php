@@ -53,21 +53,21 @@ if ($search !== '')
 
 $query_common_part = "FROM proposal "
                     ."LEFT JOIN publication ON publication.id = proposal.publication "
-                    ."LEFT JOIN publication AS area_p ON proposal.area = area_p.signature "
+                    ."LEFT JOIN publication AS area_p ON proposal.area = area_p.id "
                     ."LEFT JOIN area ON area.publication = area_p.id "
-                    ."LEFT JOIN participant ON participant.`key` = publication.`key` AND particpant.type='judge' "
+                    ."LEFT JOIN participant ON participant.id = publication.participant AND particpant.type='judge' "
                     ."LEFT JOIN webservice ON webservice.participant=participant.id "
                     ."WHERE $secret$open$search"
                     ."YEAR(proposal.deadline) = $year "
                     ."AND ST_Intersects(area.polygons, ST_Buffer(POINT($longitude, $latitude), $radius))";
 $query = "SELECT "
         ."CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json') AS `schema`, "
-        ."REPLACE(REPLACE(TO_BASE64(publication.`key`), '\\n', ''), '=', '') AS `key`, "
+        ."REPLACE(REPLACE(TO_BASE64(participant.`key`), '\\n', ''), '=', '') AS `key`, "
         ."REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature, "
         ."UNIX_TIMESTAMP(publication.published) AS published, "
         ."REPLACE(REPLACE(TO_BASE64(proposal.area), '\\n', ''), '=', '') as area, "
         ."proposal.title, proposal.description, "
-        ."proposal.question, proposal.answers, proposal.secret, UNIX_TIMESTAMP(proposal.deadline) AS deadline, proposal.trust, proposal.website, "
+        ."proposal.question, proposal.answers, proposal.type, proposal.secret, UNIX_TIMESTAMP(proposal.deadline) AS deadline, proposal.trust, proposal.website, "
         ."area.name AS areas, "
         ."webservice.url AS judge "
         .$query_common_part
@@ -90,7 +90,6 @@ $result->free();
 $query = "SELECT "
         ."COUNT(*) AS number_of_proposals "
         .$query_common_part;
-
 
 $result = $mysqli->query($query) or die($mysqli->error);
 $number = $result->fetch_assoc() or die($mysqli->error);
