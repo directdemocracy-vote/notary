@@ -41,7 +41,6 @@ $query = "SELECT publication.id, "
         ."LEFT JOIN participantArea ON participantArea.id = pa.participant "
         ."LEFT JOIN webservice ON webservice.participant=participant.id "
         ."WHERE $condition";
-die($query);
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $proposal = $result->fetch_assoc();
 $result->free();
