@@ -56,7 +56,7 @@ if ($corpus)
          ." WHERE certificate.type='endorse' OR (certificate.type='report' AND"
          ." EXISTS(SELECT pep.id FROM publication AS pep"
          ." INNER JOIN certificate AS e ON e.publication=pep.id AND $join2_condition"
-         ." WHERE pep.`key`=pc.`key`))";
+         ." WHERE pep.id=pc.id))";
 elseif ($secret === 0)
   $query .= " INNER JOIN certificate AS signature ON $join3_condition"
            ." INNER JOIN publication AS ps ON ps.id=signature.publication AND ps.`key`=pc.`key`";
