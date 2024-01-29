@@ -21,9 +21,9 @@ if ($input) {
     $judge = sanitize_field($_GET['judge'], 'base64', 'judge');
   if (isset($_GET['area']))
     $area = $mysqli->escape_string($_GET['area']);
-  if (isset($_GET['lat'))
+  if (isset($_GET['lat'])
     $lat = floatval($_GET['lat']);
-  if (isset($_GET['lon'))
+  if (isset($_GET['lon'])
     $lon = floatval($_GET['lon']);
 }
 if (!$judge)
