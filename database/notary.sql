@@ -111,6 +111,7 @@ INSERT INTO `webservice` (`participant`, `url`) VALUES
 
 ALTER TABLE `area`
   ADD PRIMARY KEY (`publication`);
+  ADD KEY `id` (`id`);
 
 ALTER TABLE `certificate`
   ADD PRIMARY KEY (`publication`),
