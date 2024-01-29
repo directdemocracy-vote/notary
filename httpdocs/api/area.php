@@ -48,5 +48,5 @@ $mysqli->close();
 if ($area)
   die("{\"published\":\"$area[published]\"}");
 else
-  die('{"published":"never"}');
+  die('{"published":"never", "query":"'.$query.'"}');
 ?>
