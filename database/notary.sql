@@ -4,6 +4,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `area` (
   `publication` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `name` varchar(1024) NOT NULL,
   `polygons` multipolygon NOT NULL,
   `local` tinyint(1) NOT NULL
