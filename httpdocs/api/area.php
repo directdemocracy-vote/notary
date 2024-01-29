@@ -35,7 +35,7 @@ elseif (isset($lat) && isset($lon))
 else
   error('Missing area or lat/lon arguments');
 
-$query = "SELECT UNIX_TIMESTAMP(publication.published) AS published FROM area "
+$query = "SELECT id FROM area "
         ."INNER JOIN publication ON publication.id=area.publication "
         ."INNER JOIN participant ON participant.id=publication.participant "
         ."WHERE participant.`key`=FROM_BASE64('$judge==') AND $condition AND publication.published <= NOW()";
@@ -45,8 +45,6 @@ if (!$result)
 $area = $result->fetch_assoc();
 $result->free();
 $mysqli->close();
-if ($area)
-  die("{\"published\":\"$area[published]\"}");
-else
-  die('{"published":"never", "query":"'.$query.'"}');
+$id = $area ? intval($area['id']) : 0;
+die("{\"id\":$id");
 ?>
