@@ -226,20 +226,23 @@ if ($type === 'citizen') {
     $answers = $publication->answers;
   $answers = implode("\n", $answers);
   $answers = $mysqli->escape_string($answers);
+  $t = $mysqli->escape_string($proposal->type);
   $secret = ($proposal->secret) ? 1 : 0;
-  $area = sanitize_field($publication->area, 'base64', 'area');
+  $area = intval($publication->area);
   $title = $mysqli->escape_string($publication->title);
   $description = $mysqli->escape_string($publication->description);
   $deadline = sanitize_field($publication->deadline, 'positive_int', 'deadline');
   $trust = sanitize_field($publication->trust, 'positive_int', 'trust');
-  $result = $mysqli->query("SELECT id FROM publication WHERE `signature`=FROM_BASE64('$area==') AND `type`='area'") or error($mysqli->error);
+  $query = "SELECT id FROM area INNER JOIN publication ON publication.id=area.publication "
+          ."INNER JOIN participant ON participant.id=publication.participant "
+          ."WHERE area.id=$area AND participant.`key`=FROM_BASE64('$proposal->key==')";
+  $result = $mysqli->query($query) or error($mysqli->error);
   $area_publication = $result->fetch_assoc();
   $result->free();
   if (!$area_publication)
     die("could not find area");
-  $area_id = $area_publication['id'];
-  $query = "INSERT INTO proposal(publication, area, title, description, question, answers, secret, deadline, trust, website, participants, corpus) "
-          ."VALUES($id, $area_id, \"$title\", \"$description\", \"$question\", \"$answers\", $secret, FROM_UNIXTIME($deadline), $trust, \"$website\", 0, 0)";
+  $query = "INSERT INTO proposal(publication, area, title, description, question, answers, type, secret, deadline, trust, website, participants, corpus) "
+          ."VALUES($id, $area, \"$title\", \"$description\", \"$question\", \"$answers\", \"$t\", $secret, FROM_UNIXTIME($deadline), $trust, \"$website\", 0, 0)";
 } elseif ($type === 'participation') {
   $participation =&$publication;
   list($app, $app_signature) = check_app($participation);
@@ -267,6 +270,7 @@ if ($type === 'citizen') {
           ."\"$answer\") "
           ."ON DUPLICATE KEY UPDATE appSignature=FROM_BASE64('$app_signature=='), number=$number, answer=\"$answer\";";
 } elseif ($type === 'area') {
+  $area_id = intval($publication->id);
   $polygons = 'ST_GeomFromText("MULTIPOLYGON(';
   $t1 = false;
   foreach($publication->polygons as $polygon1) {
@@ -295,7 +299,7 @@ if ($type === 'citizen') {
   $name = implode("\n", $publication->name);
   $name = $mysqli->escape_string($name);
   $local = $publication->local ? 1 : 0;
-  $query = "INSERT INTO area(publication, name, polygons, local) VALUES($id, \"$name\", $polygons, $local)";
+  $query = "INSERT INTO area(publication, id, name, polygons, local) VALUES($id, $area_id, \"$name\", $polygons, $local)";
 } else
   error("unknown publication type.");
 $mysqli->query($query) or error($mysqli->error);
