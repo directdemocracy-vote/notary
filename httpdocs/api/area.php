@@ -46,5 +46,5 @@ $area = $result->fetch_assoc();
 $result->free();
 $mysqli->close();
 $id = $area ? intval($area['id']) : 0;
-die("{\"id\":$id");
+die("{\"id\":$id}");
 ?>
