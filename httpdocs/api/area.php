@@ -14,7 +14,7 @@ if (isset($input->area)) {
 } else if (isset($input->lat) && isset($input->lon)) {
   $lat = floatval($input->lat);
   $lon = floatval($input->lon);
-  $condition = "ST_Contains(area.polygons, POINT($lon, $lat)) AND area.local=1"
+  $condition = "ST_Contains(area.polygons, POINT($lon, $lat)) AND area.local=1";
 } else
   error("Missing area and lat/lon parameters");
 if (!$judge)
