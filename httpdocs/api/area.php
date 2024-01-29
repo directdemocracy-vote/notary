@@ -26,7 +26,7 @@ if ($input) {
   if (isset($_GET['lon']))
     $lon = floatval($_GET['lon']);
 }
-if (!$judge)
+if (!isset($judge) || !$judge)
   error('Missing judge argument');
 if (isset($area))
   $condition = "area.name=\"$area\" AND area.local=0";
