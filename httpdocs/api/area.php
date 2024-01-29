@@ -35,7 +35,7 @@ elseif (isset($lat) && isset($lon))
 else
   error('Missing area or lat/lon arguments');
 
-$query = "SELECT id FROM area "
+$query = "SELECT area.id FROM area "
         ."INNER JOIN publication ON publication.id=area.publication "
         ."INNER JOIN participant ON participant.id=publication.participant "
         ."WHERE participant.`key`=FROM_BASE64('$judge==') AND $condition AND publication.published <= NOW()";
