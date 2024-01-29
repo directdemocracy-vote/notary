@@ -38,7 +38,7 @@ else
 $query = "SELECT UNIX_TIMESTAMP(publication.published) AS published FROM area "
         ."INNER JOIN publication ON publication.id=area.publication "
         ."INNER JOIN participant ON participant.id=publication.participant "
-        ."WHERE participant.`key`='$judge' AND $condition AND publication.published <= NOW()";
+        ."WHERE participant.`key`=FROM_BASE64('$judge==') AND $condition AND publication.published <= NOW()";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
   die("{\"status\":\"area not found\"}");
