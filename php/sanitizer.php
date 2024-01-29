@@ -33,7 +33,7 @@ function sanitize_field($variable, $type, $name) {
       else {
         $b64 = base64_encode($str);
         if (str_replace('=', '', $variable) !== str_replace('=', '', $b64))
-          error("Invalid base64 field $name. $b64 != $variable");
+          error("Invalid base64 field $name.");
       }
       break;
     case 'hex':
