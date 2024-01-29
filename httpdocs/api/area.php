@@ -7,18 +7,33 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 $input = json_decode(file_get_contents("php://input"));
-$judge = sanitize_field($input->judge, "base64", "judge");
-if (isset($input->area)) {
-  $area = $mysqli->escape_string($input->area);
-  $condition = "area.name=\"$area\" AND area.local=0";
-} else if (isset($input->lat) && isset($input->lon)) {
-  $lat = floatval($input->lat);
-  $lon = floatval($input->lon);
-  $condition = "ST_Contains(area.polygons, POINT($lon, $lat)) AND area.local=1";
-} else
-  error("Missing area and lat/lon parameters");
+if ($input) {
+  if (isset($input->judge))
+    $judge = sanitize_field($input->judge, 'base64', 'judge');
+  if (isset($input->area))
+    $area = $mysqli->escape_string($input->area);
+  if (isset($input->lat))
+    $lat = floatval($input->lat);
+  if (isset($input->lon))
+    $lon = floatval($input->lon);
+} else {
+  if (isset($_GET['judge']))
+    $judge = sanitize_field($_GET['judge'], 'base64', 'judge');
+  if (isset($_GET['area']))
+    $area = $mysqli->escape_string($_GET['area']);
+  if (isset($_GET['lat'))
+    $lat = floatval($_GET['lat']);
+  if (isset($_GET['lon'))
+    $lon = floatval($_GET['lon']);
+}
 if (!$judge)
-  error("Missing judge argument");
+  error('Missing judge argument');
+if (isset($area))
+  $condition = "area.name=\"$area\" AND area.local=0";
+elseif (isset($lat) && isset($lon))
+  $condition = "ST_Contains(area.polygons, POINT($lon, $lat)) AND area.local=1";
+else
+  error('Missing area or lat/lon arguments');
 
 $query = "SELECT UNIX_TIMESTAMP(publication.published) AS published FROM area "
         ."LEFT JOIN publication ON publication.id=area.publication "
