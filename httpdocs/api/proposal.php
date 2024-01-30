@@ -32,7 +32,8 @@ $query = "SELECT publication.id, "
         ."REPLACE(REPLACE(TO_BASE64(participantArea.`key`), '\\n', ''), '=', '') AS areaKey, "
         ."UNIX_TIMESTAMP(pa.published) AS areaPublished, "
         ."area.name AS areaName, "
-        ."ST_AsGeoJSON(area.polygons) AS areaPolygons "
+        ."ST_AsGeoJSON(area.polygons) AS areaPolygons, "
+        ."area.local AS areaLocal "
         ."FROM proposal "
         ."INNER JOIN publication ON publication.id = proposal.publication "
         ."INNER JOIN area ON area.id = proposal.area "
@@ -54,6 +55,7 @@ settype($proposal['area'], 'int');
 settype($proposal['secret'], 'bool');
 settype($proposal['deadline'], 'int');
 settype($proposal['trust'], 'int');
+settype($proposal['areaLocal'], 'bool');
 settype($proposal['participants'], 'int');
 settype($proposal['corpus'], 'int');
 if ($proposal['answers'] === '')
