@@ -302,14 +302,13 @@ if ($type === 'citizen') {
 $mysqli->query($query) or error($mysqli->error);
 if ($type === 'proposal')
   update_corpus($mysqli, $id);
-if ($type === 'vote') {
+elseif ($type === 'vote') {
   $query = "INSERT INTO results(referendum, answer, `count`) VALUES($referendum_id, \"$answer\", 1) "
           ."ON DUPLICATE KEY UPDATE `count`=`count`+1";
   $mysqli->query($query) or error($mysqli->error);
   $query = "UPDATE proposal SET participants=participants+1 WHERE id=$id";
   $mysqli->query($query) or error($mysqli->error);
-}
-if ($type === 'certificate' &&  $ctype === 'report' && $comment === 'transferred') {
+} elseif ($type === 'certificate' &&  $ctype === 'report' && $comment === 'transferred') {
   $fingerprint = sha1(base64_decode("$p=="));
   $filename = "../../transfers/$fingerprint";
   if (file_exists($filename))
