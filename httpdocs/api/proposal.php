@@ -44,7 +44,6 @@ $query = "SELECT publication.id, "
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $proposal = $result->fetch_assoc();
 $result->free();
-die($query);
 if (!$proposal)
   die('{"error":"Proposal not found"}');
 $id = intval($proposal['id']);
