@@ -43,7 +43,8 @@ $query .= ", publication.`version`, publication.`type`, "
          ."INNER JOIN participant ON participant.id=publication.participant";
 if ($key)
   $query .= " INNER JOIN certificate ON certificate.publication = publication.signature AND certificate.type = 'endorse' AND certificate.latest = 1"
-           ." INNER JOIN publication AS pe ON pe.id=certificate.publication AND pe.`key` = FROM_BASE64('$key==')";
+           ." INNER JOIN publication AS pe ON pe.id=certificate.publication"
+           ." INNER JOIN participant AS pep ON pep.id=pe.participant AND pep.`key` = FROM_BASE64('$key==')";
 if ($familyName or $givenNames) {
   $query .= " WHERE";
   if ($familyName) {
