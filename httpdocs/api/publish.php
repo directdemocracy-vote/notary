@@ -209,7 +209,6 @@ if ($type === 'citizen') {
   $query = "INSERT INTO certificate(publication,$app_fields `type`, `message`, comment, certifiedPublication, latest) "
           ."VALUES($id,$app_values \"$ctype\", \"$message\", \"$comment\", $publication_id, 1)";
 } elseif ($type === 'proposal') {
-  die("coucou 212");
   $proposal =&$publication;
   if (!isset($proposal->website))  # optional
     $website = '';
@@ -241,6 +240,7 @@ if ($type === 'citizen') {
     error("could not find area");
   $query = "INSERT INTO proposal(publication, area, title, description, question, answers, type, secret, deadline, trust, website, participants, corpus) "
           ."VALUES($id, $area, \"$title\", \"$description\", \"$question\", \"$answers\", \"$t\", $secret, FROM_UNIXTIME($deadline), $trust, \"$website\", 0, 0)";
+  error("done");
 } elseif ($type === 'participation') {
   $participation =&$publication;
   list($app, $app_signature) = check_app($participation);
