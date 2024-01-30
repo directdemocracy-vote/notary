@@ -46,7 +46,7 @@ if ($corpus)
          ." INNER JOIN publication AS pe ON pe.participant=judge.id"
          ." INNER JOIN certificate ON certificate.publication=pe.id AND certificate.latest=1 AND certificate.certifiedPublication=pc.id"
          ." INNER JOIN area ON area.id=proposal.area AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home)))"
-         ." INNER JOIN publication AS pa ON pa.id = area.publication AND pa.participation=pp.participation"
+         ." INNER JOIN publication AS pa ON pa.id = area.publication AND pa.participant=pp.participant"
          ." WHERE certificate.type='endorse' OR (certificate.type='report' AND"
          ." EXISTS(SELECT pep.id FROM publication AS pep"
          ." INNER JOIN certificate AS e ON e.publication=pep.id AND e.certifiedPublication=pp.id"
