@@ -22,16 +22,12 @@ if (isset($_GET['signature'])) {
   error("Missing fingerprint or signature GET parameter");
 
 $corpus = isset($_GET['corpus']) ? $_GET['corpus'] === '1' : false;
-$query = "SELECT title, secret FROM proposal INNER JOIN publication ON publication.id=proposal.publication AND $condition";
+$query = "SELECT title, type FROM proposal INNER JOIN publication ON publication.id=proposal.publication AND $condition";
 $result = $mysqli->query($query) or error($mysqli->error);
-$proposal = $result->fetch_assoc();
+$answer = $result->fetch_assoc();
 $result->free();
 if (!$proposal)
   error("Proposal not found");
-$answer = array();
-$answer['title'] = $proposal['title'];
-$secret = intval($proposal['secret']);
-$answer['type'] = $secret === 0 ? 'petition' : 'referendum';
 $query = "SELECT REPLACE(REPLACE(TO_BASE64(pc.signature), '\\n', ''), '=', '') AS signature, "
         ."citizen.givenNames, citizen.familyName, "
         ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture";
