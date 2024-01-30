@@ -22,7 +22,7 @@ if (isset($_GET['signature'])) {
   error("Missing fingerprint or signature GET parameter");
 
 $corpus = isset($_GET['corpus']) ? $_GET['corpus'] === '1' : false;
-$query = "SELECT title, type FROM proposal INNER JOIN publication ON publication.id=proposal.publication AND $condition";
+$query = "SELECT title, proposal.type FROM proposal INNER JOIN publication ON publication.id=proposal.publication AND $condition";
 $result = $mysqli->query($query) or error($mysqli->error);
 $answer = $result->fetch_assoc();
 $result->free();
