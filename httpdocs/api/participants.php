@@ -54,7 +54,6 @@ else
   $query .= " INNER JOIN participation ON $join3_condition"
            ." INNER JOIN publication AS ps ON ps.id=participation.publication AND ps.`key`=pc.`key`";
 $query .= " ORDER BY citizen.familyName, citizen.givenNames";
-$answer['query'] = $query;
 $result = $mysqli->query($query) or error($mysqli->error);
 $participants = array();
 while ($participant = $result->fetch_assoc()) {
