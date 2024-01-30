@@ -10,24 +10,18 @@ if (isset($_GET['signature'])) {
   $signature = sanitize_field($_GET["signature"], "base64", "signature");
   $condition = "publication.signature=FROM_BASE64('$signature==')";
   $join1_condition = "pp.signature=FROM_BASE64('$signature==')";
-  $join2_condition = "e.publication=FROM_BASE64('$signature==')";
-  $join3_condition = "signature.publication=FROM_BASE64('$signature==')";
-  $join4_condition = "participation.referendum=FROM_BASE64('$signature==')";
+  $join2_condition = "signature.publication=FROM_BASE64('$signature==')";
+  $join3_condition = "participation.referendum=FROM_BASE64('$signature==')";
 } elseif (isset($_GET['fingerprint'])) {
   $fingerprint = sanitize_field($_GET["fingerprint"], "hex", "fingerprint");
   $condition = "publication.signatureSHA1=UNHEX('$fingerprint')";
   $join1_condition = "pp.signatureSHA1=UNHEX('$fingerprint')";
-  $join2_condition = "SHA1(e.publication)='$fingerprint'";
-  $join3_condition = "SHA1(signature.publication)='$fingerprint'";
-  $join4_condition = "SHA1(participation.referendum)='$fingerprint'";
+  $join2_condition = "SHA1(signature.publication)='$fingerprint'";
+  $join3_condition = "SHA1(participation.referendum)='$fingerprint'";
 } else
   error("Missing fingerprint or signature GET parameter");
 
-if (isset($_GET['corpus']))
-  $corpus = ($_GET['corpus'] === '1');
-else
-  $corpus = false;
-
+$corpus = isset($_GET['corpus']) ? $_GET['corpus'] === '1' : false;
 $query = "SELECT title, secret FROM proposal INNER JOIN publication ON publication.id=proposal.publication AND $condition";
 $result = $mysqli->query($query) or error($mysqli->error);
 $proposal = $result->fetch_assoc();
@@ -48,20 +42,20 @@ $query .= " FROM citizen"
          ." INNER JOIN publication AS pp ON $join1_condition"
          ." INNER JOIN proposal ON proposal.publication=pp.id";
 if ($corpus)
-  $query .= " INNER JOIN participant AS judge ON judge.`type`='judge' AND judge.id=pp.id"
-         ." INNER JOIN publication AS pe ON pe.id=judge.id"
-         ." INNER JOIN certificate ON certificate.publication=pe.id AND certificate.latest=1 AND certificate.publication=pc.signature"
-         ." INNER JOIN publication AS pa ON proposal.area=pa.`signature`"
-         ." INNER JOIN area ON area.publication=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home)))"
+  $query .= " INNER JOIN participant AS judge ON judge.`type`='judge' AND judge.id=pp.participant"
+         ." INNER JOIN publication AS pe ON pe.participant=judge.id"
+         ." INNER JOIN certificate ON certificate.publication=pe.id AND certificate.latest=1 AND certificate.certifiedPublication=pc.id"
+         ." INNER JOIN area ON area.id=proposal.area AND area.participant=proposal.participant AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home)))"
+         ." INNER JOIN publication AS pa ON pa.id = area.publication"
          ." WHERE certificate.type='endorse' OR (certificate.type='report' AND"
          ." EXISTS(SELECT pep.id FROM publication AS pep"
-         ." INNER JOIN certificate AS e ON e.publication=pep.id AND $join2_condition"
+         ." INNER JOIN certificate AS e ON e.publication=pep.id AND e.certifiedPublication=pp.id"
          ." WHERE pep.id=pc.id))";
 elseif ($secret === 0)
-  $query .= " INNER JOIN certificate AS signature ON $join3_condition"
+  $query .= " INNER JOIN certificate AS signature ON $join2_condition"
            ." INNER JOIN publication AS ps ON ps.id=signature.publication AND ps.`key`=pc.`key`";
 else
-  $query .= " INNER JOIN participation ON $join4_condition"
+  $query .= " INNER JOIN participation ON $join3_condition"
            ." INNER JOIN publication AS ps ON ps.id=participation.publication AND ps.`key`=pc.`key`";
 $query .= " ORDER BY citizen.familyName, citizen.givenNames";
 
