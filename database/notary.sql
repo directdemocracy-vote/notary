@@ -176,8 +176,7 @@ ALTER TABLE `participation`
   ADD CONSTRAINT `referendumParticipation` FOREIGN KEY (`referendum`) REFERENCES `proposal` (`publication`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 ALTER TABLE `proposal`
-  ADD CONSTRAINT `proposal` FOREIGN KEY (`publication`) REFERENCES `publication` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `proposalArea` FOREIGN KEY (`area`) REFERENCES `area` (`publication`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `proposal` FOREIGN KEY (`publication`) REFERENCES `publication` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 ALTER TABLE `publication`
   ADD CONSTRAINT `publication` FOREIGN KEY (`participant`) REFERENCES `participant` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
