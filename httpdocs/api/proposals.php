@@ -52,11 +52,11 @@ if ($search !== '')
   $search = "(title LIKE \"%$search%\" OR description LIKE \"%$search%\") AND ";
 
 $query_common_part = "FROM proposal "
-                    ."LEFT JOIN publication ON publication.id = proposal.publication "
-                    ."LEFT JOIN publication AS area_p ON proposal.area = area_p.id "
-                    ."LEFT JOIN area ON area.publication = area_p.id "
-                    ."LEFT JOIN participant ON participant.id = publication.participant AND participant.type='judge' "
-                    ."LEFT JOIN webservice ON webservice.participant=participant.id "
+                    ."INNER JOIN publication ON publication.id = proposal.publication "
+                    ."INNER JOIN area ON area.id = proposal.area "
+                    ."INNER JOIN publication AS area_p ON area_p.id = area.publication "
+                    ."INNER JOIN participant ON participant.id = publication.participant AND participant.type='judge' "
+                    ."INNER JOIN webservice ON webservice.participant=participant.id "
                     ."WHERE $secret$open$search"
                     ."YEAR(proposal.deadline) = $year "
                     ."AND ST_Intersects(area.polygons, ST_Buffer(POINT($longitude, $latitude), $radius))";
