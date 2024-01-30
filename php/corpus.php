@@ -15,7 +15,7 @@ function update_corpus($mysqli, $publication) {
   INNER JOIN publication AS pa ON pa.`signature`=proposal.area
   INNER JOIN area ON area.publication=pa.id AND ST_Contains(area.polygons, POINT(ST_X(citizen.home), ST_Y(citizen.home)))
   INNER JOIN participant AS judge ON judge.`type`='judge' AND judge.id=pp.participant AND judge.id=pe.participant
-  WHERE certificate.`type`='endorse' OR (certificate.`type`='report' AND EXISTS($signed))
+  WHERE certificate.`type`='trust' OR (certificate.`type`='report' AND EXISTS($signed))
   EOT;
   $query = "UPDATE proposal SET corpus = ($count) WHERE proposal.publication=$publication";
   $mysqli->query($query) or die($mysqli->error);
