@@ -26,7 +26,7 @@ $query = "SELECT title, proposal.type FROM proposal INNER JOIN publication ON pu
 $result = $mysqli->query($query) or error($mysqli->error);
 $answer = $result->fetch_assoc();
 $result->free();
-if (!$proposal)
+if (!$answer)
   error("Proposal not found");
 $query = "SELECT REPLACE(REPLACE(TO_BASE64(pc.signature), '\\n', ''), '=', '') AS signature, "
         ."citizen.givenNames, citizen.familyName, "
