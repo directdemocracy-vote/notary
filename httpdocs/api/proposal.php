@@ -34,12 +34,12 @@ $query = "SELECT publication.id, "
         ."area.name AS areaName, "
         ."ST_AsGeoJSON(area.polygons) AS areaPolygons "
         ."FROM proposal "
-        ."LEFT JOIN publication ON publication.id = proposal.publication "
-        ."LEFT JOIN publication AS pa ON pa.id = proposal.area "
-        ."LEFT JOIN area ON area.publication = pa.id "
-        ."LEFT JOIN participant ON participant.id = publication.participant AND participant.type='judge' "
-        ."LEFT JOIN participant AS participantArea ON participantArea.id = pa.participant "
-        ."LEFT JOIN webservice ON webservice.participant=participant.id "
+        ."INNER JOIN publication ON publication.id = proposal.publication "
+        ."INNER JOIN area ON area.id = proposal.area "
+        ."INNER JOIN publication AS pa ON pa.id = area.publication "
+        ."INNER JOIN participant ON participant.id = publication.participant AND participant.type='judge' "
+        ."INNER JOIN participant AS participantArea ON participantArea.id = pa.participant "
+        ."INNER JOIN webservice ON webservice.participant=participant.id "
         ."WHERE $condition";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 $proposal = $result->fetch_assoc();
