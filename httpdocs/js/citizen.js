@@ -303,8 +303,6 @@ window.onload = async function() {
             icon = 'arrow_right_arrow_left';
             color = 'green';
             otherDay = false;
-            otherIcon = false;
-            otherColor = false;
           } else {
             icon = 'arrow_left';
             color = 'green';
@@ -320,11 +318,8 @@ window.onload = async function() {
             icon = 'arrow_left';
             color = 'green';
             day = new Date(endorsement.endorsed * 1000).toISOString().slice(0, 10);
-          } else {
-            icon = false;
-            color = false;
+          } else
             day = false;
-          }
           if (endorsement.hasOwnProperty('reportedYou')) {
             otherIcon = 'xmark';
             otherColor = 'red';
@@ -333,11 +328,8 @@ window.onload = async function() {
             otherIcon = 'arrow_right';
             otherColor = 'green';
             otherDay = new Date(endorsement.endorsedYou * 1000).toISOString().slice(0, 10);
-          } else {
-            otherIcon = false;
-            otherColor = false;
+          } else
             otherDay = false;
-          }
         }
         let dates = '';
         if (day) {
