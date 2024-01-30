@@ -97,5 +97,6 @@ $mysqli->close();
 $answer = array();
 $answer['proposals'] = $proposals;
 $answer['number'] = $number['number_of_proposals'];
+$answer['query'] = $query;
 die(json_encode($answer, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
