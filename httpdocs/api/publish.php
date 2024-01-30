@@ -231,14 +231,13 @@ if ($type === 'citizen') {
   $description = $mysqli->escape_string($publication->description);
   $deadline = sanitize_field($publication->deadline, 'positive_int', 'deadline');
   $trust = sanitize_field($publication->trust, 'positive_int', 'trust');
+  die("coucou");
   $query = "SELECT id FROM area INNER JOIN publication ON publication.id=area.publication "
           ."INNER JOIN participant ON participant.id=publication.participant "
           ."WHERE area.id=$area AND participant.`key`=FROM_BASE64('$proposal->key==')";
   $result = $mysqli->query($query) or error($mysqli->error);
   $area_publication = $result->fetch_assoc();
-  error("area publication");
-  $result->free();
-  if (!$area_publication)
+  $result->free();  if (!$area_publication)
     error("could not find area");
   $query = "INSERT INTO proposal(publication, area, title, description, question, answers, type, secret, deadline, trust, website, participants, corpus) "
           ."VALUES($id, $area, \"$title\", \"$description\", \"$question\", \"$answers\", \"$t\", $secret, FROM_UNIXTIME($deadline), $trust, \"$website\", 0, 0)";
