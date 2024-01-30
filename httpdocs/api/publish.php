@@ -243,6 +243,7 @@ if ($type === 'citizen') {
     die("could not find area");
   $query = "INSERT INTO proposal(publication, area, title, description, question, answers, type, secret, deadline, trust, website, participants, corpus) "
           ."VALUES($id, $area, \"$title\", \"$description\", \"$question\", \"$answers\", \"$t\", $secret, FROM_UNIXTIME($deadline), $trust, \"$website\", 0, 0)";
+  error($query);
 } elseif ($type === 'participation') {
   $participation =&$publication;
   list($app, $app_signature) = check_app($participation);
