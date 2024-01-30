@@ -223,7 +223,6 @@ if ($type === 'citizen') {
     $answers = array();
   else
     $answers = $publication->answers;
-  die("coucou 225");
   $answers = implode("\n", $answers);
   $answers = $mysqli->escape_string($answers);
   $t = $mysqli->escape_string($proposal->type);
@@ -233,7 +232,6 @@ if ($type === 'citizen') {
   $description = $mysqli->escape_string($publication->description);
   $deadline = sanitize_field($publication->deadline, 'positive_int', 'deadline');
   $trust = sanitize_field($publication->trust, 'positive_int', 'trust');
-  die("coucou 234");
   $query = "SELECT id FROM area INNER JOIN publication ON publication.id=area.publication "
           ."INNER JOIN participant ON participant.id=publication.participant "
           ."WHERE area.id=$area AND participant.`key`=FROM_BASE64('$proposal->key==')";
