@@ -236,12 +236,12 @@ if ($type === 'citizen') {
           ."WHERE area.id=$area AND participant.`key`=FROM_BASE64('$proposal->key==')";
   $result = $mysqli->query($query) or error($mysqli->error);
   $area_publication = $result->fetch_assoc();
+  error("area publication");
   $result->free();
   if (!$area_publication)
     error("could not find area");
   $query = "INSERT INTO proposal(publication, area, title, description, question, answers, type, secret, deadline, trust, website, participants, corpus) "
           ."VALUES($id, $area, \"$title\", \"$description\", \"$question\", \"$answers\", \"$t\", $secret, FROM_UNIXTIME($deadline), $trust, \"$website\", 0, 0)";
-  error($query);
 } elseif ($type === 'participation') {
   $participation =&$publication;
   list($app, $app_signature) = check_app($participation);
