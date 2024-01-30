@@ -50,7 +50,6 @@ window.onload = async function() {
   a.textContent = me ? "That's me" : 'Report';
   document.getElementById('panel-heading').appendChild(a);
   a.addEventListener('click', function(event) {
-    console.log('Yeah');
     let binaryFingerprint = new Uint8Array(20);
     for (let i = 0; i < 20; i += 1)
       binaryFingerprint[i] = parseInt(fingerprint.slice(2 * i, 2 * i + 2), 16);
@@ -123,7 +122,7 @@ window.onload = async function() {
           if (response === 'OK')
             window.location.replace('https://notary.directdemocracy.vote');
           else
-            console.log(response);
+            console.error(response);
         });
     });
     document.getElementById('panel-heading').appendChild(a);
@@ -280,8 +279,8 @@ window.onload = async function() {
           overlay.textContent = 'TEST';
         else {
           overlay.textContent = 'ERROR';
-          console.log('endorsement.appKey = ' + endorsement.appKey);
-          console.log('TEST_APP_KEY    = ' + TEST_APP_KEY);
+          console.error('endorsement.appKey = ' + endorsement.appKey);
+          console.error('TEST_APP_KEY    = ' + TEST_APP_KEY);
         }
         container.appendChild(overlay);
         const div = document.createElement('div');
@@ -321,6 +320,10 @@ window.onload = async function() {
             icon = 'arrow_left';
             color = 'green';
             day = new Date(endorsement.endorsed * 1000).toISOString().slice(0, 10);
+          } else {
+            icon = false;
+            color = false;
+            day = false;
           }
           if (endorsement.hasOwnProperty('reportedYou')) {
             otherIcon = 'xmark';
@@ -330,10 +333,15 @@ window.onload = async function() {
             otherIcon = 'arrow_right';
             otherColor = 'green';
             otherDay = new Date(endorsement.endorsedYou * 1000).toISOString().slice(0, 10);
+          } else {
+            otherIcon = false;
+            otherColor = false;
+            otherDay = false;
           }
         }
-        console.log(day);
-        let dates = `<i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${color}">${icon}</i> ${day}`;
+        let dates;
+        if (day)
+          dates += `<i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${color}">${icon}</i> ${day}`;
         if (otherDay)
           dates += `<br><i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${otherColor}">${otherIcon}</i> ${otherDay}`;
         content.innerHTML =
