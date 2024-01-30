@@ -231,7 +231,7 @@ if ($type === 'citizen') {
   $description = $mysqli->escape_string($publication->description);
   $deadline = sanitize_field($publication->deadline, 'positive_int', 'deadline');
   $trust = sanitize_field($publication->trust, 'positive_int', 'trust');
-  $query = "SELECT id FROM area INNER JOIN publication ON publication.id=area.publication "
+  $query = "SELECT area.id FROM area INNER JOIN publication ON publication.id=area.publication "
           ."INNER JOIN participant ON participant.id=publication.participant "
           ."WHERE area.id=$area AND participant.`key`=FROM_BASE64('$proposal->key==')";
   $result = $mysqli->query($query) or error($mysqli->error);
@@ -240,7 +240,6 @@ if ($type === 'citizen') {
     error("could not find area");
   $query = "INSERT INTO proposal(publication, area, title, description, question, answers, type, secret, deadline, trust, website, participants, corpus) "
           ."VALUES($id, $area, \"$title\", \"$description\", \"$question\", \"$answers\", \"$t\", $secret, FROM_UNIXTIME($deadline), $trust, \"$website\", 0, 0)";
-  error("done");
 } elseif ($type === 'participation') {
   $participation =&$publication;
   list($app, $app_signature) = check_app($participation);
