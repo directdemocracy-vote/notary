@@ -10,14 +10,12 @@ if (isset($_GET['signature'])) {
   $signature = sanitize_field($_GET["signature"], "base64", "signature");
   $condition = "publication.signature=FROM_BASE64('$signature==')";
   $join1_condition = "pp.signature=FROM_BASE64('$signature==')";
-  $join2_condition = "signature.publication=FROM_BASE64('$signature==')";
-  $join3_condition = "participation.referendum=FROM_BASE64('$signature==')";
+  $join2_condition = "participation.referendum=FROM_BASE64('$signature==')";
 } elseif (isset($_GET['fingerprint'])) {
   $fingerprint = sanitize_field($_GET["fingerprint"], "hex", "fingerprint");
   $condition = "publication.signatureSHA1=UNHEX('$fingerprint')";
   $join1_condition = "pp.signatureSHA1=UNHEX('$fingerprint')";
-  $join2_condition = "SHA1(signature.publication)='$fingerprint'";
-  $join3_condition = "SHA1(participation.referendum)='$fingerprint'";
+  $join2_condition = "SHA1(participation.referendum)='$fingerprint'";
 } else
   error("Missing fingerprint or signature GET parameter");
 
@@ -49,10 +47,10 @@ if ($corpus)
          ." INNER JOIN certificate AS e ON e.publication=pep.id AND e.certifiedPublication=pp.id"
          ." WHERE pep.id=pc.id))";
 elseif ($type === 'petition')
-  $query .= " INNER JOIN certificate AS signature ON $join2_condition"
+  $query .= " INNER JOIN certificate AS signature ON signature.certifiedPublication=pp.id"
            ." INNER JOIN publication AS ps ON ps.id=signature.publication AND ps.participant=pc.participant";
 else
-  $query .= " INNER JOIN participation ON $join3_condition"
+  $query .= " INNER JOIN participation ON $join2_condition"
            ." INNER JOIN publication AS ps ON ps.id=participation.publication AND ps.participant=pc.participant";
 $query .= " ORDER BY citizen.familyName, citizen.givenNames";
 $result = $mysqli->query($query) or error($mysqli->error);
