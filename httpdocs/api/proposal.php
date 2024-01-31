@@ -103,6 +103,7 @@ $query = "SELECT "
         ."WHERE trust.certifiedPublication=pc.id AND trust.latest=1 AND (trust.type='trust' OR trust.type='distrust')";
 $result = $mysqli->query($query) or error($mysqli->error);
 $certificate = $result->fetch_assoc();
+$result->free();
 $answer = [];
 $answer['certificate'] = $certificate;
 $answer['proposal'] = $proposal;
