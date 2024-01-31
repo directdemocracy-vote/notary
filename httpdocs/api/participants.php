@@ -50,7 +50,7 @@ if ($corpus)
          ." WHERE pep.id=pc.id))";
 elseif ($type === 'petition')
   $query .= " INNER JOIN certificate AS signature ON $join2_condition"
-           ." INNER JOIN publication AS ps ON ps.id=signature.publication AND ps.particpant=pc.participant"
+           ." INNER JOIN publication AS ps ON ps.id=signature.publication AND ps.particpant=pc.participant";
 else
   $query .= " INNER JOIN participation ON $join3_condition"
            ." INNER JOIN publication AS ps ON ps.id=participation.publication AND ps.`key`=pc.`key`";
