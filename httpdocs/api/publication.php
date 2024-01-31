@@ -93,7 +93,7 @@ if ($type === 'citizen') {
   $proposal = $publication + $proposal;
   echo json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type === 'area') {
-  $query = "SELECT id, name, ST_AsGeoJSON(polygons) AS polygons FROM area WHERE publication=$publication_id";
+  $query = "SELECT id, name, ST_AsGeoJSON(polygons) AS polygons, local FROM area WHERE publication=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $area = $result->fetch_assoc();
   $area['id'] = intval($area['id']);
@@ -102,6 +102,7 @@ if ($type === 'citizen') {
   if ($polygons->type !== 'MultiPolygon')
     error("area without MultiPolygon: $polygons->type");
   $area['polygons'] = &$polygons->coordinates;
+  $area['local'] = $area['local'] == 1 ? true : false; 
   $result->free();
   $area = $publication + $area;
   echo json_encode($area, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
