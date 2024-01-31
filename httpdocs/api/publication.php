@@ -74,10 +74,11 @@ if ($type === 'citizen') {
   $certificate = $publication + $certificate;
   echo json_encode($certificate, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type === 'proposal') {
-  $query = "SELECT REPLACE(REPLACE(TO_BASE64(area), '\\n', ''), '=', '') AS area, title, description, question, answers, secret, UNIX_TIMESTAMP(deadline) AS deadline, trust, website FROM proposal WHERE publication=$publication_id";
+  $query = "SELECT area, title, description, question, answers, secret, UNIX_TIMESTAMP(deadline) AS deadline, trust, website FROM proposal WHERE publication=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $proposal = $result->fetch_assoc();
   $result->free();
+  $proposal['area'] = intval($proposal['area']);
   if ($proposal['website'] === '')
     unset($proposal['website']);
   $proposal['deadline'] = intval($proposal['deadline']);
@@ -92,9 +93,10 @@ if ($type === 'citizen') {
   $proposal = $publication + $proposal;
   echo json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type === 'area') {
-  $query = "SELECT name, ST_AsGeoJSON(polygons) AS polygons FROM area WHERE publication=$publication_id";
+  $query = "SELECT id, name, ST_AsGeoJSON(polygons) AS polygons FROM area WHERE publication=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $area = $result->fetch_assoc();
+  $area['id'] = intval($area['id']);
   $polygons = json_decode($area['polygons']);
   if ($polygons->type !== 'MultiPolygon')
     error("area without MultiPolygon: $polygons->type");
