@@ -11,11 +11,13 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 if (isset($_GET['signature']))
-  $signature = sanitize_field($_GET["signature"], "base64", "signature");
+  $signature = sanitize_field($_GET['signature'], 'base64', 'signature');
 elseif (isset($_GET['fingerprint']))
-  $fingerprint = sanitize_field($_GET["fingerprint"], "hex", "fingerprint");
+  $fingerprint = sanitize_field($_GET['fingerprint'], 'hex', 'fingerprint');
 else
   die('{"error":"Missing fingerprint or signature parameter"}');
+
+$citizen = isset($_GET['citizen']) ? sanitize_field($_GET['citizen'], 'base64', 'citizen') : false;
 
 $condition = (isset($signature)) ? "publication.signature=FROM_BASE64('$signature==')" : "publication.signatureSHA1=UNHEX('$fingerprint')";
 
@@ -34,7 +36,8 @@ $query = "SELECT publication.id, "
         ."UNIX_TIMESTAMP(pa.published) AS areaPublished, "
         ."area.name AS areaName, "
         ."ST_AsGeoJSON(area.polygons) AS areaPolygons, "
-        ."area.local AS areaLocal "
+        ."area.local AS areaLocal, "
+        ."participant.id AS judgeParticipant "
         ."FROM proposal "
         ."INNER JOIN publication ON publication.id = proposal.publication "
         ."INNER JOIN area ON area.id = proposal.area "
@@ -59,6 +62,8 @@ settype($proposal['trust'], 'int');
 settype($proposal['areaLocal'], 'bool');
 settype($proposal['participants'], 'int');
 settype($proposal['corpus'], 'int');
+$judge = intval($proposal['judgeParticipant']);
+unset($proposal['judgeParticipant']);
 if ($proposal['answers'] === '')
   unset($proposal['answers']);
 else
@@ -72,7 +77,7 @@ if ($polygons->type !== 'MultiPolygon')
 $proposal['areaPolygons'] = &$polygons->coordinates;
 if ($proposal['secret']) {
   $proposal['results'] = [];
-  $proposal['answers'][] = ''; // abstention
+  $proposal['answers'][] = ''; // abstention; FIXME: remove this
   foreach($proposal['answers'] as $key => $value) {
     $query = "SELECT `count` FROM results WHERE referendum=$id AND answer=\"$value\"";
     $r = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
@@ -82,6 +87,24 @@ if ($proposal['secret']) {
   }
 }
 $mysqli->close();
-$json = json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-die($json);
+if ($citizen === false)
+  die(json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+$query = "SELECT "
+        ."CONCAT(CONCAT('https://directdemocracy.vote/json-schema/', pt.`version`, '/', pt.`type`, '.schema.json') AS `schema`, "
+        ."'$proposal[key]' AS `key`, "
+        ."REPLACE(REPLACE(TO_BASE64(pt.signature), '\\n', ''), '=', '') AS signature, "
+        ."UNIX_TIMESTAMP(pt.published) AS published, "
+        ."trust.type, "
+        ."REPLACE(REPLACE(TO_BASE64(trust.publication), '\\n', ''), '=', '') AS publication, "
+        ."trust.comment, trust.message "
+        ."FROM certificate AS trust "
+        ."INNER JOIN publication AS pt ON pt.id=trust.publication AND pt.participant=$judge "
+        ."INNER JOIN publication AS pc ON pc.signature=FROM_BASE64('$citizen==') "
+        ."WHERE trust.certifiedPublication=pc.id AND trust.latest=1 AND (trust.type='trust' OR trust.type='distrust')";
+$result = $mysqli->query($query) or error($mysqli->error);
+$certificate = $result->fetch_assoc();
+$answer = [];
+$answer['certificate'] = $certificate;
+$answer['proposal'] = $proposal;
+die(json_encode($answer, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
