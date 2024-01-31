@@ -28,6 +28,7 @@ $answer = $result->fetch_assoc();
 $result->free();
 if (!$answer)
   error("Proposal not found");
+$type = $proposal['type'];
 $query = "SELECT REPLACE(REPLACE(TO_BASE64(pc.signature), '\\n', ''), '=', '') AS signature, "
         ."citizen.givenNames, citizen.familyName, "
         ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture";
@@ -47,9 +48,9 @@ if ($corpus)
          ." EXISTS(SELECT pep.id FROM publication AS pep"
          ." INNER JOIN certificate AS e ON e.publication=pep.id AND e.certifiedPublication=pp.id"
          ." WHERE pep.id=pc.id))";
-elseif ($secret === 0)
+elseif ($type === 'petition')
   $query .= " INNER JOIN certificate AS signature ON $join2_condition"
-           ." INNER JOIN publication AS ps ON ps.id=signature.publication AND ps.`key`=pc.`key`";
+           ." INNER JOIN publication AS ps ON ps.id=signature.publication AND ps.particpant=pc.participant"
 else
   $query .= " INNER JOIN participation ON $join3_condition"
            ." INNER JOIN publication AS ps ON ps.id=participation.publication AND ps.`key`=pc.`key`";
