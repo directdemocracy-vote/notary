@@ -28,7 +28,7 @@ $answer = $result->fetch_assoc();
 $result->free();
 if (!$answer)
   error("Proposal not found");
-$type = $proposal['type'];
+$type = $answer['type'];
 $query = "SELECT REPLACE(REPLACE(TO_BASE64(pc.signature), '\\n', ''), '=', '') AS signature, "
         ."citizen.givenNames, citizen.familyName, "
         ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture";
@@ -53,7 +53,7 @@ elseif ($type === 'petition')
            ." INNER JOIN publication AS ps ON ps.id=signature.publication AND ps.particpant=pc.participant";
 else
   $query .= " INNER JOIN participation ON $join3_condition"
-           ." INNER JOIN publication AS ps ON ps.id=participation.publication AND ps.`key`=pc.`key`";
+           ." INNER JOIN publication AS ps ON ps.id=participation.publication AND ps.participant=pc.participant";
 $query .= " ORDER BY citizen.familyName, citizen.givenNames";
 $result = $mysqli->query($query) or error($mysqli->error);
 $participants = array();
