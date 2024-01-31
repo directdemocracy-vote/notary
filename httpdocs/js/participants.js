@@ -68,7 +68,7 @@ window.onload = function() {
           const p = document.createElement('p');
           p.setAttribute('style', 'width:100%');
           const a = document.createElement('a');
-          a.setAttribute('href', `citizen.html?${selector}`);
+          a.setAttribute('href', `citizen.html?signature=${encodeURIComponent(participant.signature)}`);
           a.setAttribute('target', '_blank');
           p.appendChild(a);
           const img = document.createElement('img');
