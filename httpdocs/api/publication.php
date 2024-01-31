@@ -97,6 +97,7 @@ if ($type === 'citizen') {
   $result = $mysqli->query($query) or error($mysqli->error);
   $area = $result->fetch_assoc();
   $area['id'] = intval($area['id']);
+  $area['name'] = explode("\n", $area['name']);
   $polygons = json_decode($area['polygons']);
   if ($polygons->type !== 'MultiPolygon')
     error("area without MultiPolygon: $polygons->type");
