@@ -17,6 +17,8 @@ elseif (isset($_GET['fingerprint']))
 else
   die('{"error":"Missing fingerprint or signature parameter"}');
 
+$key = isset($_GET['key']) ? sanitize_field($_GET['key'], 'base64', 'key') : false;
+
 $condition = (isset($signature)) ? "publication.signature=FROM_BASE64('$signature==')" : "publication.signatureSHA1=UNHEX('$fingerprint')";
 
 $query = "SELECT publication.id, "
@@ -81,5 +83,11 @@ if ($proposal['secret']) {
   }
 }
 $mysqli->close();
-die(json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+if ($key === false)
+  die(json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+$reputation = file_get_content("$judge/api/reputation.php?key=".urlencode($key)."&timestamp=1");
+$answer = [];
+$answer['reputation'] = $reputation;
+$answer['proposal'] = $proposal;
+die(json_encode($answer, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
