@@ -17,7 +17,7 @@ elseif (isset($_GET['fingerprint']))
 else
   die('{"error":"Missing fingerprint or signature parameter"}');
 
-$key = isset($_GET['key']) ? sanitize_field($_GET['key'], 'base64', 'key') : false;
+$citizen = isset($_GET['citizen']) ? sanitize_field($_GET['citizen'], 'base64', 'citizen signature') : false;
 
 $condition = (isset($signature)) ? "publication.signature=FROM_BASE64('$signature==')" : "publication.signatureSHA1=UNHEX('$fingerprint')";
 
@@ -37,6 +37,7 @@ $query = "SELECT publication.id, "
         ."area.name AS areaName, "
         ."ST_AsGeoJSON(area.polygons) AS areaPolygons, "
         ."area.local AS areaLocal, "
+        ."participant.id AS judgeParticipant "
         ."FROM proposal "
         ."INNER JOIN publication ON publication.id = proposal.publication "
         ."INNER JOIN area ON area.id = proposal.area "
@@ -61,6 +62,8 @@ settype($proposal['trust'], 'int');
 settype($proposal['areaLocal'], 'bool');
 settype($proposal['participants'], 'int');
 settype($proposal['corpus'], 'int');
+$judge = intval($proposal['judgeParticipant']);
+unset($proposal['judgeParticipant']);
 if ($proposal['answers'] === '')
   unset($proposal['answers']);
 else
@@ -83,11 +86,29 @@ if ($proposal['secret']) {
   }
 }
 $mysqli->close();
-if ($key === false)
+if ($citizen === false)
   die(json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-$reputation = file_get_content("$judge/api/reputation.php?key=".urlencode($key)."&timestamp=1");
+$query = "SELECT "
+        ."CONCAT(CONCAT('https://directdemocracy.vote/json-schema/', pt.`version`, '/certificate.schema.json') AS `schema`, "
+        ."'$proposal[key]' AS `key`, "
+        ."REPLACE(REPLACE(TO_BASE64(pt.signature), '\\n', ''), '=', '') AS signature, "
+        ."UNIX_TIMESTAMP(pt.published) AS published, "
+        ."trust.type, "
+        ."REPLACE(REPLACE(TO_BASE64(trust.publication), '\\n', ''), '=', '') AS publication, "
+        ."trust.comment, trust.message "
+        ."FROM certificate AS trust "
+        ."INNER JOIN publication AS pc ON pc.signature=FROM_BASE64('$citizen==') AND pc.id=trust.certifiedPublication "
+        ."INNER JOIN publication AS pt ON pt.id=trust.publication AND pt.participant=$judge "
+        ."WHERE trust.latest=1";
+$result = $mysqli->query($query) or error($mysqli->error);
+$certificate = $result->fetch_assoc();
+$result->free();
+if ($certificate['comment'] === '')
+  unset($certificate['comment']);
+if ($certificate['message'] === '')
+  unset($certificate['message']);
 $answer = [];
-$answer['reputation'] = $reputation;
+$answer['certificate'] = $certificate;
 $answer['proposal'] = $proposal;
 die(json_encode($answer, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
