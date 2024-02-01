@@ -39,8 +39,8 @@ function delete_publication($mysqli, $type) {
   return $mysqli->affected_rows / 2;
 }
 
-$n_citizen = $citizens ? delete_publication($mysqli, 'citizen') : 0;
 $n_certificate = $certificates ? delete_publication($mysqli, 'certificate') : 0;
+$n_citizen = $citizens ? delete_publication($mysqli, 'citizen') : 0;
 $n_proposal = $proposals ? delete_publication($mysqli, 'proposal') : 0;
 $n_area = $areas ? delete_publication($mysqli, 'area') : 0;
 $n_participation = $participations ? delete_publication($mysqli, 'participation') : 0;
