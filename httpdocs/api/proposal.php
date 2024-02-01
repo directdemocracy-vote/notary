@@ -85,7 +85,6 @@ if ($proposal['secret']) {
     $proposal['results'][] = $c ? intval($c['count']) : 0;
   }
 }
-$mysqli->close();
 if ($citizen) {
   $query = "SELECT "
           ."UNIX_TIMESTAMP(pt.published) AS published, "
@@ -102,5 +101,6 @@ if ($citizen) {
   else
     $proposal['trusted'] = 0;
 }
+$mysqli->close();
 die(json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
