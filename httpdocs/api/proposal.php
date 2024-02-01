@@ -88,7 +88,7 @@ if ($proposal['secret']) {
 if ($citizen) {
   $query = "SELECT "
           ."UNIX_TIMESTAMP(pt.published) AS published, "
-          ."trust.type, "
+          ."trust.type "
           ."FROM certificate AS trust "
           ."INNER JOIN publication AS pc ON pc.signature=FROM_BASE64('$citizen==') AND pc.id=trust.certifiedPublication "
           ."INNER JOIN publication AS pt ON pt.id=trust.publication AND pt.participant=$judge "
