@@ -86,29 +86,21 @@ if ($proposal['secret']) {
   }
 }
 $mysqli->close();
-if ($citizen === false)
-  die(json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-$query = "SELECT "
-        ."CONCAT(CONCAT('https://directdemocracy.vote/json-schema/', pt.`version`, '/certificate.schema.json') AS `schema`, "
-        ."'$proposal[key]' AS `key`, "
-        ."REPLACE(REPLACE(TO_BASE64(pt.signature), '\\n', ''), '=', '') AS signature, "
-        ."UNIX_TIMESTAMP(pt.published) AS published, "
-        ."trust.type, "
-        ."REPLACE(REPLACE(TO_BASE64(trust.publication), '\\n', ''), '=', '') AS publication, "
-        ."trust.comment, trust.message "
-        ."FROM certificate AS trust "
-        ."INNER JOIN publication AS pc ON pc.signature=FROM_BASE64('$citizen==') AND pc.id=trust.certifiedPublication "
-        ."INNER JOIN publication AS pt ON pt.id=trust.publication AND pt.participant=$judge "
-        ."WHERE trust.latest=1";
-$result = $mysqli->query($query) or error($mysqli->error);
-$certificate = $result->fetch_assoc();
-$result->free();
-if ($certificate['comment'] === '')
-  unset($certificate['comment']);
-if ($certificate['message'] === '')
-  unset($certificate['message']);
-$answer = [];
-$answer['certificate'] = $certificate;
-$answer['proposal'] = $proposal;
-die(json_encode($answer, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+if ($citizen) {
+  $query = "SELECT "
+          ."UNIX_TIMESTAMP(pt.published) AS published, "
+          ."trust.type, "
+          ."FROM certificate AS trust "
+          ."INNER JOIN publication AS pc ON pc.signature=FROM_BASE64('$citizen==') AND pc.id=trust.certifiedPublication "
+          ."INNER JOIN publication AS pt ON pt.id=trust.publication AND pt.participant=$judge "
+          ."WHERE trust.latest=1";
+  $result = $mysqli->query($query) or error($mysqli->error);
+  $certificate = $result->fetch_assoc();
+  $result->free();
+  if ($certificate)
+    $proposal['trusted'] = $certificate['type'] === 'distrust' ? -1 : intval($certificate['published']);
+  else
+    $proposal['trusted'] = 0;
+}
+die(json_encode($proposal, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
