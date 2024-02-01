@@ -24,8 +24,8 @@ $password = $input->password;
 if ($password !== $admin_password)
   error('Wrong password.');
 
-$citizens = $mysqli->escape_string($input->citizens);
 $certificates = $mysqli->escape_string($input->certificates);
+$citizens = $mysqli->escape_string($input->citizens);
 $proposals = $mysqli->escape_string($input->proposals);
 $areas = $mysqli->escape_string($input->areas);
 $participations = $mysqli->escape_string($input->participations);
