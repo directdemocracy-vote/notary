@@ -314,7 +314,7 @@ elseif ($type === 'vote') {
   $query = "INSERT INTO results(referendum, answer, `count`) VALUES($referendum_id, \"$answer\", 1) "
           ."ON DUPLICATE KEY UPDATE `count`=`count`+1";
   $mysqli->query($query) or error($mysqli->error);
-  $query = "UPDATE proposal SET participants=participants+1 WHERE id=$id";
+  $query = "UPDATE proposal SET participants=participants+1 WHERE publication=$id";
   $mysqli->query($query) or error($mysqli->error);
 } elseif ($type === 'certificate' &&  $ctype === 'report' && $comment === 'transferred') {
   $fingerprint = sha1(base64_decode("$p=="));
