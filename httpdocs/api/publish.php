@@ -32,6 +32,7 @@ function check_app($publication, $vote=false) {
   if ($vote) {
     $voteBytes = base64_decode("$publication->referendum==");
     $voteBytes .= pack('J', $publication->number);
+    $voteBytes .= pack('J', $publication->area);
     $voteBytes .= base64_decode("$publication->ballot");
     $voteBytes .= $publication->answer;
     $publicKey = openssl_pkey_get_public(public_key($appKey));
@@ -68,8 +69,6 @@ $published = sanitize_field($publication->published, 'positive_int', 'published'
 $signature = sanitize_field($publication->signature, 'base64', 'signature');
 if (isset($publication->blindKey))
   $blindKey = sanitize_field($publication->blindKey, 'base64', 'signature');
-if (isset($publication->encryptedVote))
-  $encrypted_vote = sanitize_field($publication->encryptedVote, 'base64', 'signature');
 
 # validate from json-schema
 $schema_file = file_get_contents($schema);
@@ -243,8 +242,9 @@ if ($type === 'citizen') {
 } elseif ($type === 'participation') {
   $participation =&$publication;
   list($app, $app_signature) = check_app($participation);
-  $query = "INSERT INTO participation(publication, app, appSignature, referendum, encryptedVote) "
-          ."VALUES($id, $app, FROM_BASE64('$app_signature=='), FROM_BASE64('$participation->referendum=='), FROM_BASE64('$encrypted_vote'))";  # FIXME: referendum is an int
+  $area = intval($participation->area);
+  $query = "INSERT INTO participation(publication, app, appSignature, referendum, area) "
+          ."VALUES($id, $app, FROM_BASE64('$app_signature=='), FROM_BASE64('$participation->referendum=='), $area)";  # FIXME: referendum is an int
 } elseif ($type === 'vote') {
   $vote = &$publication;
   list($app, $app_signature) = check_app($vote, true);
