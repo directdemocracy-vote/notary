@@ -259,7 +259,7 @@ if ($type === 'citizen') {
   $area = sanitize_field($vote->area, 'positive_int', 'area');
   $ballot = sanitize_field($vote->ballot, 'base64', 'ballot');
   $answer = $mysqli->escape_string($vote->answer);
-  $result = $mysqli->query("SELECT id FROM publication WHERE `signature`=FROM_BASE64('$referendum==') AND `type`='proposal')") or error($mysqli->error);
+  $result = $mysqli->query("SELECT id FROM publication WHERE `signature`=FROM_BASE64('$referendum==') AND `type`='proposal'") or error($mysqli->error);
   $referendum_publication = $result->fetch_assoc();
   $result->free();
   if (!$referendum_publication)
