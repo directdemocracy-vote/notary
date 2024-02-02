@@ -93,7 +93,8 @@ CREATE TABLE `vote` (
   `referendum` int(11) NOT NULL,
   `number` int(11) NOT NULL,
   `ballot` binary(32) NOT NULL,
-  `answer` text NOT NULL
+  `answer` text NOT NULL,
+  `area` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `webservice` (
