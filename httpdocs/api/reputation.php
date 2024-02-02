@@ -1,5 +1,5 @@
 <?php
-# This a proxy to query any judge for the reputation of a citizen
+# This is a proxy to query any judge for the reputation of a citizen
 require_once '../../php/database.php';
 require_once '../../php/sanitizer.php';
 
