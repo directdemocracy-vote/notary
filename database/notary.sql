@@ -129,7 +129,8 @@ ALTER TABLE `participant`
 ALTER TABLE `participation`
   ADD PRIMARY KEY (`publication`),
   ADD KEY `app` (`app`),
-  ADD KEY `referendum` (`referendum`);
+  ADD KEY `referendum` (`referendum`),
+  ADD KEY `area` (`area`);
 
 ALTER TABLE `proposal`
   ADD PRIMARY KEY (`publication`),
