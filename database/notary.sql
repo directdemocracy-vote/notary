@@ -50,7 +50,7 @@ CREATE TABLE `participation` (
   `app` int(11) NOT NULL,
   `appSignature` blob NOT NULL,
   `referendum` int(11) NOT NULL,
-  `encryptedVote` blob NOT NULL
+  `area` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `proposal` (
