@@ -35,7 +35,16 @@ elseif (isset($lat) && isset($lon))
 else
   error('Missing area or lat/lon arguments');
 
-$query = "SELECT area.id FROM area "
+$query = "SELECT "
+        ."CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json') AS `schema`, "
+        ."REPLACE(REPLACE(TO_BASE64(participant.`key`), '\\n', ''), '=', '') AS `key`, "
+        ."REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature, "
+        ."UNIX_TIMESTAMP(publication.published) AS published "
+        ."area.id, "
+        ."area.name, "
+        ."ST_AsGeoJSON(area.polygons) AS polygons, "
+        ."area.local "
+        ."FROM area "
         ."INNER JOIN publication ON publication.id=area.publication "
         ."INNER JOIN participant ON participant.id=publication.participant "
         ."WHERE participant.`key`=FROM_BASE64('$judge==') AND $condition "
@@ -47,5 +56,8 @@ $area = $result->fetch_assoc();
 $result->free();
 $mysqli->close();
 $id = $area ? intval($area['id']) : 0;
-die("{\"id\":$id}");
+if ($id === 0)
+  die("{\"id\":$id}");
+else
+  die(json_encode($area, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
