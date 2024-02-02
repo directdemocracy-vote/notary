@@ -19,8 +19,10 @@ $query = "SELECT url FROM webservice INNER JOIN participant ON participant.id=we
 $result = $mysqli->query($query) or error($mysqli->error);
 $j = $result->fetch_assoc();
 $result->free();
+$mysqli->close();
 if (!$j)
   error('judge not found');
 $url = $j['url'];
-return file_get_contents("$url/api/reputation.php?key=".urlencode($key));
+$response = file_get_contents("$url/api/reputation.php?key=".urlencode($key));
+die($response);
 ?>
