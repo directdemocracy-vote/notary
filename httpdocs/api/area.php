@@ -55,9 +55,16 @@ if (!$result)
 $area = $result->fetch_assoc();
 $result->free();
 $mysqli->close();
-$id = $area ? intval($area['id']) : 0;
-if ($id === 0)
-  die("{\"id\":$id}");
-else
+if ($area) {
+  $area['published'] = intval($area['published']);
+  $area['id'] = intval($area['id']);
+  $area['name'] = explode("\n", $area['name']);
+  $polygons = json_decode($area['polygons']);
+  if ($polygons->type !== 'MultiPolygon')
+    error("area without MultiPolygon: $polygons->type");
+  $area['polygons'] = &$polygons->coordinates;
+  $area['local'] = $area['local'] == 1 ? true : false; 
   die(json_encode($area, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+} else
+  die('{"id":0}');
 ?>
