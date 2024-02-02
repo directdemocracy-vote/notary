@@ -244,7 +244,7 @@ if ($type === 'citizen') {
   $participation =&$publication;
   list($app, $app_signature) = check_app($participation);
   $query = "INSERT INTO participation(publication, app, appSignature, referendum, encryptedVote) "
-          ."VALUES($id, $app, FROM_BASE64('$app_signature=='), FROM_BASE64('$participation->referendum=='), FROM_BASE64('$encrypted_vote'))";
+          ."VALUES($id, $app, FROM_BASE64('$app_signature=='), FROM_BASE64('$participation->referendum=='), FROM_BASE64('$encrypted_vote'))";  # FIXME: referendum is an int
 } elseif ($type === 'vote') {
   $vote = &$publication;
   list($app, $app_signature) = check_app($vote, true);
