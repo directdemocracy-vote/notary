@@ -243,7 +243,7 @@ if ($type === 'citizen') {
   $participation = &$publication;
   list($app, $app_signature) = check_app($participation);
   $referendum = sanitize_field($participation->referendum, 'base64', 'referendum');
-  $area = sanitize_field($participation->area, 'positive_integer', 'area');
+  $area = sanitize_field($participation->area, 'positive_int', 'area');
   $result = $mysqli->query("SELECT id FROM publication WHERE type='proposal' AND `key`=FROM_BASE64('$referendum==')") or error($mysqli->error);
   $proposal = $result->fetch_assoc();
   if (!$proposal)
