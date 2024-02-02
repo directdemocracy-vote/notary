@@ -26,5 +26,5 @@ $mysqli->close();
 if (!$j)
   error('judge not found');
 $url = $j['url'];
-die(file_get_contents("$url/api/publish_area.php?key=".urlencode($key)."&lat=$lat&lon=$lon"));
+die(file_get_contents("$url/api/publish_area.php?lat=$lat&lon=$lon"));
 ?>
