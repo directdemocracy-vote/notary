@@ -240,16 +240,23 @@ if ($type === 'citizen') {
   $query = "INSERT INTO proposal(publication, area, title, description, question, answers, type, secret, deadline, trust, website, participants, corpus) "
           ."VALUES($id, $area, \"$title\", \"$description\", \"$question\", \"$answers\", \"$t\", $secret, FROM_UNIXTIME($deadline), $trust, \"$website\", 0, 0)";
 } elseif ($type === 'participation') {
-  $participation =&$publication;
+  $participation = &$publication;
   list($app, $app_signature) = check_app($participation);
-  $area = intval($participation->area);
+  $referendum = sanitize_field($participation->referendum, 'base64', 'referendum');
+  $area = sanitize_field($participation->area, 'positive_integer', 'area');
+  $result = $mysqli->query("SELECT id FROM publication WHERE type='proposal' AND `key`=FROM_BASE64('$referendum==')") or error($mysqli->error);
+  $proposal = $result->fetch_assoc();
+  if (!$proposal)
+    error('proposal for participation not found');
+  $referendum_id = intval($proposal['id']);
   $query = "INSERT INTO participation(publication, app, appSignature, referendum, area) "
-          ."VALUES($id, $app, FROM_BASE64('$app_signature=='), FROM_BASE64('$participation->referendum=='), $area)";  # FIXME: referendum is an int
+          ."VALUES($id, $app, FROM_BASE64('$app_signature=='), $referendum_id, $area)";
 } elseif ($type === 'vote') {
   $vote = &$publication;
   list($app, $app_signature) = check_app($vote, true);
   $referendum = sanitize_field($vote->referendum, 'base64', 'referendum');
   $number = sanitize_field($vote->number, 'positive_int', 'number');
+  $area = sanitize_field($vote->area, 'positive_int', 'area');
   $ballot = sanitize_field($vote->ballot, 'base64', 'ballot');
   $answer = $mysqli->escape_string($vote->answer);
   $result = $mysqli->query("SELECT id FROM publication WHERE `signature`=FROM_BASE64('$referendum==') AND `type`='proposal')") or error($mysqli->error);
@@ -258,11 +265,12 @@ if ($type === 'citizen') {
   if (!$referendum_publication)
     error("referendum not found");
   $referendum_id = $referendum_publication['id'];
-  $query = "INSERT INTO vote(publication, app, appSignature, referendum, number, ballot, answer) VALUES($id, "
+  $query = "INSERT INTO vote(publication, app, appSignature, referendum, number, area, ballot, answer) VALUES($id, "
           ."$app, "
           ."FROM_BASE64('$app_signature=='), "
           ."$referendum_id, "
           ."$number, "
+          ."$area, "
           ."FROM_BASE64('$ballot'), "
           ."\"$answer\") "
           ."ON DUPLICATE KEY UPDATE appSignature=FROM_BASE64('$app_signature=='), number=$number, answer=\"$answer\";";
