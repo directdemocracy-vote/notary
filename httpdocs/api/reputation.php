@@ -23,6 +23,5 @@ $mysqli->close();
 if (!$j)
   error('judge not found');
 $url = $j['url'];
-$response = file_get_contents("$url/api/reputation.php?key=".urlencode($key));
-die($response);
+die(file_get_contents("$url/api/reputation.php?key=".urlencode($key)));
 ?>
