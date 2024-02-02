@@ -38,7 +38,8 @@ else
 $query = "SELECT area.id FROM area "
         ."INNER JOIN publication ON publication.id=area.publication "
         ."INNER JOIN participant ON participant.id=publication.participant "
-        ."WHERE participant.`key`=FROM_BASE64('$judge==') AND $condition AND publication.published <= NOW()";
+        ."WHERE participant.`key`=FROM_BASE64('$judge==') AND $condition "
+        ."ORDER BY publication.published DESC LIMIT 1";
 $result = $mysqli->query($query) or error($mysqli->error);
 if (!$result)
   die("{\"status\":\"area not found\"}");
