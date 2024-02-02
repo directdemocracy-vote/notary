@@ -244,7 +244,7 @@ if ($type === 'citizen') {
   list($app, $app_signature) = check_app($participation);
   $referendum = sanitize_field($participation->referendum, 'base64', 'referendum');
   $area = sanitize_field($participation->area, 'positive_int', 'area');
-  $result = $mysqli->query("SELECT id FROM publication WHERE type='proposal' AND `key`=FROM_BASE64('$referendum==')") or error($mysqli->error);
+  $result = $mysqli->query("SELECT id FROM publication WHERE type='proposal' AND signature=FROM_BASE64('$referendum==')") or error($mysqli->error);
   $proposal = $result->fetch_assoc();
   if (!$proposal)
     error('proposal for participation not found');
