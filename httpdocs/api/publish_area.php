@@ -15,8 +15,8 @@ if (!isset($_GET['lon']))
   die('{"error":"missing lon argument"}');
 
 $judge = sanitize_field($_GET['judge'], 'base64', 'judge');
-$lat = sanitize_field($_GET['lat', 'float', 'lat');
-$lon = sanitize_field($_GET['lon', 'float', 'lon');
+$lat = sanitize_field($_GET['lat'], 'float', 'lat');
+$lon = sanitize_field($_GET['lon'], 'float', 'lon');
 
 $query = "SELECT url FROM webservice INNER JOIN participant ON participant.id=webservice.participant WHERE participant.`key`=FROM_BASE64('$judge==')";
 $result = $mysqli->query($query) or error($mysqli->error);
