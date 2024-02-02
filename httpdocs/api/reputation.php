@@ -22,5 +22,5 @@ $result->free();
 if (!$j)
   error('judge not found');
 $url = $j['url'];
-return file_get_content("$judge/api/reputation?key=".urlencode($key));
+return file_get_contents("$judge/api/reputation?key=".urlencode($key));
 ?>
