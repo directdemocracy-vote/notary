@@ -123,7 +123,7 @@ window.onload = async function() {
         actionButton.removeAttribute('disabled');
       const corpus = answer.corpus;
       const participants = answer.secret ? 'Voters' : 'Signatures';
-      const participants_count = answer.secret ? (total === answer.participants ? total : `${total}/${answer.participants}`) : answer.participants;
+      const participants_count = answer.secret ? total : answer.participants;
       const participation = corpus === 0 ? 0 : Math.round(10000 * answer.participants / corpus) / 100;
       const line = `Corpus: <a target="_blank" href="participants.html?${payload}&corpus=1">` +
         `${corpus}</a> &mdash; ` +
