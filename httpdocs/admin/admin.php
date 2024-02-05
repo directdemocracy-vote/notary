@@ -35,7 +35,7 @@ $results = $mysqli->escape_string($input->results);
 
 $query = "";
 
-function delete_certificicate($mysqli, $type) {
+function delete_certificate($mysqli, $type) {
   query("DELETE FROM certificate WHERE type='$type'");
   return $mysqli->affected_rows;
 }
