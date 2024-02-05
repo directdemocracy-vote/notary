@@ -193,8 +193,10 @@ if ($type === 'citizen') {
       error("cannot sign petition after deadline passed");
     # increment the number of participants in a petition
     $committed_id = $committed['id'];
-    $query = "UPDATE proposal SET participants=participants+1 WHERE proposal.publication=$committed_id AND proposal.`secret`=0";
+    $query = "UPDATE proposal SET participants=participants+1 WHERE proposal.publication=$committed_id AND proposal.type='petition'";
     $mysqli->query($query) or error($msqli->error);
+    if ($mysqli->affected_rows === 0)
+      die("failed to update participation in proposal $committed_id");
   }
   # mark other certificates on the same publication by the same participant as not the latest
   $mysqli->query("UPDATE certificate INNER JOIN publication ON publication.id = certificate.publication"
