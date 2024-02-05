@@ -180,9 +180,9 @@ if ($type === 'citizen') {
   $committed = $result->fetch_assoc();
   $result->free();
   if (!$committed)
-    error("committed publication not found: $publication");
+    error("certified publication not found.");
   if ($committed['signature'] != $p)
-    error("committed publication signature mismatch.");
+    error("certified publication signature mismatch.");
   $publication_id = intval($committed['id']);
   # mark other certificates on the same publication by the same participant as not the latest
   $mysqli->query("UPDATE certificate INNER JOIN publication ON publication.id = certificate.publication"
