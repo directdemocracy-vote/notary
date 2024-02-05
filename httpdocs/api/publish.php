@@ -174,8 +174,7 @@ if ($type === 'citizen') {
   if (!property_exists($certificate, 'message'))
     $certificate->message = '';
   $p = sanitize_field($certificate->publication, 'base64', 'publication');
-  $query = "SELECT id, `type`, REPLACE(REPLACE(TO_BASE64(signature), '\\n', ''), '=', '') AS signature FROM publication "
-          ."WHERE signature = FROM_BASE64('$p==')";
+  $query = "SELECT id, `type`, REPLACE(REPLACE(TO_BASE64(signature), '\\n', ''), '=', '') AS signature FROM publication WHERE signature = FROM_BASE64('$p==')";
   $result = $mysqli->query($query) or error($mysqli->error);
   $committed = $result->fetch_assoc();
   $result->free();
@@ -184,17 +183,24 @@ if ($type === 'citizen') {
   if ($committed['signature'] != $p)
     error("certified publication signature mismatch.");
   $publication_id = intval($committed['id']);
-  # mark other certificates on the same publication by the same participant as not the latest
-  $mysqli->query("UPDATE certificate INNER JOIN publication ON publication.id = certificate.publication"
-                ." SET certificate.latest = 0"
-                ." WHERE certificate.certifiedPublication = $publication_id"
-                ." AND publication.participant = $participant_id") or error($mysli->error);
   if ($committed['type'] == 'proposal') {  # signing a petition
+    $r = mysqli->query("SELECT UNIX_TIMESTAMP(deadline) AS deadline FROM proposal WHERE publication=$publication_id") or die($mysqli->error);
+    $p = $r->fetch_assoc();
+    if (!$p)
+      error("signed petition not found");
+    $deadline = intval($p['deadline']);
+    if ($certificate->published > $deadline)
+      error("cannot sign petition after deadline passed");
     # increment the number of participants in a petition
     $committed_id = $committed['id'];
     $query = "UPDATE proposal SET participants=participants+1 WHERE proposal.publication=$committed_id AND proposal.`secret`=0";
     $mysqli->query($query) or error($msqli->error);
   }
+  # mark other certificates on the same publication by the same participant as not the latest
+  $mysqli->query("UPDATE certificate INNER JOIN publication ON publication.id = certificate.publication"
+                ." SET certificate.latest = 0"
+                ." WHERE certificate.certifiedPublication = $publication_id"
+                ." AND publication.participant = $participant_id") or error($mysli->error);
   $ctype = $mysqli->escape_string($certificate->type);
   $message = $mysqli->escape_string($certificate->message);
   $comment = $mysqli->escape_string($certificate->comment);
