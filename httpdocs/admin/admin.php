@@ -24,7 +24,8 @@ $password = $input->password;
 if ($password !== $admin_password)
   error('Wrong password.');
 
-$certificates = $mysqli->escape_string($input->certificates);
+$endorsements = $mysqli->escape_string($input->endorsements);
+$signatures = $mysqli->escape_string($input->signatures);
 $participations = $mysqli->escape_string($input->participations);
 $votes = $mysqli->escape_string($input->votes);
 $citizens = $mysqli->escape_string($input->citizens);
@@ -34,12 +35,18 @@ $results = $mysqli->escape_string($input->results);
 
 $query = "";
 
-function delete_publication($mysqli, $type) {
-  query("DELETE $type FROM publication INNER JOIN $type ON $type.publication=publication.id");
+function delete_certificicate($mysqli, $type) {
+  query("DELETE FROM certificate WHERE type='$type'");
   return $mysqli->affected_rows;
 }
 
-$n_certificate = $certificates ? delete_publication($mysqli, 'certificate') : 0;
+function delete_publication($mysqli, $type) {
+  query("DELETE FROM $type");
+  return $mysqli->affected_rows;
+}
+
+$n_endorsement = $endorsements ? delete_certificate($mysqli, 'endorse') : 0;
+$n_signature = $signatures ? delete_certificate($mysqli, 'sign') : 0;
 $n_participation = $participations ? delete_publication($mysqli, 'participation') : 0;
 $n_vote = $votes ? delete_publication($mysqli, 'vote') : 0;
 $n_citizen = $citizens ? delete_publication($mysqli, 'citizen') : 0;
@@ -48,7 +55,7 @@ $n_area = $areas ? delete_publication($mysqli, 'area') : 0;
 if ($results)
   query("DELETE FROM results");
 
-$n = $n_citizen + $n_certificate + $n_proposal + $n_area + $n_participation + $n_vote;
+$n = $n_citizen + $n_endorsement + $n_proposal + $n_area + $n_signature + $n_participation + $n_vote;
 
 # clean-up obsolete certificates
 query("DELETE FROM certificate WHERE certificate.certifiedPublication NOT IN (SELECT id FROM publication)");
@@ -89,12 +96,14 @@ if ($n)
   $list .= ':<ul>';
 if ($n_citizen)
   $list .= "<li>citizen: $n_citizen</li>";
-if ($n_certificate)
-  $list .= "<li>certificate: $n_certificate</li>";
+if ($n_endorsement)
+  $list .= "<li>certificate: $n_endorsement</li>";
 if ($n_proposal)
   $list .= "<li>proposal: $n_proposal</li>";
 if ($n_area)
   $list .= "<li>area: $n_area</li>";
+if ($n_signature)
+  $list .= "<li>signature: $n_signature</li>";
 if ($n_participation)
   $list .= "<li>participation: $n_participation</li>";
 if ($n_vote)
