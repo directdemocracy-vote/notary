@@ -37,7 +37,7 @@ $query = "";
 
 function delete_certificate($mysqli, $type) {
   if ($type === 'sign')
-    query("UPDATE proposal SET participation=0 WHERE type='petition');
+    query("UPDATE proposal SET participation=0 WHERE type='petition'");
   query("DELETE FROM certificate WHERE type='$type'");
   return $mysqli->affected_rows;
 }
