@@ -184,7 +184,7 @@ if ($type === 'citizen') {
     error("certified publication signature mismatch.");
   $publication_id = intval($committed['id']);
   if ($committed['type'] == 'proposal') {  # signing a petition
-    $r = mysqli->query("SELECT UNIX_TIMESTAMP(deadline) AS deadline FROM proposal WHERE publication=$publication_id") or die($mysqli->error);
+    $r = $mysqli->query("SELECT UNIX_TIMESTAMP(deadline) AS deadline FROM proposal WHERE publication=$publication_id") or die($mysqli->error);
     $p = $r->fetch_assoc();
     if (!$p)
       error("signed petition not found");
