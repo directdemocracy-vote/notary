@@ -36,7 +36,7 @@ $query = "";
 
 function delete_publication($mysqli, $type) {
   query("DELETE publication, $type FROM publication INNER JOIN $type ON $type.publication=publication.id");
-  return $mysqli->affected_rows;
+  return $mysqli->affected_rows / 2;
 }
 
 $n_certificate = $certificates ? delete_publication($mysqli, 'certificate') : 0;
