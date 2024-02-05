@@ -25,11 +25,11 @@ if ($password !== $admin_password)
   error('Wrong password.');
 
 $certificates = $mysqli->escape_string($input->certificates);
+$participations = $mysqli->escape_string($input->participations);
+$votes = $mysqli->escape_string($input->votes);
 $citizens = $mysqli->escape_string($input->citizens);
 $proposals = $mysqli->escape_string($input->proposals);
 $areas = $mysqli->escape_string($input->areas);
-$participations = $mysqli->escape_string($input->participations);
-$votes = $mysqli->escape_string($input->votes);
 $results = $mysqli->escape_string($input->results);
 
 $query = "";
@@ -40,11 +40,11 @@ function delete_publication($mysqli, $type) {
 }
 
 $n_certificate = $certificates ? delete_publication($mysqli, 'certificate') : 0;
+$n_participation = $participations ? delete_publication($mysqli, 'participation') : 0;
+$n_vote = $votes ? delete_publication($mysqli, 'vote') : 0;
 $n_citizen = $citizens ? delete_publication($mysqli, 'citizen') : 0;
 $n_proposal = $proposals ? delete_publication($mysqli, 'proposal') : 0;
 $n_area = $areas ? delete_publication($mysqli, 'area') : 0;
-$n_participation = $participations ? delete_publication($mysqli, 'participation') : 0;
-$n_vote = $votes ? delete_publication($mysqli, 'vote') : 0;
 if ($results)
   query("DELETE FROM results");
 
@@ -65,12 +65,12 @@ DELETE FROM publication WHERE id NOT IN (
 EOT;
 
 query($query);
-query("DELETE FROM citizen WHERE publication NOT IN (SELECT id FROM publication)");
 query("DELETE FROM certificate WHERE publication NOT IN (SELECT id FROM publication)");
-query("DELETE FROM area WHERE publication NOT IN (SELECT id FROM publication)");
-query("DELETE FROM proposal WHERE publication NOT IN (SELECT id FROM publication)");
 query("DELETE FROM participation WHERE publication NOT IN (SELECT id FROM publication)");
 query("DELETE FROM vote WHERE publication NOT IN (SELECT id FROM publication)");
+query("DELETE FROM citizen WHERE publication NOT IN (SELECT id FROM publication)");
+query("DELETE FROM area WHERE publication NOT IN (SELECT id FROM publication)");
+query("DELETE FROM proposal WHERE publication NOT IN (SELECT id FROM publication)");
 
 $result = query("SELECT MAX(id) AS `max` FROM publication");
 if ($result) {
