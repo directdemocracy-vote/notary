@@ -66,6 +66,7 @@ window.onload = async function() {
       }
       document.getElementById('title').textContent = answer.title;
       document.getElementById('description').textContent = answer.description;
+      let total = 0;
       if (answer.secret) {
         document.getElementById('question-block').style.display = '';
         document.getElementById('question').textContent = answer.question;
@@ -74,7 +75,6 @@ window.onload = async function() {
         table.classList.add('table', 'is-bordered');
         document.getElementById('answers').appendChild(table);
         const max = answer.answers.length;
-        let total = 0;
         for(let i = 0; i < max; i++)
           total += answer.results[i];
         let expressed = 0;
@@ -123,11 +123,12 @@ window.onload = async function() {
         actionButton.removeAttribute('disabled');
       const corpus = answer.corpus;
       const participants = answer.secret ? 'Voters' : 'Signatures';
+      const participants_count = answer.secret ? (total === answer.participants ? total : `${answer.participants}/${total}`) : answer.participants;
       const participation = corpus === 0 ? 0 : Math.round(10000 * answer.participants / corpus) / 100;
       const line = `Corpus: <a target="_blank" href="participants.html?${payload}&corpus=1">` +
         `${corpus}</a> &mdash; ` +
         `${participants}: <a target="_blank" href="participants.html?${payload}">` +
-        `${answer.participants}</a> &mdash; ` +
+        `${participants_count}</a> &mdash; ` +
         `Participation: ${participation}%`;
       document.getElementById('result').innerHTML = line;
       const areaName = document.getElementById('area-name');
