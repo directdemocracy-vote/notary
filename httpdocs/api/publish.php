@@ -30,7 +30,7 @@ function check_app($publication, $vote=false) {
   $app_signature = sanitize_field($publication->appSignature, 'base64', 'appSignature');
   $publication->appSignature = '';
   if ($vote) {
-    if ($app !== 2) {
+    if ($app !== 2) { # FIXME: the signature of the test app is currently broken
       $voteBytes = base64_decode("$publication->referendum==");
       $voteBytes .= pack('J', $publication->number);
       $voteBytes .= pack('J', $publication->area);
