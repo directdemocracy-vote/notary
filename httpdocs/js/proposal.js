@@ -78,14 +78,14 @@ window.onload = async function() {
         for(let i = 0; i < max; i++)
           total += answer.results[i];
         let expressed = 0;
-        for(let i = 0; i < max - 1; i++)
+        for(let i = 1; i < max; i++)
           expressed += answer.results[i];
         for(let i = 0; i < max; i++) {
           const tr = document.createElement('tr');
           table.appendChild(tr);
           const a = document.createElement('td');
           tr.appendChild(a);
-          a.textContent = answer.answers[i] === '' ? 'Abstention' : answer.answers[i];
+          a.textContent = i === 0 ? 'Abstention' : answer.answers[i - 1];
           const c = document.createElement('td');
           tr.appendChild(c);
           c.textContent = answer.results[i];
