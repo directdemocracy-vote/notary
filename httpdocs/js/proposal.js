@@ -75,13 +75,12 @@ window.onload = async function() {
         table.classList.add('table');
         document.getElementById('answers').appendChild(table);
         const length = answer.answers.length + 1;
-        let max = 0;
+        let max = 1;
         for(let i = 0; i < length; i++) {
           total += answer.results[i];
-          if (answer.results[i] > answer.results[max])
+          if (i > 0 && answer.results[i] > answer.results[max])
             max = i;
         }
-        console.log("max = " + max);
         let expressed = 0;
         for(let i = 1; i < length; i++)
           expressed += answer.results[i];
