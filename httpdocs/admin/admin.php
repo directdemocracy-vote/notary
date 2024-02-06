@@ -47,7 +47,7 @@ function delete_publication($mysqli, $type) {
   return $mysqli->affected_rows;
 }
 
-$n_endorsement = $endorsements ? delete_certificate($mysqli, 'endorse') : 0;
+$n_endorsement = $endorsements ? delete_certificate($mysqli, 'endorse') + delete_certificate($mysqli, 'trust'): 0;
 $n_signature = $signatures ? delete_certificate($mysqli, 'sign') : 0;
 $n_participation = $participations ? delete_publication($mysqli, 'participation') : 0;
 $n_vote = $votes ? delete_publication($mysqli, 'vote') : 0;
