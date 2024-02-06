@@ -46,7 +46,7 @@ $query = "SELECT publication.id, "
         ."INNER JOIN participant AS participantArea ON participantArea.id = pa.participant "
         ."INNER JOIN webservice ON webservice.participant=participant.id "
         ."WHERE $condition";
-$result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
+$result = $mysqli->query($query) or error($mysqli->error);
 $proposal = $result->fetch_assoc();
 $result->free();
 if (!$proposal)
@@ -77,9 +77,13 @@ if ($polygons->type !== 'MultiPolygon')
 $proposal['areaPolygons'] = &$polygons->coordinates;
 if ($proposal['secret']) {
   $proposal['results'] = [];
+  $r = $mysqli->query("SELECT `count` FROM results WHERE referendum=$id AND answer=''") or error($mysqli->error);
+  $c = $r->fetch_assoc();
+  $r->free();
+  $proposal['results'][] = $c ? intval($c['count']) : 0;
   foreach($proposal['answers'] as $key => $value) {
     $query = "SELECT `count` FROM results WHERE referendum=$id AND answer=\"$value\"";
-    $r = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
+    $r = $mysqli->query($query) or error($mysqli->error);
     $c = $r->fetch_assoc();
     $r->free();
     $proposal['results'][] = $c ? intval($c['count']) : 0;
