@@ -89,8 +89,8 @@ window.onload = async function() {
           const tr = document.createElement('tr');
           table.appendChild(tr);
           if (i === max) {
-            tr.fontStyle = 'bold';
-            tr.backgroundColor = 'green';
+            tr.style.fontWeight = 'bold';
+            tr.style.backgroundColor = 'lightgreen';
           }
           let td = document.createElement('td');
           tr.appendChild(td);
