@@ -29,19 +29,21 @@ function check_app($publication, $vote=false) {
   $result->free();
   $app_signature = sanitize_field($publication->appSignature, 'base64', 'appSignature');
   $publication->appSignature = '';
-  if ($vote && $app !== 2) {
-    $voteBytes = base64_decode("$publication->referendum==");
-    $voteBytes .= pack('J', $publication->number);
-    $voteBytes .= pack('J', $publication->area);
-    $voteBytes .= base64_decode("$publication->ballot");
-    $voteBytes .= $publication->answer;
-    $publicKey = openssl_pkey_get_public(public_key($appKey));
-    $details = openssl_pkey_get_details($publicKey);
-    $n = gmp_import($details['rsa']['n'], 1, GMP_BIG_ENDIAN | GMP_MSW_FIRST);
-    $e = gmp_import($details['rsa']['e'], 1, GMP_BIG_ENDIAN | GMP_MSW_FIRST);
-    $error = blind_verify($n, $e, $voteBytes, base64_decode("$app_signature=="));
-    if ($error !== '')
-      error("failed to verify app signature: $error");
+  if ($vote) {
+    if ($app !== 2) {
+      $voteBytes = base64_decode("$publication->referendum==");
+      $voteBytes .= pack('J', $publication->number);
+      $voteBytes .= pack('J', $publication->area);
+      $voteBytes .= base64_decode("$publication->ballot");
+      $voteBytes .= $publication->answer;
+      $publicKey = openssl_pkey_get_public(public_key($appKey));
+      $details = openssl_pkey_get_details($publicKey);
+      $n = gmp_import($details['rsa']['n'], 1, GMP_BIG_ENDIAN | GMP_MSW_FIRST);
+      $e = gmp_import($details['rsa']['e'], 1, GMP_BIG_ENDIAN | GMP_MSW_FIRST);
+      $error = blind_verify($n, $e, $voteBytes, base64_decode("$app_signature=="));
+      if ($error !== '')
+        error("failed to verify app signature: $error");
+    }
   } else {
     $verify = openssl_verify($publication->signature, base64_decode("$app_signature=="), public_key($appKey), OPENSSL_ALGO_SHA256);
     if ($verify != 1) {
