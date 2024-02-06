@@ -91,7 +91,7 @@ window.onload = async function() {
           td.textContent = answer.results[i];
           td = document.createElement('td');
           tr.appendChild(td);
-          p.textContent = (Math.floor(10000 * answer.results[i] / total) / 100) + '%';
+          td.textContent = (Math.floor(10000 * answer.results[i] / total) / 100) + '%';
         }
         let tr = document.createElement('tr');
         table.appendChild(tr);
@@ -103,7 +103,7 @@ window.onload = async function() {
         td.textContent = answer.results[0];
         td = document.createElement('td');
         tr.appendChild(td);
-        p.textContent = (Math.floor(10000 * answer.results[0] / total) / 100) + '%';
+        td.textContent = (Math.floor(10000 * answer.results[0] / total) / 100) + '%';
       }
       const deadline = new Date(answer.deadline * 1000);
       const published = new Date(answer.published * 1000);
