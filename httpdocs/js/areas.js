@@ -87,13 +87,23 @@ window.onload = function() {
           const localArea = area.name.split('\n')[0].split('=')[1];
           td.textContent = localArea;
           td.title = area.name.replaceAll('=', ': ');
+          let expressed = 0;
           let sum = 0;
+          let first = true;
           for(const a of area.answers) {
+            sum += a;
+            if (first) {
+              first = false;
+              continue;
+            }
             td = document.createElement('td');
             tr.appendChild(td);
             td.textContent = a;
-            sum += a;
+            expressed += a;
           }
+          td = document.createElement('td');
+          tr.appendChild(td);
+          td.textContent = area.answers[0];          
           td = document.createElement('td');
           tr.appendChild(td);
           td.textContent = area.corpus;
