@@ -140,7 +140,8 @@ window.onload = async function() {
         `${corpus}</a> &mdash; ` +
         `${participants}: <a target="_blank" href="participants.html?${payload}">` +
         `${participants_count}</a> &mdash; ` +
-        `Participation: ${participation}% &mdash; <a target="_blank" hred="areas.html?${payload}">${answer.areas}</a>`;
+        `Participation: ${participation}% &mdash; ` +
+        `Areas: <a target="_blank" hred="areas.html?${payload}">${answer.areas}</a>`;
       document.getElementById('result').innerHTML = line;
       const areaName = document.getElementById('area-name');
       const areas = answer.areaName[0].split('=');
