@@ -52,7 +52,7 @@ window.onload = function() {
       } else {
         const table = document.createElement('table');
         panel.appendChild(table);
-        const thead = document.createElement('theah');
+        const thead = document.createElement('thead');
         table.appendChild(thead);
         const tr = document.createElement('tr');
         thead.appendChild(tr);
@@ -75,7 +75,9 @@ window.onload = function() {
           tbody.appendChild(tr);
           let td = document.createElement('td');
           tr.appendChild(td);
-          td.textContent = area.name;
+          const localArea = area.name.split('\n')[0];
+          td.textContent = localArea;
+          td.title = area.name;
           td = document.createElement('td');
           tr.appendChild(td);
           td.textContent = area.corpus;
