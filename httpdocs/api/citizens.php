@@ -69,7 +69,6 @@ while ($citizen = $result->fetch_assoc()) {
   $citizens[] = $citizen;
 }
 $result->free();
-die($query);
 echo json_encode($citizens, JSON_UNESCAPED_SLASHES);
 $mysqli->close();
 ?>
