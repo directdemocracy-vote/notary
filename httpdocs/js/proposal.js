@@ -80,27 +80,30 @@ window.onload = async function() {
         let expressed = 0;
         for(let i = 1; i < max; i++)
           expressed += answer.results[i];
-        for(let i = 0; i < max; i++) {
+        for(let i = 1; i < max; i++) {
           const tr = document.createElement('tr');
           table.appendChild(tr);
-          const a = document.createElement('td');
-          tr.appendChild(a);
-          a.textContent = i === 0 ? 'Abstention' : answer.answers[i - 1];
-          const c = document.createElement('td');
-          tr.appendChild(c);
-          c.textContent = answer.results[i];
-          const p = document.createElement('td');
-          tr.appendChild(p);
-          const percent = total ? (Math.floor(10000 * answer.results[i] / total) / 100) + '%' : 'N/A';
-          p.textContent = percent;
-          if (i !== max - 1) {
-            const e = document.createElement('td');
-            e.style.fontWeight = 'bold';
-            tr.appendChild(e);
-            const ec = expressed ? (Math.floor(10000 * answer.results[i] / expressed) / 100) + '%' : 'N/A';
-            e.textContent = ec;
-          }
+          let td = document.createElement('td');
+          tr.appendChild(td);
+          td.textContent = answer.answers[i - 1];
+          td = document.createElement('td');
+          tr.appendChild(td);
+          td.textContent = answer.results[i];
+          td = document.createElement('td');
+          tr.appendChild(td);
+          p.textContent = (Math.floor(10000 * answer.results[i] / total) / 100) + '%';
         }
+        let tr = document.createElement('tr');
+        table.appendChild(tr);
+        let td = document.createELement('td');
+        tr.appendChild(td);
+        td.textContent = 'Abstention';
+        td = document.createElement('td');
+        tr.appendChild(td);
+        td.textContent = answer.results[0];
+        td = document.createElement('td');
+        tr.appendChild(td);
+        p.textContent = (Math.floor(10000 * answer.results[0] / total) / 100) + '%';
       }
       const deadline = new Date(answer.deadline * 1000);
       const published = new Date(answer.published * 1000);
