@@ -58,7 +58,7 @@ window.onload = function() {
         thead.appendChild(tr);
         let th = document.createElement('th');
         tr.appendChild(th);
-        td.textContent = 'Area';
+        let td.textContent = 'Area';
         th = document.createElement('th');
         tr.appendChild(th);
         th.textContent = 'Corpus';
