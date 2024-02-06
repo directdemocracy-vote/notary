@@ -99,14 +99,15 @@ window.onload = async function() {
           td.textContent = answer.results[i];
           td = document.createElement('td');
           tr.appendChild(td);
-          td.textContent = (Math.floor(10000 * answer.results[i] / total) / 100) + '%';
+          td.textContent = (Math.floor(10000 * answer.results[i] / expressed) / 100) + '%';
         }
         let tr = document.createElement('tr');
         table.appendChild(tr);
+        tr.style.backgroundColor = 'lightgrey';
         let td = document.createElement('td');
         tr.appendChild(td);
         td.style.fontStyle = 'italic';
-        td.textContent = 'Abstention';
+        td.textContent = 'Blank';
         td = document.createElement('td');
         tr.appendChild(td);
         td.textContent = answer.results[0];
