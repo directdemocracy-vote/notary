@@ -95,7 +95,7 @@ window.onload = async function() {
         }
         let tr = document.createElement('tr');
         table.appendChild(tr);
-        let td = document.createELement('td');
+        let td = document.createElement('td');
         tr.appendChild(td);
         td.textContent = 'Abstention';
         td = document.createElement('td');
