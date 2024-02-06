@@ -68,7 +68,7 @@ window.onload = function() {
         th = document.createElement('th');
         tr.appendChild(th);
         th.textContent = 'Participation';
-        for(a of answer.answers) {
+        for(const a of answer.answers) {
           th = document.createElement('th');
           tr.appendChild(th);
           th.textContent = a;
