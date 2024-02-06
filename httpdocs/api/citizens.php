@@ -61,7 +61,6 @@ $query .= " LIMIT 20;";
 $result = $mysqli->query($query) or die($mysqli->error);
 $citizens = array();
 while ($citizen = $result->fetch_assoc()) {
-  # unset($citizen['distance']);
   $citizen['latitude'] = floatval($citizen['latitude']);
   $citizen['longitude'] = floatval($citizen['longitude']);
   $citizen['published'] = intval($citizen['published']);
@@ -70,6 +69,7 @@ while ($citizen = $result->fetch_assoc()) {
   $citizens[] = $citizen;
 }
 $result->free();
+die($query);
 echo json_encode($citizens, JSON_UNESCAPED_SLASHES);
 $mysqli->close();
 ?>
