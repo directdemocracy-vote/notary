@@ -75,7 +75,7 @@ window.onload = function() {
           tbody.appendChild(tr);
           let td = document.createElement('td');
           tr.appendChild(td);
-          const localArea = area.name.split('\n')[0].split['='][1];
+          const localArea = area.name.split('\n')[0].split('=')[1];
           td.textContent = localArea;
           td.title = area.name.replace('=', ': ');
           td = document.createElement('td');
