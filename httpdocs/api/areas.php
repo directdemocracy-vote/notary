@@ -32,11 +32,11 @@ $response['answers'] = explode("\n", $a['answers']);
 $count = count($response['answers']);
 $answers = array_merge($answers, $response['answers']);
 $result = [];
-$query = "SELECT area, SUM(CASE WHEN answer='' THEN 1 ELSE 0 END) AS a0";
+$query = "SELECT area";
 $i = 0;
 foreach ($answers as &$answer) {
-  $i++;
   $query .= ", SUM(CASE WHEN answer=\"$answer\" THEN 1 ELSE 0 END) AS a$i";
+  $i++;
 }
 $query .= " FROM vote GROUP BY area";
 $r = $mysqli->query($query) or error($mysqli->error);
