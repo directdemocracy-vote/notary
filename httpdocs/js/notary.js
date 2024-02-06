@@ -321,5 +321,5 @@ function openTab(event, name) {
   document.getElementById(name).style.display = 'block';
   event.currentTarget.classList.add('is-active');
   const section = document.getElementById('proposal-results');
-  section.style.display = name === 'proposals' && section.innerHTML !== '' ? '' : 'none';
+  section.style.display = name === 'proposals' && section.innerHTML ? '' : 'none';
 }
