@@ -81,6 +81,7 @@ window.onload = async function() {
           if (answer.results[i] > answer.results[max])
             max = i;
         }
+        console.log("max = " + max);
         let expressed = 0;
         for(let i = 1; i < length; i++)
           expressed += answer.results[i];
