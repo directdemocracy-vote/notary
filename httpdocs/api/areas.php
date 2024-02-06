@@ -31,19 +31,19 @@ $answers[] = '';
 $response['answers'] = explode("\n", $a['answers']);
 $answers = array_merge($answers, $response['answers']);
 $result = [];
-$query = "SELECT area";
+$query = "SELECT area.name, vote.area";
 $count = 0;
 foreach ($answers as &$answer) {
   $query .= ", SUM(CASE WHEN answer=\"$answer\" THEN 1 ELSE 0 END) AS a$count";
   $count++;
 }
-$query .= " FROM vote GROUP BY area";
+$query .= " FROM vote INNER JOIN area ON area.id=vote.area GROUP BY vote.area";
 $r = $mysqli->query($query) or error($mysqli->error);
 $response['areas'] = [];
 while ($c = $r->fetch_assoc()) {
   $area = [];
   $area['id'] = intval($c['area']);
-  $area['name'] = 'Unknown';
+  $area['name'] = '$c['name']';
   $area['answers'] = [];
   for($i = 0; $i < $count; $i++)
     $area['answers'][] = intval($c["a$i"]);
