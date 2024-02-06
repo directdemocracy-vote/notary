@@ -68,6 +68,14 @@ window.onload = function() {
         th = document.createElement('th');
         tr.appendChild(th);
         th.textContent = 'Participation';
+        for(a of answer.answers) {
+          th = document.createElement('th');
+          tr.appendChild(th);
+          th.textContent = a;
+        }
+        th = document.createElement('th');
+        tr.appendChild(th);
+        th.textContent = 'Blank';
         const tbody = document.createElement('tbody');
         table.appendChild(tbody);
         for (const area of answer.areas) {
@@ -77,7 +85,7 @@ window.onload = function() {
           tr.appendChild(td);
           const localArea = area.name.split('\n')[0].split('=')[1];
           td.textContent = localArea;
-          td.title = area.name.replace('=', ': ');
+          td.title = area.name.replaceAll('=', ': ');
           td = document.createElement('td');
           tr.appendChild(td);
           td.textContent = area.corpus;
