@@ -74,7 +74,7 @@ window.onload = async function() {
         const table = document.createElement('table');
         table.classList.add('table', 'is-bordered');
         document.getElementById('answers').appendChild(table);
-        const max = answer.answers.length;
+        const max = answer.answers.length + 1;
         for(let i = 0; i < max; i++)
           total += answer.results[i];
         let expressed = 0;
