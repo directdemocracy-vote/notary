@@ -63,6 +63,12 @@ $n = $n_citizen + $n_endorsement + $n_proposal + $n_area + $n_signature + $n_par
 query("DELETE FROM certificate WHERE certificate.certifiedPublication NOT IN (SELECT id FROM publication)");
 
 # clean-up orphan publications
+query("DELETE FROM certificate WHERE publication NOT IN (SELECT id FROM publication)");
+query("DELETE FROM participation WHERE publication NOT IN (SELECT id FROM publication)");
+query("DELETE FROM vote WHERE publication NOT IN (SELECT id FROM publication)");
+query("DELETE FROM citizen WHERE publication NOT IN (SELECT id FROM publication)");
+query("DELETE FROM area WHERE publication NOT IN (SELECT id FROM publication)");
+query("DELETE FROM proposal WHERE publication NOT IN (SELECT id FROM publication)");
 $query = <<<EOT
 DELETE FROM publication WHERE id NOT IN (
     SELECT publication FROM citizen UNION
@@ -73,12 +79,6 @@ DELETE FROM publication WHERE id NOT IN (
     SELECT publication FROM vote)
 EOT;
 query($query);
-query("DELETE FROM certificate WHERE publication NOT IN (SELECT id FROM publication)");
-query("DELETE FROM participation WHERE publication NOT IN (SELECT id FROM publication)");
-query("DELETE FROM vote WHERE publication NOT IN (SELECT id FROM publication)");
-query("DELETE FROM citizen WHERE publication NOT IN (SELECT id FROM publication)");
-query("DELETE FROM area WHERE publication NOT IN (SELECT id FROM publication)");
-query("DELETE FROM proposal WHERE publication NOT IN (SELECT id FROM publication)");
 
 $result = query("SELECT MAX(id) AS `max` FROM publication");
 if ($result) {
