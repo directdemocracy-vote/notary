@@ -320,4 +320,7 @@ function openTab(event, name) {
     tab[i].classList.remove('is-active');
   document.getElementById(name).style.display = 'block';
   event.currentTarget.classList.add('is-active');
+  const section = document.getElementById('proposal-results');
+  console.log(name);
+  section.style.display = 'none';
 }
