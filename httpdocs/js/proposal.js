@@ -98,7 +98,7 @@ window.onload = async function() {
           td.textContent = answer.results[i];
           td = document.createElement('td');
           tr.appendChild(td);
-          td.textContent = (Math.floor(10000 * answer.results[i] / expressed) / 100) + '%';
+          td.textContent = expressed ? (Math.floor(10000 * answer.results[i] / expressed) / 100) + '%' : 'N/A';
         }
         let tr = document.createElement('tr');
         table.appendChild(tr);
