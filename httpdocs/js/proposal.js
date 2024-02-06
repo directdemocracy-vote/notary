@@ -113,7 +113,6 @@ window.onload = async function() {
         td.textContent = answer.results[0];
         td = document.createElement('td');
         tr.appendChild(td);
-        td.textContent = (Math.floor(10000 * answer.results[0] / total) / 100) + '%';
       }
       const deadline = new Date(answer.deadline * 1000);
       const published = new Date(answer.published * 1000);
