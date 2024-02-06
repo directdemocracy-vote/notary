@@ -97,20 +97,25 @@ window.onload = function() {
               continue;
             }
             td = document.createElement('td');
+            td.align = 'center';
             tr.appendChild(td);
             td.textContent = a;
             expressed += a;
           }
           td = document.createElement('td');
+          td.align = 'center';
           tr.appendChild(td);
           td.textContent = area.answers[0];          
           td = document.createElement('td');
+          td.align = 'center';
           tr.appendChild(td);
           td.textContent = area.corpus;
           td = document.createElement('td');
+          td.align = 'center';
           tr.appendChild(td);
           td.textContent = sum;
           td = document.createElement('td');
+          td.align = 'center';
           tr.appendChild(td);
           td.textContent = (Math.round(10000 * area.voters / area.corpus) / 100) + '%' ;
         }
