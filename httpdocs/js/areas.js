@@ -68,15 +68,6 @@ window.onload = function() {
         th = document.createElement('th');
         tr.appendChild(th);
         th.textContent = 'Blank';
-        th = document.createElement('th');
-        tr.appendChild(th);
-        th.textContent = 'Corpus';
-        th = document.createElement('th');
-        tr.appendChild(th);
-        th.textContent = 'Voters';
-        th = document.createElement('th');
-        tr.appendChild(th);
-        th.textContent = 'Participation';
         const tbody = document.createElement('tbody');
         table.appendChild(tbody);
         for (const area of answer.areas) {
@@ -106,18 +97,6 @@ window.onload = function() {
           td.align = 'center';
           tr.appendChild(td);
           td.textContent = area.answers[0];          
-          td = document.createElement('td');
-          td.align = 'center';
-          tr.appendChild(td);
-          td.textContent = area.corpus;
-          td = document.createElement('td');
-          td.align = 'center';
-          tr.appendChild(td);
-          td.textContent = sum;
-          td = document.createElement('td');
-          td.align = 'center';
-          tr.appendChild(td);
-          td.textContent = (Math.round(10000 * area.voters / area.corpus) / 100) + '%' ;
         }
       }
     });
