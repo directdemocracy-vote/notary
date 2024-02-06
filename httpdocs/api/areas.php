@@ -29,14 +29,13 @@ $response['title'] = $a['title'];
 $answers = [];
 $answers[] = '';
 $response['answers'] = explode("\n", $a['answers']);
-$count = count($response['answers']);
 $answers = array_merge($answers, $response['answers']);
 $result = [];
 $query = "SELECT area";
-$i = 0;
+$count = 0;
 foreach ($answers as &$answer) {
-  $query .= ", SUM(CASE WHEN answer=\"$answer\" THEN 1 ELSE 0 END) AS a$i";
-  $i++;
+  $query .= ", SUM(CASE WHEN answer=\"$answer\" THEN 1 ELSE 0 END) AS a$count";
+  $count++;
 }
 $query .= " FROM vote GROUP BY area";
 $r = $mysqli->query($query) or error($mysqli->error);
@@ -46,7 +45,6 @@ while ($c = $r->fetch_assoc()) {
   $area['id'] = intval($c['area']);
   $area['name'] = 'Unknown';
   $area['answers'] = [];
-  $area['answers'][] = intval($c['a0']);
   for($i = 0; $i < $count; $i++)
     $area['answers'][] = intval($c["a$i"]);
   $response['areas'][] = $area;
