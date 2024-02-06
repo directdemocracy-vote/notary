@@ -90,6 +90,7 @@ if ($proposal['secret']) {
   }
   $r = $mysqli->query("SELECT COUNT(DISTINCT area) AS count FROM vote WHERE referendum=$id") or error($mysqli->error);
   $c = r->fetch_assoc();
+  $r->free();
   $proposal['areas'] = $c ? intval($c{'count']) : 0;
 }
 if ($citizen) {
