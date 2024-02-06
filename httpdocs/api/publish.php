@@ -29,7 +29,7 @@ function check_app($publication, $vote=false) {
   $result->free();
   $app_signature = sanitize_field($publication->appSignature, 'base64', 'appSignature');
   $publication->appSignature = '';
-  if ($vote) {
+  if ($vote && $app !== 2) {
     $voteBytes = base64_decode("$publication->referendum==");
     $voteBytes .= pack('J', $publication->number);
     $voteBytes .= pack('J', $publication->area);
