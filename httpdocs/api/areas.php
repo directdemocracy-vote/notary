@@ -49,7 +49,6 @@ while ($c = $r->fetch_assoc()) {
     $area['answers'][] = intval($c["a$i"]);
   $response['areas'][] = $area;
 }
-$response['query'] = $query;
 $r->free();
 $mysqli->close();
 die(json_encode($response, JSON_UNESCAPED_SLASHES));
