@@ -74,15 +74,23 @@ window.onload = async function() {
         const table = document.createElement('table');
         table.classList.add('table', 'is-bordered');
         document.getElementById('answers').appendChild(table);
-        const max = answer.answers.length + 1;
-        for(let i = 0; i < max; i++)
+        const length = answer.answers.length + 1;
+        let max = 0;
+        for(let i = 0; i < length; i++) {
           total += answer.results[i];
+          if (answer.results[i] > answer.results[max])
+            max = i;
+        }
         let expressed = 0;
-        for(let i = 1; i < max; i++)
+        for(let i = 1; i < length; i++)
           expressed += answer.results[i];
-        for(let i = 1; i < max; i++) {
+        for(let i = 1; i < length; i++) {
           const tr = document.createElement('tr');
           table.appendChild(tr);
+          if (i === max) {
+            tr.fontStyle = 'bold';
+            tr.backgroundColor = 'green';
+          }
           let td = document.createElement('td');
           tr.appendChild(td);
           td.textContent = answer.answers[i - 1];
@@ -97,6 +105,7 @@ window.onload = async function() {
         table.appendChild(tr);
         let td = document.createElement('td');
         tr.appendChild(td);
+        td.style.fontStyle = 'italic';
         td.textContent = 'Abstention';
         td = document.createElement('td');
         tr.appendChild(td);
