@@ -38,7 +38,7 @@ foreach ($answers as &$answer) {
   $i++;
   $query .= ", SUM(CASE WHEN answer=\"$answer\" THEN 1 ELSE 0 END) AS a$i";
 }
-$query .= "FROM vote GROUP BY area";
+$query .= " FROM vote GROUP BY area";
 $r = $mysqli->query($query) or error($mysqli->error);
 $response['areas'] = [];
 while ($c = $r->fetch_assoc()) {
