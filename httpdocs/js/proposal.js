@@ -90,7 +90,7 @@ window.onload = async function() {
           table.appendChild(tr);
           if (i === max)
             tr.style.fontWeight = 'bold';
-          tr.style.backgroundColor = i === max ? 'lightgreen' : 'lightred';
+          tr.style.backgroundColor = i === max ? 'lightgreen' : 'lightpink';
           let td = document.createElement('td');
           tr.appendChild(td);
           td.textContent = answer.answers[i - 1];
