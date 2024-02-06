@@ -51,6 +51,7 @@ window.onload = function() {
         block.appendChild(p);
       } else {
         const table = document.createElement('table');
+        table.classList.add('table');
         panel.appendChild(table);
         const thead = document.createElement('thead');
         table.appendChild(thead);
@@ -59,6 +60,14 @@ window.onload = function() {
         let th = document.createElement('th');
         tr.appendChild(th);
         th.textContent = 'Area';
+        for(const a of answer.answers) {
+          th = document.createElement('th');
+          tr.appendChild(th);
+          th.textContent = a;
+        }
+        th = document.createElement('th');
+        tr.appendChild(th);
+        th.textContent = 'Blank';
         th = document.createElement('th');
         tr.appendChild(th);
         th.textContent = 'Corpus';
@@ -68,14 +77,6 @@ window.onload = function() {
         th = document.createElement('th');
         tr.appendChild(th);
         th.textContent = 'Participation';
-        for(const a of answer.answers) {
-          th = document.createElement('th');
-          tr.appendChild(th);
-          th.textContent = a;
-        }
-        th = document.createElement('th');
-        tr.appendChild(th);
-        th.textContent = 'Blank';
         const tbody = document.createElement('tbody');
         table.appendChild(tbody);
         for (const area of answer.areas) {
@@ -86,17 +87,22 @@ window.onload = function() {
           const localArea = area.name.split('\n')[0].split('=')[1];
           td.textContent = localArea;
           td.title = area.name.replaceAll('=', ': ');
+          let sum = 0;
+          for(const a of area.answers) {
+            td = document.createElement('td');
+            tr.appendChild(td);
+            td.textContent = a;
+            sum += a;
+          }
           td = document.createElement('td');
           tr.appendChild(td);
           td.textContent = area.corpus;
           td = document.createElement('td');
           tr.appendChild(td);
-          td.textContent = area.voters;
+          td.textContent = sum;
           td = document.createElement('td');
           tr.appendChild(td);
           td.textContent = (Math.round(10000 * area.voters / area.corpus) / 100) + '%' ;
-          for (const answer of area.answers) {
-          }
         }
       }
     });
