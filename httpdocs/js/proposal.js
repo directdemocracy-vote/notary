@@ -72,7 +72,7 @@ window.onload = async function() {
         document.getElementById('question').textContent = answer.question;
         document.getElementById('answers-block').style.display = '';
         const table = document.createElement('table');
-        table.classList.add('table', 'is-bordered');
+        table.classList.add('table');
         document.getElementById('answers').appendChild(table);
         const length = answer.answers.length + 1;
         let max = 0;
@@ -88,10 +88,9 @@ window.onload = async function() {
         for(let i = 1; i < length; i++) {
           const tr = document.createElement('tr');
           table.appendChild(tr);
-          if (i === max) {
+          if (i === max)
             tr.style.fontWeight = 'bold';
-            tr.style.backgroundColor = 'lightgreen';
-          }
+          tr.style.backgroundColor = i===max ? 'lightgreen' : 'lightred';
           let td = document.createElement('td');
           tr.appendChild(td);
           td.textContent = answer.answers[i - 1];
