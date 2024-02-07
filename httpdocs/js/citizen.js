@@ -47,7 +47,7 @@ window.onload = async function() {
   const a = document.createElement('a');
   a.classList.add('level-right');
   a.setAttribute('id', 'delete-link');
-  a.textContent = me ? "That's me" : 'Report';
+  a.textContent = me ? "That's me" : 'Review';
   document.getElementById('panel-heading').appendChild(a);
   a.addEventListener('click', function(event) {
     let binaryFingerprint = new Uint8Array(20);
