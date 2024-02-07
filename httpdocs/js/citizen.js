@@ -220,7 +220,7 @@ window.onload = async function() {
               const block = document.createElement('div');
               div.appendChild(block);
               const d = new Date(parseInt(endorsement.published * 1000));
-              const action = endorsement.revoke ? 'Revoked' : 'Endorsed';
+              const action = endorsement.revoke ? 'Distrusted' : 'Trusted';
               const latest = parseInt(endorsement.latest) === 1;
               const color = endorsement.revoke ? 'red' : 'green';
               const icon = endorsement.revoke ? 'xmark_seal_fill' : 'checkmark_seal_fill';
