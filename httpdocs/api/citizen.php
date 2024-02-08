@@ -79,6 +79,7 @@ while($e = $result->fetch_assoc()) {
     $e['reportedSignature'] = $e['certificateSignature'];
   } else { # endorse
     $e['endorsed'] = $e['certificatePublished'];
+    $e['endorsedComment'] = $e['comment'];
     $e['endorsedSignature'] = $e['certificateSignature'];
   }
   unset($e['comment']);
@@ -108,6 +109,7 @@ while($e = $result->fetch_assoc()) {
     $e['reportedYouSignature'] = $e['certificateSignature'];
   } else { # endorse
     $e['endorsedYou'] = $e['certificatePublished'];
+    $e['endorsedYouComment'] = $e['comment'];
     $e['endorsedYouSignature'] = $e['certificateSignature'];
   }
   unset($e['comment']);
@@ -125,6 +127,7 @@ while($e = $result->fetch_assoc()) {
         $endorsement['reportedYouSignature'] = $e['reportedYouSignature'];
       } else { # endorsedYou
         $endorsement['endorsedYou'] = $e['endorsedYou'];
+        $endorsement['endorsedYouComment'] = $e['comment'];
         $endorsement['endorsedYouSignature'] = $e['endorsedYouSignature'];
       }
       break;
