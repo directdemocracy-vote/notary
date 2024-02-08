@@ -127,7 +127,7 @@ while($e = $result->fetch_assoc()) {
         $endorsement['reportedYouSignature'] = $e['reportedYouSignature'];
       } else { # endorsedYou
         $endorsement['endorsedYou'] = $e['endorsedYou'];
-        $endorsement['endorsedYouComment'] = $e['comment'];
+        $endorsement['endorsedYouComment'] = $e['endorsedYouComment'];
         $endorsement['endorsedYouSignature'] = $e['endorsedYouSignature'];
       }
       break;
