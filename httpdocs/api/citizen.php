@@ -67,7 +67,7 @@ $query = $bob_query
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 if (!$result)
   die("{\"error\":\"$mysqli->error\"}");
-$endorsements = array();
+$endorsements = [];
 while($e = $result->fetch_assoc()) {
   settype($e['id'], 'int');
   settype($e['published'], 'int');
@@ -139,7 +139,7 @@ while($e = $result->fetch_assoc()) {
 foreach ($endorsements as &$endorsement)
   unset($endorsement['id']);
 $mysqli->close();
-$answer = array();
+$answer = [];
 $answer['citizen'] = $citizen;
 $answer['endorsements'] = $endorsements;
 die(json_encode($answer, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
