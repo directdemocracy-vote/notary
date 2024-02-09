@@ -7,9 +7,9 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 if (isset($_POST['judge']))
-  $judge = sanitize_field($_POST["judge"], "url", "judge");
+  $judge = sanitize_field($_POST['judge'], 'url', 'judge');
 else
-  $judge = "https://judge.directdemocracy.vote";
+  $judge = 'https://judge.directdemocracy.vote';
 
 $query = "SELECT id FROM participant INNER JOIN webservice ON webservice.participant=participant.id WHERE participant.`type`='judge' AND webservice.url=\"$judge\"";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
