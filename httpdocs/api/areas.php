@@ -7,11 +7,11 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
 if (isset($_GET['signature'])) {
-  $signature = sanitize_field($_GET["signature"], "base64", "signature");
+  $signature = sanitize_field($_GET['signature'], 'base64', 'signature');
   $condition = "publication.signature=FROM_BASE64('$signature==')";
   $join_condition = "pp.signature=FROM_BASE64('$signature==')";
 } elseif (isset($_GET['fingerprint'])) {
-  $fingerprint = sanitize_field($_GET["fingerprint"], "hex", "fingerprint");
+  $fingerprint = sanitize_field($_GET['fingerprint'], 'hex', 'fingerprint');
   $condition = "publication.signatureSHA1=UNHEX('$fingerprint')";
   $join_condition = "pp.signatureSHA1=UNHEX('$fingerprint')";
 } else
