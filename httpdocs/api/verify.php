@@ -11,7 +11,7 @@ if (!isset($_GET['signature']))
 if (!isset($_GET['from']))
   error('missing from parameter');
 $signature = sanitize_field($_GET['signature'], 'base64', 'signature');
-$from = sanitize_field($_GET['value'], 'positive_int', 'from');
+$from = sanitize_field($_GET['from'], 'positive_int', 'from');
 $query = "SELECT "
         ."CONCAT('https://directdemocracy.vote/json-schema/', publication.`version`, '/', publication.`type`, '.schema.json') AS `schema`, "
         ."REPLACE(REPLACE(TO_BASE64(participant.`key`), '\\n', ''), '=', '') AS `key`, "
