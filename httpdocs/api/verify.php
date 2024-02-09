@@ -42,5 +42,5 @@ while($vote = $result->fetch_assoc()) {
 }
 $result->free();
 $mysqli->close();
-die(json_encode($votes, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+die(json_encode($votes, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
