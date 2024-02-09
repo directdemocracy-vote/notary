@@ -7,16 +7,16 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-$radius = sanitize_field($_GET["radius"], "positive_float", "radius");
+$radius = sanitize_field($_GET['radius'], 'positive_float', 'radius');
 if ($radius) {
   $radius = $radius / 1000;
   $latitude = sanitize_field($_GET["latitude"], "float", "latitude");
   $longitude = sanitize_field($_GET["longitude"], "float", "longitude");
 }
 
-$familyName = isset($_GET["familyName"]) ? $mysqli->escape_string($_GET["familyName"]) : null;
-$givenNames = isset($_GET["givenNames"]) ? $mysqli->escape_string($_GET["givenNames"]) : null;
-$judge = isset($_GET["judge"]) ? sanitize_field($_GET["judge"], "url", "judge") : null;
+$familyName = isset($_GET['familyName']) ? $mysqli->escape_string($_GET['familyName']) : null;
+$givenNames = isset($_GET['givenNames']) ? $mysqli->escape_string($_GET['givenNames']) : null;
+$judge = isset($_GET['judge']) ? sanitize_field($_GET['judge'], 'url', 'judge') : null;
 
 $key = '';
 if ($judge) {
