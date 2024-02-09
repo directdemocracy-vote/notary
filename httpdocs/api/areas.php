@@ -22,7 +22,7 @@ $r = $mysqli->query($query) or error($mysqli->error);
 $a = $r->fetch_assoc();
 $r->free();
 if (!$a)
-  error("Proposal not found");
+  error('proposal not found');
 $response = [];
 $referendum = $a['id'];
 $response['title'] = $a['title'];
