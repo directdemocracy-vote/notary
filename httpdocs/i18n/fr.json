@@ -15,5 +15,9 @@
   "closed": "Fermé",
   "deadline-year": "Année d'échéance :",
   "search-referendums-and": "Rechercher des référendums et/ou pétitions",
-  "propose-a-new": "Proposer un nouveau référendum ou une nouvelle pétition"
+  "propose-a-new": "Proposer un nouveau référendum ou une nouvelle pétition",
+  "type": "Type",
+  "area": "Zone géographique",
+  "title": "Titre",
+  "deadline": "Échéance"
 }
