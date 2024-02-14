@@ -364,7 +364,7 @@ window.onload = async function() {
         const span = document.createElement('span');
         small.appendChild(span);
         translator.translateElement(span, 'distance');
-        small.appendChild(document.createTextNode(` ${distance} m.`);
+        small.appendChild(document.createTextNode(` ${distance} m.`));
         small.appendChild(document.createElement('br'));
         small.appendChild(document.createTextNode(dates);
       }
