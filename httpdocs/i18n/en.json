@@ -19,5 +19,7 @@
   "type": "Type",
   "area": "Area",
   "title": "Title",
-  "deadline": "Deadline"
+  "deadline": "Deadline",
+  "citizen-card": "Citizen card",
+  "test": "TEST"
 }
