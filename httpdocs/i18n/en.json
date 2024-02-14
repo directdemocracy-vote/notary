@@ -50,6 +50,7 @@
   "voters": "Voters:",
   "participation:": "Participation:",
   "areas:": "Areas:",
+  "area:": "Area:",
   "world": "<a target=\"_blank\" href=\"https://en.wikipedia.org/wiki/World\">World</a>",
   "european-union": "<a target=\"_blank\" href=\"https://en.wikipedia.org/wiki/European_Union\">European Union</a>",
   "area-estimation": "(estimated population: %1 for a corpus of %2)",
