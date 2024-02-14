@@ -49,5 +49,8 @@
   "signers:": "Signatories:",
   "voters": "Voters:",
   "participation:": "Participation:",
-  "areas:": "Areas:"
+  "areas:": "Areas:",
+  "world": "<a target=\"_blank\" href=\"https://en.wikipedia.org/wiki/World\">World</a>",
+  "european-union": "<a target=\"_blank\" href=\"https://en.wikipedia.org/wiki/European_Union\">European Union</a>",
+  "area-estimation": "(estimated population: %1 with a corpus of %2)"
 }
