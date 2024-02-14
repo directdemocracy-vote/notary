@@ -221,23 +221,23 @@ window.onload = function() {
         thead.appendChild(tr);
         let th = document.createElement('th');
         tr.appendChild(th);
-        th.textContent = 'Type';
+        translator.translateElement(th, 'type');
         th = document.createElement('th');
         tr.appendChild(th);
-        th.textContent = 'Area';
+        translator.translateElement(th, 'area');
         th = document.createElement('th');
         tr.appendChild(th);
-        th.textContent = 'Title';
+        translator.translateElement(th, 'title');
         th = document.createElement('th');
         tr.appendChild(th);
-        th.textContent = 'Deadline';
+        translator.translateElement(th, 'deadline');
         const tbody = document.createElement('tbody');
         table.appendChild(tbody);
         answer.proposals.forEach(function(proposal) {
           tr = document.createElement('tr');
           tbody.appendChild(tr);
           let td = document.createElement('td');
-          td.textContent = `${proposal.secret ? 'Referendum' : 'Petition'}`;
+          translator.translateElement(td, proposal.secret ? 'referendum' : 'petition');
           tr.appendChild(td);
           td = document.createElement('td');
           td.textContent = proposal.areas[0].split('=')[1];
