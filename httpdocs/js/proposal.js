@@ -24,7 +24,7 @@ window.onload = async function() {
     a = document.createElement('a');
     a.classList.add('level-right');
     a.setAttribute('id', 'delete-link');
-    a.textContent = 'Delete';
+    translator.translateElement(a, 'delete');
     a.addEventListener('click', function(event) {
       const h = localStorage.getItem('password');
       fetch('/api/developer/delete.php', {
@@ -37,7 +37,7 @@ window.onload = async function() {
           if (response === 'OK')
             window.location.replace('https://notary.directdemocracy.vote');
           else
-            console.log('Cannot delete proposal: ' + response);
+            console.error('Cannot delete proposal: ' + response);
         });
     });
     document.getElementById('panel-heading').appendChild(a);
@@ -106,7 +106,7 @@ window.onload = async function() {
         let td = document.createElement('td');
         tr.appendChild(td);
         td.style.fontStyle = 'italic';
-        td.textContent = 'Blank';
+        translator.translateElement(td, 'blank');
         td = document.createElement('td');
         tr.appendChild(td);
         td.textContent = answer.results[0];
@@ -125,24 +125,28 @@ window.onload = async function() {
       a.textContent = answer.judge;
       document.getElementById('judge').appendChild(a);
       document.querySelector('.subtitle').textContent = (answer.secret) ? 'referendum' : 'petition';
-      document.getElementById('modal-title').textContent = (answer.secret) ? 'Vote at this referendum' : 'Sign this petition';
+      translator.translateElement(document.getElementById('modal-title'), answer.secret ? 'vote-at' : 'sign-this');
       const actionButton = document.getElementById('action-button');
-      actionButton.textContent = (answer.secret) ? 'Vote' : 'Sign';
       if (deadline < now)
-        actionButton.textContent = 'Closed';
-      else
+        translator.translateElement(actionButton, 'closed');
+      else {
+        translator.translateElement(actionButton, answer.secret ? 'vote' : 'sign');
         actionButton.removeAttribute('disabled');
-      const corpus = answer.corpus;
-      const participants = answer.secret ? 'Voters' : 'Signatures';
-      const participants_count = answer.secret ? total : answer.participants;
-      const participation = corpus === 0 ? 0 : Math.round(10000 * answer.participants / corpus) / 100;
-      const line = `Corpus: <a target="_blank" href="participants.html?${payload}&corpus=1">` +
-        `${corpus}</a> &mdash; ` +
-        `${participants}: <a target="_blank" href="participants.html?${payload}">` +
-        `${participants_count}</a> &mdash; ` +
-        `Participation: ${participation}% &mdash; ` +
-        `Areas: <a target="_blank" href="areas.html?${payload}">${answer.areas}</a>`;
-      document.getElementById('result').innerHTML = line;
+      }
+      const corpus = document.getElementById('corpus');
+      corpus.textContent = answer.corpus;
+      corpus.href = `participants.html?${payload}&corpus=1`;
+      corpus.target = '_blank';
+      translator.translateElement(document.getElementById('signers-or-voters-label'), answer.secret ? 'voters' : 'signers');
+      const sv = document.getElementById('signers-or-voters');
+      sv.textContent = answer.secret ? total : answer.participants;
+      sv.href = `participants.html?${payload}`;
+      sv.target = '_blank';
+      document.getElementById('participation').textContent = answer.corpus === 0 ? 0 : Math.round(10000 * answer.participants / answer.corpus) / 100;
+      const areas = document.getElementById('areas');
+      areas.textContent = answer.areas;
+      areas.href = `areas.html?${payload}`;
+      areas.target = '_blank';
       const areaName = document.getElementById('area-name');
       const areas = answer.areaName[0].split('=');
       let query = '';
