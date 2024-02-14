@@ -37,5 +37,17 @@
   "copied-in-clipboard": "Copied in the clipboard! You can now paste it in the direct<b>democracy</b> app.",
   "deadline:": "Deadline:",
   "published:": "Published:",
-  "judge:": "Judge:"
+  "judge:": "Judge:",
+  "delete": "Delete",
+  "blank": "Blank",
+  "vote-at": "Vote at this referendum",
+  "sign-this": "Sign this petition",
+  "closed": "Closed",
+  "vote": "Vote",
+  "sign": "Sign",
+  "corpus:": "Corpus:",
+  "signers:": "Signatories:",
+  "voters": "Voters:",
+  "participation:": "Participation:",
+  "areas:": "Areas:"
 }
