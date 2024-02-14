@@ -133,16 +133,17 @@ window.onload = async function() {
         translator.translateElement(actionButton, answer.secret ? 'vote' : 'sign');
         actionButton.removeAttribute('disabled');
       }
-      const corpus = document.getElementById('corpus');
-      corpus.textContent = answer.corpus;
-      corpus.href = `participants.html?${payload}&corpus=1`;
-      corpus.target = '_blank';
+      const corpus = answer.corpus;
+      const corpusElement = document.getElementById('corpus');
+      corpusElement.textContent = corpus;
+      corpusElement.href = `participants.html?${payload}&corpus=1`;
+      corpusElement.target = '_blank';
       translator.translateElement(document.getElementById('signers-or-voters-label'), answer.secret ? 'voters:' : 'signers:');
       const sv = document.getElementById('signers-or-voters');
       sv.textContent = answer.secret ? total : answer.participants;
       sv.href = `participants.html?${payload}`;
       sv.target = '_blank';
-      document.getElementById('participation').textContent = answer.corpus === 0 ? 'N/A' : (Math.round(10000 * answer.participants / answer.corpus) / 100) + '%';
+      document.getElementById('participation').textContent = corpus === 0 ? 'N/A' : (Math.round(10000 * answer.participants / corpus) / 100) + '%';
       const areas = document.getElementById('areas');
       areas.textContent = answer.areas ? answer.areas : 'undefined';
       areas.href = `areas.html?${payload}`;
@@ -175,9 +176,7 @@ window.onload = async function() {
                 const url = 'https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=' + response.osm_id;
                 const estimation = document.getElementById('area-estimation');                
                 if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population')) {
-                  const corpusPercent = answer.corpus ? Math.round(10000 * answer.corpus / parseFloat(response.extratags.population)) / 100 : 0;
-                  console.log(answer.corpus);
-                  console.log(10000 * answer.corpus / parseFloat(response.extratags.population) / 100);
+                  const corpusPercent = corpus ? Math.round(10000 * corpus / parseFloat(response.extratags.population)) / 100 : 0;
                   translator.translateElement(estimation, 'area-estimation', [`<a target="_blank" href="${url}">${response.extratags.population}</a>`, corpusPercent + '%']);
                 } else
                   translator.translateElement(estimation, 'area-estimation-unknown', `<a target="_blank" href="${url}">N/A</a>`);
