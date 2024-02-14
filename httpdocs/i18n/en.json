@@ -21,5 +21,12 @@
   "title": "Title",
   "deadline": "Deadline",
   "citizen-card": "Citizen card",
-  "test": "TEST"
+  "test": "TEST",
+  "lat-lon": "Latitude, longitude",
+  "created": "Created:",
+  "reputation": "Reputation:",
+  "trusted": "Trusted",
+  "on": "on:",
+  "endorsed-by": "Endorsed by %1/%2",
+  "distance": "Distance:"
 }
