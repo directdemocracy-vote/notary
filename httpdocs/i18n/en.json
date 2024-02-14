@@ -1,5 +1,13 @@
 {
   "moto": "a notary publishing signed data",
   "introduction": "<p>This web service is hosting the sample direct<b>democracy</b> notary. The notary is responsible for publishing signed data.</p>",
-  "more-info": "More information is available from <a href=\"//directdemocracy.vote\" target=\"_blank\">directdemocracy.vote</a>."
+  "more-info": "More information is available from <a href=\"//directdemocracy.vote\" target=\"_blank\">directdemocracy.vote</a>.",
+  "citizens": "Citizens",
+  "referendums-and-petitions": "Referendums and Petitions",
+  "judge": "Judge",
+  "trusted-by-judge": "Trusted by judge",
+  "given-names": "Given name(s)",
+  "family-name": "Family name",
+  "search": "Search"
+  
 }
