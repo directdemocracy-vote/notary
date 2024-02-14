@@ -1,5 +1,19 @@
 {
   "moto": "un bureau de vote pour anonymiser les votes",
   "introduction": "<p>Ce service web héberge un exemple de bureau de vote pour direct<b>democracy</b>.</p><p>Les bureaux de votes permettent d'anonymiser les bulletins de vote des citoyens.</p>",
-  "more-info": "Pour plus d'informations, veuillez consulter <a href=\"//directdemocracy.vote\" target=\"_blank\">directdemocracy.vote</a>."
+  "more-info": "Pour plus d'informations, veuillez consulter <a href=\"//directdemocracy.vote\" target=\"_blank\">directdemocracy.vote</a>.",
+  "citizens": "Citoyens",
+  "referendums-and-petitions": "Référendums et pétitions",
+  "judge": "Juge",
+  "trusted-by-judge": "Approuvé par le juge",
+  "given-names": "Prénom(s)",
+  "family-name": "Nom",
+  "search": "Rechercher",
+  "referendum": "Référendum",
+  "petition": "Pétition",
+  "open": "Ouvert",
+  "closed": "Fermé",
+  "deadline-year": "Année d'échéance :",
+  "search-referendums-and": "Rechercher des référendums et/ou pétitions",
+  "propose-a-new": "Proposer un nouveau référendum ou une nouvelle pétition"
 }
