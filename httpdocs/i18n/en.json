@@ -1,5 +1,5 @@
 {
-  "moto": "a polling station anonymizing votes",
-  "introduction": "<p>This web service is hosting the sample direct<b>democracy</b> polling station.</p><p>The polling station is responsible for anonymizing the votes of the citizens.</p>",
+  "moto": "a notary publishing signed data",
+  "introduction": "<p>This web service is hosting the sample direct<b>democracy</b> notary.</p><p>The notary is responsible for publishing signed data.</p>",
   "more-info": "More information is available from <a href=\"//directdemocracy.vote\" target=\"_blank\">directdemocracy.vote</a>."
 }
