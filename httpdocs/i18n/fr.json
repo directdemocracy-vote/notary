@@ -19,5 +19,16 @@
   "type": "Type",
   "area": "Zone géographique",
   "title": "Titre",
-  "deadline": "Échéance"
+  "deadline": "Échéance",
+  "citizen-card": "Carte de citoyen",
+  "test": "TEST",
+  "error": "ERREUR",
+  "lat-lon": "Latitude, longitude",
+  "created": "Crée le :",
+  "reputation": "Réputation:",
+  "trusted": "Approuvé(e)",
+  "distrusted": "Désapprouvé(e)",
+  "on": "le :",
+  "endorsed-by": "Assermenté(e) par %1/%2",
+  "distance": "Distance :"
 }
