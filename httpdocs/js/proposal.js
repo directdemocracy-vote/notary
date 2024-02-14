@@ -144,7 +144,7 @@ window.onload = async function() {
       sv.target = '_blank';
       document.getElementById('participation').textContent = answer.corpus === 0 ? 0 : Math.round(10000 * answer.participants / answer.corpus) / 100;
       const areas = document.getElementById('areas');
-      areas.textContent = answer.areas;
+      areas.textContent = answer.areas ? answer.areas : 'undefined';
       areas.href = `areas.html?${payload}`;
       areas.target = '_blank';
       const areaName = document.getElementById('area-name');
