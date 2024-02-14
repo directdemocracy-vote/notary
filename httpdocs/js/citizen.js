@@ -358,14 +358,14 @@ window.onload = async function() {
         content.appendChild(a);
         a.href = `/citizen.html?signature=${encodeURIComponent(endorsement.signature)}`;
         a.innerHTML = `<b>${endorsement.givenNames}<br>${endorsement.familyName}</b>`;
-        content.appendChild(document.createElement('br');
+        content.appendChild(document.createElement('br'));
         const small = document.createElement('small');
         content.appendChild(small);
         const span = document.createElement('span');
         small.appendChild(span);
         translator.translateElement(span, 'distance');
         small.appendChild(document.createTextNode(` ${distance} m.`);
-        small.appendChild(document.createElement('br');
+        small.appendChild(document.createElement('br'));
         small.appendChild(document.createTextNode(dates);
       }
 
