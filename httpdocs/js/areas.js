@@ -59,7 +59,7 @@ window.onload = function() {
         thead.appendChild(tr);
         let th = document.createElement('th');
         tr.appendChild(th);
-        th.textContent = 'Area';
+        translator.translateElement(th, 'area');
         for(const a of answer.answers) {
           th = document.createElement('th');
           tr.appendChild(th);
