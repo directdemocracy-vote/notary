@@ -26,6 +26,7 @@
   "created": "Created:",
   "reputation": "Reputation:",
   "trusted": "Trusted",
+  "distrusted": "Distrusted",
   "on": "on:",
   "endorsed-by": "Endorsed by %1/%2",
   "distance": "Distance:"
