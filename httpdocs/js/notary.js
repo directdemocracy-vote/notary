@@ -121,7 +121,7 @@ window.onload = function() {
     const givenNames = document.getElementById('given-names').value;
     judge = document.getElementById('judge-input').value;
     let parameters = `latitude=${latitude}&longitude=${longitude}&radius=${radius}`;
-    if (judge && document.getElementById('endorsed-by-judge').checked)
+    if (judge && document.getElementById('trusted-by-judge').checked)
       parameters += `&judge=https://${encodeURIComponent(judge)}`;
     if (familyName)
       parameters += `&familyName=${encodeURIComponent(familyName)}`;
