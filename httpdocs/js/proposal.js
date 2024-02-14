@@ -148,7 +148,7 @@ window.onload = async function() {
       areas.href = `areas.html?${payload}`;
       areas.target = '_blank';
       const areaName = document.getElementById('area-name');
-      const areas = answer.areaName[0].split('=');
+      const areaNames = answer.areaName[0].split('=');
       let query = '';
       answer.areaName.forEach(function(line) {
         const eq = line.indexOf('=');
@@ -159,11 +159,11 @@ window.onload = async function() {
         if (type)
           query += type + '=' + encodeURIComponent(name) + '&';
       });
-      areaName.textContent = `Area: ${areas[1]}`;
+      areaName.textContent = `Area: ${areaNames[1]}`;
       query = query.slice(0, -1);
-      if (!areas[0])
+      if (!areaNames[0])
         areaName.innerHTML = `Area: <a target="_blank" href="https://en.wikipedia.org/wiki/Earth">Earth</a>`;
-      else if (areas[0] === 'union')
+      else if (areaNames[0] === 'union')
         areaName.innerHTML = `Area: <a target="_blank" href="https://en.wikipedia.org/wiki/European_Union">European Union</a>`;
       else {
         fetch(`https://nominatim.openstreetmap.org/search.php?${query}&format=json&extratags=1`)
@@ -181,7 +181,7 @@ window.onload = async function() {
                     `corpus</a> of ${corpusPercent}%`;
                 } else
                   population = `<a target="_blank" href="${url}">N/A</a>`;
-                areaName.innerHTML = `Area: ${areas[1]} (estimated population: ${population})`;
+                areaName.innerHTML = `Area: ${areaNames[1]} (estimated population: ${population})`;
               }
             }
           });
