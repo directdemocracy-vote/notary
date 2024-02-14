@@ -15,5 +15,9 @@
   "closed": "Closed",
   "deadline-year": "Deadline Year:",
   "search-referendums-and": "Search referendums and/or petitions",
-  "propose-a-new": "Propose a new referendum or petition"
+  "propose-a-new": "Propose a new referendum or petition",
+  "type": "Type",
+  "area": "Area",
+  "title": "Title",
+  "deadline": "Deadline"
 }
