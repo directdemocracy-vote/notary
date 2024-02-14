@@ -124,7 +124,7 @@ window.onload = async function() {
       a.setAttribute('href', answer.judge);
       a.textContent = answer.judge;
       document.getElementById('judge').appendChild(a);
-      document.querySelector('.subtitle').textContent = (answer.secret) ? 'referendum' : 'petition';
+      translator.translateElement(document.querySelector('.subtitle'), answer.secret ? 'referendum' : 'petition');
       translator.translateElement(document.getElementById('modal-title'), answer.secret ? 'vote-at' : 'sign-this');
       const actionButton = document.getElementById('action-button');
       if (deadline < now)
