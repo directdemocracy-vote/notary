@@ -366,7 +366,7 @@ window.onload = async function() {
         translator.translateElement(span, 'distance');
         small.appendChild(document.createTextNode(` ${distance} m.`));
         small.appendChild(document.createElement('br'));
-        small.appendChild(document.createTextNode(dates);
+        small.appendChild(document.createTextNode(dates));
       }
 
       function publishedDate(seconds) {
