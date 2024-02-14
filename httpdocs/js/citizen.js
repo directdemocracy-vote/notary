@@ -354,9 +354,19 @@ window.onload = async function() {
         }
         if (otherDay)
           dates += `<i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${otherColor}">${otherIcon}</i> ${otherDay}`;
-        content.innerHTML =
-          `<a href="/citizen.html?signature=${encodeURIComponent(endorsement.signature)}"><b>${endorsement.givenNames}<br>` +
-          `${endorsement.familyName}</b></a><br><small><span data-i18n="distance"></span> ${distance} m.<br>${dates}</small>`;
+        const a = document.createElement('a');
+        content.appendChild(a);
+        a.href = `/citizen.html?signature=${encodeURIComponent(endorsement.signature)}`;
+        a.innerHTML = `<b>${endorsement.givenNames}<br>${endorsement.familyName}</b>`;
+        content.appendChild(document.createElement('br');
+        const small = document.createElement('small');
+        content.appendChild(small);
+        const span = document.createElement('span');
+        small.appendChild(span);
+        translator.translateElement(span, 'distance');
+        small.appendChild(document.createTextNode(` ${distance} m.`);
+        small.appendChild(document.createElement('br');
+        small.appendChild(document.createTextNode(dates);
       }
 
       function publishedDate(seconds) {
