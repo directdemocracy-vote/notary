@@ -37,5 +37,17 @@
   "copied-in-clipboard": "Copié dans le presse-papier ! Vous pouvez maintenant le coller dans l'app direct<b>democracy</b>.",
   "deadline:": "Échéance :",
   "published:": "Publié le :",
-  "judge:": "Juge :"
+  "judge:": "Juge :",
+  "delete": "Effacer",
+  "blank": "Bulletins blancs",
+  "vote-at": "Votez à ce référendum",
+  "sign-this": "Signez cette pétition",
+  "closed": "Fermé",
+  "vote": "Votez",
+  "sign": "Signez",
+  "corpus:": "Corpus :",
+  "signers:": "Signataires :",
+  "voters": "Votants :",
+  "participation:": "Participation :",
+  "areas:": "Zones géographiques :"
 }
