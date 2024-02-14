@@ -8,6 +8,12 @@
   "trusted-by-judge": "Trusted by judge",
   "given-names": "Given name(s)",
   "family-name": "Family name",
-  "search": "Search"
-  
+  "search": "Search",
+  "referendum": "Referendum",
+  "petition": "Petition",
+  "open": "Open",
+  "closed": "Closed",
+  "deadline-year": "Deadline Year:",
+  "search-referendum-and": "Search referendums and/or petitions",
+  "propose-a-new": "Propose a new referendum or petition"
 }
