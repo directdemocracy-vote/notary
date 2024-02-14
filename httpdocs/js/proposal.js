@@ -176,6 +176,8 @@ window.onload = async function() {
                 const estimation = document.getElementById('area-estimation');                
                 if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population')) {
                   const corpusPercent = answer.corpus ? Math.round(10000 * answer.corpus / parseFloat(response.extratags.population)) / 100 : 0;
+                  console.log(answer.corpus);
+                  console.log(10000 * answer.corpus / parseFloat(response.extratags.population) / 100);
                   translator.translateElement(estimation, 'area-estimation', [`<a target="_blank" href="${url}">${response.extratags.population}</a>`, corpusPercent + '%']);
                 } else
                   translator.translateElement(estimation, 'area-estimation-unknown', `<a target="_blank" href="${url}">N/A</a>`);
