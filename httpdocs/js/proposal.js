@@ -159,13 +159,13 @@ window.onload = async function() {
         if (type)
           query += type + '=' + encodeURIComponent(name) + '&';
       });
-      areaName.textContent = `Area: ${areaNames[1]}`;
       query = query.slice(0, -1);
       if (!areaNames[0])
-        areaName.innerHTML = `Area: <a target="_blank" href="https://en.wikipedia.org/wiki/Earth">Earth</a>`;
+        translator.translateElement(areaName, 'world');
       else if (areaNames[0] === 'union')
-        areaName.innerHTML = `Area: <a target="_blank" href="https://en.wikipedia.org/wiki/European_Union">European Union</a>`;
+        translator.translateElement(areaName, 'european-union');
       else {
+        areaName.textContent = areaNames[1];
         fetch(`https://nominatim.openstreetmap.org/search.php?${query}&format=json&extratags=1`)
           .then(response => response.json())
           .then(answer => {
@@ -173,15 +173,12 @@ window.onload = async function() {
               const response = answer[0];
               if (response.hasOwnProperty('osm_id')) {
                 const url = 'https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=' + response.osm_id;
-                let population;
+                const estimation = document.getElementById('area-estimation');                
                 if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population')) {
                   const corpusPercent = Math.round(10000 * corpus / parseFloat(response.extratags.population)) / 100;
-                  population = `<a target="_blank" href="${url}">${response.extratags.population}</a> with a ` +
-                    `<a target="_blank" href="participants.html?${payload}&corpus=1">` +
-                    `corpus</a> of ${corpusPercent}%`;
+                  translator.translateElement(estimation, 'area-estimation', `<a target="_blank" href="${url}">${response.extratags.population}</a>`, corpusPercent + '%');
                 } else
-                  population = `<a target="_blank" href="${url}">N/A</a>`;
-                areaName.innerHTML = `Area: ${areaNames[1]} (estimated population: ${population})`;
+                  translator.translateElement(estimation, 'area-estimation-unknown', `<a target="_blank" href="${url}">N/A</a>`);
               }
             }
           });
