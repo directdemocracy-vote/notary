@@ -224,7 +224,7 @@ window.onload = async function() {
               const color = endorsement.revoke ? 'red' : 'green';
               const icon = endorsement.revoke ? 'xmark_seal_fill' : 'checkmark_seal_fill';
               const p = document.createElement('p');
-              block.appenChild(p);
+              block.appendChild(p);
               p.style.width = "100%";
               const i = document.createElement('i');
               p.appendChild(i);
