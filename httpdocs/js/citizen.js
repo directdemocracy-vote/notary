@@ -237,11 +237,11 @@ window.onload = async function() {
               if (latest)
                 span.style.fontWeight = 'bold';
               translator.translateElement(span, endorsement.revoke ? 'distrusted' : 'trusted');
-              p.appendChild(document.createTextNode(' ');
+              p.appendChild(document.createTextNode(' '));
               span = document.createElement('span');
               p.appendChild(span);
               translator.translateElement(span, 'on');
-              p.appendChild(document.createTextNode(` ${d.toLocaleString()}`);              
+              p.appendChild(document.createTextNode(` ${d.toLocaleString()}`));
             }
           });
       }
