@@ -361,12 +361,14 @@ window.onload = async function() {
         content.appendChild(document.createElement('br'));
         const small = document.createElement('small');
         content.appendChild(small);
-        const span = document.createElement('span');
+        let span = document.createElement('span');
         small.appendChild(span);
         translator.translateElement(span, 'distance');
         small.appendChild(document.createTextNode(` ${distance} m.`));
         small.appendChild(document.createElement('br'));
-        small.appendChild(document.createTextNode(dates));
+        span = document.createElement('span');
+        small.appendChild(span);
+        span.innerHTML = dates;
       }
 
       function publishedDate(seconds) {
