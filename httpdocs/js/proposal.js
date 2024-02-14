@@ -142,7 +142,7 @@ window.onload = async function() {
       sv.textContent = answer.secret ? total : answer.participants;
       sv.href = `participants.html?${payload}`;
       sv.target = '_blank';
-      document.getElementById('participation').textContent = answer.corpus === 0 ? 0 : Math.round(10000 * answer.participants / answer.corpus) / 100;
+      document.getElementById('participation').textContent = answer.corpus === 0 ? 'N/A' : str(Math.round(10000 * answer.participants / answer.corpus) / 100) + '%';
       const areas = document.getElementById('areas');
       areas.textContent = answer.areas ? answer.areas : 'undefined';
       areas.href = `areas.html?${payload}`;
