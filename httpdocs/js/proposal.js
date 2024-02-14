@@ -137,7 +137,7 @@ window.onload = async function() {
       corpus.textContent = answer.corpus;
       corpus.href = `participants.html?${payload}&corpus=1`;
       corpus.target = '_blank';
-      translator.translateElement(document.getElementById('signers-or-voters-label'), answer.secret ? 'voters' : 'signers');
+      translator.translateElement(document.getElementById('signers-or-voters-label'), answer.secret ? 'voters:' : 'signers:');
       const sv = document.getElementById('signers-or-voters');
       sv.textContent = answer.secret ? total : answer.participants;
       sv.href = `participants.html?${payload}`;
