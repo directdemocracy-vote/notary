@@ -34,5 +34,8 @@
   "thats-me": "That's me",
   "review": "Review",
   "scan-instructions": "From the direct<b>democracy</b> app, scan this QR code or copy and paste this number.",
-  "copied-in-clipboard": "Copied in the clipboard! You can now paste it in the direct<b>democracy</b> app."
+  "copied-in-clipboard": "Copied in the clipboard! You can now paste it in the direct<b>democracy</b> app.",
+  "deadline:": "Deadline:",
+  "published:": "Published:",
+  "judge:": "Judge:"
 }
