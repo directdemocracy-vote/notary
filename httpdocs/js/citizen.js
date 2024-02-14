@@ -47,7 +47,7 @@ window.onload = async function() {
   const a = document.createElement('a');
   a.classList.add('level-right');
   a.setAttribute('id', 'delete-link');
-  a.textContent = me ? "That's me" : 'Review';
+  translator.translate(a, me ? 'thats-me' : 'review');
   document.getElementById('panel-heading').appendChild(a);
   a.addEventListener('click', function(event) {
     let binaryFingerprint = new Uint8Array(20);
@@ -84,14 +84,14 @@ window.onload = async function() {
     a.textContent = 'Copy';
     const message = document.createElement('div');
     div.appendChild(message);
-    message.innerHTML = 'From the <i>directdemocracy</i> app, scan this QR code or copy and paste it.';
+    translator.translateElement(message, 'scan-instructions');
     a.addEventListener('click', function() {
       input.select();
       input.setSelectionRange(0, 99999);
       document.execCommand('copy');
       input.setSelectionRange(0, 0);
       input.blur();
-      message.innerHTML = 'Copied in clipboard! You can now paste in the <i>directdemocracy</i> app.';
+      translator.translateElement(message, 'copied-in-clipboard');
     });
     const content = document.getElementById('modal-content');
     content.innerHTML = '';
