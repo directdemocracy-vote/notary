@@ -30,5 +30,9 @@
   "distrusted": "Désapprouvée",
   "on": "le :",
   "endorsed-by": "Assermenté(e) par %1/%2",
-  "distance": "Distance :"
+  "distance": "Distance :",
+  "thats-me": "C'est moi",
+  "review": "Examiner",
+  "scan-instructions": "Depuis l'app direct<b>democracy</b>, scannez ce code QR ou copier et coller le numéro de citoyen.",
+  "copied-in-clipboard": "Copié dans le presse-papier ! Vous pouvez maintenant le coller dans l'app direct<b>democracy</b>."
 }
