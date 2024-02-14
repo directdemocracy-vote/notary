@@ -220,13 +220,28 @@ window.onload = async function() {
               const block = document.createElement('div');
               div.appendChild(block);
               const d = new Date(parseInt(endorsement.published * 1000));
-              const action = endorsement.revoke ? 'Distrusted' : 'Trusted';
               const latest = parseInt(endorsement.latest) === 1;
               const color = endorsement.revoke ? 'red' : 'green';
               const icon = endorsement.revoke ? 'xmark_seal_fill' : 'checkmark_seal_fill';
-              block.innerHTML = '<p style="width:100%">' +
-                `<i class="icon f7-icons margin-right" style="color:${color};font-size:110%">${icon}</i>` +
-                `${latest ? '<b>' : ''}${action}${latest ? '</b>' : ''} on: ${d.toLocaleString()}</p>`;
+              const p = document.createElement('p');
+              block.appenChild(p);
+              p.style.width = "100%";
+              const i = document.createElement('i');
+              p.appendChild(i);
+              i.classList.add('icon', 'f7-icons', 'margin-right');
+              i.style.color = color;
+              i.style.fontSize = '110%';
+              i.textContent = icon;
+              let span = document.createElement('span');
+              p.appendChild(span);
+              if (latest)
+                span.style.fontWeight = 'bold';
+              translator.translateElement(span, endorsement.revoke ? 'distrusted' : 'trusted');
+              p.appendChild(document.createTextNode(' ');
+              span = document.createElement('span');
+              p.appendChild(span);
+              translator.translateElement(span, 'on');
+              p.appendChild(document.createTextNode(` ${d.toLocaleString()}`);              
             }
           });
       }
@@ -276,9 +291,9 @@ window.onload = async function() {
         if (endorsement.appKey === PRODUCTION_APP_KEY)
           overlay.style.visibility = 'hidden';
         else if (endorsement.appKey === TEST_APP_KEY)
-          overlay.textContent = 'TEST';
+          translator.translateElement(overlay, 'test');
         else {
-          overlay.textContent = 'ERROR';
+          translator.translateElement(overlay, 'error');
           console.error('endorsement.appKey = ' + endorsement.appKey);
           console.error('TEST_APP_KEY    = ' + TEST_APP_KEY);
         }
@@ -341,7 +356,7 @@ window.onload = async function() {
           dates += `<i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${otherColor}">${otherIcon}</i> ${otherDay}`;
         content.innerHTML =
           `<a href="/citizen.html?signature=${encodeURIComponent(endorsement.signature)}"><b>${endorsement.givenNames}<br>` +
-          `${endorsement.familyName}</b></a><br><small>Distance: ${distance} m.<br>${dates}</small>`;
+          `${endorsement.familyName}</b></a><br><small><span data-i18n="distance"></span> ${distance} m.<br>${dates}</small>`;
       }
 
       function publishedDate(seconds) {
