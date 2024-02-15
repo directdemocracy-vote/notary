@@ -151,6 +151,10 @@ window.onload = async function() {
         areas.target = '_blank';
       } else {
         areas.textContent = 'N/A';
+        areas.addInputListener('click', function(event) {
+          event.preventDefault();
+          alert('Areas are not available for petitions.');
+        });
       }
       const areaName = document.getElementById('area-name');
       const areaNames = answer.areaName[0].split('=');
