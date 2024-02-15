@@ -58,7 +58,7 @@ window.onload = function() {
         block.classList.add('panel-block');
         panel.appendChild(block);
         const p = document.createElement('p');
-        translator.translateElement(a, answer.type === 'petition' ? 'nobody-signed' : 'no-referendum-results');
+        translator.translateElement(p, answer.type === 'petition' ? 'nobody-signed' : 'no-referendum-results');
         block.appendChild(p);
       } else {
         for (const participant of answer.participants) {
