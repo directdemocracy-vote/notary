@@ -252,17 +252,17 @@ window.onload = async function() {
     const a = document.createElement('a');
     control.appendChild(a);
     a.classList.add('button', 'is-info');
-    a.textContent = 'Copy';
+    translator.translateElement(a, 'copy');
     const message = document.createElement('div');
     div.appendChild(message);
-    message.innerHTML = 'From the <i>directdemocracy</i> app, scan this QR code or copy and paste it.';
+    translator.translateElement(message, 'scan-instructions');
     a.addEventListener('click', function() {
       input.select();
       input.setSelectionRange(0, 99999);
       document.execCommand('copy');
       input.setSelectionRange(0, 0);
       input.blur();
-      message.innerHTML = 'Copied in clipboard! You can now paste in the <i>directdemocracy</i> app.';
+      translator.translateElement(message, 'copied-in-clipboard');
     });
     const content = document.getElementById('modal-content');
     content.innerHTML = '';
