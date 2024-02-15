@@ -64,5 +64,7 @@
   "nobody-signed": "Nobody signed this petition yet.",
   "no-referendum-results": "No referendum results are available yet.",
   "signed-on": "Signed on: %1",
-  "has-voted":  "Has voted"
+  "has-voted":  "Has voted",
+  "petition-no-corpus": "There is no corpus in the area of the petition.",
+  "referendum-no-corpus": "The is no corpus in the area of the referendum."
 }
