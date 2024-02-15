@@ -32,7 +32,7 @@ if ($type === 'citizen') {
     $registration_ids[] = intval($row['id']);
   $registrations = implode(',', $registration_ids);
   if ($registrations !== '') {
-    $mysqli->query("DELETE FROM registration WHERE publication IN ($registrations)") or die($mysqli->error);
+    $mysqli->query("DELETE FROM participation WHERE publication IN ($registrations)") or die($mysqli->error);
     $mysqli->query("DELETE FROM publication WHERE id IN ($registrations)") or die($mysqli->error);
   }
   if ($certificates !== '') {
