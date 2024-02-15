@@ -56,5 +56,13 @@
   "european-union": "<a target=\"_blank\" href=\"https://fr.wikipedia.org/wiki/Union_europ%C3%A9enne\">Union Européenne</a>",
   "area-estimation": "(population estimée : %1 pour un corpus de %2)",
   "area-estimation-unknown": "(population estimée : %1)",
-  "proposal-areas": "zones géographiques"
+  "proposal-areas": "zones géographiques",
+  "referendum-corpus": "corpus du référendum",
+  "petition-corpus": "corpus de la pétition",
+  "referendum-participants": "votants au référendum",
+  "petition-participants": "signataires de la pétition",
+  "nobody-signed": "Personne n'a encore signé cette pétition.",
+  "no-referendum-results": "Aucun résultat de référendum n'est disponible pour le moment.",
+  "signed-on": "A signé le : %1",
+  "has-voted":  "A voté"
 }
