@@ -164,6 +164,7 @@ window.onload = async function() {
           query += type + '=' + encodeURIComponent(name) + '&';
       });
       query = query.slice(0, -1);
+      const ghost = (answer.areaName[0] === 'hamlet=Le Poil' || answer.areaName[0] === 'building=Bodie');
       if (!areaNames[0])
         translator.translateElement(areaName, 'world');
       else if (areaNames[0] === 'union')
@@ -178,7 +179,7 @@ window.onload = async function() {
               if (response.hasOwnProperty('osm_id')) {
                 const url = 'https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=' + response.osm_id;
                 const estimation = document.getElementById('area-estimation');                
-                if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population')) {
+                if (response.hasOwnProperty('extratags') && response.extratags.hasOwnProperty('population') && !ghost) {
                   const corpusPercent = corpus ? Math.round(10000 * corpus / parseFloat(response.extratags.population)) / 100 : 0;
                   translator.translateElement(estimation, 'area-estimation', [`<a target="_blank" href="${url}">${response.extratags.population}</a>`, corpusPercent + '%']);
                 } else
