@@ -56,5 +56,6 @@
   "area-estimation": "(estimated population: %1 for a corpus of %2)",
   "area-estimation-unknown": "(estimated population: %1)",
   "proposal-areas": "areas",
+  "area:": "Area:",
   "areas-not-available": "Areas are not available for petitions."
 }
