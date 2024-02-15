@@ -23,7 +23,7 @@ if ($type === 'citizen') {
   $query = "SELECT publication FROM certificate WHERE certifiedPublication=$id";
   $result = $mysqli->query($query) or die($mysqli->error);
   while($row = $result->fetch_assoc())
-    $certificate_ids[] = intval($row['id']);
+    $certificate_ids[] = intval($row['publication']);
   $certificates = implode(',', $certificate_ids);
   $query = "SELECT id FROM publication WHERE participant=$participant AND `type`='participation'";
   $result = $mysqli->query($query) or die($mysqli->error);
