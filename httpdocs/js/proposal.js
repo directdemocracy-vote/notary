@@ -153,7 +153,7 @@ window.onload = async function() {
         areas.textContent = 'N/A';
         areas.addEventListener('click', function(event) {
           event.preventDefault();
-          alert('Areas are not available for petitions.');
+          alert(translator.translate('areas-not-available'));
         });
       }
       const areaName = document.getElementById('area-name');
