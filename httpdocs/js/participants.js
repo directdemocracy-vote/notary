@@ -43,9 +43,9 @@ window.onload = function() {
       const type = answer.type.charAt(0).toUpperCase() + answer.type.slice(1);
       const subtitle = document.getElementById('subtitle');
       if (corpus)
-        subtitle.textContent = `${type} corpus`;
+        translator.translateElement(subtitle, type === 'referendum' ? 'referendum-corpus' : 'petition-corpus');
       else
-        subtitle.textContent = `${type} participants`;
+        translator.translateElement(subtitle, type === 'referendum' ? 'referendum-participants' : 'petition-participants');
       const panel = document.getElementById('panel');
       const title = document.createElement('p');
       panel.appendChild(title);
@@ -59,7 +59,7 @@ window.onload = function() {
         block.classList.add('panel-block');
         panel.appendChild(block);
         const p = document.createElement('p');
-        p.textContent = answer.type === 'petition' ? 'Nobody signed this petition yet.' : 'No referendum results are available yet.';
+        translator.translateElement(a, answer.type === 'petition' ? 'nobody-signed' : 'no-referendum-results');
         block.appendChild(p);
       } else {
         for (const participant of answer.participants) {
@@ -83,7 +83,10 @@ window.onload = function() {
             const d = new Date(parseInt(participant.published) * 1000);
             p.appendChild(document.createElement('br'));
             const small = document.createElement('small');
-            small.textContent = answer.type === 'petition' ? `Signed on: ${d.toLocaleString()}` : 'Has voted';
+            if (answer.type === 'petition')
+              translator.translateElement(small, 'signed-on', d.toLocateString());
+            else
+              translator.translateElement(small, 'has-voted');
             p.appendChild(small);
           }
           block.appendChild(p);
