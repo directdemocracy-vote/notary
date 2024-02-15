@@ -31,7 +31,7 @@ $query = "SELECT "
         ."INNER JOIN participant AS pa ON pa.type='app' AND pa.id=vote.app "
         ."WHERE pp.signature=FROM_BASE64('$signature==') AND vote.ballot >= UNHEX($from) "
         ."ORDER BY vote.ballot LIMIT 100";
-$result = $mysqli->query($query) or error($mysqli->error);
+$result = $mysqli->query($query) or error($query - ' => ' . $mysqli->error);
 if (!$result)
   error('vote not found');
 $votes = [];
