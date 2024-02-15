@@ -149,13 +149,8 @@ window.onload = async function() {
         areas.textContent = answer.areas;
         areas.href = `areas.html?${payload}`;
         areas.target = '_blank';
-      } else {
-        areas.textContent = 'N/A';
-        areas.addEventListener('click', function(event) {
-          event.preventDefault();
-          alert(translator.translate('areas-not-available'));
-        });
-      }
+      } else
+        document.getElementById('areas-span').classList.add('is-hidden');
       const areaName = document.getElementById('area-name');
       const areaNames = answer.areaName[0].split('=');
       let query = '';
