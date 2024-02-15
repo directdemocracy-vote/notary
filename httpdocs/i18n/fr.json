@@ -64,5 +64,8 @@
   "nobody-signed": "Personne n'a encore signé cette pétition.",
   "no-referendum-results": "Aucun résultat de référendum n'est disponible pour le moment.",
   "signed-on": "A signé le : %1",
-  "has-voted":  "A voté"
+  "has-voted":  "A voté",
+  "petition-no-corpus": "Le corpus de la zone géographique de la pétition est vide.",
+  "referendum-no-corpus": "Le corpus de la zone géographique du référendum est vide."
+
 }
