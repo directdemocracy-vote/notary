@@ -40,12 +40,11 @@ window.onload = function() {
         console.error(answer.error);
         return;
       }
-      const type = answer.type.charAt(0).toUpperCase() + answer.type.slice(1);
       const subtitle = document.getElementById('subtitle');
       if (corpus)
-        translator.translateElement(subtitle, type === 'referendum' ? 'referendum-corpus' : 'petition-corpus');
+        translator.translateElement(subtitle, answer.type === 'petition' ? 'petition-corpus' : 'referendum-corpus');
       else
-        translator.translateElement(subtitle, type === 'referendum' ? 'referendum-participants' : 'petition-participants');
+        translator.translateElement(subtitle, answer.type === 'petition' ? 'petition-participants' : 'referendum-participants');
       const panel = document.getElementById('panel');
       const title = document.createElement('p');
       panel.appendChild(title);
