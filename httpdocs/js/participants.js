@@ -86,7 +86,7 @@ window.onload = function() {
             p.appendChild(document.createElement('br'));
             const small = document.createElement('small');
             if (answer.type === 'petition')
-              translator.translateElement(small, 'signed-on', d.toLocateString());
+              translator.translateElement(small, 'signed-on', d.toLocaleString());
             else
               translator.translateElement(small, 'has-voted');
             p.appendChild(small);
