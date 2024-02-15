@@ -55,5 +55,5 @@
   "area-estimation": "(population estimée : %1 pour un corpus de %2)",
   "area-estimation-unknown": "(population estimée : %1)",
   "proposal-areas": "zones géographiques",
-  "areas-are-not": "Les zones géographiques ne sont pas disponibles pour les pétitions."
+  "areas-not-available": "Les zones géographiques ne sont pas disponibles pour les pétitions."
 }
