@@ -35,6 +35,7 @@
   "review": "Review",
   "scan-instructions": "From the direct<b>democracy</b> app, scan this QR code or copy and paste this number.",
   "copied-in-clipboard": "Copied in the clipboard! You can now paste it in the direct<b>democracy</b> app.",
+  "copy": "Copy",
   "deadline:": "Deadline:",
   "published:": "Published:",
   "judge:": "Judge:",
@@ -55,8 +56,5 @@
   "european-union": "<a target=\"_blank\" href=\"https://en.wikipedia.org/wiki/European_Union\">European Union</a>",
   "area-estimation": "(estimated population: %1 for a corpus of %2)",
   "area-estimation-unknown": "(estimated population: %1)",
-  "proposal-areas": "areas",
-  "scan-or-copy": "From the <i>directdemocracy</i> app, scan this QR code or copy and paste it.",
-  "copy": "Copy",
-  "copied": "Copied in clipboard! You can now paste in the <i>directdemocracy</i> app."
+  "proposal-areas": "areas"
 }
