@@ -81,7 +81,7 @@ window.onload = async function() {
     const a = document.createElement('a');
     control.appendChild(a);
     a.classList.add('button', 'is-info');
-    a.textContent = 'Copy';
+    translator.translateElement(a, 'copy');
     const message = document.createElement('div');
     div.appendChild(message);
     translator.translateElement(message, 'scan-instructions');
