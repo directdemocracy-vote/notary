@@ -151,7 +151,7 @@ window.onload = async function() {
         areas.target = '_blank';
       } else {
         areas.textContent = 'N/A';
-        areas.addInputListener('click', function(event) {
+        areas.addEventListener('click', function(event) {
           event.preventDefault();
           alert('Areas are not available for petitions.');
         });
