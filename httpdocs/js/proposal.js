@@ -145,9 +145,13 @@ window.onload = async function() {
       sv.target = '_blank';
       document.getElementById('participation').textContent = corpus === 0 ? 'N/A' : (Math.round(10000 * answer.participants / corpus) / 100) + '%';
       const areas = document.getElementById('areas');
-      areas.textContent = answer.areas ? answer.areas : 'undefined';
-      areas.href = `areas.html?${payload}`;
-      areas.target = '_blank';
+      if (answer.areas) {
+        areas.textContent = answer.areas;
+        areas.href = `areas.html?${payload}`;
+        areas.target = '_blank';
+      } else {
+        areas.textContent = 'N/A';
+      }
       const areaName = document.getElementById('area-name');
       const areaNames = answer.areaName[0].split('=');
       let query = '';
