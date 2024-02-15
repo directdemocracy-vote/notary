@@ -34,7 +34,7 @@ $query = "SELECT participant.id, publication.id AS publication, "
         ."INNER JOIN participant AS app ON app.id = citizen.app "
         ."WHERE $condition";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
-$citizen = $result->fetch_assoc() or die("{\"error\":\"citizen not found: $condition\"}");
+$citizen = $result->fetch_assoc() or die("{\"error\":\"citizen not found\"}");
 $result->free();
 $alice_id = intval($citizen['id']);
 $alice_publication = intval($citizen['publication']);
