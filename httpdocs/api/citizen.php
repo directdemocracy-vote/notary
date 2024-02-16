@@ -75,9 +75,9 @@ while($e = $result->fetch_assoc()) {
   settype($e['latitude'], 'float');
   settype($e['longitude'], 'float');
   if ($e['type'] === 'report') {
-    $e['reported'] = $e['certificatePublished'];
-    $e['reportedComment'] = $e['comment'];
-    $e['reportedSignature'] = $e['certificateSignature'];
+    $e['revoked'] = $e['certificatePublished'];
+    $e['revokedComment'] = $e['comment'];
+    $e['revokedSignature'] = $e['certificateSignature'];
   } else { # endorse
     $e['endorsed'] = $e['certificatePublished'];
     $e['endorsedComment'] = $e['comment'];
@@ -105,9 +105,9 @@ while($e = $result->fetch_assoc()) {
   settype($e['latitude'], 'float');
   settype($e['longitude'], 'float');
   if ($e['type'] === 'report') {
-    $e['reportedYou'] = $e['certificatePublished'];
-    $e['reportedYouComment'] = $e['comment'];
-    $e['reportedYouSignature'] = $e['certificateSignature'];
+    $e['revokedYou'] = $e['certificatePublished'];
+    $e['revokedYouComment'] = $e['comment'];
+    $e['revokedYouSignature'] = $e['certificateSignature'];
   } else { # endorse
     $e['endorsedYou'] = $e['certificatePublished'];
     $e['endorsedYouComment'] = $e['comment'];
@@ -122,10 +122,10 @@ while($e = $result->fetch_assoc()) {
   foreach ($endorsements as &$endorsement) {
     if ($endorsement['id'] === $id) {
       $found = true;
-      if (isset($e['reportedYou'])) {
-        $endorsement['reportedYou'] = $e['reportedYou'];
-        $endorsement['reportedYouComment'] = $e['reportedYouComment'];
-        $endorsement['reportedYouSignature'] = $e['reportedYouSignature'];
+      if (isset($e['revokedYou'])) {
+        $endorsement['revokedYou'] = $e['revokedYou'];
+        $endorsement['revokedYouComment'] = $e['revokedYouComment'];
+        $endorsement['revokedYouSignature'] = $e['revokedYouSignature'];
       } else { # endorsedYou
         $endorsement['endorsedYou'] = $e['endorsedYou'];
         $endorsement['endorsedYouComment'] = $e['endorsedYouComment'];
