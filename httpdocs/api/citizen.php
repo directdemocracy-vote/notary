@@ -65,6 +65,7 @@ $query = $bob_query
         ."INNER JOIN participant AS app ON app.id=bob.app "
         ."WHERE pe.participant=$alice_id ORDER BY pe.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
+$q2 = $query;
 if (!$result)
   die("{\"error\":\"$mysqli->error\"}");
 $endorsements = [];
@@ -142,5 +143,6 @@ $mysqli->close();
 $answer = [];
 $answer['citizen'] = $citizen;
 $answer['endorsements'] = $endorsements;
+$answer['query'] = $q2;
 die(json_encode($answer, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
