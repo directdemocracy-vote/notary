@@ -20,6 +20,15 @@ function findGetParameter(parameterName, result) {
   return result;
 }
 
+function formatReputation(reputation) {
+  if (reputation !== 'N/A') {
+    const percent = Math.round(100 * parseFloat(reputation));
+    if (percent >= 0 && percent <= 100)
+      return percent + '%';
+  }
+  return 'N/A';
+}
+
 window.onload = async function() {
   let judge = findGetParameter('judge', 'https://judge.directdemocracy.vote');
   document.getElementById('judge').value = judge.substring(8);
@@ -192,7 +201,7 @@ window.onload = async function() {
               reputation.textContent = answer.error;
             } else {
               reputation.style.color = answer.trusted ? 'green' : 'red';
-              reputation.textContent = `${answer.reputation}`;
+              reputation.textContent = formatReputation(answer.reputation);
             }
           });
       }
