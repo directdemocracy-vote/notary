@@ -200,7 +200,6 @@ window.onload = async function() {
               reputation.style.color = 'red';
               reputation.textContent = answer.error;
             } else {
-              console.log(answer.trusted);
               reputation.style.color = answer.trusted === 1 ? 'green' : 'red';
               reputation.textContent = formatReputation(answer.reputation);
             }
@@ -231,8 +230,8 @@ window.onload = async function() {
               div.appendChild(block);
               const d = new Date(parseInt(endorsement.published * 1000));
               const latest = parseInt(endorsement.latest) === 1;
-              const color = endorsement.revoke ? 'red' : 'green';
-              const icon = endorsement.revoke ? 'xmark_seal_fill' : 'checkmark_seal_fill';
+              const color = endorsement.type !== 'trust' ? 'red' : 'green';
+              const icon = endorsement.type !== 'trust' ? 'xmark_seal_fill' : 'checkmark_seal_fill';
               const p = document.createElement('p');
               block.appendChild(p);
               p.style.width = "100%";
@@ -246,7 +245,7 @@ window.onload = async function() {
               p.appendChild(span);
               if (latest)
                 span.style.fontWeight = 'bold';
-              translator.translateElement(span, endorsement.revoke ? 'distrusted' : 'trusted');
+              translator.translateElement(span, endorsement.type + 'ed');
               p.appendChild(document.createTextNode(' '));
               span = document.createElement('span');
               p.appendChild(span);
