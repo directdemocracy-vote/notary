@@ -200,6 +200,7 @@ window.onload = async function() {
               reputation.style.color = 'red';
               reputation.textContent = answer.error;
             } else {
+              console.log(answer.trusted);
               reputation.style.color = answer.trusted === 1 ? 'green' : 'red';
               reputation.textContent = formatReputation(answer.reputation);
             }
