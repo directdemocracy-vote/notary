@@ -69,6 +69,10 @@ window.onload = async function() {
       padding: 0
     });
     const div = document.createElement('div');
+    const message = document.createElement('div');
+    div.appendChild(message);
+    message.classList.add('mb-4');
+    translator.translateElement(message, 'scan-instructions');
     const img = document.createElement('img');
     div.appendChild(img);
     img.src = qr.toDataURL();
@@ -91,9 +95,6 @@ window.onload = async function() {
     control.appendChild(a);
     a.classList.add('button', 'is-info');
     translator.translateElement(a, 'copy');
-    const message = document.createElement('div');
-    div.appendChild(message);
-    translator.translateElement(message, 'scan-instructions');
     a.addEventListener('click', function() {
       input.select();
       input.setSelectionRange(0, 99999);
