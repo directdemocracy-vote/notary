@@ -233,6 +233,9 @@ window.onload = async function() {
     });
     const div = document.createElement('div');
     div.classList.add('content', 'has-text-centered');
+    const message = document.createElement('div');
+    div.appendChild(message);
+    translator.translateElement(message, 'scan-instructions');
     const field = document.createElement('div');
     div.appendChild(field);
     field.classList.add('field', 'has-addons');
@@ -251,9 +254,6 @@ window.onload = async function() {
     control.appendChild(a);
     a.classList.add('button', 'is-info');
     translator.translateElement(a, 'copy');
-    const message = document.createElement('div');
-    div.appendChild(message);
-    translator.translateElement(message, 'scan-instructions');
     const img = document.createElement('img');
     div.appendChild(img);
     img.src = qr.toDataURL();
