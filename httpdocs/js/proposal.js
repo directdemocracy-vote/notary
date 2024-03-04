@@ -194,9 +194,9 @@ window.onload = async function() {
       }).addTo(map);
       map.whenReady(function() { setTimeout(() => { this.invalidateSize(); }, 0); });
       map.on('contextmenu', function(event) { return false; });
-      // L.geoJSON({ type: 'MultiPolygon', coordinates: answer.areaPolygons }).addTo(map);
+      L.geoJSON({ type: 'MultiPolygon', coordinates: answer.areaPolygons }).addTo(map);
 
-      L.rectangle([[43.96, 6.30], [43.93, 6.26]], {color: 'red', weight: 1}).addTo(map);
+      // L.rectangle([[43.96, 6.30], [43.93, 6.26]], {color: 'red', weight: 1}).addTo(map);
       
       let maxLon = -1000;
       let minLon = 1000;
