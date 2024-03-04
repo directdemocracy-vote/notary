@@ -235,6 +235,7 @@ window.onload = async function() {
     div.classList.add('content', 'has-text-centered');
     const message = document.createElement('div');
     div.appendChild(message);
+    message.classList.add('mb-4');
     translator.translateElement(message, 'scan-instructions');
     const img = document.createElement('img');
     div.appendChild(img);
