@@ -33,7 +33,7 @@
   "distance": "Distance :",
   "thats-me": "C'est moi",
   "review": "Examiner",
-  "scan-instructions": "Depuis l'app DirectDemocracy, scannez ce code QR ou copiez et collez ce numéro.",
+  "scan-instructions": "Depuis l'app DirectDemocracy, scannez ce code QR <i class=\"f7-icons has-text-link\">qrcode_viewfinder</i> ou copiez et collez ce numéro.",
   "copied-in-clipboard": "Copié ! Vous pouvez maintenant le coller dans l'app DirectDemocracy.",
   "copy": "Copier",
   "deadline:": "Échéance :",
