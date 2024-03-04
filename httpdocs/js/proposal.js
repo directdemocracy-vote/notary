@@ -200,7 +200,7 @@ window.onload = async function() {
 
       
       // L.rectangle([[43.96, 6.30], [43.93, 6.26]], {color: 'red', weight: 1}).addTo(map);
-
+    map.addLayer(L.rectangle([[43.96, 6.30], [43.93, 6.26]], {color: 'red', weight: 1}));
 
 
 
