@@ -194,14 +194,14 @@ window.onload = async function() {
       }).addTo(map);
       map.whenReady(function() { setTimeout(() => { this.invalidateSize(); }, 0); });
       map.on('contextmenu', function(event) { return false; });
-      L.geoJSON({ type: 'MultiPolygon', coordinates: answer.areaPolygons }).addTo(map);
+      // L.geoJSON({ type: 'MultiPolygon', coordinates: answer.areaPolygons }).addTo(map);
 
-      /*
+      
       let drawnItems = new L.FeatureGroup();
       map.addLayer(drawnItems);
       drawnItems.addLayer(L.geoJSON({ type: 'MultiPolygon', coordinates: answer.areaPolygons }));
       drawnItems.addLayer(L.rectangle([[43.96, 6.305], [43.925, 6.26]], {color: 'red', weight: 1}));
-      */
+      
       
       let maxLon = -1000;
       let minLon = 1000;
