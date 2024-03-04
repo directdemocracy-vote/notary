@@ -58,6 +58,7 @@ window.onload = async function() {
   a.setAttribute('id', 'delete-link');
   translator.translateElement(a, me ? 'thats-me' : 'review');
   document.getElementById('panel-heading').appendChild(a);
+  translator.translateElement(document.getElementById('modal-title'), me ? 'thats-me' : 'review');
   a.addEventListener('click', function(event) {
     let binaryFingerprint = new Uint8Array(20);
     for (let i = 0; i < 20; i += 1)
