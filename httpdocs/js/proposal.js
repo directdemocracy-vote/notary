@@ -195,6 +195,11 @@ window.onload = async function() {
       map.whenReady(function() { setTimeout(() => { this.invalidateSize(); }, 0); });
       map.on('contextmenu', function(event) { return false; });
       L.geoJSON({ type: 'MultiPolygon', coordinates: answer.areaPolygons }).addTo(map);
+
+      L.rectangle([[43.96, 6.30], [43.93, 6.26]], {color: 'red', weight: 1}).on('click', function (e) {
+        console.info(e);
+      }).addTo(map);
+      
       let maxLon = -1000;
       let minLon = 1000;
       let maxLat = -1000;
