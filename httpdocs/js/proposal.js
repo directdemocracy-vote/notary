@@ -236,6 +236,9 @@ window.onload = async function() {
     const message = document.createElement('div');
     div.appendChild(message);
     translator.translateElement(message, 'scan-instructions');
+    const img = document.createElement('img');
+    div.appendChild(img);
+    img.src = qr.toDataURL();    
     const field = document.createElement('div');
     div.appendChild(field);
     field.classList.add('field', 'has-addons');
@@ -254,9 +257,6 @@ window.onload = async function() {
     control.appendChild(a);
     a.classList.add('button', 'is-info');
     translator.translateElement(a, 'copy');
-    const img = document.createElement('img');
-    div.appendChild(img);
-    img.src = qr.toDataURL();
     a.addEventListener('click', function() {
       input.select();
       input.setSelectionRange(0, 99999);
