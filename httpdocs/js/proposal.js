@@ -201,7 +201,7 @@ window.onload = async function() {
       let drawnItems = new L.FeatureGroup();
       map.addLayer(drawnItems);
       drawnItems.addLayer(L.geoJSON({ type: 'MultiPolygon', coordinates: answer.areaPolygons }));
-      drawnItems.addLayer(L.rectangle([[43.96, 6.31], [43.92, 6.26]], {color: 'red', weight: 1}));
+      drawnItems.addLayer(L.rectangle([[43.96, 6.305], [43.925, 6.26]], {color: 'red', weight: 1}));
 
       
       // L.rectangle([[43.96, 6.30], [43.93, 6.26]], {color: 'red', weight: 1}).addTo(map);
