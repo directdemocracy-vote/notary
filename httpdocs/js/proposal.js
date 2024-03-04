@@ -194,15 +194,15 @@ window.onload = async function() {
       }).addTo(map);
       map.whenReady(function() { setTimeout(() => { this.invalidateSize(); }, 0); });
       map.on('contextmenu', function(event) { return false; });
-      // L.geoJSON({ type: 'MultiPolygon', coordinates: answer.areaPolygons }).addTo(map);
+      L.geoJSON({ type: 'MultiPolygon', coordinates: answer.areaPolygons }).addTo(map);
 
-      
+      /*
       let drawnItems = new L.FeatureGroup();
       map.addLayer(drawnItems);
       drawnItems.addLayer(L.geoJSON({ type: 'MultiPolygon', coordinates: answer.areaPolygons }));
-      // drawnItems.addLayer(L.rectangle([[43.96, 6.305], [43.925, 6.26]], {color: 'red', weight: 1}));
-      drawnItems.addLayer(L.rectangle([[38.2165, -119.0075], [38.2095, -119.0165]], {color: 'red', weight: 1}));
-      
+      // drawnItems.addLayer(L.rectangle([[43.960, 6.305], [43.925, 6.260]], {color: 'red', weight: 1})); // Le Poil
+      // drawnItems.addLayer(L.rectangle([[38.2165, -119.0075], [38.2095, -119.0165]], {color: 'red', weight: 1})); // Bodie
+      */
       
       let maxLon = -1000;
       let minLon = 1000;
