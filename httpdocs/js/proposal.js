@@ -201,7 +201,7 @@ window.onload = async function() {
       map.addLayer(drawnItems);
       drawnItems.addLayer(L.geoJSON({ type: 'MultiPolygon', coordinates: answer.areaPolygons }));
       // drawnItems.addLayer(L.rectangle([[43.96, 6.305], [43.925, 6.26]], {color: 'red', weight: 1}));
-      drawnItems.addLayer(L.rectangle([[38.217, -119.006], [38.208, -119.017]], {color: 'red', weight: 1}));
+      drawnItems.addLayer(L.rectangle([[38.2165, -119.0075], [38.2095, -119.0165]], {color: 'red', weight: 1}));
       
       
       let maxLon = -1000;
