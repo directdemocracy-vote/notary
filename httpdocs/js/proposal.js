@@ -232,9 +232,6 @@ window.onload = async function() {
       padding: 0
     });
     const div = document.createElement('div');
-    const img = document.createElement('img');
-    div.appendChild(img);
-    img.src = qr.toDataURL();
     div.classList.add('content', 'has-text-centered');
     const field = document.createElement('div');
     div.appendChild(field);
@@ -257,6 +254,9 @@ window.onload = async function() {
     const message = document.createElement('div');
     div.appendChild(message);
     translator.translateElement(message, 'scan-instructions');
+    const img = document.createElement('img');
+    div.appendChild(img);
+    img.src = qr.toDataURL();
     a.addEventListener('click', function() {
       input.select();
       input.setSelectionRange(0, 99999);
