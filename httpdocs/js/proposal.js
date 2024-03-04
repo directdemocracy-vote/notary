@@ -200,7 +200,8 @@ window.onload = async function() {
       let drawnItems = new L.FeatureGroup();
       map.addLayer(drawnItems);
       drawnItems.addLayer(L.geoJSON({ type: 'MultiPolygon', coordinates: answer.areaPolygons }));
-      drawnItems.addLayer(L.rectangle([[43.96, 6.305], [43.925, 6.26]], {color: 'red', weight: 1}));
+      // drawnItems.addLayer(L.rectangle([[43.96, 6.305], [43.925, 6.26]], {color: 'red', weight: 1}));
+      drawnItems.addLayer(L.rectangle([[38.212, -119.012], [38.198, -119.018]], {color: 'red', weight: 1}));
       
       
       let maxLon = -1000;
