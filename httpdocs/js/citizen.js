@@ -316,12 +316,16 @@ window.onload = async function() {
         div.appendChild(content);
         content.style.minWidth = '250px';        
         const distance = Math.round(distanceFromLatitudeLongitude(latitude, longitude, endorsement.latitude, endorsement.longitude));
+        // copied from app.js
+        /*
         let icon;
         let day;
         let color;
+        let comment;
         let otherIcon;
         let otherDay;
         let otherColor;
+        let otherComment;
         if (endorsement.hasOwnProperty('endorsed') && endorsement.hasOwnProperty('endorsedYou')) {
           day = new Date(endorsement.endorsed * 1000).toISOString().slice(0, 10);
           otherDay = new Date(endorsement.endorsedYou * 1000).toISOString().slice(0, 10);
@@ -365,6 +369,97 @@ window.onload = async function() {
         }
         if (otherDay)
           dates += `<i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${otherColor}">${otherIcon}</i> ${otherDay}`;
+        */
+        let icon;
+        let day;
+        let color;
+        let comment;
+        let otherIcon;
+        let otherDay;
+        let otherColor;
+        let otherComment;
+        if (endorsement.hasOwnProperty('endorsed')) {
+          day = new Date(endorsement.endorsed * 1000).toISOString().slice(0, 10);
+          color = endorsement.endorsedComment === 'in-person' ? 'Green' : 'Blue';
+          icon = 'arrow_left';
+          comment = endorsement.endorsedComment;
+        } else if (endorsement.hasOwnProperty('revoked')) {
+          day = new Date(endorsement.revoked * 1000).toISOString().slice(0, 10);
+          color = 'Red';
+          icon = 'arrow_left';
+          comment = endorsement.revokedComment;
+        } else
+          day = false;
+        if (endorsement.hasOwnProperty('endorsedYou')) {
+          otherDay = new Date(endorsement.endorsedYou * 1000).toISOString().slice(0, 10);
+          otherColor = endorsement.endorsedYouComment === 'in-person' ? 'Green' : 'Blue';
+          otherIcon = 'arrow_right';
+          otherComment = endorsement.endorsedYouComment;
+        } else if (endorsement.hasOwnProperty('revokedYou')) {
+          otherDay = new Date(endorsement.revokedYou * 1000).toISOString().slice(0, 10);
+          otherColor = 'Red';
+          otherIcon = 'arrow_right';
+          otherComment = endorsement.revokedYouComment;
+        } else
+          otherDay = false;
+        if (day !== false || otherDay !== false) {
+          if (day === otherDay && color === otherColor && comment === otherComment) {
+            otherDay = false;
+            icon = 'arrow_right_arrow_left';
+          }
+          if (otherComment === 'remote')
+            otherComment = 'endorsed-you-remotely';
+          else if (otherComment === 'in-person')
+            otherComment = 'endorsed-you-in-person';
+          else if (otherComment === 'revoked+address')
+            otherComment = 'revoked-moved';
+          else if (otherComment === 'revoked+name')
+            otherComment = 'revoked-name';
+          else if (otherComment === 'revoked+picture')
+            otherComment = 'revoked-picture';
+          else if (otherComment === 'revoked+address+name')
+            otherComment = 'revoked-address-name';
+          else if (otherComment === 'revoked+address+picture')
+            otherComment = 'revoked-address-picture';
+          else if (otherComment === 'revoked+name+picture')
+            otherComment = 'revoked-name-picture';
+          else if (otherComment === 'revoked+address+name+picture')
+            otherComment = 'revoked-address-name-picture';
+          else if (otherComment === 'revoked+died')
+            otherComment = 'revoked-died';
+          else if (otherComment)
+            console.error('Unsupported other comment: ' + otherComment);
+          if (comment === 'remote')
+            comment = 'you-endorsed-remotely';
+          else if (comment === 'in-person')
+            comment = 'you-endorsed-in-person';
+          else if (comment === 'revoked+address')
+            comment = 'you-revoked-moved';
+          else if (comment === 'revoked+name')
+            comment = 'you-revoked-name';
+          else if (comment === 'revoked+picture')
+            comment = 'you-revoked-picture';
+          else if (comment === 'revoked+address+name')
+            comment = 'you-revoked-address-name';
+          else if (comment === 'revoked+address+picture')
+            comment = 'you-revoked-address-picture';
+          else if (comment === 'revoked+name+picture')
+            comment = 'you-revoked-name-picture';
+          else if (comment === 'revoked+address+name+picture')
+            comment = 'you-revoked-address-name-picture';
+          else if (comment === 'revoked+died')
+            comment = 'you-revoked-died';
+          else if (comment)
+            console.error('Unsupported comment: ' + comment);
+          let other = otherDay
+            ? `<i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${otherColor}">${otherIcon}</i> ${otherDay}` +
+            `${day ? ' ' : ''}`
+            : '';
+          let main = day
+            ? `<i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${color}">${icon}</i> ${day}`
+            : '';
+
+        // end of copy
         const a = document.createElement('a');
         content.appendChild(a);
         a.href = `/citizen.html?signature=${encodeURIComponent(endorsement.signature)}`;
@@ -377,9 +472,18 @@ window.onload = async function() {
         translator.translateElement(span, 'distance');
         small.appendChild(document.createTextNode(` ${distance} m.`));
         small.appendChild(document.createElement('br'));
-        span = document.createElement('span');
-        small.appendChild(span);
-        span.innerHTML = dates;
+        if (other !== '')
+          span = document.createElement('span');
+          span.setAttribute('title', otherComment);
+          small.appendChild(span);
+          span.innerHTML = other;
+        }
+        if (main !== '') {
+          span = document.createElement('span');
+          span.setAttribute('title', comment);
+          small.appendChild(span);
+          span.innerHTML = main;
+        }
       }
 
       function publishedDate(seconds) {
