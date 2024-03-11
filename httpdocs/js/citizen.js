@@ -475,13 +475,17 @@ window.onload = async function() {
         small.appendChild(document.createElement('br'));
         if (other !== '') {
           span = document.createElement('span');
-          span.setAttribute('title', otherComment);
+          const c = comment ? translator.translate(comment, [endorsement.givenNames, endorsement.familyName]) : '';
+          const oc = otherComment ? translator.translate(otherComment, [endorsement.givenNames, endorsement.familyName]) : '';
+          span.setAttribute('title', icon === 'arrow_right_arrow_left' ? oc + '<br>' + c : oc);
           small.appendChild(span);
           span.innerHTML = other;
         }
         if (main !== '') {
           span = document.createElement('span');
-          span.setAttribute('title', comment);
+          const c = comment ? translator.translate(comment, [endorsement.givenNames, endorsement.familyName]) : '';
+          const oc = otherComment ? translator.translate(otherComment, [endorsement.givenNames, endorsement.familyName]) : '';
+          span.setAttribute('title', icon === 'arrow_right_arrow_left' ? c + '<br>' + oc : c);
           small.appendChild(span);
           span.innerHTML = main;
         }
