@@ -86,5 +86,8 @@
   "you-revoked-address-picture": "Vous avez révoqué %1 %2 pensant que cette personne a déménagé et que sa photo d'identité n'est plus à jour.",
   "you-revoked-name-picture": "Vous avez révoqué %1 %2 pensant que son nom a changé et que sa photo d'identité n'est plus à jour.",
   "you-revoked-address-name-picture": "Vous avez révoqué %1 %2 pensant que cette personne a déménagé, que son nom a changé et que sa photo d'identité n'est plus à jour.",
-  "you-revoked-died": "Vous avez révoqué %1 %2 pensant que cette personne est décédée."
+  "you-revoked-died": "Vous avez révoqué %1 %2 pensant que cette personne est décédée.",
+  "deleted": "effacée",
+  "transferred": "transférée",
+  "updated": "mise à jour"
 }
