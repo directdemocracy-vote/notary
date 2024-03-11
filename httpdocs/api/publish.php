@@ -215,6 +215,9 @@ if ($type === 'citizen') {
     $app_fields = '';
     $app_values = '';
   }
+  # update citizen status if needed
+  if ($ctype === 'report' && ($comment === 'deleted' || $comment === 'transferred' || $comment === 'updated'))
+    $mysqli->query("UPDATE citizen SET status='$comment' WHERE publication=$publication_id") or error($mysqli->error);
   $query = "INSERT INTO certificate(publication,$app_fields `type`, `message`, comment, certifiedPublication, latest) "
           ."VALUES($id,$app_values \"$ctype\", \"$message\", \"$comment\", $publication_id, 1)";
 } elseif ($type === 'proposal') {
