@@ -146,7 +146,7 @@ window.onload = async function() {
         console.error(answer.error);
         return;
       }
-      if (answer.status !== 'active')
+      if (answer.status === 'deleted')
         document.getElementById('status').textContent = ' (' + answer.status + ')';
       const published = publishedDate(answer.citizen.published);
       const givenNames = answer.citizen.givenNames;
