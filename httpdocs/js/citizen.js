@@ -199,10 +199,10 @@ window.onload = async function() {
           .then((answer) => {
             const reputation = document.getElementById('reputation');
             if (answer.error) {
-              reputation.style.color = 'red';
+              reputation.style.color = 'Red';
               reputation.textContent = answer.error;
             } else {
-              reputation.style.color = answer.trusted === 1 ? 'green' : 'red';
+              reputation.style.color = answer.trusted === 1 ? 'Green' : 'Red';
               reputation.textContent = formatReputation(answer.reputation);
             }
           });
@@ -232,7 +232,7 @@ window.onload = async function() {
               div.appendChild(block);
               const d = new Date(parseInt(endorsement.published * 1000));
               const latest = parseInt(endorsement.latest) === 1;
-              const color = endorsement.type !== 'trust' ? 'red' : 'green';
+              const color = endorsement.type !== 'trust' ? 'Red' : 'Green';
               const icon = endorsement.type !== 'trust' ? 'xmark_seal_fill' : 'checkmark_seal_fill';
               const p = document.createElement('p');
               block.appendChild(p);
