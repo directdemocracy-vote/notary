@@ -423,7 +423,7 @@ window.onload = async function() {
           span = document.createElement('span');
           const c = comment ? translator.translate(comment, [endorsement.givenNames, endorsement.familyName]) : '';
           const oc = otherComment ? translator.translate(otherComment, [endorsement.givenNames, endorsement.familyName]) : '';
-          span.setAttribute('title', icon === 'arrow_right_arrow_left' ? oc + '<br>' + c : oc);
+          span.setAttribute('title', icon === 'arrow_right_arrow_left' ? oc + '\n' + c : oc);
           small.appendChild(span);
           span.innerHTML = other;
         }
@@ -431,7 +431,7 @@ window.onload = async function() {
           span = document.createElement('span');
           const c = comment ? translator.translate(comment, [endorsement.givenNames, endorsement.familyName]) : '';
           const oc = otherComment ? translator.translate(otherComment, [endorsement.givenNames, endorsement.familyName]) : '';
-          span.setAttribute('title', icon === 'arrow_right_arrow_left' ? c + '<br>' + oc : c);
+          span.setAttribute('title', icon === 'arrow_right_arrow_left' ? c + '\n' + oc : c);
           small.appendChild(span);
           span.innerHTML = main;
         }
