@@ -146,6 +146,8 @@ window.onload = async function() {
         console.error(answer.error);
         return;
       }
+      if (!signature)
+        signature = answer.citizen.signature;
       if (answer.status !== 'active') {
         document.getElementById('status-span').style.display = '';
         translator.translateElement(document.getElementById('status'), answer.status);
