@@ -146,8 +146,10 @@ window.onload = async function() {
         console.error(answer.error);
         return;
       }
-      if (answer.status === 'deleted')
-        document.getElementById('status').textContent = ' (' + answer.status + ')';
+      if (answer.status !== 'active') {
+        document.getElementById('status-span').style.display = '';
+        translator.translateElement(document.getElementById('status'), answer.status);
+      }
       const published = publishedDate(answer.citizen.published);
       const givenNames = answer.citizen.givenNames;
       const familyName = answer.citizen.familyName;
