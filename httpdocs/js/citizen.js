@@ -317,59 +317,6 @@ window.onload = async function() {
         content.style.minWidth = '250px';        
         const distance = Math.round(distanceFromLatitudeLongitude(latitude, longitude, endorsement.latitude, endorsement.longitude));
         // copied from app.js
-        /*
-        let icon;
-        let day;
-        let color;
-        let comment;
-        let otherIcon;
-        let otherDay;
-        let otherColor;
-        let otherComment;
-        if (endorsement.hasOwnProperty('endorsed') && endorsement.hasOwnProperty('endorsedYou')) {
-          day = new Date(endorsement.endorsed * 1000).toISOString().slice(0, 10);
-          otherDay = new Date(endorsement.endorsedYou * 1000).toISOString().slice(0, 10);
-          if (day === otherDay) {
-            icon = 'arrow_right_arrow_left';
-            color = 'green';
-            otherDay = false;
-          } else {
-            icon = 'arrow_left';
-            color = 'green';
-            otherIcon = 'arrow_right';
-            otherColor = 'green';
-          }
-        } else {
-          if (endorsement.hasOwnProperty('reported')) {
-            icon = 'xmark';
-            color = 'red';
-            day = new Date(endorsement.reported * 1000).toISOString().slice(0, 10);
-          } else if (endorsement.hasOwnProperty('endorsed')) {
-            icon = 'arrow_left';
-            color = 'green';
-            day = new Date(endorsement.endorsed * 1000).toISOString().slice(0, 10);
-          } else
-            day = false;
-          if (endorsement.hasOwnProperty('reportedYou')) {
-            otherIcon = 'xmark';
-            otherColor = 'red';
-            otherDay = new Date(endorsement.reportedYou * 1000).toISOString().slice(0, 10);
-          } else if (endorsement.hasOwnProperty('endorsedYou')) {
-            otherIcon = 'arrow_right';
-            otherColor = 'green';
-            otherDay = new Date(endorsement.endorsedYou * 1000).toISOString().slice(0, 10);
-          } else
-            otherDay = false;
-        }
-        let dates = '';
-        if (day) {
-          dates += `<i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${color}">${icon}</i> ${day}`;
-          if (otherDay)
-            dates += '<br>';
-        }
-        if (otherDay)
-          dates += `<i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${otherColor}">${otherIcon}</i> ${otherDay}`;
-        */
         let icon;
         let day;
         let color;
@@ -459,7 +406,6 @@ window.onload = async function() {
         let main = day
           ? `<i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${color}">${icon}</i> ${day}`
           : '';
-
         // end of copy
         const a = document.createElement('a');
         content.appendChild(a);
