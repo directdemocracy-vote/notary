@@ -42,7 +42,7 @@ $alice_publication = intval($citizen['publication']);
 unset($citizen['id']);
 unset($citizen['publication']);
 $status = $citizen['status'];
-unset($citizen['status'];
+unset($citizen['status']);
 settype($citizen['published'], 'int');
 settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
