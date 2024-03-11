@@ -86,5 +86,8 @@
   "you-revoked-address-picture": "You revoked %1 %2 because you believe they moved and their picture is outdated.",
   "you-revoked-name-picture": "You revoked %1 %2 because you believe their name changed and their picture is outdated.",
   "you-revoked-address-name-picture": "You revoked %1 %2 because you believe their name changed, they moved and their picture is outdated.",
-  "you-revoked-died": "You revoked %1 %2 because you believe they died."
+  "you-revoked-died": "You revoked %1 %2 because you believe they died.",
+  "deleted": "deleted",
+  "transferred": "transferred",
+  "updated": "updated"
 }
