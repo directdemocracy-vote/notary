@@ -28,7 +28,8 @@ CREATE TABLE `citizen` (
   `givenNames` varchar(256) NOT NULL,
   `familyName` varchar(256) NOT NULL,
   `picture` blob NOT NULL,
-  `home` point NOT NULL
+  `home` point NOT NULL,
+  `status` enum('active','deleted','transferred','updated') NOT NULL DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `participant` (
