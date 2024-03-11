@@ -66,6 +66,25 @@
   "signed-on": "A signé le : %1",
   "has-voted":  "A voté",
   "petition-no-corpus": "Le corpus de la zone géographique de la pétition est vide.",
-  "referendum-no-corpus": "Le corpus de la zone géographique du référendum est vide."
-
+  "referendum-no-corpus": "Le corpus de la zone géographique du référendum est vide.",
+  "endorsed-you-remotely": "%1 %2 vous a assermenté à distance.",
+  "endorsed-you-in-person": "%1 %2 vous a assermenté en présentiel.",
+  "revoked-moved": "%1 %2 vous a révoqué(e) pensant que vous avez déménagé.",
+  "revoked-name": "%1 %2 vous a révoqué(e) pensant que votre nom a changé.",
+  "revoked-picture": "%1 %2 vous a révoqué(e) pensant que votre photo d'identité n'est plus à jour.",
+  "revoked-address-name": "%1 %2 vous révoqué(e) pensant que votre adresse et que votre nom ont changé.",
+  "revoked-address-picture": "%1 %2 vous a révoqué(e) pensant que votre adresse a changé et que votre photo d'identité n'est plus à jour.",
+  "revoked-name-picture": "%1 %2 vous a révoqué(e) pensant que votre nom a changé et que votre photo d'identité n'est plus à jour.",
+  "revoked-address-name-picture": "%1 %2 vous a révoqué(e) pensant que votre adresse et votre nom ont changé et que votre photo d'identité n'est plus à jour.",
+  "revoked-died": "%1 %2 vous a révoqué(e) pensant que vous êtes décédé(e).",
+  "you-endorsed-remotely": "Vous avez assermenté %1 %2 à distance.",
+  "you-endorsed-in-person": "Vous avez assermenté %1 %2 en présentiel.",
+  "you-revoked-moved'": "Vous avez révoqué %1 %2 pensant que cette personne a déménagé.",
+  "you-revoked-name": "Vous avez révoqué %1 %2 pensant que son nom a changé.",
+  "you-revoked-picture": "Vous avez révoqué %1 %2 pensant que sa photo d'identité n'est plus à jour.",
+  "you-revoked-address-name": "Vous avez révoqué %1 %2 pensant que cette personne a déménagé et que son nom a changé.",
+  "you-revoked-address-picture": "Vous avez révoqué %1 %2 pensant que cette personne a déménagé et que sa photo d'identité n'est plus à jour.",
+  "you-revoked-name-picture": "Vous avez révoqué %1 %2 pensant que son nom a changé et que sa photo d'identité n'est plus à jour.",
+  "you-revoked-address-name-picture": "Vous avez révoqué %1 %2 pensant que cette personne a déménagé, que son nom a changé et que sa photo d'identité n'est plus à jour.",
+  "you-revoked-died": "Vous avez révoqué %1 %2 pensant que cette personne est décédée."
 }
