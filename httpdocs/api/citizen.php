@@ -41,11 +41,20 @@ $alice_id = intval($citizen['id']);
 $alice_publication = intval($citizen['publication']);
 unset($citizen['id']);
 unset($citizen['publication']);
-$status = $citizen['status'];
+$answer = [];
+$answer['status'] = $citizen['status'];
 unset($citizen['status']);
 settype($citizen['published'], 'int');
 settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
+if ($status === 'updated' || $status === 'transferred') {
+  $query = "SELECT REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature FROM publication "
+          ."INNER JOIN publication AS pc ON pc.`type`='certificate' AND pc.participant=publication.participant "
+          ."INNER JOIN certificate ON certificate.publication=pc.id AND certificate.certifiedPublication=$alice_publication AND certificate.`type`='report' AND certificate.comment='$status'";
+  $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
+  $new = $result->fetch_assoc() or die("{\"error\":\"new citizen not found\"}");
+  $answer['new'] = $new['signature'];
+}
 # list all the bobs endorsed by alice
 $bob_query = "SELECT publication_bob.id, "
             ."REPLACE(REPLACE(TO_BASE64(participant_bob.`key`), '\\n', ''), '=', '') AS `key`, "
@@ -142,9 +151,7 @@ while($e = $result->fetch_assoc()) {
 foreach ($endorsements as &$endorsement)
   unset($endorsement['id']);
 $mysqli->close();
-$answer = [];
 $answer['citizen'] = $citizen;
 $answer['endorsements'] = $endorsements;
-$answer['status'] = $status;
 die(json_encode($answer, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
