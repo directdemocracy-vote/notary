@@ -45,8 +45,9 @@ if ($key)
   $query .= " INNER JOIN certificate ON certificate.certifiedPublication = publication.id AND certificate.type = 'trust' AND certificate.latest = 1"
            ." INNER JOIN publication AS pe ON pe.id=certificate.publication"
            ." INNER JOIN participant AS pep ON pep.id=pe.participant AND pep.`key` = FROM_BASE64('$key==')";
+$query .= " WHERE status='active'";
 if ($familyName or $givenNames) {
-  $query .= " WHERE";
+  $query .= " AND";
   if ($familyName) {
     $query .= " familyName LIKE \"%$familyName%\"";
     if ($givenNames)
