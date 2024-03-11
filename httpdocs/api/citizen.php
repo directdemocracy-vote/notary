@@ -42,7 +42,7 @@ $alice_publication = intval($citizen['publication']);
 unset($citizen['id']);
 unset($citizen['publication']);
 $answer = [];
-$status = $citizen['status']
+$status = $citizen['status'];
 $answer['status'] = $status;
 unset($citizen['status']);
 settype($citizen['published'], 'int');
