@@ -407,57 +407,58 @@ window.onload = async function() {
             otherDay = false;
             icon = 'arrow_right_arrow_left';
           }
-          if (otherComment === 'remote')
-            otherComment = 'endorsed-you-remotely';
-          else if (otherComment === 'in-person')
-            otherComment = 'endorsed-you-in-person';
-          else if (otherComment === 'revoked+address')
-            otherComment = 'revoked-moved';
-          else if (otherComment === 'revoked+name')
-            otherComment = 'revoked-name';
-          else if (otherComment === 'revoked+picture')
-            otherComment = 'revoked-picture';
-          else if (otherComment === 'revoked+address+name')
-            otherComment = 'revoked-address-name';
-          else if (otherComment === 'revoked+address+picture')
-            otherComment = 'revoked-address-picture';
-          else if (otherComment === 'revoked+name+picture')
-            otherComment = 'revoked-name-picture';
-          else if (otherComment === 'revoked+address+name+picture')
-            otherComment = 'revoked-address-name-picture';
-          else if (otherComment === 'revoked+died')
-            otherComment = 'revoked-died';
-          else if (otherComment)
-            console.error('Unsupported other comment: ' + otherComment);
-          if (comment === 'remote')
-            comment = 'you-endorsed-remotely';
-          else if (comment === 'in-person')
-            comment = 'you-endorsed-in-person';
-          else if (comment === 'revoked+address')
-            comment = 'you-revoked-moved';
-          else if (comment === 'revoked+name')
-            comment = 'you-revoked-name';
-          else if (comment === 'revoked+picture')
-            comment = 'you-revoked-picture';
-          else if (comment === 'revoked+address+name')
-            comment = 'you-revoked-address-name';
-          else if (comment === 'revoked+address+picture')
-            comment = 'you-revoked-address-picture';
-          else if (comment === 'revoked+name+picture')
-            comment = 'you-revoked-name-picture';
-          else if (comment === 'revoked+address+name+picture')
-            comment = 'you-revoked-address-name-picture';
-          else if (comment === 'revoked+died')
-            comment = 'you-revoked-died';
-          else if (comment)
-            console.error('Unsupported comment: ' + comment);
-          let other = otherDay
-            ? `<i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${otherColor}">${otherIcon}</i> ${otherDay}` +
-            `${day ? ' ' : ''}`
-            : '';
-          let main = day
-            ? `<i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${color}">${icon}</i> ${day}`
-            : '';
+        }
+        if (otherComment === 'remote')
+          otherComment = 'endorsed-you-remotely';
+        else if (otherComment === 'in-person')
+          otherComment = 'endorsed-you-in-person';
+        else if (otherComment === 'revoked+address')
+          otherComment = 'revoked-moved';
+        else if (otherComment === 'revoked+name')
+          otherComment = 'revoked-name';
+        else if (otherComment === 'revoked+picture')
+          otherComment = 'revoked-picture';
+        else if (otherComment === 'revoked+address+name')
+          otherComment = 'revoked-address-name';
+        else if (otherComment === 'revoked+address+picture')
+          otherComment = 'revoked-address-picture';
+        else if (otherComment === 'revoked+name+picture')
+          otherComment = 'revoked-name-picture';
+        else if (otherComment === 'revoked+address+name+picture')
+          otherComment = 'revoked-address-name-picture';
+        else if (otherComment === 'revoked+died')
+          otherComment = 'revoked-died';
+        else if (otherComment)
+          console.error('Unsupported other comment: ' + otherComment);
+        if (comment === 'remote')
+          comment = 'you-endorsed-remotely';
+        else if (comment === 'in-person')
+          comment = 'you-endorsed-in-person';
+        else if (comment === 'revoked+address')
+          comment = 'you-revoked-moved';
+        else if (comment === 'revoked+name')
+          comment = 'you-revoked-name';
+        else if (comment === 'revoked+picture')
+          comment = 'you-revoked-picture';
+        else if (comment === 'revoked+address+name')
+          comment = 'you-revoked-address-name';
+        else if (comment === 'revoked+address+picture')
+          comment = 'you-revoked-address-picture';
+        else if (comment === 'revoked+name+picture')
+          comment = 'you-revoked-name-picture';
+        else if (comment === 'revoked+address+name+picture')
+          comment = 'you-revoked-address-name-picture';
+        else if (comment === 'revoked+died')
+          comment = 'you-revoked-died';
+        else if (comment)
+          console.error('Unsupported comment: ' + comment);
+        let other = otherDay
+          ? `<i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${otherColor}">${otherIcon}</i> ${otherDay}` +
+          `${day ? ' ' : ''}`
+          : '';
+        let main = day
+          ? `<i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${color}">${icon}</i> ${day}`
+          : '';
 
         // end of copy
         const a = document.createElement('a');
