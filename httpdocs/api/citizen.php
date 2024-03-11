@@ -53,8 +53,9 @@ if ($status === 'updated' || $status === 'transferred') {
           ."INNER JOIN publication AS pc ON pc.`type`='certificate' AND pc.participant=publication.participant "
           ."INNER JOIN certificate ON certificate.publication=pc.id AND certificate.certifiedPublication=$alice_publication AND certificate.`type`='report' AND certificate.comment='$status'";
   $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
-  $new = $result->fetch_assoc() or die("{\"error\":\"new citizen not found\"}");
-  $answer['new'] = $new['signature'];
+  $new = $result->fetch_assoc();
+  if ($new)
+    $answer['new'] = $new['signature'];
 }
 # list all the bobs endorsed by alice
 $bob_query = "SELECT publication_bob.id, "
