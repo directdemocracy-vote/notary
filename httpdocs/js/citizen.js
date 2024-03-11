@@ -156,7 +156,7 @@ window.onload = async function() {
           document.getElementById('status-link').style.display = '';
           const a = document.getElementById('status-a');
           translator.translateElement(a, answer.status);
-          a.setAttribute('href', '/citizen.php?signature=' + encodeURIComponent(answer.new));
+          a.setAttribute('href', '/citizen.html?signature=' + encodeURIComponent(answer.new));
         }
       }
       const published = publishedDate(answer.citizen.published);
