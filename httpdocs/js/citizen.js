@@ -149,8 +149,15 @@ window.onload = async function() {
       if (!signature)
         signature = answer.citizen.signature;
       if (answer.status !== 'active') {
-        document.getElementById('status-span').style.display = '';
-        translator.translateElement(document.getElementById('status'), answer.status);
+        if (answer.status === 'deleted') {
+          document.getElementById('status-span').style.display = '';
+          translator.translateElement(document.getElementById('status'), answer.status);
+        } else { // transferred or updated
+          document.getElementById('status-link').style.display = '';
+          const a = document.getElementById('status-a');
+          translator.translateElement(a, answer.status);
+          a.setAttribute('href', '/citizen.php?signature=' + encodeURIComponent(answer.new));
+        }
       }
       const published = publishedDate(answer.citizen.published);
       const givenNames = answer.citizen.givenNames;
