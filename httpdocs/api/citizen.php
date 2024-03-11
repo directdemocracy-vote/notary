@@ -25,6 +25,7 @@ $query = "SELECT participant.id, publication.id AS publication, "
         ."UNIX_TIMESTAMP(publication.published) AS published, "
         ."REPLACE(REPLACE(TO_BASE64(app.`key`), '\\n', ''), '=', '') AS appKey, "
         ."REPLACE(REPLACE(TO_BASE64(citizen.appSignature), '\\n', ''), '=', '') AS appSignature, "
+        ."citizen.status, "
         ."citizen.givenNames, citizen.familyName, "
         ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude "
@@ -40,6 +41,8 @@ $alice_id = intval($citizen['id']);
 $alice_publication = intval($citizen['publication']);
 unset($citizen['id']);
 unset($citizen['publication']);
+$status = $citizen['status'];
+unset($citizen['status'];
 settype($citizen['published'], 'int');
 settype($citizen['latitude'], 'float');
 settype($citizen['longitude'], 'float');
@@ -65,7 +68,6 @@ $query = $bob_query
         ."INNER JOIN participant AS app ON app.id=bob.app "
         ."WHERE pe.participant=$alice_id ORDER BY pe.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
-$q2 = $query;
 if (!$result)
   die("{\"error\":\"$mysqli->error\"}");
 $endorsements = [];
@@ -143,6 +145,6 @@ $mysqli->close();
 $answer = [];
 $answer['citizen'] = $citizen;
 $answer['endorsements'] = $endorsements;
-$answer['query'] = $q2;
+$answer['status'] = $status;
 die(json_encode($answer, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 ?>
