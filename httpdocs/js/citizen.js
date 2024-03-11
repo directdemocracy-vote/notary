@@ -33,7 +33,7 @@ window.onload = async function() {
   let judge = findGetParameter('judge', 'https://judge.directdemocracy.vote');
   document.getElementById('judge').value = judge.substring(8);
   let fingerprint = findGetParameter('fingerprint');
-  const signature = findGetParameter('signature');
+  let signature = findGetParameter('signature');
   const me = findGetParameter('me') === 'true';
   if (!fingerprint && !signature) {
     console.error('Missing fingerprint or signature GET argument.');
