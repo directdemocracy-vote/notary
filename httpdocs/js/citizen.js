@@ -473,7 +473,7 @@ window.onload = async function() {
         translator.translateElement(span, 'distance');
         small.appendChild(document.createTextNode(` ${distance} m.`));
         small.appendChild(document.createElement('br'));
-        if (other !== '')
+        if (other !== '') {
           span = document.createElement('span');
           span.setAttribute('title', otherComment);
           small.appendChild(span);
