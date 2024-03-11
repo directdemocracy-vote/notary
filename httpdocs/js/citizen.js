@@ -202,7 +202,7 @@ window.onload = async function() {
               reputation.style.color = 'Red';
               reputation.textContent = answer.error;
             } else {
-              reputation.style.color = answer.trusted === 1 ? 'Green' : 'Red';
+              reputation.style.color = answer.trusted === 1 ? 'Green' : (answer.trusted === 0 ? 'Red' : 'OrangeRed');
               reputation.textContent = formatReputation(answer.reputation);
             }
           });
