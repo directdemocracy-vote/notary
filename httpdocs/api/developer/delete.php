@@ -59,6 +59,7 @@ if ($type === 'citizen') {
     $mysqli->query("DELETE FROM certificate WHERE publication IN ($certificates)") or die($mysqli->error);
     $mysqli->query("DELETE FROM publication WHERE id IN ($certificates)") or die($mysqli->error);
   }
+  # FIXME: we should also delete the publications for vote and participation
   $mysqli->query("DELETE FROM vote WHERE referendum=$id") or die($mysqli->error);
   $mysqli->query("DELETE FROM participation WHERE referendum=$id") or die($mysqli->error);
   $mysqli->query("DELETE FROM proposal WHERE publication=$id") or die($msqli->error);
