@@ -53,7 +53,7 @@ if ($type === 'citizen') {
   $result = $mysqli->query($query) or die($mysqli->error);
   $certificate_ids = array();
   while($row = $result->fetch_assoc())
-    $certificate_ids[] = intval($row['id']);
+    $certificate_ids[] = intval($row['publication']);
   $certificates = implode(',', $certificate_ids);
 
   # FIXME: we should also delete the referendum participations and votes
