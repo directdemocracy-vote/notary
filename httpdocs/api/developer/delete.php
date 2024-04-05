@@ -55,13 +55,12 @@ if ($type === 'citizen') {
   while($row = $result->fetch_assoc())
     $certificate_ids[] = intval($row['publication']);
   $certificates = implode(',', $certificate_ids);
-
-  # FIXME: we should also delete the referendum participations and votes
-
   if ($certificates !== '') {
     $mysqli->query("DELETE FROM certificate WHERE publication IN ($certificates)") or die($mysqli->error);
     $mysqli->query("DELETE FROM publication WHERE id IN ($certificates)") or die($mysqli->error);
   }
+  $mysqli->query("DELETE FROM vote WHERE referendum=$id") or die($mysqli->error);
+  $mysqli->query("DELETE FROM participation WHERE referendum=$id") or die($mysqli->error);
   $mysqli->query("DELETE FROM proposal WHERE publication=$id") or die($msqli->error);
   $mysqli->query("DELETE FROM publication WHERE id=$id") or die($msqli->error);
   die('OK');
