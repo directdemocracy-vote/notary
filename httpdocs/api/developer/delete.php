@@ -62,8 +62,8 @@ if ($type === 'citizen') {
     $mysqli->query("DELETE FROM certificate WHERE publication IN ($certificates)") or die($mysqli->error);
     $mysqli->query("DELETE FROM publication WHERE id IN ($certificates)") or die($mysqli->error);
   }
-  $mysqli->query("DELETE FROM publication WHERE id=$id") or die($msqli->error);
   $mysqli->query("DELETE FROM proposal WHERE publication=$id") or die($msqli->error);
+  $mysqli->query("DELETE FROM publication WHERE id=$id") or die($msqli->error);
   die('OK');
 } else
   die('Only deletion of a citizen or a proposal is supported');
