@@ -74,7 +74,7 @@ $bob_query = "SELECT publication_bob.id, "
             ."INNER JOIN certificate AS e ON e.publication=pe.id AND (e.type='endorse' OR (e.type='report' AND e.comment LIKE \"revoked+%\")) AND e.latest=1 ";
 $query = $bob_query
         ."INNER JOIN publication AS publication_bob ON publication_bob.id=e.certifiedPublication "
-        ."INNER JOIN citizen AS bob ON bob.publication=publication_bob.id "
+        ."INNER JOIN citizen AS bob ON bob.publication=publication_bob.id AND bob.status='active' "
         ."INNER JOIN participant AS participant_bob ON participant_bob.id=publication_bob.participant "
         ."INNER JOIN participant AS app ON app.id=bob.app "
         ."WHERE pe.participant=$alice_id ORDER BY pe.published DESC";
@@ -108,7 +108,7 @@ $query = $bob_query
         ."INNER JOIN publication AS pe_bob ON pe_bob.id=e.publication "
         ."INNER JOIN participant AS participant_bob ON participant_bob.id=pe_bob.participant "
         ."INNER JOIN publication AS publication_bob ON publication_bob.participant=participant_bob.id AND publication_bob.type='citizen' "
-        ."INNER JOIN citizen AS bob ON bob.publication=publication_bob.id "
+        ."INNER JOIN citizen AS bob ON bob.publication=publication_bob.id AND bob.status='active' "
         ."INNER JOIN participant AS app ON app.id=bob.app "
         ."WHERE e.certifiedPublication=$alice_publication ORDER BY pe.published DESC";
 $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
