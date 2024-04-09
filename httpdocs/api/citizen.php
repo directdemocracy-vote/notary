@@ -30,7 +30,7 @@ $query = "SELECT participant.id, publication.id AS publication, "
         ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture, "
         ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude "
         ."FROM publication "
-        ."INNER JOIN citizen ON publication.id = citizen.publication "
+        ."INNER JOIN citizen ON publication.id = citizen.publication AND citizen.status='active' "
         ."INNER JOIN participant ON participant.id = publication.participant "
         ."INNER JOIN participant AS app ON app.id = citizen.app "
         ."WHERE $condition";
