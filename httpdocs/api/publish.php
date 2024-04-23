@@ -161,8 +161,8 @@ if ($type === 'citizen') {
   list($app, $app_signature) = check_app($citizen);
   $family_name = $mysqli->escape_string($publication->familyName);
   $given_names = $mysqli->escape_string($publication->givenNames);
-  $latitude = sanitize_field($citizen->latitude, 'float', 'latitude');
-  $longitude = sanitize_field($citizen->longitude, 'float', 'longitude');
+  $latitude = isset($citizen->latitude) ? sanitize_field($citizen->latitude, 'float', 'latitude') : 0;
+  $longitude = isset($citizen->longitude) ? sanitize_field($citizen->longitude, 'float', 'longitude') : 0;
   $commune = sanitize_field($citizen->commune, 'positive_int', 'commune');
   $query = "INSERT INTO citizen(publication, app, appSignature, familyName, givenNames, commune, picture, home) "
           ."VALUES($id, $app, FROM_BASE64('$app_signature=='), \"$family_name\", \"$given_names\", $commune, ";
