@@ -121,7 +121,8 @@ if ($type === 'citizen') {
     } catch(Exception $e) {
       error("cannot determine picture size");
     }
-  }
+  } else
+    $citizen_picture = '';
 }
 
 $publication->signature = '';
@@ -162,8 +163,9 @@ if ($type === 'citizen') {
   $given_names = $mysqli->escape_string($publication->givenNames);
   $latitude = sanitize_field($citizen->latitude, 'float', 'latitude');
   $longitude = sanitize_field($citizen->longitude, 'float', 'longitude');
-  $query = "INSERT INTO citizen(publication, app, appSignature, familyName, givenNames, picture, home) "
-          ."VALUES($id, $app, FROM_BASE64('$app_signature=='), \"$family_name\", \"$given_names\", "
+  $commune = sanitize_field($citizen->commune, 'positive_int', 'commune');
+  $query = "INSERT INTO citizen(publication, app, appSignature, familyName, givenNames, commune, picture, home) "
+          ."VALUES($id, $app, FROM_BASE64('$app_signature=='), \"$family_name\", \"$given_names\", $commune, "
           ."FROM_BASE64('$citizen_picture'), POINT($longitude, $latitude))";
 } elseif ($type === 'certificate') {
   $certificate = &$publication;
