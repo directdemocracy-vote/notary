@@ -27,6 +27,7 @@ CREATE TABLE `citizen` (
   `appSignature` blob NOT NULL,
   `givenNames` varchar(256) NOT NULL,
   `familyName` varchar(256) NOT NULL,
+  `commune` bigint(20) NOT NULL,
   `picture` blob NOT NULL,
   `home` point NOT NULL,
   `status` enum('active','deleted','transferred','updated') NOT NULL DEFAULT 'active'
