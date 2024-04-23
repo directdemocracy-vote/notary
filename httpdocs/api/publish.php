@@ -109,16 +109,18 @@ if ($type !== 'vote' && $published > $now + 60)  # allowing a 1 minute (60 secon
   error("publication date in the future for $type: $published > $now");
 if ($type === 'citizen') {
   $citizen = &$publication;
-  $citizen_picture = substr($citizen->picture, strlen('data:image/jpeg;base64,'));
-  $data = base64_decode($citizen_picture);
-  try {
-    $size = @getimagesizefromstring($data);
-    if ($size['mime'] != 'image/jpeg')
-      error("wrong picture MIME type: '$size[mime]' (expecting 'image/jpeg')");
-    if ($size[0] != 150 || $size[1] != 200)
-      error("wrong picture size: $size[0]x$size[1] (expecting 150x200)");
-  } catch(Exception $e) {
-    error("cannot determine picture size");
+  if (isset($citizen->picture)) {
+    $citizen_picture = substr($citizen->picture, strlen('data:image/jpeg;base64,'));
+    $data = base64_decode($citizen_picture);
+    try {
+      $size = @getimagesizefromstring($data);
+      if ($size['mime'] != 'image/jpeg')
+        error("wrong picture MIME type: '$size[mime]' (expecting 'image/jpeg')");
+      if ($size[0] != 150 || $size[1] != 200)
+        error("wrong picture size: $size[0]x$size[1] (expecting 150x200)");
+    } catch(Exception $e) {
+      error("cannot determine picture size");
+    }
   }
 }
 
