@@ -165,8 +165,12 @@ if ($type === 'citizen') {
   $longitude = sanitize_field($citizen->longitude, 'float', 'longitude');
   $commune = sanitize_field($citizen->commune, 'positive_int', 'commune');
   $query = "INSERT INTO citizen(publication, app, appSignature, familyName, givenNames, commune, picture, home) "
-          ."VALUES($id, $app, FROM_BASE64('$app_signature=='), \"$family_name\", \"$given_names\", $commune, "
-          ."FROM_BASE64('$citizen_picture'), POINT($longitude, $latitude))";
+          ."VALUES($id, $app, FROM_BASE64('$app_signature=='), \"$family_name\", \"$given_names\", $commune, ";
+  if ($citizen_picture === '')
+    $query .= "''";
+  else
+    $query .= "FROM_BASE64('$citizen_picture')";
+  $query .= ", POINT($longitude, $latitude))";
 } elseif ($type === 'certificate') {
   $certificate = &$publication;
   if (isset($certificate->appKey))
