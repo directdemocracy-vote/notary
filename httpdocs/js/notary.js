@@ -7,6 +7,7 @@ let slider = 10;
 let radius = slider * slider * slider;
 let address = '';
 let markers = [];
+let area = null;
 
 function findGetParameter(parameterName) {
   let result;
@@ -87,13 +88,6 @@ window.onload = function() {
     shadowSize: [41, 41]
   });
   const marker = L.marker([latitude, longitude]).addTo(map).bindPopup(latitude + ',' + longitude).on('click', updateLabel);
-  const circle = L.circle([latitude, longitude], {
-    color: 'red',
-    opacity: 0.4,
-    fillColor: '#f03',
-    fillOpacity: 0.2,
-    radius: radius
-  }).addTo(map);
   marker.setPopupContent(`<div style="text-align:center" id="address">${address}</div>` +
     `<div><input type="range" min="5" max="100" value="${slider}" class="slider" id="range"></div>` +
     `<div style="text-align:center;color:#999" id="position">` +
@@ -295,7 +289,9 @@ window.onload = function() {
       .then(answer => {
         address = answer.display_name;
         updateLabel();
-        L.geoJSON(answer.geojson).addTo(map);
+        if (area)
+          area.remove();
+        area = L.geoJSON(answer.geojson).addTo(map);
       });
   }
 
