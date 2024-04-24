@@ -3,10 +3,7 @@
 let geolocation = false;
 let latitude = 0;
 let longitude = 0;
-let slider = 10;
-let radius = slider * slider * slider;
 let address = '';
-let markers = [];
 let area = null;
 
 function findGetParameter(parameterName) {
@@ -79,29 +76,10 @@ window.onload = function() {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
   map.whenReady(function() { setTimeout(() => { this.invalidateSize(); }, 0); });
-  const greenIcon = new L.Icon({
-    iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-  });
-  const marker = L.marker([latitude, longitude]).addTo(map).bindPopup(latitude + ',' + longitude).on('click', updateLabel);
-  marker.setPopupContent(`<div style="text-align:center" id="address">${address}</div>` +
-    `<div><input type="range" min="5" max="100" value="${slider}" class="slider" id="range"></div>` +
-    `<div style="text-align:center;color:#999" id="position">` +
-    `(${latitude}, ${longitude} &plusmn; ${Math.round(radius / 100) / 10} km</div></center>`).openPopup();
-  document.getElementById('range').addEventListener('input', rangeChanged);
   map.on('click', function(event) {
-    marker.setLatLng(event.latlng).openPopup();
     latitude = event.latlng.lat;
     longitude = event.latlng.lng;
-    updateLabel();
     updatePosition();
-    const range = document.getElementById('range');
-    range.setAttribute('value', slider);
-    range.addEventListener('input', rangeChanged);
   });
   map.on('contextmenu', function(event) { return false; });
   updatePosition();
@@ -113,29 +91,6 @@ window.onload = function() {
     const familyName = document.getElementById('family-name').value;
     const givenNames = document.getElementById('given-names').value;
     judge = document.getElementById('judge-input').value;
-    let parameters = `latitude=${latitude}&longitude=${longitude}&radius=${radius}`;
-    if (judge && document.getElementById('trusted-by-judge').checked)
-      parameters += `&judge=https://${encodeURIComponent(judge)}`;
-    if (familyName)
-      parameters += `&familyName=${encodeURIComponent(familyName)}`;
-    if (givenNames)
-      parameters += `&givenNames=${encodeURIComponent(givenNames)}`;
-    fetch(`/api/citizens.php?${parameters}`)
-      .then((response) => response.json())
-      .then((answer) => {
-        markers.forEach(function(marker) { map.removeLayer(marker); });
-        markers = [];
-        answer.forEach(function(citizen) {
-          const name = `${citizen.givenNames} ${citizen.familyName}`;
-          const searchMe = me ? '&me=true' : '';
-          const label = '<div style="text-align:center">' +
-            `<a target="_blank" href="/citizen.html?signature=${encodeURIComponent(citizen.signature)}${searchMe}">` +
-            `<img src="${citizen.picture}" width="60" height="80"><br>${name}</a></div>`;
-          markers.push(L.marker([citizen.latitude, citizen.longitude], { icon: greenIcon }).addTo(map).bindPopup(label));
-        });
-        fieldset.removeAttribute('disabled');
-        searchCitizen.classList.remove('is-loading');
-      });
   });
 
   document.getElementById('proposal-referendum').addEventListener('change', function(event) {
@@ -174,10 +129,10 @@ window.onload = function() {
     const open = (c && o) ? 2 : (o ? 1 : 0);
     const year = document.getElementById('proposal-year').value;
     const limit = 10;
-    fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, 0, limit);
+    fetchAndDisplayProposals(secret, open, query, latitude, longitude, year, 0, limit);
   }
 
-  function fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, offset, limit) {
+  function fetchAndDisplayProposals(secret, open, query, latitude, longitude, year, offset, limit) {
     const fieldset = document.getElementById('proposals-fieldset');
     fieldset.setAttribute('disabled', '');
     const searchProposal = document.getElementById('search-proposals');
@@ -188,7 +143,6 @@ window.onload = function() {
       `&search=${encodeURIComponent(query)}` +
       `&latitude=${latitude}` +
       `&longitude=${longitude}` +
-      `&radius=${radius}` +
       `&year=${year}` +
       `&offset=${offset}` +
       `&limit=${limit}`)
@@ -254,7 +208,7 @@ window.onload = function() {
           prev.textContent = 'Previous';
           prev.className = 'button is-info';
           prev.onclick = () => {
-            fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, offset - limit, limit);
+            fetchAndDisplayProposals(secret, open, query, latitude, longitude, year, offset - limit, limit);
           };
           section.appendChild(prev);
         }
@@ -265,7 +219,7 @@ window.onload = function() {
           next.className = 'button is-info';
           next.style.float = 'right';
           next.onclick = () => {
-            fetchAndDisplayProposals(secret, open, query, latitude, longitude, radius, year, offset + limit, limit);
+            fetchAndDisplayProposals(secret, open, query, latitude, longitude, year, offset + limit, limit);
           };
           section.appendChild(next);
         }
@@ -281,27 +235,14 @@ window.onload = function() {
   }
 
   function updatePosition() {
-    marker.setLatLng([latitude, longitude]);
     fetch(`https://nominatim.openstreetmap.org/reverse?format=json&polygon_geojson=1&lat=${latitude}&lon=${longitude}&zoom=12&accept-language=${translator.language}`)
       .then(response => response.json())
       .then(answer => {
         address = answer.display_name;
-        updateLabel();
         if (area)
           area.remove();
         area = L.geoJSON(answer.geojson).addTo(map);
       });
-  }
-
-  function rangeChanged(event) {
-    slider = event.currentTarget.value;
-    radius = slider * slider * slider;
-    updateLabel();
-  }
-
-  function updateLabel() {
-    document.getElementById('address').textContent = address;
-    document.getElementById('position').innerHTML = `(${latitude}, ${longitude}) &plusmn; ${Math.round(radius / 100) / 10} km`;
   }
 };
 
