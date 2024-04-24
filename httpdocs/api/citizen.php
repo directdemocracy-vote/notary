@@ -26,9 +26,8 @@ $query = "SELECT participant.id, publication.id AS publication, "
         ."REPLACE(REPLACE(TO_BASE64(app.`key`), '\\n', ''), '=', '') AS appKey, "
         ."REPLACE(REPLACE(TO_BASE64(citizen.appSignature), '\\n', ''), '=', '') AS appSignature, "
         ."citizen.status, "
-        ."citizen.givenNames, citizen.familyName, "
-        ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture, "
-        ."ST_Y(citizen.home) AS latitude, ST_X(citizen.home) AS longitude "
+        ."citizen.givenNames, citizen.familyName, citizen.commune, "
+        ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture "
         ."FROM publication "
         ."INNER JOIN citizen ON publication.id = citizen.publication AND citizen.status='active' "
         ."INNER JOIN participant ON participant.id = publication.participant "
@@ -46,8 +45,7 @@ $status = $citizen['status'];
 $answer['status'] = $status;
 unset($citizen['status']);
 settype($citizen['published'], 'int');
-settype($citizen['latitude'], 'float');
-settype($citizen['longitude'], 'float');
+settype($citizen['commune'], 'int');
 if ($status === 'updated' || $status === 'transferred') {
   $query = "SELECT REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature FROM publication "
           ."INNER JOIN publication AS pc ON pc.`type`='certificate' AND pc.participant=publication.participant "
@@ -64,9 +62,8 @@ $bob_query = "SELECT publication_bob.id, "
             ."UNIX_TIMESTAMP(publication_bob.published) AS published, "
             ."REPLACE(REPLACE(TO_BASE64(app.key), '\\n', ''), '=', '') AS appKey, "
             ."REPLACE(REPLACE(TO_BASE64(bob.appSignature), '\\n', ''), '=', '') AS appSignature, "
-            ."bob.familyName, bob.givenNames, "
+            ."bob.familyName, bob.givenNames, bob.commune, "
             ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(bob.picture), '\\n', '')) AS picture, "
-            ."ST_Y(bob.home) AS latitude, ST_X(bob.home) AS longitude, "
             ."REPLACE(REPLACE(TO_BASE64(pe.signature), '\\n', ''), '=', '') AS certificateSignature, "
             ."e.type, e.comment, "
             ."UNIX_TIMESTAMP(pe.published) AS certificatePublished "
@@ -85,8 +82,7 @@ $endorsements = [];
 while($e = $result->fetch_assoc()) {
   settype($e['id'], 'int');
   settype($e['published'], 'int');
-  settype($e['latitude'], 'float');
-  settype($e['longitude'], 'float');
+  settype($e['commune'], 'int');
   if ($e['type'] === 'report') {
     $e['revoked'] = $e['certificatePublished'];
     $e['revokedComment'] = $e['comment'];
@@ -115,8 +111,7 @@ $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 while($e = $result->fetch_assoc()) {
   settype($e['id'], 'int');
   settype($e['published'], 'int');
-  settype($e['latitude'], 'float');
-  settype($e['longitude'], 'float');
+  settype($e['commune'], 'int');
   if ($e['type'] === 'report') {
     $e['revokedYou'] = $e['certificatePublished'];
     $e['revokedYouComment'] = $e['comment'];
