@@ -95,7 +95,6 @@ window.onload = function() {
   document.getElementById('range').addEventListener('input', rangeChanged);
   map.on('click', function(event) {
     marker.setLatLng(event.latlng).openPopup();
-    circle.setLatLng(event.latlng);
     latitude = event.latlng.lat;
     longitude = event.latlng.lng;
     updateLabel();
@@ -283,7 +282,6 @@ window.onload = function() {
 
   function updatePosition() {
     marker.setLatLng([latitude, longitude]);
-    circle.setLatLng([latitude, longitude]);
     fetch(`https://nominatim.openstreetmap.org/reverse?format=json&polygon_geojson=1&lat=${latitude}&lon=${longitude}&zoom=12&accept-language=${translator.language}`)
       .then(response => response.json())
       .then(answer => {
@@ -298,7 +296,6 @@ window.onload = function() {
   function rangeChanged(event) {
     slider = event.currentTarget.value;
     radius = slider * slider * slider;
-    circle.setRadius(radius);
     updateLabel();
   }
 
