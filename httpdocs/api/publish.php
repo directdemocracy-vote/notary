@@ -160,7 +160,7 @@ if ($type === 'citizen') {
   $given_names = $mysqli->escape_string($publication->givenNames);
   $commune = sanitize_field($citizen->commune, 'positive_int', 'commune');
   $query = "INSERT INTO citizen(publication, app, appSignature, familyName, givenNames, commune, picture) "
-          ."VALUES($id, $app, FROM_BASE64('$app_signature=='), \"$family_name\", \"$given_names\", $commune, ";
+          ."VALUES($id, $app, FROM_BASE64('$app_signature=='), \"$family_name\", \"$given_names\", $commune, "
           ."FROM_BASE64('$citizen_picture'))";
 } elseif ($type === 'certificate') {
   $certificate = &$publication;
