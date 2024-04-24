@@ -295,6 +295,7 @@ window.onload = function() {
       .then(answer => {
         address = answer.display_name;
         updateLabel();
+        L.geoJSON(answer.geojson).addTo(map);
       });
   }
 
