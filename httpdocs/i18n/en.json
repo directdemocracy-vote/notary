@@ -1,6 +1,6 @@
 {
   "moto": "a notary publishing signed data",
-  "introduction": "<p>This web service is hosting the sample direct<b>democracy</b> notary. The notary is responsible for publishing signed data.</p>",
+  "introduction": "<p>This web service is hosting the sample direct<b>democracy</b> notary. The notary is responsible for publishing signed data in a unalterable public registry.</p>",
   "more-info": "More information is available from <a href=\"//directdemocracy.vote\" target=\"_blank\">directdemocracy.vote</a>.",
   "citizens": "Citizens",
   "referendums-and-petitions": "Referendums and Petitions",
