@@ -89,5 +89,6 @@
   "you-revoked-died": "You revoked %1 %2 because you believe they died.",
   "deleted": "deleted",
   "transferred": "transferred",
-  "updated": "updated"
+  "updated": "updated",
+  "click-map-commune": "Click on the map to select a commune"
 }
