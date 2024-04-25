@@ -58,11 +58,24 @@
           <p id="commune-address"></p>
           <table class="table">
             <tbody>
-              <tr><th>Population:</th><td id="population">1000</td></tr>
-              <tr><th>Active Citizens:</th><td id="active-citizens">123</td></tr>
-              <tr><th>Inactive Citizens:</th><td id="inactive-citizens">43</td></tr>
+              <tr><th>Population:</th><td id="population"></td></tr>
+              <tr><th>Active Citizens:</th><td id="active-citizens"></td></tr>
+              <tr><th>Inactive Citizens:</th><td id="inactive-citizens"></td></tr>
+              <tr><th>Referendums:</th><td id="referendums"></td></tr>
+              <tr><th>Petitions:</th><td id="petitions"></td></tr>
             </tbody>
           </table>
+          <fieldset id="judge-fieldset">
+            <div class="field has-addons">
+              <div class="control"><a class="button is-static">https://</a></div>
+              <div class="control is-expanded"><input id="judge-input" class="input" type="text" placeholder="judge.directdemocracy.vote" value="judge.directdemocracy.vote"></div>
+            </div>
+            <div class="field">
+              <div class="control has-text-centered">
+                <button id="proposal" class="button is-info" data-i18n="propose-a-new"></button>
+              </div>
+            </div>
+          </fieldset>
         </div>
         <div id="map" class="column" style="height:400px;margin-top:10px"></div>
       </div>
