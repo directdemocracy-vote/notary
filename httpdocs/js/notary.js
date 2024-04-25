@@ -261,7 +261,7 @@ window.onload = function() {
               const p1082 = answer.statements.P1082;
               let population = '?';
               let rank = 'deprecated';
-              for(p of p1082) {
+              for(let p of p1082) {
                 if (rank === 'deprecated' || (rank === 'normal' && p.rank === 'preferred')) {
                   population = int(p.value.content.amount);
                   rank = p.rank;
