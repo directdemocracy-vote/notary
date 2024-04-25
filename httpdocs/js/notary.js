@@ -249,7 +249,9 @@ window.onload = function() {
         n.textContent = answer.name;
         n.removeAttribute('data-i18n');
         const population = answer.extratags.hasOwnProperty('population') ? answer.extratags.population : '?';
-        document.getElementById('population').textContent = population;
+        const p = document.getElementById('population')
+        p.textContent = population;
+        p.href = `https://nominatim.openstreetmap.org/lookup?osm_ids=R${answer.osm_id}&format=json&extratags=1`;
         document.getElementById('active-citizens').textContent = 0;
         document.getElementById('inactive-citizens').textContent = 0;        
       });
