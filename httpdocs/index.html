@@ -53,7 +53,12 @@
     </section>
     <section class="section">
       <p data-i18n="introduction"></p>
-      <div id="map" style="height:400px;margin-top:10px"></div>
+      <div class="columns">
+        <div id="info" class="column">
+          Click on the map to select a commune
+        </div>
+        <div id="map" class="column" style="height:400px;margin-top:10px"></div>
+      </div>
       <div class="tabs">
         <ul>
           <li id="citizens-tab" class="tab is-active" onclick="openTab(event,'citizens')"><a data-i18n="citizens"></a></li>
