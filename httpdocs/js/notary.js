@@ -241,10 +241,10 @@ window.onload = function() {
         if (area)
           area.remove();
         area = L.geoJSON(answer.geojson).addTo(map);
-        let address = answer.display_name;
-        if (address.startsWith(answer.name + ', '))
-          address = address.substring(answer.name.length + 2);
-        document.getElementById('commune-address').textContent = address;
+        let displayName = answer.display_name;
+        if (displayName.startsWith(answer.name + ', '))
+          displayName = displayName.substring(answer.name.length + 2);
+        document.getElementById('commune-address').textContent = displayName;
         const n = document.getElementById('commune-name');
         n.textContent = answer.name;
         n.removeAttribute('data-i18n');
