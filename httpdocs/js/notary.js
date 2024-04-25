@@ -263,7 +263,7 @@ window.onload = function() {
               let rank = 'deprecated';
               for(let p of p1082) {
                 if (rank === 'deprecated' || (rank === 'normal' && p.rank === 'preferred')) {
-                  population = int(p.value.content.amount);
+                  population = parseInt(p.value.content.amount);
                   rank = p.rank;
                 }
                 console.log(population);
