@@ -82,7 +82,6 @@ window.onload = function() {
     updatePosition();
   });
   map.on('contextmenu', function(event) { return false; });
-  updatePosition();
   document.getElementById('search-citizens').addEventListener('click', function(event) {
     const fieldset = document.getElementById('citizens-fieldset');
     fieldset.setAttribute('disabled', '');
@@ -242,13 +241,17 @@ window.onload = function() {
         if (area)
           area.remove();
         area = L.geoJSON(answer.geojson).addTo(map);
-        document.getElementById('commune-address').textContent = answer.display_name;
+        let address = answer.display_name;
+        if (address.startsWith(answer.name + ', '))
+          address = address.substring(answer.name.length + 2);
+        document.getElementById('commune-address').textContent = address;
         const n = document.getElementById('commune-name');
         n.textContent = answer.name;
         n.removeAttribute('data-i18n');
-        console.log(answer);
         const population = answer.extratags.hasOwnProperty('population') ? answer.extratags.population : '?';
         document.getElementById('population').textContent = population;
+        document.getElementById('active-citizens').textContent = 0;
+        document.getElementById('inactive-citizens').textContent = 0;        
       });
   }
 };
