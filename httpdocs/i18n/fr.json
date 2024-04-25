@@ -89,5 +89,6 @@
   "you-revoked-died": "Vous avez révoqué %1 %2 pensant que cette personne est décédée.",
   "deleted": "effacée",
   "transferred": "transférée",
-  "updated": "mise à jour"
+  "updated": "mise à jour",
+  "select-commune-on-map": "Selectionnez une commune sur la carte"
 }
