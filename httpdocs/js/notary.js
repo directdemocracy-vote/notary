@@ -253,7 +253,16 @@ window.onload = function() {
         p.textContent = population;
         p.href = `https://nominatim.openstreetmap.org/lookup?osm_ids=R${answer.osm_id}&format=json&extratags=1`;
         document.getElementById('active-citizens').textContent = 0;
-        document.getElementById('inactive-citizens').textContent = 0;        
+        document.getElementById('inactive-citizens').textContent = 0;
+        if (answer.extratags.hasOwnProperty('wikidata'))
+          fetch(`https://www.wikidata.org/w/rest.php/wikibase/v0/entities/items/${answer.extratags.wikidata}`)
+            .then(response => response.json())
+            .then(answer => {
+              const p1082 = answer.statements.P1082;
+              console.log(p1082);
+              const link = answer.sitelinks[`${translator.language}wiki`].url;
+              console.log(link);
+            });
       });
   }
 };
