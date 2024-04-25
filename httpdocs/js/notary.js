@@ -246,7 +246,7 @@ window.onload = function() {
         const n = document.getElementById('commune-name');
         n.textContent = answer.name;
         n.removeAttribute('data-i18n');
-        const population = answer.extratags.hasAttribute('population') ? answer.extratags.population : "?";
+        const population = answer.extratags.hasOwnProperty('population') ? answer.extratags.population : "?";
         document.getElementById('population').textContent = population;
       });
   }
