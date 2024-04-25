@@ -235,13 +235,19 @@ window.onload = function() {
   }
 
   function updatePosition() {
-    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&polygon_geojson=1&lat=${latitude}&lon=${longitude}&zoom=12&accept-language=${translator.language}`)
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&polygon_geojson=1&lat=${latitude}&lon=${longitude}&zoom=12&extratags=1&accept-language=${translator.language}`)
       .then(response => response.json())
       .then(answer => {
         address = answer.display_name;
         if (area)
           area.remove();
         area = L.geoJSON(answer.geojson).addTo(map);
+        document.getElementById('commune-address').textContent = answer.display_name;
+        const n = document.getElementById('commune-name');
+        n.textContent = answer.name;
+        n.removeAttribute('data-i18n');
+        const population = answer.extratags.hasAttribute('population') ? answer.extratags.population : "?";
+        document.getElementById('population').textContent = population;
       });
   }
 };
