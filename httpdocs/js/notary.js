@@ -259,7 +259,15 @@ window.onload = function() {
             .then(response => response.json())
             .then(answer => {
               const p1082 = answer.statements.P1082;
-              console.log(p1082);
+              let population = '?';
+              let rank = 'deprecated';
+              for(p of p1082) {
+                if (rank === 'deprecated' || (rank === 'normal' && p.rank === 'preferred')) {
+                  population = int(p.value.content.amount);
+                  rank = p.rank;
+                }
+                console.log(population);
+              }
               const link = answer.sitelinks[`${translator.language}wiki`].url;
               console.log(link);
             });
