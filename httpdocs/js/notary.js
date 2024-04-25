@@ -248,13 +248,12 @@ window.onload = function() {
         const n = document.getElementById('commune-name');
         n.textContent = answer.name;
         n.removeAttribute('data-i18n');
-        const population = answer.extratags.hasOwnProperty('population') ? answer.extratags.population : '?';
-        const p = document.getElementById('population')
-        p.textContent = population;
-        p.href = `https://nominatim.openstreetmap.org/lookup?osm_ids=R${answer.osm_id}&format=json&extratags=1`;
         document.getElementById('active-citizens').textContent = 0;
         document.getElementById('inactive-citizens').textContent = 0;
-        if (answer.extratags.hasOwnProperty('wikidata'))
+        const p = document.getElementById('population');
+        if (!answer.extratags.hasOwnProperty('wikidata'))
+          p.textContent = '?';
+        else
           fetch(`https://www.wikidata.org/w/rest.php/wikibase/v0/entities/items/${answer.extratags.wikidata}`)
             .then(response => response.json())
             .then(answer => {
@@ -266,10 +265,15 @@ window.onload = function() {
                   population = parseInt(p.value.content.amount);
                   rank = p.rank;
                 }
-                console.log(population);
               }
-              const link = answer.sitelinks[`${translator.language}wiki`].url;
-              console.log(link);
+              p.textContent = population;
+              if (answer.hasOwnProperty('sitelinks')) {
+                const wiki = translator.language + 'wiki';
+                if (answer.sitelinks[wiki].hasOwnProperty('url')) {
+                  const url = answer.sitelinks[wiki].url;
+                  p.href = url;
+                }
+              }
             });
       });
   }
