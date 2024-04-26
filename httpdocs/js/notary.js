@@ -258,11 +258,11 @@ window.onload = function() {
         if (!answer.extratags.hasOwnProperty('wikidata')) {
           if (!answer.extratags.hasOwnProperty('population')) {
             population.textContent = '?';
-            population.title = translator.translate('population-not-found');
+            translator.translate(population, 'population-not-found');
             population.removeAttribute('href');
           } else {
             population.textContent = parseInt(answer.extratags.population);
-            population.title = translator.translate('population-from-osm');
+            translator.translateElement(population, 'population-from-osm');
             population.href = `https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=${answer.osm_id}&class=boundary`;
           }
           if (answer.extratags.hasOwnProperty('wikipedia')) {
@@ -270,10 +270,10 @@ window.onload = function() {
             const wikipediaLanguage = answer.extratags.wikipedia.substring(0, colon);
             const wikipediaPage = answer.extratags.wikipedia.substring(colon + 1);
             n.href = `https://${wikipediaLanguage}.wikipedia.org/wiki/${wikipediaPage}`;
-            n.title = translator.translate('wikipedia-page');
+            translator.translateElement(n, 'wikipedia-page');
           } else {
             n.removeAttribute('href');
-            n.title = translator.translate('wikipedia-page-not-found');
+            translator.translateElement(n, 'wikipedia-page-not-found');
           }
         } else 
           fetch(`https://www.wikidata.org/w/rest.php/wikibase/v0/entities/items/${answer.extratags.wikidata}`)
@@ -290,20 +290,20 @@ window.onload = function() {
               }
               population.textContent = p;
               if (p === '?') {
-                population.title = translator.translate('population-not-found');
+                translator.translateElement(population, 'population-not-found');
                 population.removeAttribute('href');
               } else {
-                population.title = translator.translate('population-from-wikidata');
+                translator.translateElement(population, 'population-from-wikidata');
                 population.href = `https://www.wikidata.org/wiki/${answer.id}`;
               }
               if (answer.hasOwnProperty('sitelinks')) {
                 const wiki = translator.language + 'wiki';
                 if (answer.sitelinks[wiki].hasOwnProperty('url')) {
                   n.href = answer.sitelinks[wiki].url;
-                  n.title = translator.translate('wikipedia-page');
+                  translator.translateElement(n, 'wikipedia-page');
                 } else {
                   n.removeAttribute('href');
-                  n.title = translator.translate('wikipedia-page-not-found');
+                  translator.translateElement(n, 'wikipedia-page-not-found');
                 }
               }
             });
