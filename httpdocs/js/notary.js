@@ -274,7 +274,7 @@ window.onload = function() {
               let rank = 'deprecated';
               for(let pop of p1082) {
                 if (rank === 'deprecated' || (rank === 'normal' && pop.rank === 'preferred')) {
-                  p = parseInt(p.value.content.amount);
+                  p = parseInt(pop.value.content.amount);
                   rank = pop.rank;
                 }
               }
