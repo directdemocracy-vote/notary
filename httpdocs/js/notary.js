@@ -256,7 +256,7 @@ window.onload = function() {
         // 2. wikidata or
         // 3. OSM data
         if (true) { // !answer.extratags.hasOwnProperty('wikidata')) {
-          if (answer.extratags.hasOwnProperty('population')) {
+          if (!answer.extratags.hasOwnProperty('population')) {
             population.textContent = '?';
             population.title = translator.translate('population-not-found');
             population.removeAttribute('href');
@@ -269,9 +269,7 @@ window.onload = function() {
             const colon = answer.extratags.wikipedia.indexOf(':');
             const wikipediaLanguage = answer.extratags.wikipedia.substring(0, colon);
             const wikipediaPage = answer.extratags.wikipedia.substring(colon + 1);
-            console.log(wikipediaLanguage);
-            console.log(wikipediaPage);
-            n.href = `https://${wikipediaLanguage}.wikipedia.org/${wikipediaPage}`;
+            n.href = `https://${wikipediaLanguage}.wikipedia.org/wiki/${wikipediaPage}`;
           }
         } else 
           fetch(`https://www.wikidata.org/w/rest.php/wikibase/v0/entities/items/${answer.extratags.wikidata}`)
