@@ -91,6 +91,7 @@ window.onload = function() {
     fetch(`https://nominatim.openstreetmap.org/reverse?format=json&polygon_geojson=1&lat=${latitude}&lon=${longitude}&zoom=11&extratags=1&accept-language=${translator.language}`)
       .then(response => response.json())
       .then(answer => {
+        const osm_id = answer.osm_id;
         address = answer.display_name;
         if (area)
           area.remove();
@@ -115,8 +116,8 @@ window.onload = function() {
         if (!answer.hasOwnProperty('extratags') || answer.extratags === null) {
           population.textContent = '?';
           translator.translateElement(population, 'population-not-provided-by-osm');
-          population.href = `https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=${answer.osm_id}&class=boundary`;
-          n.href = `https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=${answer.osm_id}&class=boundary`;
+          population.href = `https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=${osm_id}&class=boundary`;
+          n.href = `https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=${osm_id}&class=boundary`;
           translator.translateElement(n, 'wikipedia-page-not-provided-by-osm');
         } else if (!answer.extratags.hasOwnProperty('wikidata')) {
           if (!answer.extratags.hasOwnProperty('population')) {
@@ -126,7 +127,7 @@ window.onload = function() {
           } else {
             population.textContent = parseInt(answer.extratags.population);
             translator.translateElement(population, 'population-from-osm');
-            population.href = `https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=${answer.osm_id}&class=boundary`;
+            population.href = `https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=${osm_id}&class=boundary`;
           }
           if (answer.extratags.hasOwnProperty('wikipedia')) {
             const colon = answer.extratags.wikipedia.indexOf(':');
@@ -183,7 +184,7 @@ window.onload = function() {
               }
             });
         const judge = document.getElementById('judge-input').value.trim();
-        fetch(`/api/commune.php?commune=${answer.osm_id}&judge=https://${judge}`)
+        fetch(`/api/commune.php?commune=${osm_id}&judge=https://${judge}`)
           .then(response => response.json())
           .then(answer => {
             const active = parseInt(answer['active-citizens']);
@@ -195,13 +196,13 @@ window.onload = function() {
             if (active === 0)
               a.removeAttribute('href');
             else
-              a.href = `/citizens.php?commune=${answer.osm_id}&type=active`;
+              a.href = `/citizens.php?commune=${osm_id}&type=active`;
             const i = document.getElementById('inactive-citizens');
             i.textContent = inactive;
             if (inactive === 0)
               i.removeAttribute('href');
             else
-              i.href = `/citizens.php?commune=${answer.osm_id}&type=inactive`;
+              i.href = `/citizens.php?commune=${osm_id}&type=inactive`;
             const r = document.getElementById('referendums');
             r.textContent = referendums;
             const p = document.getElementById('petitions');
