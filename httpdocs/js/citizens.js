@@ -8,6 +8,12 @@ function findGetParameter(parameterName, result) {
 }
 
 window.onload = async function() {
-  let judge = findGetParameter('judge', 'https://judge.directdemocracy.vote');
-  console.log(judge);
+  const judge = findGetParameter('judge', 'https://judge.directdemocracy.vote');
+  const commune = findGetParameter('commune');
+  const type = findGetParameter('type');
+  fetch(`api/citizens.php?commune=${commune}&judge=${judge}&type=${type}`)
+    .then(response => response.json())
+    .then(answer => {
+      console.log(answer);
+    });
 }
