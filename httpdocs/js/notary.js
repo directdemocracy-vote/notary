@@ -180,5 +180,11 @@ window.onload = function() {
               }
             });
       });
+    const judge = document.getElementById('judge-input').value.trim();
+    fetch(`/api/commune.php?commune=${answer.osm_id}&judge=${judge}`)
+      .then(response => response.json())
+      .then(answer => {
+        console.log(answer);
+      });
   }
 };
