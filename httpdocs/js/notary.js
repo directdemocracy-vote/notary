@@ -70,7 +70,7 @@ window.onload = function() {
         }
       });
   } else
-    zoom = 12;
+    zoom = 11;
   const map = L.map('map').setView([latitude, longitude], zoom);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
