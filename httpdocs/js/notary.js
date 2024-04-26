@@ -292,6 +292,13 @@ window.onload = function() {
               if (answer.statements.hasOwnProperty('P771') { // Swiss municipality code
                 const code = parseInt(answer.statements.P771[0].value.content);
                 console.log('code = ' + code);
+                fetch(`/api/CH-population.php?municipality=${code}`)
+                  .then(response => response.json())
+                  .then(answer => {
+                    translator.translateElement(population, 'population-from-ofs-ch')
+                    population.textContent = answer.population;
+                    population.href = answer.url;
+                  });
               }
               let p = '?';
               if (answer.statements.hasOwnProperty('P1082') { // population
