@@ -28,12 +28,14 @@ window.onload = function() {
         img.style.height = '20px';
         img.style.width = 'auto';
         img.addEventListener('mouseover', function(event) {
-          console.log('mouseover');
-          event.currentTarget.style.height = '200px';
+          const style = event.currentTarget.style;
+          style.height = '200px';
+          style.position = 'absolute';
         });
         img.addEventListener('mouseout', function(event) {
-          console.log('mouseout');
-          event.currentTarget.style.height = '20px';
+          const style = event.currentTarget.style;
+          style.height = '20px';
+          style.position = '';
         });
         td = document.createElement('td');
         tr.appendChild(td);
