@@ -299,7 +299,7 @@ window.onload = function() {
                   .then(response => response.json())
                   .then(answer => {
                     translator.translateElement(population, 'population-from-ofs-ch')
-                    population.textContent = answer.population;
+                    population.textContent = answer.population != -1 ? answer.population : 'N/A';
                     population.href = answer.url;
                   });
                 return;
