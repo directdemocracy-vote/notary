@@ -27,8 +27,8 @@ window.onload = function() {
         img.src = citizen.picture;
         img.style.height = '20px';
         img.style.width = 'auto';
-        img.addEventListener('mousehover', function(event) {
-          console.log('mousehover');
+        img.addEventListener('mouseover', function(event) {
+          console.log('mouseover');
           event.currentTarget.style.height = '200px';
         });
         img.addEventListener('mouseout', function(event) {
