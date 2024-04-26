@@ -35,8 +35,8 @@ if ($type === 'active')
           ."INNER JOIN participant AS pep ON pep.id=pe.participant AND pep.`key` = FROM_BASE64('$key==') ";
 elseif ($type === 'inactive')
   $query.= "LEFT JOIN certificate ON certificate.certifiedPublication = publication.id AND certificate.type = 'distrust' AND certificate.latest = 1 "
-          ."INNER JOIN publication AS pe ON pe.id=certificate.publication "
-          ."INNER JOIN participant AS pep ON pep.id=pe.participant AND pep.`key` = FROM_BASE64('$key==') ";  
+          ."LEFT JOIN publication AS pe ON pe.id=certificate.publication "
+          ."LEFT JOIN participant AS pep ON pep.id=pe.participant AND pep.`key` = FROM_BASE64('$key==') ";  
 $query.= "WHERE status='active'";
 if ($familyName or $givenNames) {
   $query .= " AND";
