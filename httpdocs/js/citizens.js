@@ -31,20 +31,26 @@ window.onload = function() {
         img.style.height = '40px';
         img.style.width = 'auto';
         img.style.verticalAlign = 'middle';
-        img.addEventListener('mouseover', function(event) {
-          const style = event.currentTarget.style;
-          style.height = '200px';
-          style.position = 'absolute';
-          style.transform = 'translate(-20px,-80px)';
-        });
         function reduce(event) {
           const style = event.currentTarget.style;
           style.height = '40px';
           style.position = '';
           style.transform = '';
         }
+        function magnify(event) {
+          const style = event.currentTarget.style;
+          style.height = '200px';
+          style.position = 'absolute';
+          style.transform = 'translate(-20px,-80px)';
+        }
+        img.addEventListener('mouseover', magnify);
         img.addEventListener('mouseout', reduce);
-        img.addEventListener('click', reduce);
+        img.addEventListener('click', function(event) {
+          if (event.currentTarget.position === '')
+            magnify(event);
+          else
+            reduce(event);
+        });
         td = document.createElement('td');
         tr.appendChild(td);
         td.textContent = citizen.familyName;
