@@ -29,7 +29,7 @@ window.onload = function() {
         td.style.paddingTop = 0;
         td.style.paddingBottom = 0;
         img.src = citizen.picture;
-        img.style.height = '30px';
+        img.style.height = '40px';
         img.style.width = 'auto';
         img.addEventListener('mouseover', function(event) {
           const style = event.currentTarget.style;
@@ -39,7 +39,7 @@ window.onload = function() {
         });
         img.addEventListener('mouseout', function(event) {
           const style = event.currentTarget.style;
-          style.height = '30px';
+          style.height = '40px';
           style.position = '';
           style.transform = '';
         });
