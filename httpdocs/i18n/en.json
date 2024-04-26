@@ -93,5 +93,7 @@
   "select-commune-on-map": "Select a commune on the map",
   "population-not-found": "Population estimate not found from WikiData and OpenStreetMap",
   "population-from-osm": "Population estimate from OpenStreetMap",
-  "population-from-wikidata": "Population estimate from WikiData"
+  "population-from-wikidata": "Population estimate from WikiData",
+  "wikipedia-page": "Wikipedia page",
+  "wikipedia-page-not-found": "Wikipedia page not found"
 }
