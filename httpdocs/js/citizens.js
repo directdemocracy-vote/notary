@@ -51,19 +51,22 @@ window.onload = function() {
           else
             reduce(event);
         });
+        function link(event) {
+          console.log('click ' + citizen.signature[0]);
+        }
         td = document.createElement('td');
         tr.appendChild(td);
         td.textContent = citizen.familyName;
+        td.addEventListener('click', link);
         td = document.createElement('td');
         tr.appendChild(td);
         td.textContent = citizen.givenNames;
+        td.addEventListener('click', link);
         td = document.createElement('td');
         tr.appendChild(td);
         const date = new Date(citizen.published * 1000);
         td.textContent = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
-        tr.addEventListener('click', function(event) {
-          console.log('click ' + citizen.signature[0]);
-        });
+        td.addEventListener('click', link);
       }
       console.log(answer);
     });
