@@ -25,6 +25,12 @@ window.onload = function() {
         const img = document.createElement('img');
         td.appendChild(img);
         img.src = citizen.picture;
+        img.style.height = '16px';
+        img.style.width = 'auto';
+        img.addEventListener('hover', function(event) {
+          console.log('hover');
+          event.currentTarget.style.height = '200px';
+        });
         td = document.createElement('td');
         tr.appendChild(td);
         td.textContent = citizen.familyName;
