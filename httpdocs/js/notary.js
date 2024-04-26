@@ -255,7 +255,7 @@ window.onload = function() {
         // 1. custom sources if available (depending on country), or
         // 2. wikidata or
         // 3. OSM data
-        if (true) { // !answer.extratags.hasOwnProperty('wikidata')) {
+        if (!answer.extratags.hasOwnProperty('wikidata')) {
           if (!answer.extratags.hasOwnProperty('population')) {
             population.textContent = '?';
             population.title = translator.translate('population-not-found');
