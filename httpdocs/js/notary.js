@@ -270,6 +270,10 @@ window.onload = function() {
             const wikipediaLanguage = answer.extratags.wikipedia.substring(0, colon);
             const wikipediaPage = answer.extratags.wikipedia.substring(colon + 1);
             n.href = `https://${wikipediaLanguage}.wikipedia.org/wiki/${wikipediaPage}`;
+            n.title = translator.translate('wikipedia-page');
+          } else {
+            n.removeAttribute('href');
+            n.title = translator.translate('wikipedia-page-not-found');
           }
         } else 
           fetch(`https://www.wikidata.org/w/rest.php/wikibase/v0/entities/items/${answer.extratags.wikidata}`)
@@ -295,8 +299,11 @@ window.onload = function() {
               if (answer.hasOwnProperty('sitelinks')) {
                 const wiki = translator.language + 'wiki';
                 if (answer.sitelinks[wiki].hasOwnProperty('url')) {
-                  const url = answer.sitelinks[wiki].url;
-                  n.href = url;
+                  n.href = answer.sitelinks[wiki].url;
+                  n.title = translator.translate('wikipedia-page');
+                } else {
+                  n.removeAttribute('href');
+                  n.title = translator.translate('wikipedia-page-not-found');
                 }
               }
             });
