@@ -31,13 +31,13 @@ window.onload = function() {
           const style = event.currentTarget.style;
           style.height = '200px';
           style.position = 'absolute';
-          style.top = '-80px';
+          //style.top = '-80px';
         });
         img.addEventListener('mouseout', function(event) {
           const style = event.currentTarget.style;
           style.height = '20px';
           style.position = '';
-          style.top = '';
+          //style.top = '';
         });
         td = document.createElement('td');
         tr.appendChild(td);
