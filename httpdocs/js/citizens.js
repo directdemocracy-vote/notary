@@ -62,7 +62,7 @@ window.onload = function() {
         const date = new Date(citizen.published * 1000);
         td.textContent = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
         tr.addEventListener('click', function(event) {
-          console.log('click');
+          console.log('click ' + citizen.signature[0]);
         });
       }
       console.log(answer);
