@@ -258,13 +258,13 @@ window.onload = function() {
         // 1. custom sources if available (depending on country), or
         // 2. wikidata or
         // 3. OSM data
-        if (!answer.hasOwnProperty('extratags')) {
+        if (!answer.hasOwnProperty('extratags') || answer.extratags === null) {
           population.textContent = '?';
           translator.translate(population, 'population-not-found');
           population.removeAttribute('href');
           n.removeAttribute('href');
           translator.translateElement(n, 'wikipedia-page-not-found');
-        } else if (!answer.extratags.hasOwnProperty('wikidata') || !answer.extratags) {
+        } else if (!answer.extratags.hasOwnProperty('wikidata')) {
           if (!answer.extratags.hasOwnProperty('population')) {
             population.textContent = '?';
             translator.translate(population, 'population-not-found');
