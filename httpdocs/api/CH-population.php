@@ -13,5 +13,5 @@ foreach($rows as &$row) {
     break;
   }
 }
-die("{\"popupation\":$population}");
+die("{\"population\":$population}");
 ?>
