@@ -196,13 +196,13 @@ window.onload = function() {
             if (active === 0)
               a.removeAttribute('href');
             else
-              a.href = `/citizens.php?commune=${osmId}&type=active`;
+              a.href = `/citizens.html?commune=${osmId}&type=active&judge=https://${judge}`;
             const i = document.getElementById('inactive-citizens');
             i.textContent = inactive;
             if (inactive === 0)
               i.removeAttribute('href');
             else
-              i.href = `/citizens.php?commune=${osmId}&type=inactive`;
+              i.href = `/citizens.html?commune=${osmId}&type=inactive&judge=https://${judge}`;
             const r = document.getElementById('referendums');
             r.textContent = referendums;
             const p = document.getElementById('petitions');
