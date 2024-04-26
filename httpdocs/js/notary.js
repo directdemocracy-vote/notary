@@ -268,7 +268,7 @@ window.onload = function() {
           if (answer.extratags.hasOwnProperty('wikipedia')) {
             const colon = answer.extratags.wikipedia.indexOf(':');
             const wikipediaLanguage = answer.extratags.wikipedia.substring(0, colon);
-            const wikipediaPage = answer.extratags.wikipedia.substring(colon);
+            const wikipediaPage = answer.extratags.wikipedia.substring(colon + 1);
             console.log(wikipediaLanguage);
             console.log(wikipediaPage);
             n.href = `https://${wikipediaLanguage}.wikipedia.org/${wikipediaPage}`;
