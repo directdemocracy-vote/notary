@@ -290,7 +290,7 @@ window.onload = function() {
                 const wiki = translator.language + 'wiki';
                 if (answer.sitelinks[wiki].hasOwnProperty('url')) {
                   const url = answer.sitelinks[wiki].url;
-                  p.href = url;
+                  n.href = url;
                 }
               }
             });
