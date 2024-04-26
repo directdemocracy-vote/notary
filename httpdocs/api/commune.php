@@ -23,8 +23,8 @@ $result->free();
 $query = "SELECT COUNT(*) AS count FROM citizen WHERE status='active' AND commune=$commune";
 $result = $mysqli->query($query) or die($mysqli->error);
 $c = $result->fetch_assoc();
-$count = $c['count'];
+$inactive = $c['count'];
 $result->free();
 $mysqli->close();
-die("{\"active-citizens\":0,\"inactive-citizens\":$count,\"referendums\":0,\"petitions\":0}");
+die("{\"active-citizens\":0,\"inactive-citizens\":$inactive,\"referendums\":0,\"petitions\":0}");
 ?>
