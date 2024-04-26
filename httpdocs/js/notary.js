@@ -299,6 +299,7 @@ window.onload = function() {
                     population.textContent = answer.population;
                     population.href = answer.url;
                   });
+                return;
               }
               let p = '?';
               if (answer.statements.hasOwnProperty('P1082') { // population
