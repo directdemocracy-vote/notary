@@ -3,7 +3,7 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 $municipality = intval($_GET['municipality']);
-$data = file_get_content('CH-cc-f-01.02.03.01.csv');
+$data = file_get_contents('CH-cc-f-01.02.03.01.csv');
 $rows = explode("\n", $data);
 $population = -1;
 foreach($rows as &$row) {
