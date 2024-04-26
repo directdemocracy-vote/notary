@@ -25,7 +25,7 @@ if ($j = $result->fetch_assoc())
 $result->free();
 
 $query = "SELECT citizen.familyName, citizen.givenNames, CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture, "
-        ."UNIX_TIMESTAMP(publication.published) AS published "
+        ."UNIX_TIMESTAMP(publication.published) AS published, REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature "
         ."FROM citizen "
         ."INNER JOIN publication ON publication.id = citizen.publication "
         ."INNER JOIN participant ON participant.id=publication.participant ";
