@@ -284,7 +284,7 @@ window.onload = function() {
                 population.removeAttribute('href');
               } else {
                 population.title = translator.translate('population-from-wikidata');
-                population.href = `https://www.wikidata.org/wiki/${answer.extratags.wikidata}`;
+                population.href = `https://www.wikidata.org/wiki/${answer.id}`;
               }
               if (answer.hasOwnProperty('sitelinks')) {
                 const wiki = translator.language + 'wiki';
