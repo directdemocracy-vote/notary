@@ -251,6 +251,9 @@ window.onload = function() {
         document.getElementById('active-citizens').textContent = 0;
         document.getElementById('inactive-citizens').textContent = 0;
         let population = document.getElementById('population');
+        population.textContent = '...';
+        population.title = '';
+        population.removeAttribute('href');
         // to estimate the population we use in this order:
         // 1. custom sources if available (depending on country), or
         // 2. wikidata or
