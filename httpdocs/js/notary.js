@@ -97,10 +97,10 @@ window.onload = function() {
         const n = document.getElementById('commune-name');
         n.textContent = answer.name;
         n.removeAttribute('data-i18n');
-        document.getElementById('active-citizens').textContent = 0;
-        document.getElementById('inactive-citizens').textContent = 0;
-        document.getElementById('referendums').textContent = 0;
-        document.getElementById('petitions').textContent = 0;
+        document.getElementById('active-citizens').textContent = '...';
+        document.getElementById('inactive-citizens').textContent = '...';
+        document.getElementById('referendums').textContent = '...';
+        document.getElementById('petitions').textContent = '...';
         let population = document.getElementById('population');
         population.textContent = '...';
         population.title = '';
@@ -183,7 +183,26 @@ window.onload = function() {
         fetch(`/api/commune.php?commune=${answer.osm_id}&judge=https://${judge}`)
           .then(response => response.json())
           .then(answer => {
-            document.getElementById('inactive-citizen').textContent = answer['inactive-citizens'];
+            const active = parseInt(answer['active-citizens']);
+            const inactive = parseInt(answer['inactive-citizens']);
+            const referendums = parseInt(answer['referendums']);
+            const petitions = parseInt(answer['petitions']);
+            const a = document.getElementById('active-citizens');
+            a.textContent = active;
+            if (active === 0)
+              a.removeAttribute('href');
+            else
+              a.href = `/citizens.php?commune=${answer.osm_id}&type=active`;
+            const i = document.getElementById('inactive-citizen');
+            i.textContent = inactive;
+            if (inactive === 0)
+              i.removeAttribute('href');
+            else
+              i.href = `/citizens.php?commune=${answer.osm_id}&type=inactive`;
+            const r = document.getElementById('referendums');
+            r.textContent = referendums;
+            const p = document.getElementById('petitions');
+            p.textContent = petitions;
             console.log(answer);
           });
       });
