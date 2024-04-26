@@ -250,23 +250,42 @@ window.onload = function() {
         n.removeAttribute('data-i18n');
         document.getElementById('active-citizens').textContent = 0;
         document.getElementById('inactive-citizens').textContent = 0;
-        const p = document.getElementById('population');
-        if (!answer.extratags.hasOwnProperty('wikidata'))
-          p.textContent = '?';
-        else
+        let population = document.getElementById('population');
+        // to estimate the population we use in this order:
+        // 1. custom sources if available (depending on country), or
+        // 2. wikidata or
+        // 3. OSM data
+        if (!answer.extratags.hasOwnProperty('wikidata')) {
+          if (answer.extratags.hasOwnProperty('population')) {
+            population.textContent = '?';
+            population.title = translator.translate('population-not-found');
+            population.removeAttribute('href');
+          } else {
+            population.textContent = parseInt(answer.extratags.population);
+            population.title = translator.translate('population-from-osm');
+            population.href = `https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=${answer.osm_id}&class=boundary`;
+          }
+        } else 
           fetch(`https://www.wikidata.org/w/rest.php/wikibase/v0/entities/items/${answer.extratags.wikidata}`)
             .then(response => response.json())
             .then(answer => {
               const p1082 = answer.statements.P1082;
-              let population = '?';
+              let p = '?';
               let rank = 'deprecated';
-              for(let p of p1082) {
-                if (rank === 'deprecated' || (rank === 'normal' && p.rank === 'preferred')) {
-                  population = parseInt(p.value.content.amount);
-                  rank = p.rank;
+              for(let pop of p1082) {
+                if (rank === 'deprecated' || (rank === 'normal' && pop.rank === 'preferred')) {
+                  p = parseInt(p.value.content.amount);
+                  rank = pop.rank;
                 }
               }
-              p.textContent = population;
+              population.textContent = p;
+              if (p === '?') {
+                population.title = translator.translate('population-not-found');
+                population.removeAttribute('href');
+              } else {
+                population.title = translator.translate('population-from-wikidata');
+                population.href = `https://www.wikidata.org/wiki/${answer.extratags.wikidata}`;
+              }
               if (answer.hasOwnProperty('sitelinks')) {
                 const wiki = translator.language + 'wiki';
                 if (answer.sitelinks[wiki].hasOwnProperty('url')) {
