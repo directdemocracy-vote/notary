@@ -61,6 +61,9 @@ window.onload = function() {
         tr.appendChild(td);
         const date = new Date(citizen.published * 1000);
         td.textContent = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        tr.addEventListener('click', function(event) {
+          console.log('click');
+        });
       }
       console.log(answer);
     });
