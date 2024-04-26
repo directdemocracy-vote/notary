@@ -162,8 +162,7 @@ window.onload = async function() {
       const published = publishedDate(answer.citizen.published);
       const givenNames = answer.citizen.givenNames;
       const familyName = answer.citizen.familyName;
-      const latitude = answer.citizen.latitude;
-      const longitude = answer.citizen.longitude;
+      const commune = answer.citizen.commune;
       document.getElementById('picture').src = answer.citizen.picture;
       if (answer.citizen.appKey !== PRODUCTION_APP_KEY) {
         document.getElementById('picture-overlay').style.visibility = '';
@@ -174,22 +173,18 @@ window.onload = async function() {
       }
       document.getElementById('given-names').textContent = givenNames;
       document.getElementById('family-name').textContent = familyName;
-      document.getElementById('home').innerHTML = `<a href="https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}&zoom=12" target="_blank">${latitude}, ${longitude}</a>`;
       document.getElementById('created').textContent = published;
       const map = L.map('map');
       map.whenReady(function() { setTimeout(() => { this.invalidateSize(); }, 0); });
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
-      let marker = L.marker([latitude, longitude]).addTo(map);
-      marker.bindPopup(`<b>${givenNames} ${familyName}</b><br>[${latitude}, ${longitude}]`);
-      map.setView([latitude, longitude], 18);
+      // map.setView([latitude, longitude], 18);
       map.on('contextmenu', function(event) { return false; });
       fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=20`)
         .then(response => response.json())
         .then(answer => {
           const address = answer.display_name;
-          marker.setPopupContent(`<b>${givenNames} ${familyName}</b><br>${address}`).openPopup();
         });
       document.getElementById('reload').addEventListener('click', function(event) {
         event.currentTarget.setAttribute('disabled', '');
