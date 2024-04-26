@@ -37,12 +37,14 @@ window.onload = function() {
           style.position = 'absolute';
           style.transform = 'translate(-20px,-80px)';
         });
-        img.addEventListener('mouseout', function(event) {
+        function reduce(event) {
           const style = event.currentTarget.style;
           style.height = '40px';
           style.position = '';
           style.transform = '';
-        });
+        }
+        img.addEventListener('mouseout', reduce);
+        img.addEventListener('click', reduce);
         td = document.createElement('td');
         tr.appendChild(td);
         td.textContent = citizen.familyName;
