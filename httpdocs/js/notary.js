@@ -31,8 +31,6 @@ window.onload = function() {
     window.open(`https://${judge}/propose.html?latitude=${latitude}&longitude=${longitude}`, '_blank');
   });
 
-  document.getElementById('proposal-year').setAttribute('value', new Date().getFullYear());
-
   const tab = findGetParameter('tab');
   if (tab && tab !== 'citizens') {
     document.getElementById('citizens-tab').classList.remove('is-active');
