@@ -279,23 +279,6 @@ window.onload = function() {
           fetch(`https://www.wikidata.org/w/rest.php/wikibase/v0/entities/items/${answer.extratags.wikidata}`)
             .then(response => response.json())
             .then(answer => {
-              const p1082 = answer.statements.P1082;
-              let p = '?';
-              let rank = 'deprecated';
-              for(let pop of p1082) {
-                if (rank === 'deprecated' || (rank === 'normal' && pop.rank === 'preferred')) {
-                  p = parseInt(pop.value.content.amount);
-                  rank = pop.rank;
-                }
-              }
-              population.textContent = p;
-              if (p === '?') {
-                translator.translateElement(population, 'population-not-found');
-                population.removeAttribute('href');
-              } else {
-                translator.translateElement(population, 'population-from-wikidata');
-                population.href = `https://www.wikidata.org/wiki/${answer.id}`;
-              }
               if (answer.hasOwnProperty('sitelinks')) {
                 const wiki = translator.language + 'wiki';
                 if (answer.sitelinks[wiki].hasOwnProperty('url')) {
@@ -305,6 +288,28 @@ window.onload = function() {
                   n.removeAttribute('href');
                   translator.translateElement(n, 'wikipedia-page-not-found');
                 }
+              }
+              if (answer.statements.hasOwnProperty('P771') { // Swiss municipality code
+                const code = parseInt(answer.statements.P771[0].value.content);
+                console.log('code = ' + code);
+              }
+              let p = '?';
+              if (answer.statements.hasOwnProperty('P1082') { // population
+                let rank = 'deprecated';
+                for(let pop of answer.statements.P1082) {
+                  if (rank === 'deprecated' || (rank === 'normal' && pop.rank === 'preferred')) {
+                    p = parseInt(pop.value.content.amount);
+                    rank = pop.rank;
+                  }
+                }
+              }
+              population.textContent = p;
+              if (p === '?') {
+                translator.translateElement(population, 'population-not-found');
+                population.removeAttribute('href');
+              } else {
+                translator.translateElement(population, 'population-from-wikidata');
+                population.href = `https://www.wikidata.org/wiki/${answer.id}`;
               }
             });
       });
