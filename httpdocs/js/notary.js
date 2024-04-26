@@ -234,7 +234,7 @@ window.onload = function() {
   }
 
   function updatePosition() {
-    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&polygon_geojson=1&lat=${latitude}&lon=${longitude}&zoom=12&extratags=1&accept-language=${translator.language}`)
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&polygon_geojson=1&lat=${latitude}&lon=${longitude}&zoom=11&extratags=1&accept-language=${translator.language}`)
       .then(response => response.json())
       .then(answer => {
         address = answer.display_name;
