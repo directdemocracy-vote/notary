@@ -260,10 +260,10 @@ window.onload = function() {
         // 3. OSM data
         if (!answer.hasOwnProperty('extratags') || answer.extratags === null) {
           population.textContent = '?';
-          translator.translateElement(population, 'population-not-found');
+          translator.translateElement(population, 'population-not-provided-by-osm');
           population.removeAttribute('href');
           n.removeAttribute('href');
-          translator.translateElement(n, 'wikipedia-page-not-found');
+          translator.translateElement(n, 'wikipedia-page-not-provided-by-osm');
         } else if (!answer.extratags.hasOwnProperty('wikidata')) {
           if (!answer.extratags.hasOwnProperty('population')) {
             population.textContent = '?';
