@@ -35,8 +35,10 @@ window.onload = function() {
         });
         img.addEventListener('mouseout', function(event) {
           const style = event.currentTarget.style;
+          /*
           style.height = '30px';
           style.position = '';
+          */
           //style.top = '';
         });
         td = document.createElement('td');
