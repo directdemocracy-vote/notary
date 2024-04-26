@@ -261,8 +261,8 @@ window.onload = function() {
         if (!answer.hasOwnProperty('extratags') || answer.extratags === null) {
           population.textContent = '?';
           translator.translateElement(population, 'population-not-provided-by-osm');
-          population.removeAttribute('href');
-          n.removeAttribute('href');
+          population.href = `https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=${answer.osm_id}&class=boundary`;
+          n.href = `https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=${answer.osm_id}&class=boundary`;
           translator.translateElement(n, 'wikipedia-page-not-provided-by-osm');
         } else if (!answer.extratags.hasOwnProperty('wikidata')) {
           if (!answer.extratags.hasOwnProperty('population')) {
