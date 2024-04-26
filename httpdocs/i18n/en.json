@@ -96,5 +96,7 @@
   "population-from-wikidata": "Population estimate from WikiData",
   "population-from-ofs-ch": "Population estimate from the Swiss Federal Statistical Office",
   "wikipedia-page": "Wikipedia page",
-  "wikipedia-page-not-found": "Wikipedia page not found"
+  "wikipedia-page-not-found": "Wikipedia page not found",
+  "population-not-provided-by-osm": "Population not provided by OpenStreetMap",
+  "wikipedia-page-not-provided-by-osm": "Wikipedia page not provided by OpenStreetMap"
 }
