@@ -183,6 +183,7 @@ window.onload = function() {
         fetch(`/api/commune.php?commune=${answer.osm_id}&judge=https://${judge}`)
           .then(response => response.json())
           .then(answer => {
+            document.getElementById('inactive-citizen').textContent = answer['inactive-citizens'];
             console.log(answer);
           });
       });
