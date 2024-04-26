@@ -24,6 +24,8 @@ window.onload = function() {
         tr.appendChild(td);
         const img = document.createElement('img');
         td.appendChild(img);
+        td.style.paddingTop = 0;
+        td.style.paddingBottom = 0;
         img.src = citizen.picture;
         img.style.height = '30px';
         img.style.width = 'auto';
