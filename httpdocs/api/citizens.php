@@ -31,11 +31,11 @@ $query = "SELECT citizen.familyName, citizen.givenNames, CONCAT('data:image/jpeg
         ."INNER JOIN participant ON participant.id=publication.participant ";
 if ($type === 'active')
   $query.= "INNER JOIN certificate ON certificate.certifiedPublication = publication.id AND certificate.type = 'trust' AND certificate.latest = 1 "
-          ."INNER JOIN publication AS pe ON pe.id=certificate.publication"
+          ."INNER JOIN publication AS pe ON pe.id=certificate.publication "
           ."INNER JOIN participant AS pep ON pep.id=pe.participant AND pep.`key` = FROM_BASE64('$key==') ";
 elseif ($type === 'inactive')
   $query.= "LEFT JOIN certificate ON certificate.certifiedPublication = publication.id AND certificate.type = 'distrust' AND certificate.latest = 1 "
-          ."INNER JOIN publication AS pe ON pe.id=certificate.publication"
+          ."INNER JOIN publication AS pe ON pe.id=certificate.publication "
           ."INNER JOIN participant AS pep ON pep.id=pe.participant AND pep.`key` = FROM_BASE64('$key==') ";  
 $query.= "WHERE status='active'";
 if ($familyName or $givenNames) {
