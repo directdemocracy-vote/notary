@@ -264,7 +264,7 @@ window.onload = function() {
           population.removeAttribute('href');
           n.removeAttribute('href');
           translator.translateElement(n, 'wikipedia-page-not-found');
-        } else if (!answer.extratags.hasOwnProperty('wikidata') || answer.extratags === null) {
+        } else if (!answer.extratags.hasOwnProperty('wikidata') || !answer.extratags) {
           if (!answer.extratags.hasOwnProperty('population')) {
             population.textContent = '?';
             translator.translate(population, 'population-not-found');
