@@ -99,6 +99,8 @@ window.onload = function() {
         n.removeAttribute('data-i18n');
         document.getElementById('active-citizens').textContent = 0;
         document.getElementById('inactive-citizens').textContent = 0;
+        document.getElementById('referendums').textContent = 0;
+        document.getElementById('petitions').textContent = 0;
         let population = document.getElementById('population');
         population.textContent = '...';
         population.title = '';
