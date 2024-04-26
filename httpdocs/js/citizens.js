@@ -7,7 +7,7 @@ function findGetParameter(parameterName, result) {
   return result;
 }
 
-window.onload = async function() {
+window.onload = function() {
   const judge = findGetParameter('judge', 'https://judge.directdemocracy.vote');
   const commune = findGetParameter('commune');
   const type = findGetParameter('type');
