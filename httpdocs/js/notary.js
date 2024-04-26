@@ -83,6 +83,11 @@ window.onload = function() {
   }
 
   function updatePosition() {
+    document.getElementById('commune-address').textContent = '...';
+    const n = document.getElementById('commune-name');
+    n.removeAttribute('data-i18n');
+    n.removeAttribute('href');
+    n.textContent = '...';
     fetch(`https://nominatim.openstreetmap.org/reverse?format=json&polygon_geojson=1&lat=${latitude}&lon=${longitude}&zoom=11&extratags=1&accept-language=${translator.language}`)
       .then(response => response.json())
       .then(answer => {
@@ -94,9 +99,7 @@ window.onload = function() {
         if (displayName.startsWith(answer.name + ', '))
           displayName = displayName.substring(answer.name.length + 2);
         document.getElementById('commune-address').textContent = displayName;
-        const n = document.getElementById('commune-name');
         n.textContent = answer.name;
-        n.removeAttribute('data-i18n');
         document.getElementById('active-citizens').textContent = '...';
         document.getElementById('inactive-citizens').textContent = '...';
         document.getElementById('referendums').textContent = '...';
