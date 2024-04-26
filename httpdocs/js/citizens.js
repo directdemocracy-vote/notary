@@ -28,11 +28,11 @@ window.onload = function() {
         img.style.height = '20px';
         img.style.width = 'auto';
         img.addEventListener('mousehover', function(event) {
-          console.log('hover');
+          console.log('mousehover');
           event.currentTarget.style.height = '200px';
         });
         img.addEventListener('mouseout', function(event) {
-          console.log('hover');
+          console.log('mouseout');
           event.currentTarget.style.height = '20px';
         });
         td = document.createElement('td');
