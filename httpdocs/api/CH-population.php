@@ -13,5 +13,5 @@ foreach($rows as &$row) {
     break;
   }
 }
-die("{\"population\":$population}");
+die("{\"population\":$population,\"url\":\"https://www.bfs.admin.ch/bfs/fr/home/statistiques/population.assetdetail.31345244.html\"}");
 ?>
