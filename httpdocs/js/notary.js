@@ -193,7 +193,7 @@ window.onload = function() {
               a.removeAttribute('href');
             else
               a.href = `/citizens.php?commune=${answer.osm_id}&type=active`;
-            const i = document.getElementById('inactive-citizen');
+            const i = document.getElementById('inactive-citizens');
             i.textContent = inactive;
             if (inactive === 0)
               i.removeAttribute('href');
