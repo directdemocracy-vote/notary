@@ -34,7 +34,7 @@ window.onload = function() {
         td = document.createElement('td');
         tr.appendChild(td);
         const date = new Date(citizen.published * 1000);
-        td.textContent = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.toLocaleDateString();
+        td.textContent = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
       }
       console.log(answer);
     });
