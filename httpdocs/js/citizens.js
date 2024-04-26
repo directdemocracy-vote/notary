@@ -15,6 +15,7 @@ window.onload = function() {
     .then(response => response.json())
     .then(answer => {
       const tbody = document.getElementById('tbody');
+      answer.push(answer[0]);
       for(const citizen of answer) {
         if (!citizen.hasOwnProperty('picture'))
           continue;
