@@ -25,7 +25,7 @@ window.onload = function() {
         const img = document.createElement('img');
         td.appendChild(img);
         img.src = citizen.picture;
-        img.style.height = '20px';
+        img.style.height = '30px';
         img.style.width = 'auto';
         img.addEventListener('mouseover', function(event) {
           const style = event.currentTarget.style;
@@ -35,7 +35,7 @@ window.onload = function() {
         });
         img.addEventListener('mouseout', function(event) {
           const style = event.currentTarget.style;
-          style.height = '20px';
+          style.height = '30px';
           style.position = '';
           //style.top = '';
         });
