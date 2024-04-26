@@ -255,7 +255,7 @@ window.onload = function() {
         // 1. custom sources if available (depending on country), or
         // 2. wikidata or
         // 3. OSM data
-        if (!answer.extratags.hasOwnProperty('wikidata')) {
+        if (true) { // !answer.extratags.hasOwnProperty('wikidata')) {
           if (answer.extratags.hasOwnProperty('population')) {
             population.textContent = '?';
             population.title = translator.translate('population-not-found');
@@ -264,6 +264,14 @@ window.onload = function() {
             population.textContent = parseInt(answer.extratags.population);
             population.title = translator.translate('population-from-osm');
             population.href = `https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=${answer.osm_id}&class=boundary`;
+          }
+          if (answer.extratags.hasOwnProperty('wikipedia')) {
+            const colon = answer.extratags.wikipedia.indexOf(':');
+            const wikipediaLanguage = answer.extratags.wikipedia.substring(0, colon);
+            const wikipediaPage = answer.extratags.wikipedia.substring(colon);
+            console.log(wikipediaLanguage);
+            console.log(wikipediaPage);
+            n.href = `https://${wikipediaLanguage}.wikipedia.org/${wikipediaPage}`;
           }
         } else 
           fetch(`https://www.wikidata.org/w/rest.php/wikibase/v0/entities/items/${answer.extratags.wikidata}`)
