@@ -289,7 +289,7 @@ window.onload = function() {
                   translator.translateElement(n, 'wikipedia-page-not-found');
                 }
               }
-              if (answer.statements.hasOwnProperty('P771') { // Swiss municipality code
+              if (answer.statements.hasOwnProperty('P771')) { // Swiss municipality code
                 const code = parseInt(answer.statements.P771[0].value.content);
                 console.log('code = ' + code);
                 fetch(`/api/CH-population.php?municipality=${code}`)
