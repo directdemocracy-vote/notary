@@ -46,7 +46,7 @@ window.onload = function() {
         img.addEventListener('mouseover', magnify);
         img.addEventListener('mouseout', reduce);
         img.addEventListener('click', function(event) {
-          if (event.currentTarget.position === '')
+          if (event.currentTarget.height === '40px')
             magnify(event);
           else
             reduce(event);
