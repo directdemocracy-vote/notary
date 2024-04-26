@@ -90,5 +90,8 @@
   "deleted": "deleted",
   "transferred": "transferred",
   "updated": "updated",
-  "select-commune-on-map": "Select a commune on the map"
+  "select-commune-on-map": "Select a commune on the map",
+  "population-not-found": "Population estimate not found from WikiData nor OpenStreetMap",
+  "population-from-osm": "Population estimate from OpenStreetMap",
+  "population-from-wikidata": "Population estimate from WikiData"
 }
