@@ -149,7 +149,6 @@ window.onload = function() {
               }
               if (answer.statements.hasOwnProperty('P771')) { // Swiss municipality code
                 const code = parseInt(answer.statements.P771[0].value.content);
-                console.log('code = ' + code);
                 fetch(`/api/CH-population.php?municipality=${code}`)
                   .then(response => response.json())
                   .then(answer => {
