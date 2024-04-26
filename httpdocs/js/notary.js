@@ -179,12 +179,12 @@ window.onload = function() {
                 population.href = `https://www.wikidata.org/wiki/${answer.id}`;
               }
             });
-      });
-    const judge = document.getElementById('judge-input').value.trim();
-    fetch(`/api/commune.php?commune=${answer.osm_id}&judge=${judge}`)
-      .then(response => response.json())
-      .then(answer => {
-        console.log(answer);
+        const judge = document.getElementById('judge-input').value.trim();
+        fetch(`/api/commune.php?commune=${answer.osm_id}&judge=${judge}`)
+          .then(response => response.json())
+          .then(answer => {
+            console.log(answer);
+          });
       });
   }
 };
