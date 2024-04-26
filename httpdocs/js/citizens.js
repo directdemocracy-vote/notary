@@ -31,6 +31,7 @@ window.onload = function() {
         img.src = citizen.picture;
         img.style.height = '40px';
         img.style.width = 'auto';
+        img.style.verticalAlign = 'middle';
         img.addEventListener('mouseover', function(event) {
           const style = event.currentTarget.style;
           style.height = '200px';
