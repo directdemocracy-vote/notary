@@ -302,7 +302,7 @@ window.onload = function() {
                 return;
               }
               let p = '?';
-              if (answer.statements.hasOwnProperty('P1082') { // population
+              if (answer.statements.hasOwnProperty('P1082')) { // population
                 let rank = 'deprecated';
                 for(let pop of answer.statements.P1082) {
                   if (rank === 'deprecated' || (rank === 'normal' && pop.rank === 'preferred')) {
