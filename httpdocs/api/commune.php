@@ -26,5 +26,5 @@ $c = $result->fetch_assoc();
 $count = $c['count'];
 $result->free();
 $mysqli->close();
-die("{\"inactive-citizens\":$count}");
+die("{\"active-citizens\":0,\"inactive-citizens\":$count,\"referendums\":0,\"petitions\":0}");
 ?>
