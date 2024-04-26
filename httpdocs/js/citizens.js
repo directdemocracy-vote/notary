@@ -52,7 +52,7 @@ window.onload = function() {
             reduce(event);
         });
         function link(event) {
-          console.log('click ' + citizen.signature[0]);
+          location.href = `/citizen.html?signature=${citizen.signature}`;
         }
         td = document.createElement('td');
         tr.appendChild(td);
@@ -68,6 +68,5 @@ window.onload = function() {
         td.textContent = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
         td.addEventListener('click', link);
       }
-      console.log(answer);
     });
 }
