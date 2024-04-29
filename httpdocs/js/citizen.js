@@ -316,7 +316,8 @@ window.onload = async function() {
         const content = document.createElement('div');
         div.appendChild(content);
         content.style.minWidth = '250px';        
-        const distance = Math.round(distanceFromLatitudeLongitude(latitude, longitude, endorsement.latitude, endorsement.longitude));
+        // FIXME: const distance = Math.round(distanceFromLatitudeLongitude(latitude, longitude, endorsement.latitude, endorsement.longitude));
+        const distance = 0;
         // copied from app.js
         let icon;
         let day;
