@@ -2,14 +2,6 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-CREATE TABLE `area` (
-  `publication` int(11) NOT NULL,
-  `id` int(11) NOT NULL,
-  `name` varchar(1024) NOT NULL,
-  `polygons` multipolygon NOT NULL,
-  `local` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 CREATE TABLE `certificate` (
   `publication` int(11) NOT NULL,
   `app` int(11) NOT NULL,
@@ -52,12 +44,12 @@ CREATE TABLE `participation` (
   `app` int(11) NOT NULL,
   `appSignature` blob NOT NULL,
   `referendum` int(11) NOT NULL,
-  `area` int(11) NOT NULL
+  `commune` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `proposal` (
   `publication` int(11) NOT NULL,
-  `area` int(11) NOT NULL,
+  `area` bigint(20) NOT NULL,
   `title` varchar(128) NOT NULL,
   `description` text NOT NULL,
   `question` varchar(128) NOT NULL,
@@ -75,7 +67,7 @@ CREATE TABLE `proposal` (
 CREATE TABLE `publication` (
   `id` int(11) NOT NULL,
   `version` smallint(6) NOT NULL,
-  `type` enum('citizen','certificate','area','proposal','participation','vote') NOT NULL,
+  `type` enum('citizen','certificate','proposal','participation','vote') NOT NULL,
   `published` datetime NOT NULL,
   `signature` blob NOT NULL COMMENT 'signature of the publication by the author',
   `signatureSHA1` binary(20) GENERATED ALWAYS AS (unhex(sha(`signature`))) STORED,
@@ -94,7 +86,7 @@ CREATE TABLE `vote` (
   `appSignature` blob NOT NULL,
   `referendum` int(11) NOT NULL,
   `number` int(11) NOT NULL,
-  `area` int(11) NOT NULL,
+  `commune` bigint(20) NOT NULL,
   `ballot` binary(32) NOT NULL,
   `answer` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -112,10 +104,6 @@ INSERT INTO `webservice` (`participant`, `url`) VALUES
 (5, 'https://station.directdemocracy.vote');
 
 
-ALTER TABLE `area`
-  ADD PRIMARY KEY (`publication`);
-  ADD KEY `id` (`id`);
-
 ALTER TABLE `certificate`
   ADD PRIMARY KEY (`publication`),
   ADD KEY `publicationId` (`certifiedPublication`),
@@ -132,7 +120,7 @@ ALTER TABLE `participation`
   ADD PRIMARY KEY (`publication`),
   ADD KEY `app` (`app`),
   ADD KEY `referendum` (`referendum`),
-  ADD KEY `area` (`area`);
+  ADD KEY `commune` (`commune`);
 
 ALTER TABLE `proposal`
   ADD PRIMARY KEY (`publication`),
@@ -154,16 +142,11 @@ ALTER TABLE `vote`
 ALTER TABLE `webservice`
   ADD PRIMARY KEY (`participant`);
 
-
 ALTER TABLE `participant`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 ALTER TABLE `publication`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
-
-ALTER TABLE `area`
-  ADD CONSTRAINT `area` FOREIGN KEY (`publication`) REFERENCES `publication` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 ALTER TABLE `certificate`
   ADD CONSTRAINT `certificate` FOREIGN KEY (`publication`) REFERENCES `publication` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
