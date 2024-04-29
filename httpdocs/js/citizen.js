@@ -174,17 +174,10 @@ window.onload = async function() {
       document.getElementById('given-names').textContent = givenNames;
       document.getElementById('family-name').textContent = familyName;
       document.getElementById('created').textContent = published;
-      const map = L.map('map');
-      map.whenReady(function() { setTimeout(() => { this.invalidateSize(); }, 0); });
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>'
-      }).addTo(map);
-      // map.setView([latitude, longitude], 18);
-      map.on('contextmenu', function(event) { return false; });
-      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=20`)
+      fetch(`https://nominatim.openstreetmap.org/lookup?osm_ids=R${commune}&accept-language=${translator.language}&format=json`)
         .then(response => response.json())
         .then(answer => {
-          const address = answer.display_name;
+          document.getElementById('commune').textContent = answer.display_name;
         });
       document.getElementById('reload').addEventListener('click', function(event) {
         event.currentTarget.setAttribute('disabled', '');
@@ -367,20 +360,20 @@ window.onload = async function() {
           otherComment = 'endorsed-you-remotely';
         else if (otherComment === 'in-person')
           otherComment = 'endorsed-you-in-person';
-        else if (otherComment === 'revoked+address')
+        else if (otherComment === 'revoked+commune')
           otherComment = 'revoked-moved';
         else if (otherComment === 'revoked+name')
           otherComment = 'revoked-name';
         else if (otherComment === 'revoked+picture')
           otherComment = 'revoked-picture';
-        else if (otherComment === 'revoked+address+name')
-          otherComment = 'revoked-address-name';
-        else if (otherComment === 'revoked+address+picture')
-          otherComment = 'revoked-address-picture';
+        else if (otherComment === 'revoked+commune+name')
+          otherComment = 'revoked-commune-name';
+        else if (otherComment === 'revoked+commune+picture')
+          otherComment = 'revoked-commune-picture';
         else if (otherComment === 'revoked+name+picture')
           otherComment = 'revoked-name-picture';
-        else if (otherComment === 'revoked+address+name+picture')
-          otherComment = 'revoked-address-name-picture';
+        else if (otherComment === 'revoked+commune+name+picture')
+          otherComment = 'revoked-commune-name-picture';
         else if (otherComment === 'revoked+died')
           otherComment = 'revoked-died';
         else if (otherComment)
@@ -389,20 +382,20 @@ window.onload = async function() {
           comment = 'you-endorsed-remotely';
         else if (comment === 'in-person')
           comment = 'you-endorsed-in-person';
-        else if (comment === 'revoked+address')
+        else if (comment === 'revoked+commune')
           comment = 'you-revoked-moved';
         else if (comment === 'revoked+name')
           comment = 'you-revoked-name';
         else if (comment === 'revoked+picture')
           comment = 'you-revoked-picture';
-        else if (comment === 'revoked+address+name')
-          comment = 'you-revoked-address-name';
-        else if (comment === 'revoked+address+picture')
-          comment = 'you-revoked-address-picture';
+        else if (comment === 'revoked+commune+name')
+          comment = 'you-revoked-commune-name';
+        else if (comment === 'revoked+commune+picture')
+          comment = 'you-revoked-commune-picture';
         else if (comment === 'revoked+name+picture')
           comment = 'you-revoked-name-picture';
-        else if (comment === 'revoked+address+name+picture')
-          comment = 'you-revoked-address-name-picture';
+        else if (comment === 'revoked+commune+name+picture')
+          comment = 'you-revoked-commune-name-picture';
         else if (comment === 'revoked+died')
           comment = 'you-revoked-died';
         else if (comment)
