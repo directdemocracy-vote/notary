@@ -317,7 +317,7 @@ window.onload = async function() {
         img.style.float = 'left';
         img.style.marginRight = '10px';
         img.style.marginBottom = '10px';
-        img.style.width = '100px';
+        img.style.width = '75px';
         const overlay = document.createElement('div');
         overlay.classList.add('picture-overlay');
         if (endorsement.appKey === PRODUCTION_APP_KEY)
@@ -333,6 +333,7 @@ window.onload = async function() {
         const div = document.createElement('div');
         column.appendChild(div);
         div.classList.add('media-content');
+        div.marginTop = '5px';
         const content = document.createElement('div');
         div.appendChild(content);
         content.style.minWidth = '250px';
