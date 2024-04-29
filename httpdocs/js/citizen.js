@@ -195,7 +195,7 @@ window.onload = async function() {
         .then(response => response.json())
         .then(answer => {
           console.log(answer);
-          document.getElementById('commune').textContent = getCommuneName(answer[0].display_name);
+          document.getElementById('commune').textContent = getCommuneName(answer[0].address);
         });
       document.getElementById('reload').addEventListener('click', function(event) {
         event.currentTarget.setAttribute('disabled', '');
