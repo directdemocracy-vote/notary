@@ -29,6 +29,20 @@ function formatReputation(reputation) {
   return 'N/A';
 }
 
+function getCommuneName(address) {
+  const order = ['village', 'suburb', 'borough', 'town', 'municipality', 'city_district',
+    'subdivision', 'city', 'district', 'county'];
+  for (const a of order) {
+    if (address.hasOwnProperty(a)) {
+      if (address.country_code === 'fr' && a === 'suburb' && address['suburb'].indexOf(address['city']) === -1)
+        return address['city'] + ' ' + address['suburb'];
+      else
+        return address[a];
+    }
+  }
+  return 'Unknown';
+}
+
 window.onload = async function() {
   let judge = findGetParameter('judge', 'https://judge.directdemocracy.vote');
   document.getElementById('judge').value = judge.substring(8);
@@ -174,11 +188,14 @@ window.onload = async function() {
       document.getElementById('given-names').textContent = givenNames;
       document.getElementById('family-name').textContent = familyName;
       document.getElementById('created').textContent = published;
+      const communeElement = document.getElementById('commune');
+      communeElement.textContent = '...';
+      communeElement.href = `https://openstreetmap.org/relation/${commune}`;
       fetch(`https://nominatim.openstreetmap.org/lookup?osm_ids=R${commune}&accept-language=${translator.language}&format=json`)
         .then(response => response.json())
         .then(answer => {
           console.log(answer);
-          document.getElementById('commune').textContent = answer[0].display_name;
+          document.getElementById('commune').textContent = getCommuneName(answer[0].display_name);
         });
       document.getElementById('reload').addEventListener('click', function(event) {
         event.currentTarget.setAttribute('disabled', '');
