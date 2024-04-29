@@ -194,8 +194,9 @@ window.onload = async function() {
       fetch(`https://nominatim.openstreetmap.org/lookup?osm_ids=R${commune}&accept-language=${translator.language}&format=json`)
         .then(response => response.json())
         .then(answer => {
-          console.log(answer);
           document.getElementById('commune').textContent = getCommuneName(answer[0].address);
+          communeLatitude = parseFloat(answer[0].lat);
+          communeLongitude = parseFloat(answer[0].lon);
         });
       document.getElementById('reload').addEventListener('click', function(event) {
         event.currentTarget.setAttribute('disabled', '');
@@ -333,9 +334,14 @@ window.onload = async function() {
         div.classList.add('media-content');
         const content = document.createElement('div');
         div.appendChild(content);
-        content.style.minWidth = '250px';        
-        // FIXME: const distance = Math.round(distanceFromLatitudeLongitude(latitude, longitude, endorsement.latitude, endorsement.longitude));
-        const distance = 0;
+        content.style.minWidth = '250px';
+        fetch(`https://nominatim.openstreetmap.org/lookup?osm_ids=R${commune}&accept-language=${translator.language}&format=json`)
+          .then(response => response.json())
+          .then(answer => {
+            document.getElementById('commune').textContent = getCommuneName(answer[0].address);
+            communeLatitude = parseFloat(answer[0].lat);
+            communeLongitude = parseFloat(answer[0].lon);
+          });
         // copied from app.js
         let icon;
         let day;
@@ -434,11 +440,20 @@ window.onload = async function() {
         content.appendChild(document.createElement('br'));
         const small = document.createElement('small');
         content.appendChild(small);
-        let span = document.createElement('span');
-        small.appendChild(span);
-        translator.translateElement(span, 'distance');
-        small.appendChild(document.createTextNode(` ${distance} m.`));
+        const a = document.createElement('a');
+        a.target = "_blank";
+        a.textContent = '...';
+        a.href = `https://openstreetmap.org/relation/${endorsement.commune}`;
+        small.appendChild(a);
         small.appendChild(document.createElement('br'));
+        fetch(`https://nominatim.openstreetmap.org/lookup?osm_ids=R${endorsement.commune}&accept-language=${translator.language}&format=json`)
+          .then(response => response.json())
+          .then(answer => {
+            const name = getCommuneName(answer[0].address);
+            const distance = Math.round(distanceFromLatitudeLongitude(latitude, longitude, parseFloat(answer[0].lat), parseFloat(answer[0].lon)) / 1000);
+            a.textContent = `${name} (${distance} km)`;
+          });
+        let span;
         if (other !== '') {
           span = document.createElement('span');
           const c = comment ? translator.translate(comment, [endorsement.givenNames, endorsement.familyName]) : '';
