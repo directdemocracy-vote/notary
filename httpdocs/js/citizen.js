@@ -336,16 +336,16 @@ window.onload = async function() {
         const content = document.createElement('div');
         div.appendChild(content);
         content.style.minWidth = '250px';
+        /* FIXME: remove this
         fetch(`https://nominatim.openstreetmap.org/lookup?osm_ids=R${endorsement.commune}&accept-language=${translator.language}&format=json`)
           .then(response => response.json())
           .then(answer => {
             console.log(answer);
-            /*
             document.getElementById('commune').textContent = getCommuneName(answer[0].address);
             communeLatitude = parseFloat(answer[0].lat);
             communeLongitude = parseFloat(answer[0].lon);
-            */
           });
+        */
         // copied from app.js
         let icon;
         let day;
@@ -440,7 +440,7 @@ window.onload = async function() {
         let a = document.createElement('a');
         content.appendChild(a);
         a.href = `/citizen.html?signature=${encodeURIComponent(endorsement.signature)}`;
-        a.innerHTML = `<b>${endorsement.givenNames}<br>${endorsement.familyName}</b>`;
+        a.innerHTML = `<b>${endorsement.givenNames} ${endorsement.familyName}</b>`;
         content.appendChild(document.createElement('br'));
         const small = document.createElement('small');
         content.appendChild(small);
