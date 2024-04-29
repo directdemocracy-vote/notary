@@ -156,6 +156,7 @@ window.onload = async function() {
   fetch('api/citizen.php', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body })
     .then(response => response.json())
     .then(answer => {
+      let communeLatitude, communeLongitude;
       if (answer.error) {
         console.error(answer.error);
         return;
@@ -335,12 +336,15 @@ window.onload = async function() {
         const content = document.createElement('div');
         div.appendChild(content);
         content.style.minWidth = '250px';
-        fetch(`https://nominatim.openstreetmap.org/lookup?osm_ids=R${commune}&accept-language=${translator.language}&format=json`)
+        fetch(`https://nominatim.openstreetmap.org/lookup?osm_ids=R${endorsement.commune}&accept-language=${translator.language}&format=json`)
           .then(response => response.json())
           .then(answer => {
+            console.log(answer);
+            /*
             document.getElementById('commune').textContent = getCommuneName(answer[0].address);
             communeLatitude = parseFloat(answer[0].lat);
             communeLongitude = parseFloat(answer[0].lon);
+            */
           });
         // copied from app.js
         let icon;
@@ -450,7 +454,7 @@ window.onload = async function() {
           .then(response => response.json())
           .then(answer => {
             const name = getCommuneName(answer[0].address);
-            const distance = Math.round(distanceFromLatitudeLongitude(latitude, longitude, parseFloat(answer[0].lat), parseFloat(answer[0].lon)) / 1000);
+            const distance = Math.round(distanceFromLatitudeLongitude(communeLatitude, communeLongitude, parseFloat(answer[0].lat), parseFloat(answer[0].lon)) / 1000);
             a.textContent = `${name} (${distance} km)`;
           });
         let span;
