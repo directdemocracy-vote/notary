@@ -333,7 +333,6 @@ window.onload = async function() {
         const div = document.createElement('div');
         column.appendChild(div);
         div.classList.add('media-content');
-        div.marginTop = '5px';
         const content = document.createElement('div');
         div.appendChild(content);
         content.style.minWidth = '250px';
