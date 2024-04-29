@@ -42,17 +42,15 @@ if ($type === 'citizen') {
   $query = "SELECT "
           ."REPLACE(REPLACE(TO_BASE64(app.`key`), '\\n', ''), '=', '') AS appKey, "
           ."REPLACE(REPLACE(TO_BASE64(appSignature), '\\n', ''), '=', '') AS appSignature, "
-          ."givenNames, familyName, "
-          ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(picture), '\\n', '')) AS picture, "
-          ."ST_Y(home) AS latitude, ST_X(home) AS longitude "
+          ."givenNames, familyName, commune, "
+          ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(picture), '\\n', '')) AS picture "
           ."FROM citizen "
           ."INNER JOIN participant AS app ON app.id=citizen.app "
           ."WHERE citizen.publication=$publication_id";
   $result = $mysqli->query($query) or error($mysqli->error);
   $citizen = $result->fetch_assoc();
   $result->free();
-  $citizen['latitude'] = floatval($citizen['latitude']);
-  $citizen['longitude'] = floatval($citizen['longitude']);
+  $citizen['commune'] = intval($citizen['commune']);
   $citizen = $publication + $citizen;
   echo json_encode($citizen, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type === 'certificate') {
