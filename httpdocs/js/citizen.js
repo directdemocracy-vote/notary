@@ -433,14 +433,14 @@ window.onload = async function() {
           ? `<i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${color}">${icon}</i> ${day}`
           : '';
         // end of copy
-        const a = document.createElement('a');
+        let a = document.createElement('a');
         content.appendChild(a);
         a.href = `/citizen.html?signature=${encodeURIComponent(endorsement.signature)}`;
         a.innerHTML = `<b>${endorsement.givenNames}<br>${endorsement.familyName}</b>`;
         content.appendChild(document.createElement('br'));
         const small = document.createElement('small');
         content.appendChild(small);
-        const a = document.createElement('a');
+        a = document.createElement('a');
         a.target = "_blank";
         a.textContent = '...';
         a.href = `https://openstreetmap.org/relation/${endorsement.commune}`;
