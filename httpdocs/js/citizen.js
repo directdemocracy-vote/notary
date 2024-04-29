@@ -177,7 +177,8 @@ window.onload = async function() {
       fetch(`https://nominatim.openstreetmap.org/lookup?osm_ids=R${commune}&accept-language=${translator.language}&format=json`)
         .then(response => response.json())
         .then(answer => {
-          document.getElementById('commune').textContent = answer.display_name;
+          console.log(answer);
+          document.getElementById('commune').textContent = answer[0].display_name;
         });
       document.getElementById('reload').addEventListener('click', function(event) {
         event.currentTarget.setAttribute('disabled', '');
