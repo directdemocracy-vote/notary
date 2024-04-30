@@ -61,7 +61,7 @@ window.onload = function() {
         }
       });
   } else
-    zoom = 11;
+    zoom = 12;
   const map = L.map('map').setView([latitude, longitude], zoom);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -88,7 +88,7 @@ window.onload = function() {
     n.removeAttribute('data-i18n');
     n.removeAttribute('href');
     n.textContent = '...';
-    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&polygon_geojson=1&lat=${latitude}&lon=${longitude}&zoom=11&extratags=1&accept-language=${translator.language}`)
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&polygon_geojson=1&lat=${latitude}&lon=${longitude}&zoom=12&extratags=1&accept-language=${translator.language}`)
       .then(response => response.json())
       .then(answer => {
         const osmId = answer.osm_id;
