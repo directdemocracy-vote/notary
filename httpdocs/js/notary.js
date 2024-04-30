@@ -175,13 +175,8 @@ window.onload = function() {
                 }
               }
               population.textContent = p;
-              if (p === '?') {
-                translator.translateElement(population, 'population-not-found');
-                population.removeAttribute('href');
-              } else {
-                translator.translateElement(population, 'population-from-wikidata');
-                population.href = `https://www.wikidata.org/wiki/${answer.id}`;
-              }
+              population.href = `https://www.wikidata.org/wiki/${answer.id}`;
+              translator.translateElement(population, p === '?' ? 'population-not-found' : 'population-from-wikidata');
             });
         const judge = document.getElementById('judge-input').value.trim();
         fetch(`/api/commune.php?commune=${osmId}&judge=https://${judge}`)
