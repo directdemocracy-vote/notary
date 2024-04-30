@@ -143,6 +143,19 @@ window.onload = function() {
           fetch(`https://www.wikidata.org/w/rest.php/wikibase/v0/entities/items/${answer.extratags.wikidata}`)
             .then(response => response.json())
             .then(answer => {
+              function populationFromP1082(statements) {
+                let p = '?';
+                if (statements.hasOwnProperty('P1082')) {
+                  let rank = 'deprecated';
+                  for(let pop of statements.P1082) {
+                    if (rank === 'deprecated' || (rank === 'normal' && pop.rank === 'preferred')) {
+                      p = parseInt(pop.value.content.amount);
+                      rank = pop.rank;
+                    }
+                  }
+                }
+                return p;
+              }
               if (answer.hasOwnProperty('sitelinks')) {
                 const wiki = translator.language + 'wiki';
                 if (answer.sitelinks.hasOwnProperty(wiki) && answer.sitelinks[wiki].hasOwnProperty('url')) {
@@ -157,23 +170,21 @@ window.onload = function() {
                 const code = parseInt(answer.statements.P771[0].value.content);
                 fetch(`/api/CH-population.php?municipality=${code}`)
                   .then(response => response.json())
-                  .then(answer => {
+                  .then(ch => {
                     translator.translateElement(population, 'population-from-ofs-ch')
-                    population.textContent = answer.population != -1 ? answer.population : 'N/A';
-                    population.href = answer.url;
+                    if (ch.population !== -1) {
+                      population.textContent = ch.population;
+                      population.href = ch.url;
+                    } else {
+                      p = populationFromP1082(answer.statements);
+                      population.textContent = p;
+                      population.href = `https://www.wikidata.org/wiki/${answer.id}`;
+                      translator.translateElement(population, p === '?' ? 'population-not-found' : 'population-from-wikidata');
+                    }
                   });
                 return;
               }
-              let p = '?';
-              if (answer.statements.hasOwnProperty('P1082')) { // population
-                let rank = 'deprecated';
-                for(let pop of answer.statements.P1082) {
-                  if (rank === 'deprecated' || (rank === 'normal' && pop.rank === 'preferred')) {
-                    p = parseInt(pop.value.content.amount);
-                    rank = pop.rank;
-                  }
-                }
-              }
+              p = populationFromP1082(answer.statements);
               population.textContent = p;
               population.href = `https://www.wikidata.org/wiki/${answer.id}`;
               translator.translateElement(population, p === '?' ? 'population-not-found' : 'population-from-wikidata');
