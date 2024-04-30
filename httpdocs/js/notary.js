@@ -144,7 +144,7 @@ window.onload = function() {
             .then(response => response.json())
             .then(wikidata => {
               function populationFromP1082(statements) {
-                let p = '?';
+                let p = -1;
                 if (statements.hasOwnProperty('P1082')) {
                   let rank = 'deprecated';
                   for(let pop of statements.P1082) {
@@ -178,6 +178,9 @@ window.onload = function() {
                     } else {
                       p = populationFromP1082(wikidata.statements);
                       console.log(nominatim);
+                      console.log(nominatim.extratags);
+                      console.log(nominatim.extratags.population);
+                      console.log(p);
                       if (p === -1 && nominatim.hasOwnProperty('extratags') && nominatim.extratags.hasOwnProperty('population')) {
                         p = nominatim.extratags.population;
                         population.href = `https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=${osmId}&class=boundary`;
