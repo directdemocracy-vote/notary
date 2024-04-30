@@ -145,7 +145,7 @@ window.onload = function() {
             .then(answer => {
               if (answer.hasOwnProperty('sitelinks')) {
                 const wiki = translator.language + 'wiki';
-                if (answer.sitelinks[wiki].hasOwnProperty('url')) {
+                if (answer.sitelinks.hasOwnProperty(wiki) && answer.sitelinks[wiki].hasOwnProperty('url')) {
                   n.href = answer.sitelinks[wiki].url;
                   translator.translateElement(n, 'wikipedia-page');
                 } else {
