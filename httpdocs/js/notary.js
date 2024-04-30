@@ -90,17 +90,17 @@ window.onload = function() {
     n.textContent = '...';
     fetch(`https://nominatim.openstreetmap.org/reverse?format=json&polygon_geojson=1&lat=${latitude}&lon=${longitude}&zoom=12&extratags=1&accept-language=${translator.language}`)
       .then(response => response.json())
-      .then(answer => {
-        const osmId = answer.osm_id;
-        address = answer.display_name;
+      .then(nominatim => {
+        const osmId = nominatim.osm_id;
+        address = nominatim.display_name;
         if (area)
           area.remove();
-        area = L.geoJSON(answer.geojson).addTo(map);
-        let displayName = answer.display_name;
-        if (displayName.startsWith(answer.name + ', '))
-          displayName = displayName.substring(answer.name.length + 2);
+        area = L.geoJSON(nominatim.geojson).addTo(map);
+        let displayName = nominatim.display_name;
+        if (displayName.startsWith(nominatim.name + ', '))
+          displayName = displayName.substring(nominatim.name.length + 2);
         document.getElementById('commune-address').textContent = displayName;
-        n.textContent = answer.name;
+        n.textContent = nominatim.name;
         document.getElementById('active-citizens').textContent = '...';
         document.getElementById('inactive-citizens').textContent = '...';
         document.getElementById('referendums').textContent = '...';
@@ -113,26 +113,26 @@ window.onload = function() {
         // 1. custom sources if available (depending on country), or
         // 2. wikidata or
         // 3. OSM data
-        if (!answer.hasOwnProperty('extratags') || answer.extratags === null) {
+        if (!nominatim.hasOwnProperty('extratags') || nominatim.extratags === null) {
           population.textContent = '?';
           translator.translateElement(population, 'population-not-provided-by-osm');
           population.href = `https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=${osmId}&class=boundary`;
           n.href = `https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=${osmId}&class=boundary`;
           translator.translateElement(n, 'wikipedia-page-not-provided-by-osm');
-        } else if (!answer.extratags.hasOwnProperty('wikidata')) {
-          if (!answer.extratags.hasOwnProperty('population')) {
+        } else if (!nominatim.extratags.hasOwnProperty('wikidata')) {
+          if (!nominatim.extratags.hasOwnProperty('population')) {
             population.textContent = '?';
             translator.translateElement(population, 'population-not-found');
             population.removeAttribute('href');
           } else {
-            population.textContent = parseInt(answer.extratags.population);
+            population.textContent = parseInt(nominatim.extratags.population);
             translator.translateElement(population, 'population-from-osm');
             population.href = `https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=${osmId}&class=boundary`;
           }
-          if (answer.extratags.hasOwnProperty('wikipedia')) {
-            const colon = answer.extratags.wikipedia.indexOf(':');
-            const wikipediaLanguage = answer.extratags.wikipedia.substring(0, colon);
-            const wikipediaPage = answer.extratags.wikipedia.substring(colon + 1);
+          if (nominatim.extratags.hasOwnProperty('wikipedia')) {
+            const colon = nominatim.extratags.wikipedia.indexOf(':');
+            const wikipediaLanguage = nominatim.extratags.wikipedia.substring(0, colon);
+            const wikipediaPage = nominatim.extratags.wikipedia.substring(colon + 1);
             n.href = `https://${wikipediaLanguage}.wikipedia.org/wiki/${wikipediaPage}`;
             translator.translateElement(n, 'wikipedia-page');
           } else {
@@ -140,9 +140,9 @@ window.onload = function() {
             translator.translateElement(n, 'wikipedia-page-not-found');
           }
         } else 
-          fetch(`https://www.wikidata.org/w/rest.php/wikibase/v0/entities/items/${answer.extratags.wikidata}`)
+          fetch(`https://www.wikidata.org/w/rest.php/wikibase/v0/entities/items/${nominatim.extratags.wikidata}`)
             .then(response => response.json())
-            .then(answer => {
+            .then(wikidata => {
               function populationFromP1082(statements) {
                 let p = '?';
                 if (statements.hasOwnProperty('P1082')) {
@@ -156,18 +156,18 @@ window.onload = function() {
                 }
                 return p;
               }
-              if (answer.hasOwnProperty('sitelinks')) {
+              if (wikidata.hasOwnProperty('sitelinks')) {
                 const wiki = translator.language + 'wiki';
-                if (answer.sitelinks.hasOwnProperty(wiki) && answer.sitelinks[wiki].hasOwnProperty('url')) {
-                  n.href = answer.sitelinks[wiki].url;
+                if (wikidata.sitelinks.hasOwnProperty(wiki) && wikidata.sitelinks[wiki].hasOwnProperty('url')) {
+                  n.href = wikidata.sitelinks[wiki].url;
                   translator.translateElement(n, 'wikipedia-page');
                 } else {
                   n.removeAttribute('href');
                   translator.translateElement(n, 'wikipedia-page-not-found');
                 }
               }
-              if (answer.statements.hasOwnProperty('P771')) { // Swiss municipality code
-                const code = parseInt(answer.statements.P771[0].value.content);
+              if (wikidata.statements.hasOwnProperty('P771')) { // Swiss municipality code
+                const code = parseInt(wikidata.statements.P771[0].value.content);
                 fetch(`/api/CH-population.php?municipality=${code}`)
                   .then(response => response.json())
                   .then(ch => {
@@ -176,17 +176,21 @@ window.onload = function() {
                       population.textContent = ch.population;
                       population.href = ch.url;
                     } else {
-                      p = populationFromP1082(answer.statements);
+                      p = populationFromP1082(wikidata.statements);
+                      if (p === -1 && nominatim.hasOwnProperty('extratags') && nominatim.extratags.hasOwnProperty('population')) {
+                        p = nominatim.extratags.population;
+                        population.href = `https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=${osmId}&class=boundary`;
+                      } else
+                        population.href = `https://www.wikidata.org/wiki/${wikidata.id}`;
                       population.textContent = p;
-                      population.href = `https://www.wikidata.org/wiki/${answer.id}`;
                       translator.translateElement(population, p === '?' ? 'population-not-found' : 'population-from-wikidata');
                     }
                   });
                 return;
               }
-              p = populationFromP1082(answer.statements);
+              p = populationFromP1082(wikidata.statements);
               population.textContent = p;
-              population.href = `https://www.wikidata.org/wiki/${answer.id}`;
+              population.href = `https://www.wikidata.org/wiki/${wikidata.id}`;
               translator.translateElement(population, p === '?' ? 'population-not-found' : 'population-from-wikidata');
             });
         const judge = document.getElementById('judge-input').value.trim();
@@ -213,7 +217,6 @@ window.onload = function() {
             r.textContent = referendums;
             const p = document.getElementById('petitions');
             p.textContent = petitions;
-            console.log(answer);
           });
       });
   }
