@@ -93,7 +93,7 @@ if ($result) {
 } else
   query("ALTER TABLE publication AUTO_INCREMENT=1");
 
-if ($n_citizen) {
+if ($citizens) {
   query("DELETE FROM participant WHERE id > 5");
   query("ALTER TABLE participant AUTO_INCREMENT=6");
 }
