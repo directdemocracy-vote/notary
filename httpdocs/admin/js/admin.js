@@ -25,7 +25,6 @@ function wipeout() {
     citizens: document.querySelector('input[name="citizens"]').checked,
     endorsements: document.querySelector('input[name="endorsements"]').checked,
     proposals: document.querySelector('input[name="proposals"]').checked,
-    areas: document.querySelector('input[name="areas"]').checked,
     signatures: document.querySelector('input[name="signatures"]').checked,
     participations: document.querySelector('input[name="participations"]').checked,
     votes: document.querySelector('input[name="votes"]').checked,
