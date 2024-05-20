@@ -74,7 +74,7 @@ DELETE FROM publication WHERE id NOT IN (
     SELECT publication FROM participation UNION
     SELECT publication FROM vote)
 EOT;
-# query($query);
+query($query);
 
 $result = query("SELECT MAX(id) AS `max` FROM publication");
 if ($result) {
