@@ -62,6 +62,7 @@ query("DELETE FROM certificate WHERE certificate.certifiedPublication NOT IN (SE
 
 # clean-up orphan publications
 query("DELETE FROM certificate WHERE publication NOT IN (SELECT id FROM publication)");
+query("DELETE FROM certificate WHERE certifiedPublication NOT IN (SELECT id FROM publication)");
 query("DELETE FROM participation WHERE publication NOT IN (SELECT id FROM publication)");
 query("DELETE FROM vote WHERE publication NOT IN (SELECT id FROM publication)");
 query("DELETE FROM citizen WHERE publication NOT IN (SELECT id FROM publication)");
