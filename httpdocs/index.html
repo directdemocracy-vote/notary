@@ -1,92 +1,111 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>notary.directdemocracy.vote</title>
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
-    <link rel="stylesheet" href="//app.directdemocracy.vote/app/css/framework7-icons.css">
-    <link rel="stylesheet" href="//app.directdemocracy.vote/app/css/leaflet.css">
-    <link rel="stylesheet" href="//directdemocracy.vote/css/directdemocracy.css">
-    <link rel="stylesheet" href="/css/slider.css">
-    <script src="//app.directdemocracy.vote/app/js/leaflet.js"></script>
-    <script src="/js/notary.js"></script>
-    <script type="module" src="//app.directdemocracy.vote/js/index.js"></script>
-  </head>
-  <body class="has-navbar-fixed-top">
-    <nav class="navbar is-fixed-top is-light" role="navigation" aria-label="main navigation">
-      <div class="container">
-        <div class="navbar-brand">
-          <a id="main-menu" class="navbar-item">
-            <i class="f7-icons" style="rotate:-90deg;margin-right:4px">hand_point_right</i>
-            direct<b>democracy</b>
-          </a>
-          <a role="button" id="navbar-burger" class="navbar-burger" aria-label="menu" aria-expanded="false"
-            data-target="navbar-menu">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-          </a>
-        </div>
-        <div class="navbar-menu" id="navbar-menu">
-          <div class="navbar-end">
-            <div class="navbar-item has-dropdown is-hoverable">
-              <a class="navbar-link"><span class="is-size-4" id="language"></span></a>
-              <div class="navbar-dropdown" id="language-dropdown">
-              </div>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>notary.directdemocracy.vote</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+  <link rel="stylesheet" href="//app.directdemocracy.vote/app/css/framework7-icons.css">
+  <link rel="stylesheet" href="//app.directdemocracy.vote/app/css/leaflet.css">
+  <link rel="stylesheet" href="//directdemocracy.vote/css/directdemocracy.css">
+  <link rel="stylesheet" href="/css/slider.css">
+  <script src="//app.directdemocracy.vote/app/js/leaflet.js"></script>
+  <script src="/js/notary.js"></script>
+  <script type="module" src="//app.directdemocracy.vote/js/index.js"></script>
+</head>
+
+<body class="has-navbar-fixed-top">
+  <nav class="navbar is-fixed-top is-light" role="navigation" aria-label="main navigation">
+    <div class="container">
+      <div class="navbar-brand">
+        <a id="main-menu" class="navbar-item">
+          <i class="f7-icons" style="rotate:-90deg;margin-right:4px">hand_point_right</i>
+          direct<b>democracy</b>
+        </a>
+        <a role="button" id="navbar-burger" class="navbar-burger" aria-label="menu" aria-expanded="false"
+          data-target="navbar-menu">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+      <div class="navbar-menu" id="navbar-menu">
+        <div class="navbar-end">
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link"><span class="is-size-4" id="language"></span></a>
+            <div class="navbar-dropdown" id="language-dropdown">
             </div>
           </div>
         </div>
       </div>
-    </nav>
-    <section class="hero">
-      <div class="hero-body">
-        <div class="columns is-mobile">
-          <div class="column is-narrow"><i class="f7-icons">book</i></div>
-          <div class="column">
-            <p class="title">direct<b>democracy</b></p>
-            <p class="subtitle" data-i18n="moto"></p>
+    </div>
+  </nav>
+  <section class="hero">
+    <div class="hero-body">
+      <div class="columns is-mobile">
+        <div class="column is-narrow"><i class="f7-icons">book</i></div>
+        <div class="column">
+          <p class="title">direct<b>democracy</b></p>
+          <p class="subtitle" data-i18n="moto"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="columns">
+      <div id="info" class="column content">
+        <h3><a id="locality-name" data-i18n="select-locality-on-map" target="_blank" title=""></a></h3>
+        <p id="locality-address"></p>
+        <table class="table">
+          <tbody>
+            <tr>
+              <th data-i18n="population:"></th>
+              <td><a id="population" target="_blank" title=""></a></td>
+            </tr>
+            <tr>
+              <th data-i18n="active-citizens:"></th>
+              <td><a id="active-citizens" target="_blank" title=""></a></td>
+            </tr>
+            <tr>
+              <th data-i18n="inactive-citizens:"></th>
+              <td><a id="inactive-citizens" target="_blank" title=""></a></td>
+            </tr>
+            <tr>
+              <th data-i18n="referendums:"></th>
+              <td><a id="referendums" target="_blank" title=""></a></td>
+            </tr>
+            <tr>
+              <th data-i18n="petitions:"></th>
+              <td><a id="petitions" target="_blank" title=""></a></td>
+            </tr>
+          </tbody>
+        </table>
+        <fieldset id="judge-fieldset">
+          <div class="field has-addons">
+            <div class="control"><a class="button is-static">https://</a></div>
+            <div class="control is-expanded"><input id="judge-input" class="input" type="text"
+                placeholder="judge.directdemocracy.vote" value="judge.directdemocracy.vote"></div>
           </div>
-        </div>
-      </div>
-    </section>
-    <section class="section">
-      <div class="columns">
-        <div id="info" class="column content">
-          <h3><a id="commune-name" data-i18n="select-commune-on-map" target="_blank" title=""></a></h3>
-          <p id="commune-address"></p>
-          <table class="table">
-            <tbody>
-              <tr><th data-i18n="population:"></th><td><a id="population" target="_blank" title=""></a></td></tr>
-              <tr><th data-i18n="active-citizens:"></th><td><a id="active-citizens" target="_blank" title=""></a></td></tr>
-              <tr><th data-i18n="inactive-citizens:"></th><td><a id="inactive-citizens" target="_blank" title=""></a></td></tr>
-              <tr><th data-i18n="referendums:"></th><td><a id="referendums" target="_blank" title=""></a></td></tr>
-              <tr><th data-i18n="petitions:"></th><td><a id="petitions" target="_blank" title=""></a></td></tr>
-            </tbody>
-          </table>
-          <fieldset id="judge-fieldset">
-            <div class="field has-addons">
-              <div class="control"><a class="button is-static">https://</a></div>
-              <div class="control is-expanded"><input id="judge-input" class="input" type="text" placeholder="judge.directdemocracy.vote" value="judge.directdemocracy.vote"></div>
+          <div class="field">
+            <div class="control has-text-centered">
+              <button id="proposal" class="button is-info" data-i18n="propose-a-new"></button>
             </div>
-            <div class="field">
-              <div class="control has-text-centered">
-                <button id="proposal" class="button is-info" data-i18n="propose-a-new"></button>
-              </div>
-            </div>
-          </fieldset>
-        </div>
-        <div id="map" class="column" style="height:400px;margin-top:10px"></div>
+          </div>
+        </fieldset>
       </div>
-    </section>
-    <section id="proposal-results" class="section pt-0" style="display:none">
-    </section>
-    <footer class="footer">
-      <div class="content" data-i18n="introduction"></div>
-      <div class="content has-text-centered" data-i18n="more-info"></div>
-      <div id="logout-div" class="content has-text-centered">
-      </div>
-    </footer>
-  </body>
+      <div id="map" class="column" style="height:400px;margin-top:10px"></div>
+    </div>
+  </section>
+  <section id="proposal-results" class="section pt-0" style="display:none">
+  </section>
+  <footer class="footer">
+    <div class="content" data-i18n="introduction"></div>
+    <div class="content has-text-centered" data-i18n="more-info"></div>
+    <div id="logout-div" class="content has-text-centered">
+    </div>
+  </footer>
+</body>
+
 </html>

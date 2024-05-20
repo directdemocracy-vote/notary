@@ -42,7 +42,7 @@ if ($type === 'citizen') {
   $query = "SELECT "
           ."REPLACE(REPLACE(TO_BASE64(app.`key`), '\\n', ''), '=', '') AS appKey, "
           ."REPLACE(REPLACE(TO_BASE64(appSignature), '\\n', ''), '=', '') AS appSignature, "
-          ."givenNames, familyName, commune, "
+          ."givenNames, familyName, locality, "
           ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(picture), '\\n', '')) AS picture "
           ."FROM citizen "
           ."INNER JOIN participant AS app ON app.id=citizen.app "
@@ -50,7 +50,7 @@ if ($type === 'citizen') {
   $result = $mysqli->query($query) or error($mysqli->error);
   $citizen = $result->fetch_assoc();
   $result->free();
-  $citizen['commune'] = intval($citizen['commune']);
+  $citizen['locality'] = intval($citizen['locality']);
   $citizen = $publication + $citizen;
   echo json_encode($citizen, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } elseif ($type === 'certificate') {

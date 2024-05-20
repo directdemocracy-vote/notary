@@ -9,15 +9,30 @@ function findGetParameter(parameterName, result) {
 
 window.onload = function() {
   const judge = findGetParameter('judge', 'https://judge.directdemocracy.vote');
-  const commune = findGetParameter('commune');
+  const locality = findGetParameter('locality');
   const type = findGetParameter('type');
-  fetch(`api/citizens.php?commune=${commune}&judge=${judge}&type=${type}`)
+  fetch(`api/citizens.php?locality=${locality}&judge=${judge}&type=${type}`)
     .then(response => response.json())
     .then(answer => {
+      function reduce(event) {
+        const style = event.currentTarget.style;
+        style.height = '40px';
+        style.position = '';
+        style.transform = '';
+      }
+      function magnify(event) {
+        const style = event.currentTarget.style;
+        style.height = '200px';
+        style.position = 'absolute';
+        style.transform = 'translate(-20px,-80px)';
+      }
       const tbody = document.getElementById('tbody');
       answer.push(answer[0]); // debug
       answer.push(answer[0]); // debug
-      for(const citizen of answer) {
+      for (const citizen of answer) {
+        function link(event) {
+          location.href = `/citizen.html?signature=${citizen.signature}`;
+        }
         if (!citizen.hasOwnProperty('picture'))
           continue;
         const tr = document.createElement('tr');
@@ -31,18 +46,6 @@ window.onload = function() {
         img.style.height = '40px';
         img.style.width = 'auto';
         img.style.verticalAlign = 'middle';
-        function reduce(event) {
-          const style = event.currentTarget.style;
-          style.height = '40px';
-          style.position = '';
-          style.transform = '';
-        }
-        function magnify(event) {
-          const style = event.currentTarget.style;
-          style.height = '200px';
-          style.position = 'absolute';
-          style.transform = 'translate(-20px,-80px)';
-        }
         img.addEventListener('mouseover', magnify);
         img.addEventListener('mouseout', reduce);
         img.addEventListener('click', function(event) {
@@ -51,9 +54,6 @@ window.onload = function() {
           else
             reduce(event);
         });
-        function link(event) {
-          location.href = `/citizen.html?signature=${citizen.signature}`;
-        }
         td = document.createElement('td');
         tr.appendChild(td);
         td.textContent = citizen.familyName;
@@ -69,4 +69,4 @@ window.onload = function() {
         td.addEventListener('click', link);
       }
     });
-}
+};

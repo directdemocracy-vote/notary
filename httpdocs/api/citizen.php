@@ -26,7 +26,7 @@ $query = "SELECT participant.id, publication.id AS publication, "
         ."REPLACE(REPLACE(TO_BASE64(app.`key`), '\\n', ''), '=', '') AS appKey, "
         ."REPLACE(REPLACE(TO_BASE64(citizen.appSignature), '\\n', ''), '=', '') AS appSignature, "
         ."citizen.status, "
-        ."citizen.givenNames, citizen.familyName, citizen.commune, "
+        ."citizen.givenNames, citizen.familyName, citizen.locality, "
         ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture "
         ."FROM publication "
         ."INNER JOIN citizen ON publication.id = citizen.publication AND citizen.status='active' "
@@ -45,7 +45,7 @@ $status = $citizen['status'];
 $answer['status'] = $status;
 unset($citizen['status']);
 settype($citizen['published'], 'int');
-settype($citizen['commune'], 'int');
+settype($citizen['locality'], 'int');
 if ($status === 'updated' || $status === 'transferred') {
   $query = "SELECT REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature FROM publication "
           ."INNER JOIN publication AS pc ON pc.`type`='certificate' AND pc.participant=publication.participant "
@@ -62,7 +62,7 @@ $bob_query = "SELECT publication_bob.id, "
             ."UNIX_TIMESTAMP(publication_bob.published) AS published, "
             ."REPLACE(REPLACE(TO_BASE64(app.key), '\\n', ''), '=', '') AS appKey, "
             ."REPLACE(REPLACE(TO_BASE64(bob.appSignature), '\\n', ''), '=', '') AS appSignature, "
-            ."bob.familyName, bob.givenNames, bob.commune, "
+            ."bob.familyName, bob.givenNames, bob.locality, "
             ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(bob.picture), '\\n', '')) AS picture, "
             ."REPLACE(REPLACE(TO_BASE64(pe.signature), '\\n', ''), '=', '') AS certificateSignature, "
             ."e.type, e.comment, "
@@ -82,7 +82,7 @@ $endorsements = [];
 while($e = $result->fetch_assoc()) {
   settype($e['id'], 'int');
   settype($e['published'], 'int');
-  settype($e['commune'], 'int');
+  settype($e['locality'], 'int');
   if ($e['type'] === 'report') {
     $e['revoked'] = $e['certificatePublished'];
     $e['revokedComment'] = $e['comment'];
@@ -111,7 +111,7 @@ $result = $mysqli->query($query) or die("{\"error\":\"$mysqli->error\"}");
 while($e = $result->fetch_assoc()) {
   settype($e['id'], 'int');
   settype($e['published'], 'int');
-  settype($e['commune'], 'int');
+  settype($e['locality'], 'int');
   if ($e['type'] === 'report') {
     $e['revokedYou'] = $e['certificatePublished'];
     $e['revokedYouComment'] = $e['comment'];

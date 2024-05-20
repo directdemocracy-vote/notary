@@ -29,7 +29,7 @@ function formatReputation(reputation) {
   return 'N/A';
 }
 
-function getCommuneName(address) {
+function getLocalityName(address) {
   const order = ['village', 'suburb', 'borough', 'town', 'municipality', 'city_district',
     'subdivision', 'city', 'district', 'county'];
   for (const a of order) {
@@ -156,7 +156,7 @@ window.onload = async function() {
   fetch('api/citizen.php', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body })
     .then(response => response.json())
     .then(answer => {
-      let communeLatitude, communeLongitude;
+      let localityLatitude, localityLongitude;
       if (answer.error) {
         console.error(answer.error);
         return;
@@ -177,27 +177,27 @@ window.onload = async function() {
       const published = publishedDate(answer.citizen.published);
       const givenNames = answer.citizen.givenNames;
       const familyName = answer.citizen.familyName;
-      const commune = answer.citizen.commune;
+      const locality = answer.citizen.locality;
       document.getElementById('picture').src = answer.citizen.picture;
       if (answer.citizen.appKey !== PRODUCTION_APP_KEY) {
         document.getElementById('picture-overlay').style.visibility = '';
         if (answer.citizen.appKey !== TEST_APP_KEY) {
           document.getElementById('picture-overlay').textContent = 'ERROR';
-          console.error(answer.citizen.appKey + " !== " + TEST_APP_KEY);
+          console.error(answer.citizen.appKey + ' !== ' + TEST_APP_KEY);
         }
       }
       document.getElementById('given-names').textContent = givenNames;
       document.getElementById('family-name').textContent = familyName;
       document.getElementById('created').textContent = published;
-      const communeElement = document.getElementById('commune');
-      communeElement.textContent = '...';
-      communeElement.href = `https://openstreetmap.org/relation/${commune}`;
-      fetch(`https://nominatim.openstreetmap.org/lookup?osm_ids=R${commune}&accept-language=${translator.language}&format=json`)
+      const localityElement = document.getElementById('locality');
+      localityElement.textContent = '...';
+      localityElement.href = `https://openstreetmap.org/relation/${locality}`;
+      fetch(`https://nominatim.openstreetmap.org/lookup?osm_ids=R${locality}&accept-language=${translator.language}&format=json`)
         .then(response => response.json())
         .then(answer => {
-          document.getElementById('commune').textContent = getCommuneName(answer[0].address);
-          communeLatitude = parseFloat(answer[0].lat);
-          communeLongitude = parseFloat(answer[0].lon);
+          document.getElementById('locality').textContent = getLocalityName(answer[0].address);
+          localityLatitude = parseFloat(answer[0].lat);
+          localityLongitude = parseFloat(answer[0].lon);
         });
       document.getElementById('reload').addEventListener('click', function(event) {
         event.currentTarget.setAttribute('disabled', '');
@@ -257,7 +257,7 @@ window.onload = async function() {
               const icon = endorsement.type !== 'trust' ? 'xmark_seal_fill' : 'checkmark_seal_fill';
               const p = document.createElement('p');
               block.appendChild(p);
-              p.style.width = "100%";
+              p.style.width = '100%';
               const i = document.createElement('i');
               p.appendChild(i);
               i.classList.add('icon', 'f7-icons', 'margin-right');
@@ -337,13 +337,13 @@ window.onload = async function() {
         div.appendChild(content);
         content.style.minWidth = '250px';
         /* FIXME: remove this
-        fetch(`https://nominatim.openstreetmap.org/lookup?osm_ids=R${endorsement.commune}&accept-language=${translator.language}&format=json`)
+        fetch(`https://nominatim.openstreetmap.org/lookup?osm_ids=R${endorsement.locality}&accept-language=${translator.language}&format=json`)
           .then(response => response.json())
           .then(answer => {
             console.log(answer);
-            document.getElementById('commune').textContent = getCommuneName(answer[0].address);
-            communeLatitude = parseFloat(answer[0].lat);
-            communeLongitude = parseFloat(answer[0].lon);
+            document.getElementById('locality').textContent = getLocalityName(answer[0].address);
+            localityLatitude = parseFloat(answer[0].lat);
+            localityLongitude = parseFloat(answer[0].lon);
           });
         */
         // copied from app.js
@@ -389,20 +389,20 @@ window.onload = async function() {
           otherComment = 'endorsed-you-remotely';
         else if (otherComment === 'in-person')
           otherComment = 'endorsed-you-in-person';
-        else if (otherComment === 'revoked+commune')
+        else if (otherComment === 'revoked+locality')
           otherComment = 'revoked-moved';
         else if (otherComment === 'revoked+name')
           otherComment = 'revoked-name';
         else if (otherComment === 'revoked+picture')
           otherComment = 'revoked-picture';
-        else if (otherComment === 'revoked+commune+name')
-          otherComment = 'revoked-commune-name';
-        else if (otherComment === 'revoked+commune+picture')
-          otherComment = 'revoked-commune-picture';
+        else if (otherComment === 'revoked+locality+name')
+          otherComment = 'revoked-locality-name';
+        else if (otherComment === 'revoked+locality+picture')
+          otherComment = 'revoked-locality-picture';
         else if (otherComment === 'revoked+name+picture')
           otherComment = 'revoked-name-picture';
-        else if (otherComment === 'revoked+commune+name+picture')
-          otherComment = 'revoked-commune-name-picture';
+        else if (otherComment === 'revoked+locality+name+picture')
+          otherComment = 'revoked-locality-name-picture';
         else if (otherComment === 'revoked+died')
           otherComment = 'revoked-died';
         else if (otherComment)
@@ -411,26 +411,27 @@ window.onload = async function() {
           comment = 'you-endorsed-remotely';
         else if (comment === 'in-person')
           comment = 'you-endorsed-in-person';
-        else if (comment === 'revoked+commune')
+        else if (comment === 'revoked+locality')
           comment = 'you-revoked-moved';
         else if (comment === 'revoked+name')
           comment = 'you-revoked-name';
         else if (comment === 'revoked+picture')
           comment = 'you-revoked-picture';
-        else if (comment === 'revoked+commune+name')
-          comment = 'you-revoked-commune-name';
-        else if (comment === 'revoked+commune+picture')
-          comment = 'you-revoked-commune-picture';
+        else if (comment === 'revoked+locality+name')
+          comment = 'you-revoked-locality-name';
+        else if (comment === 'revoked+locality+picture')
+          comment = 'you-revoked-locality-picture';
         else if (comment === 'revoked+name+picture')
           comment = 'you-revoked-name-picture';
-        else if (comment === 'revoked+commune+name+picture')
-          comment = 'you-revoked-commune-name-picture';
+        else if (comment === 'revoked+locality+name+picture')
+          comment = 'you-revoked-locality-name-picture';
         else if (comment === 'revoked+died')
           comment = 'you-revoked-died';
         else if (comment)
           console.error('Unsupported comment: ' + comment);
         let other = otherDay
-          ? `<i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:${otherColor}">${otherIcon}</i> ${otherDay}` +
+          ? '<i class="icon f7-icons" style="font-size:150%;font-weight:bold;color:' +
+            `${otherColor}">${otherIcon}</i> ${otherDay}` +
           `${day ? ' ' : ''}`
           : '';
         let main = day
@@ -445,16 +446,17 @@ window.onload = async function() {
         const small = document.createElement('small');
         content.appendChild(small);
         a = document.createElement('a');
-        a.target = "_blank";
+        a.target = '_blank';
         a.textContent = '...';
-        a.href = `https://openstreetmap.org/relation/${endorsement.commune}`;
+        a.href = `https://openstreetmap.org/relation/${endorsement.locality}`;
         small.appendChild(a);
         small.appendChild(document.createElement('br'));
-        fetch(`https://nominatim.openstreetmap.org/lookup?osm_ids=R${endorsement.commune}&accept-language=${translator.language}&format=json`)
+        fetch(`https://nominatim.openstreetmap.org/lookup?osm_ids=R${endorsement.locality}&accept-language=${translator.language}&format=json`)
           .then(response => response.json())
           .then(answer => {
-            const name = getCommuneName(answer[0].address);
-            const distance = Math.round(distanceFromLatitudeLongitude(communeLatitude, communeLongitude, parseFloat(answer[0].lat), parseFloat(answer[0].lon)) / 1000);
+            const name = getLocalityName(answer[0].address);
+            const distance = Math.round(distanceFromLatitudeLongitude(localityLatitude,
+              localityLongitude, parseFloat(answer[0].lat), parseFloat(answer[0].lon)) / 1000);
             a.textContent = `${name} (${distance} km)`;
           });
         let span;

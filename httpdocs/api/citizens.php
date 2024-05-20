@@ -9,7 +9,7 @@ header("Access-Control-Allow-Headers: content-type");
 
 if (!isset($_GET['judge']))
   error('Missing judge parameter');
-$commune = isset($_GET['commune']) ? sanitize_field($_GET['commune'], 'positive_int', 'commune') : null;
+$locality = isset($_GET['locality']) ? sanitize_field($_GET['locality'], 'positive_int', 'locality') : null;
 if (isset($_GET['type']))
   $type = ($_GET['type'] === 'inactive' || $_GET['type'] === 'active') ? $_GET['type'] : '';
 else

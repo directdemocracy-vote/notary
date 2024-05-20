@@ -158,9 +158,9 @@ if ($type === 'citizen') {
   list($app, $app_signature) = check_app($citizen);
   $family_name = $mysqli->escape_string($publication->familyName);
   $given_names = $mysqli->escape_string($publication->givenNames);
-  $commune = sanitize_field($citizen->commune, 'positive_int', 'commune');
-  $query = "INSERT INTO citizen(publication, app, appSignature, familyName, givenNames, commune, picture) "
-          ."VALUES($id, $app, FROM_BASE64('$app_signature=='), \"$family_name\", \"$given_names\", $commune, "
+  $locality = sanitize_field($citizen->locality, 'positive_int', 'locality');
+  $query = "INSERT INTO citizen(publication, app, appSignature, familyName, givenNames, locality, picture) "
+          ."VALUES($id, $app, FROM_BASE64('$app_signature=='), \"$family_name\", \"$given_names\", $locality, "
           ."FROM_BASE64('$citizen_picture'))";
 } elseif ($type === 'certificate') {
   $certificate = &$publication;

@@ -1,9 +1,8 @@
-/* global L */
+/* global L, translator */
 
 let geolocation = false;
 let latitude = 0;
 let longitude = 0;
-let address = '';
 let area = null;
 
 function findGetParameter(parameterName) {
@@ -83,8 +82,8 @@ window.onload = function() {
   }
 
   function updatePosition() {
-    document.getElementById('commune-address').textContent = '...';
-    const n = document.getElementById('commune-name');
+    document.getElementById('locality-address').textContent = '...';
+    const n = document.getElementById('locality-name');
     n.removeAttribute('data-i18n');
     n.removeAttribute('href');
     n.textContent = '...';
@@ -92,14 +91,13 @@ window.onload = function() {
       .then(response => response.json())
       .then(nominatim => {
         const osmId = nominatim.osm_id;
-        address = nominatim.display_name;
         if (area)
           area.remove();
         area = L.geoJSON(nominatim.geojson).addTo(map);
         let displayName = nominatim.display_name;
         if (displayName.startsWith(nominatim.name + ', '))
           displayName = displayName.substring(nominatim.name.length + 2);
-        document.getElementById('commune-address').textContent = displayName;
+        document.getElementById('locality-address').textContent = displayName;
         n.textContent = nominatim.name;
         document.getElementById('active-citizens').textContent = '...';
         document.getElementById('inactive-citizens').textContent = '...';
@@ -139,7 +137,7 @@ window.onload = function() {
             n.removeAttribute('href');
             translator.translateElement(n, 'wikipedia-page-not-found');
           }
-        } else 
+        } else {
           fetch(`https://www.wikidata.org/w/rest.php/wikibase/v0/entities/items/${nominatim.extratags.wikidata}`)
             .then(response => response.json())
             .then(wikidata => {
@@ -147,7 +145,7 @@ window.onload = function() {
                 let p = -1;
                 if (statements.hasOwnProperty('P1082')) {
                   let rank = 'deprecated';
-                  for(let pop of statements.P1082) {
+                  for (let pop of statements.P1082) {
                     if (rank === 'deprecated' || (rank === 'normal' && pop.rank === 'preferred')) {
                       p = parseInt(pop.value.content.amount);
                       rank = pop.rank;
@@ -171,13 +169,15 @@ window.onload = function() {
                 fetch(`/api/CH-population.php?municipality=${code}`)
                   .then(response => response.json())
                   .then(ch => {
-                    translator.translateElement(population, 'population-from-ofs-ch')
+                    translator.translateElement(population, 'population-from-ofs-ch');
                     if (ch.population !== -1) {
                       population.textContent = ch.population;
                       population.href = ch.url;
                     } else {
-                      p = populationFromP1082(wikidata.statements);
-                      if (p === -1 && nominatim.hasOwnProperty('extratags') && nominatim.extratags.hasOwnProperty('population')) {
+                      let p = populationFromP1082(wikidata.statements);
+                      if (p === -1 &&
+                        nominatim.hasOwnProperty('extratags') &&
+                        nominatim.extratags.hasOwnProperty('population')) {
                         p = nominatim.extratags.population;
                         population.href = `https://nominatim.openstreetmap.org/ui/details.html?osmtype=R&osmid=${osmId}&class=boundary`;
                       } else
@@ -188,13 +188,14 @@ window.onload = function() {
                   });
                 return;
               }
-              p = populationFromP1082(wikidata.statements);
+              const p = populationFromP1082(wikidata.statements);
               population.textContent = p;
               population.href = `https://www.wikidata.org/wiki/${wikidata.id}`;
               translator.translateElement(population, p === '?' ? 'population-not-found' : 'population-from-wikidata');
             });
+        }
         const judge = document.getElementById('judge-input').value.trim();
-        fetch(`/api/commune.php?commune=${osmId}&judge=https://${judge}`)
+        fetch(`/api/locality.php?locality=${osmId}&judge=https://${judge}`)
           .then(response => response.json())
           .then(answer => {
             const active = parseInt(answer['active-citizens']);
@@ -206,13 +207,13 @@ window.onload = function() {
             if (active === 0)
               a.removeAttribute('href');
             else
-              a.href = `/citizens.html?commune=${osmId}&type=active&judge=https://${judge}`;
+              a.href = `/citizens.html?locality=${osmId}&type=active&judge=https://${judge}`;
             const i = document.getElementById('inactive-citizens');
             i.textContent = inactive;
             if (inactive === 0)
               i.removeAttribute('href');
             else
-              i.href = `/citizens.html?commune=${osmId}&type=inactive&judge=https://${judge}`;
+              i.href = `/citizens.html?locality=${osmId}&type=inactive&judge=https://${judge}`;
             const r = document.getElementById('referendums');
             r.textContent = referendums;
             const p = document.getElementById('petitions');
