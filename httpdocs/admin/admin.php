@@ -30,7 +30,6 @@ $participations = $mysqli->escape_string($input->participations);
 $votes = $mysqli->escape_string($input->votes);
 $citizens = $mysqli->escape_string($input->citizens);
 $proposals = $mysqli->escape_string($input->proposals);
-$areas = $mysqli->escape_string($input->areas);
 $results = $mysqli->escape_string($input->results);
 
 $query = "";
@@ -53,11 +52,10 @@ $n_participation = $participations ? delete_publication($mysqli, 'participation'
 $n_vote = $votes ? delete_publication($mysqli, 'vote') : 0;
 $n_citizen = $citizens ? delete_publication($mysqli, 'citizen') : 0;
 $n_proposal = $proposals ? delete_publication($mysqli, 'proposal') : 0;
-$n_area = $areas ? delete_publication($mysqli, 'area') : 0;
 if ($results)
   query("DELETE FROM results");
 
-$n = $n_citizen + $n_endorsement + $n_proposal + $n_area + $n_signature + $n_participation + $n_vote;
+$n = $n_citizen + $n_endorsement + $n_proposal + $n_signature + $n_participation + $n_vote;
 
 # clean-up obsolete certificates
 query("DELETE FROM certificate WHERE certificate.certifiedPublication NOT IN (SELECT id FROM publication)");
@@ -67,13 +65,11 @@ query("DELETE FROM certificate WHERE publication NOT IN (SELECT id FROM publicat
 query("DELETE FROM participation WHERE publication NOT IN (SELECT id FROM publication)");
 query("DELETE FROM vote WHERE publication NOT IN (SELECT id FROM publication)");
 query("DELETE FROM citizen WHERE publication NOT IN (SELECT id FROM publication)");
-query("DELETE FROM area WHERE publication NOT IN (SELECT id FROM publication)");
 query("DELETE FROM proposal WHERE publication NOT IN (SELECT id FROM publication)");
 $query = <<<EOT
 DELETE FROM publication WHERE id NOT IN (
     SELECT publication FROM citizen UNION
     SELECT publication FROM certificate UNION
-    SELECT publication FROM area UNION
     SELECT publication FROM proposal UNION
     SELECT publication FROM participation UNION
     SELECT publication FROM vote)
@@ -102,8 +98,6 @@ if ($n_endorsement)
   $list .= "<li>certificate: $n_endorsement</li>";
 if ($n_proposal)
   $list .= "<li>proposal: $n_proposal</li>";
-if ($n_area)
-  $list .= "<li>area: $n_area</li>";
 if ($n_signature)
   $list .= "<li>signature: $n_signature</li>";
 if ($n_participation)
