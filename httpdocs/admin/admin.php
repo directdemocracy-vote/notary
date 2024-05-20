@@ -96,6 +96,7 @@ if ($result) {
 if ($citizens) {
   query("DELETE FROM participant WHERE id > 5");
   query("ALTER TABLE participant AUTO_INCREMENT=6");
+  die("{\"status\":\"deleted participants\"}");
 }
 
 $list = '';
