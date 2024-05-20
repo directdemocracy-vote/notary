@@ -19,7 +19,7 @@ CREATE TABLE `citizen` (
   `appSignature` blob NOT NULL,
   `givenNames` varchar(256) NOT NULL,
   `familyName` varchar(256) NOT NULL,
-  `commune` bigint(20) NOT NULL,
+  `locality` bigint(20) NOT NULL,
   `picture` blob NOT NULL,
   `home` point NOT NULL,
   `status` enum('active','deleted','transferred','updated') NOT NULL DEFAULT 'active'
@@ -44,7 +44,7 @@ CREATE TABLE `participation` (
   `app` int(11) NOT NULL,
   `appSignature` blob NOT NULL,
   `referendum` int(11) NOT NULL,
-  `commune` bigint(20) NOT NULL
+  `locality` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `proposal` (
@@ -86,7 +86,7 @@ CREATE TABLE `vote` (
   `appSignature` blob NOT NULL,
   `referendum` int(11) NOT NULL,
   `number` int(11) NOT NULL,
-  `commune` bigint(20) NOT NULL,
+  `locality` bigint(20) NOT NULL,
   `ballot` binary(32) NOT NULL,
   `answer` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -120,7 +120,7 @@ ALTER TABLE `participation`
   ADD PRIMARY KEY (`publication`),
   ADD KEY `app` (`app`),
   ADD KEY `referendum` (`referendum`),
-  ADD KEY `commune` (`commune`);
+  ADD KEY `locality` (`locality`);
 
 ALTER TABLE `proposal`
   ADD PRIMARY KEY (`publication`),
