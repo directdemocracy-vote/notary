@@ -70,6 +70,7 @@ $query = <<<EOT
 DELETE FROM publication WHERE id NOT IN (
     SELECT publication FROM citizen UNION
     SELECT publication FROM certificate UNION
+    SELECT certifiedPublication FROM certificate UNION
     SELECT publication FROM proposal UNION
     SELECT publication FROM participation UNION
     SELECT publication FROM vote)
