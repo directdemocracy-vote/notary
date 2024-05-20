@@ -61,8 +61,7 @@ $n = $n_citizen + $n_endorsement + $n_proposal + $n_signature + $n_participation
 query("DELETE FROM certificate WHERE certificate.certifiedPublication NOT IN (SELECT id FROM publication)");
 
 # clean-up orphan publications
-query("DELETE FROM certificate WHERE publication NOT IN (SELECT id FROM publication)");
-query("DELETE FROM certificate WHERE certifiedPublication NOT IN (SELECT id FROM publication)");
+query("DELETE FROM certificate WHERE publication NOT IN (SELECT id FROM publication) OR certifiedPublication NOT IN (SELECT id FROM publication)");
 query("DELETE FROM participation WHERE publication NOT IN (SELECT id FROM publication)");
 query("DELETE FROM vote WHERE publication NOT IN (SELECT id FROM publication)");
 query("DELETE FROM citizen WHERE publication NOT IN (SELECT id FROM publication)");
