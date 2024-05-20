@@ -55,7 +55,7 @@ $n_signature = $signatures ? delete_certificate($mysqli, 'sign') : 0;
 $n_participation = $participations ? delete_publication($mysqli, 'participation') : 0;
 $n_vote = $votes ? delete_publication($mysqli, 'vote') : 0;
 $n_citizen = $citizens ? delete_publication($mysqli, 'citizen') : 0;
-if ($citizen) {
+if ($citizens) {
   delete_certificate($mysqli, 'update');
   delete_certificate($mysqli, 'transfer');
 }
