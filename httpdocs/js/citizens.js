@@ -27,8 +27,6 @@ window.onload = function() {
         style.transform = 'translate(-20px,-80px)';
       }
       const tbody = document.getElementById('tbody');
-      answer.push(answer[0]); // debug
-      answer.push(answer[0]); // debug
       for (const citizen of answer) {
         function link(event) {
           location.href = `/citizen.html?signature=${citizen.signature}`;
