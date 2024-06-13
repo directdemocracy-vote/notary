@@ -35,9 +35,9 @@ if ($trust === 1)
           ."INNER JOIN publication AS pe ON pe.id=certificate.publication "
           ."INNER JOIN participant AS pep ON pep.id=pe.participant AND pep.`key` = FROM_BASE64('$key==') ";
 elseif ($trust === 0)
-  $query.= "LEFT JOIN certificate ON certificate.certifiedPublication = publication.id AND certificate.type = 'distrust' AND certificate.latest = 1 "
-          ."LEFT JOIN publication AS pe ON pe.id=certificate.publication "
-          ."LEFT JOIN participant AS pep ON pep.id=pe.participant AND pep.`key` = FROM_BASE64('$key==') WHERE ";
+  $query.= "INNER JOIN certificate ON certificate.certifiedPublication = publication.id AND certificate.type = 'distrust' AND certificate.latest = 1 "
+          ."INNER JOIN publication AS pe ON pe.id=certificate.publication "
+          ."INNER JOIN participant AS pep ON pep.id=pe.participant AND pep.`key` = FROM_BASE64('$key==') WHERE ";
 $query.= "WHERE status='active'";
 if ($locality)
   $query.= " AND locality=$locality";
