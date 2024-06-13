@@ -29,5 +29,5 @@ $c = $result->fetch_assoc();
 $untrusted = $c['count'];
 $result->free();
 $mysqli->close();
-die("{\"trusted-citizens\":0,\"untrusted-citizens\":$inactive,\"referendums\":0,\"petitions\":0}");
+die("{\"trusted-citizens\":0,\"untrusted-citizens\":$untrusted,\"referendums\":0,\"petitions\":0}");
 ?>
