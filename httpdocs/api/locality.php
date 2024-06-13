@@ -15,7 +15,10 @@ if (!isset($_GET['judge']))
 $locality = sanitize_field($_GET['locality'], 'positive_int', 'locality');
 $judge = sanitize_field($_GET['judge'], 'url', 'judge');
 
-$result = $mysqli->query("SELECT REPLACE(REPLACE(TO_BASE64(`key`), '\\n', ''), '=', '') AS `key` FROM participant INNER JOIN webservice ON webservice.participant=participant.id WHERE participant.`type`='judge' AND webservice.url='$judge'") or error($mysqli->error);
+$result = $mysqli->query(
+   "SELECT REPLACE(REPLACE(TO_BASE64(`key`), '\\n', ''), '=', '') AS `key` FROM participant "
+  ."INNER JOIN webservice ON webservice.participant=participant.id "
+  ."WHERE participant.`type`='judge' AND webservice.url='$judge'") or error($mysqli->error);
 if ($j = $result->fetch_assoc())
   $key = $j['key'];
 $result->free();
@@ -23,8 +26,8 @@ $result->free();
 $query = "SELECT COUNT(*) AS count FROM citizen WHERE status='active' AND locality=$locality";
 $result = $mysqli->query($query) or die($mysqli->error);
 $c = $result->fetch_assoc();
-$inactive = $c['count'];
+$untrusted = $c['count'];
 $result->free();
 $mysqli->close();
-die("{\"active-citizens\":0,\"inactive-citizens\":$inactive,\"referendums\":0,\"petitions\":0}");
+die("{\"trusted-citizens\":0,\"untrusted-citizens\":$inactive,\"referendums\":0,\"petitions\":0}");
 ?>
