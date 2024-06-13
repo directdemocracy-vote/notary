@@ -99,8 +99,8 @@ window.onload = function() {
           displayName = displayName.substring(nominatim.name.length + 2);
         document.getElementById('locality-address').textContent = displayName;
         n.textContent = nominatim.name;
-        document.getElementById('active-citizens').textContent = '...';
-        document.getElementById('inactive-citizens').textContent = '...';
+        document.getElementById('trusted-citizens').textContent = '...';
+        document.getElementById('untrusted-citizens').textContent = '...';
         document.getElementById('referendums').textContent = '...';
         document.getElementById('petitions').textContent = '...';
         let population = document.getElementById('population');
@@ -198,19 +198,19 @@ window.onload = function() {
         fetch(`/api/locality.php?locality=${osmId}&judge=https://${judge}`)
           .then(response => response.json())
           .then(answer => {
-            const active = parseInt(answer['active-citizens']);
-            const inactive = parseInt(answer['inactive-citizens']);
+            const trusted = parseInt(answer['trusted-citizens']);
+            const untrusted = parseInt(answer['untrusted-citizens']);
             const referendums = parseInt(answer['referendums']);
             const petitions = parseInt(answer['petitions']);
-            const a = document.getElementById('active-citizens');
-            a.textContent = active;
-            if (active === 0)
+            const a = document.getElementById('trusted-citizens');
+            a.textContent = trusted;
+            if (trusted === 0)
               a.removeAttribute('href');
             else
               a.href = `/citizens.html?locality=${osmId}&trust=1&judge=https://${judge}`;
-            const i = document.getElementById('inactive-citizens');
-            i.textContent = inactive;
-            if (inactive === 0)
+            const i = document.getElementById('untrusted-citizens');
+            i.textContent = untrusted;
+            if (untrusted === 0)
               i.removeAttribute('href');
             else
               i.href = `/citizens.html?locality=${osmId}&trust=0&judge=https://${judge}`;
