@@ -11,7 +11,7 @@ if (!isset($_GET['judge']))
   error('Missing judge parameter');
 $locality = isset($_GET['locality']) ? sanitize_field($_GET['locality'], 'positive_int', 'locality') : null;
 if (isset($_GET['type']))
-  $type = ($_GET['type'] === 'inactive' || $_GET['type'] === 'active') ? $_GET['type'] : '';
+  $type = ($_GET['type'] === 'untrusted' || $_GET['type'] === 'trusted') ? $_GET['type'] : '';
 else
   $type = '';
 $familyName = isset($_GET['familyName']) ? $mysqli->escape_string($_GET['familyName']) : null;
@@ -24,30 +24,30 @@ if ($j = $result->fetch_assoc())
   $key = $j['key'];
 $result->free();
 
-$query = "SELECT citizen.familyName, citizen.givenNames, CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture, "
-        ."UNIX_TIMESTAMP(publication.published) AS published, REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature "
+$query = "SELECT "
+        ."citizen.familyName, "
+        ."citizen.givenNames, "
+        ."CONCAT('data:image/jpeg;base64,', REPLACE(TO_BASE64(citizen.picture), '\\n', '')) AS picture, "
+        ."UNIX_TIMESTAMP(publication.published) AS published, "
+        ."REPLACE(REPLACE(TO_BASE64(publication.signature), '\\n', ''), '=', '') AS signature "
         ."FROM citizen "
         ."INNER JOIN publication ON publication.id = citizen.publication "
         ."INNER JOIN participant ON participant.id=publication.participant ";
-if ($type === 'active')
+if ($type === 'trusted')
   $query.= "INNER JOIN certificate ON certificate.certifiedPublication = publication.id AND certificate.type = 'trust' AND certificate.latest = 1 "
           ."INNER JOIN publication AS pe ON pe.id=certificate.publication "
           ."INNER JOIN participant AS pep ON pep.id=pe.participant AND pep.`key` = FROM_BASE64('$key==') ";
-elseif ($type === 'inactive')
+elseif ($type === 'untrusted')
   $query.= "LEFT JOIN certificate ON certificate.certifiedPublication = publication.id AND certificate.type = 'distrust' AND certificate.latest = 1 "
           ."LEFT JOIN publication AS pe ON pe.id=certificate.publication "
-          ."LEFT JOIN participant AS pep ON pep.id=pe.participant AND pep.`key` = FROM_BASE64('$key==') ";  
+          ."LEFT JOIN participant AS pep ON pep.id=pe.participant AND pep.`key` = FROM_BASE64('$key==') WHERE ";
 $query.= "WHERE status='active'";
-if ($familyName or $givenNames) {
-  $query .= " AND";
-  if ($familyName) {
-    $query .= " familyName LIKE \"%$familyName%\"";
-    if ($givenNames)
-      $query .= " AND";
-  }
-  if ($givenNames)
-    $query .= " givenNames LIKE \"%$givenNames%\"";
-}
+if ($locality)
+  $query.= " AND locality=$locality";
+if ($familyName)
+  $query.= " AND familyName LIKE \"%$familyName%\"";
+if ($givenNames)
+  $query.= " AND givenNames LIKE \"%$givenNames%\"";
 $query .= " LIMIT 20;";
 $result = $mysqli->query($query) or die($mysqli->error);
 $citizens = array();
