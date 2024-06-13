@@ -58,7 +58,7 @@ while ($citizen = $result->fetch_assoc()) {
   $citizens[] = $citizen;
 }
 $result->free();
-$citizens[] = $query; # debug
+# $citizens[] = $query; # debug
 echo json_encode($citizens, JSON_UNESCAPED_SLASHES);
 $mysqli->close();
 ?>
