@@ -10,10 +10,7 @@ header("Access-Control-Allow-Headers: content-type");
 if (!isset($_GET['judge']))
   error('Missing judge parameter');
 $locality = isset($_GET['locality']) ? sanitize_field($_GET['locality'], 'positive_int', 'locality') : null;
-if (isset($_GET['type']))
-  $type = ($_GET['type'] === 'untrusted' || $_GET['type'] === 'trusted') ? $_GET['type'] : '';
-else
-  $type = '';
+$trust = isset($_GET['trust']) ? intval($_GET['trust']) : -1;
 $familyName = isset($_GET['familyName']) ? $mysqli->escape_string($_GET['familyName']) : null;
 $givenNames = isset($_GET['givenNames']) ? $mysqli->escape_string($_GET['givenNames']) : null;
 $judge = sanitize_field($_GET['judge'], 'url', 'judge');
@@ -33,11 +30,11 @@ $query = "SELECT "
         ."FROM citizen "
         ."INNER JOIN publication ON publication.id = citizen.publication "
         ."INNER JOIN participant ON participant.id=publication.participant ";
-if ($type === 'trusted')
+if ($trust === 1)
   $query.= "INNER JOIN certificate ON certificate.certifiedPublication = publication.id AND certificate.type = 'trust' AND certificate.latest = 1 "
           ."INNER JOIN publication AS pe ON pe.id=certificate.publication "
           ."INNER JOIN participant AS pep ON pep.id=pe.participant AND pep.`key` = FROM_BASE64('$key==') ";
-elseif ($type === 'untrusted')
+elseif ($trust === 0)
   $query.= "LEFT JOIN certificate ON certificate.certifiedPublication = publication.id AND certificate.type = 'distrust' AND certificate.latest = 1 "
           ."LEFT JOIN publication AS pe ON pe.id=certificate.publication "
           ."LEFT JOIN participant AS pep ON pep.id=pe.participant AND pep.`key` = FROM_BASE64('$key==') WHERE ";
