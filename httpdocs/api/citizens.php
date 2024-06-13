@@ -16,7 +16,11 @@ $givenNames = isset($_GET['givenNames']) ? $mysqli->escape_string($_GET['givenNa
 $judge = sanitize_field($_GET['judge'], 'url', 'judge');
 
 $key = '';
-$result = $mysqli->query("SELECT REPLACE(REPLACE(TO_BASE64(`key`), '\\n', ''), '=', '') AS `key` FROM participant INNER JOIN webservice ON webservice.participant=participant.id WHERE participant.`type`='judge' AND webservice.url='$judge'") or error($mysqli->error);
+$result = $mysqli->query(
+  "SELECT REPLACE(REPLACE(TO_BASE64(`key`), '\\n', ''), '=', '') AS `key` "
+ ."FROM participant "
+ ."INNER JOIN webservice ON webservice.participant=participant.id "
+ ."WHERE participant.`type`='judge' AND webservice.url='$judge'") or error($mysqli->error);
 if ($j = $result->fetch_assoc())
   $key = $j['key'];
 $result->free();
@@ -35,7 +39,7 @@ if ($trust === 1)
           ."INNER JOIN publication AS pe ON pe.id=certificate.publication "
           ."INNER JOIN participant AS pep ON pep.id=pe.participant AND pep.`key` = FROM_BASE64('$key==') ";
 elseif ($trust === 0)
-  $query.= "INNER JOIN certificate ON certificate.certifiedPublication = publication.id AND certificate.type = 'distrust' AND certificate.latest = 1 "
+  $query.= "LEFT JOIN certificate ON certificate.certifiedPublication = publication.id AND certificate.type = 'distrust' AND certificate.latest = 1 "
           ."INNER JOIN publication AS pe ON pe.id=certificate.publication "
           ."INNER JOIN participant AS pep ON pep.id=pe.participant AND pep.`key` = FROM_BASE64('$key==') WHERE ";
 $query.= "WHERE status='active'";
