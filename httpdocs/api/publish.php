@@ -320,6 +320,17 @@ if ($type === 'citizen') {
 } else
   error("unknown publication type.");
 $mysqli->query($query) or error($mysqli->error);
+$headers = getallheaders();
+if (isset($headers['locality']) && isset($headers['locality-name']) && isset($headers['latitude']) && isset($headers['longitude'])) {
+  $locality = intval($headers['locality']);
+  $localityName = $mysqli->escape_string($headers['locality-name']);
+  $latitude = floatval($headers['latitude']);
+  $longitude = floatval($headers['longitude']);
+  $query = "INSERT INTO locality('osm_id', 'location', 'name') "
+          ."VALUES($locality, \"$localityName\", ST_PointFromText('POINT($longitude $latitude)')) "
+          ."ON DUPLICATE KEY UPDATE location=ST_PointFromText('POINT($longitude $latitude)'), name=\"$localityName\";";
+  $mysqli->query($query) or error($mysqli->error);
+}
 if ($type === 'proposal')
   update_corpus($mysqli, $id);
 elseif ($type === 'vote') {
