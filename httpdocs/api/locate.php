@@ -19,7 +19,7 @@ if ($f = $result->fetch_assoc()) {
   $longitude = $f['longitude'];
   $name = $f['name'];
 } else
-  die("\"error\": \"osm_id not found in database\"}");
+  die("{\"error\": \"osm_id not found in database\"}");
 $result->free();
 $mysqli->close();
 die("{\"locality\":{\"osm_id\":$osm_id,\"latitude\":$latitude,\"longitude\":$longitude,\"name\":\"$name\"}}");
