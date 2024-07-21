@@ -1,5 +1,12 @@
 <?php
 
+function error_handler($errno, $errstr, $errfile, $errline {
+  $error = json_encode(array('error number' => $errno, 'description' => $errstr, 'file' => $errfile, 'line' => $errline));
+  die("{\"error\":$error}");
+}
+
+set_error_handler('error_handler');
+
 function error($message) {
   if ($message[0] != '{')
     $message = '"'.$message.'"';
