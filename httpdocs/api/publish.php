@@ -327,11 +327,9 @@ if (isset($headers['locality']) && isset($headers['locality-name']) && isset($he
   $latitude = floatval($headers['latitude']);
   $longitude = floatval($headers['longitude']);
   $query = "INSERT INTO locality(osm_id, location, name) "
-          ."VALUES($locality, \"$localityName\", ST_PointFromText('POINT($longitude $latitude)')) "
+          ."VALUES($locality, ST_PointFromText('POINT($longitude $latitude)'), \"$localityName\") "
           ."ON DUPLICATE KEY UPDATE location=ST_PointFromText('POINT($longitude $latitude)'), name=\"$localityName\"";
-  error_log($query);
-  die($query);
-  $mysqli->query($query) or die($query . "  " . $mysqli->error);
+  $mysqli->query($query) or die($mysqli->error);
 }
 if ($type === 'proposal')
   update_corpus($mysqli, $id);
