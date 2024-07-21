@@ -18,7 +18,7 @@ foreach ($osm_ids as $osm_id) {
     $list .= ',';
   $list .= intval($osm_id);
 }
-$list .= ')'
+$list .= ')';
 $result = $mysqli->query("SELECT osm_id, ST_Y(location) AS latitude, ST_X(location) AS longitude, name FROM locality WHERE osm_id IN $list")
           or error($mysqli->error);
 $answer = "{\"localities\": ";
