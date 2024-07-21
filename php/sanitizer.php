@@ -1,6 +1,6 @@
 <?php
 
-function error_handler($errno, $errstr, $errfile, $errline {
+function error_handler($errno, $errstr, $errfile, $errline) {
   $error = json_encode(array('error number' => $errno, 'description' => $errstr, 'file' => $errfile, 'line' => $errline));
   die("{\"error\":$error}");
 }
