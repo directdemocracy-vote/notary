@@ -10,7 +10,7 @@ header("Access-Control-Allow-Headers: content-type");
 if (!isset($_GET['osm_ids']))
   error('Missing osm_ids parameter');
 
-$osm_ids = explode(',', $_GET['osm_id']);
+$osm_ids = explode(',', $_GET['osm_ids']);
 
 $list = '(';
 foreach ($osm_ids as $osm_id) {
