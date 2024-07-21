@@ -33,5 +33,5 @@ while ($f = $result->fetch_assoc()) {
 $answer .= '}';
 $result->free();
 $mysqli->close();
-die("{\"localities\":{\"osm_id\":$osm_id,\"latitude\":$latitude,\"longitude\":$longitude,\"name\":\"$name\"}}");
+die($answer);
 ?>
