@@ -21,7 +21,7 @@ foreach ($osm_ids as $osm_id) {
 $list .= ')';
 $result = $mysqli->query("SELECT osm_id, ST_Y(location) AS latitude, ST_X(location) AS longitude, name FROM locality WHERE osm_id IN $list")
           or error($mysqli->error);
-$answer = "{\"localities\": ";
+$answer = "{\"localities\":[";
 $comma = false;
 while ($f = $result->fetch_assoc()) {
   $f['osm_id'] = intval($f['osm_id']);
@@ -33,7 +33,7 @@ while ($f = $result->fetch_assoc()) {
     $comma = true;
   $answer .= json_encode($f);
 }
-$answer .= '}';
+$answer .= ']}';
 $result->free();
 $mysqli->close();
 die($answer);
