@@ -7,20 +7,31 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
 
-if (!isset($_GET['osm_id']))
-  error('Missing osm_id parameter');
+if (!isset($_GET['osm_ids']))
+  error('Missing osm_ids parameter');
 
-$osm_id = sanitize_field($_GET['osm_id'], 'positive_int', 'osm_id');
+$osm_ids = explode(',', $_GET['osm_id']);
 
-$result = $mysqli->query("SELECT ST_Y(location) AS latitude, ST_X(location) AS longitude, name FROM locality WHERE osm_id=$osm_id")
+$list = '(';
+foreach ($osm_ids as $osm_id) {
+  if ($list !== '(')
+    $list .= ',';
+  $list .= intval($osm_id);
+}
+$list .= ')'
+$result = $mysqli->query("SELECT osm_id, ST_Y(location) AS latitude, ST_X(location) AS longitude, name FROM locality WHERE osm_id IN $list")
           or error($mysqli->error);
-if ($f = $result->fetch_assoc()) {
-  $latitude = $f['latitude'];
-  $longitude = $f['longitude'];
-  $name = $f['name'];
-} else
-  die("{\"error\": \"osm_id not found in database\"}");
+$answer = "{\"localities\": ";
+$comma = false;
+while ($f = $result->fetch_assoc()) {
+  if ($comma)
+    $answer .= ',';
+  else
+    $comma = true;
+  $answer .= json_encode($f);
+}
+$answer .= '}';
 $result->free();
 $mysqli->close();
-die("{\"locality\":{\"osm_id\":$osm_id,\"latitude\":$latitude,\"longitude\":$longitude,\"name\":\"$name\"}}");
+die("{\"localities\":{\"osm_id\":$osm_id,\"latitude\":$latitude,\"longitude\":$longitude,\"name\":\"$name\"}}");
 ?>
