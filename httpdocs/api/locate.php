@@ -24,6 +24,9 @@ $result = $mysqli->query("SELECT osm_id, ST_Y(location) AS latitude, ST_X(locati
 $answer = "{\"localities\": ";
 $comma = false;
 while ($f = $result->fetch_assoc()) {
+  $f['osm_id'] = intval($f['osm_id']);
+  $f['latitude'] = floatval($f['latitude']);
+  $f['longitude'] = floatval($f['longitude']);
   if ($comma)
     $answer .= ',';
   else
