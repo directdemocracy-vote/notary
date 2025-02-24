@@ -1,11 +1,8 @@
 <?php
 # This is a proxy to query any judge for the reputation of a citizen
+require_once '../../php/header.php';
 require_once '../../php/database.php';
 require_once '../../php/sanitizer.php';
-
-header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: content-type");
 
 if (!isset($_GET['key']))
   die('{"error":"missing key argument"}');
