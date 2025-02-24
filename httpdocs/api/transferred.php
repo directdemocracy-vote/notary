@@ -4,11 +4,9 @@
 # 3. if not, monitor the created file until it gets deleted, then return true.
 # 4. if the file was not deleted after 1 minute, delete it and return false.
 
-header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: content-type");
-
+require_once '../../php/header.php';
 require_once '../../php/sanitizer.php';
+
 if (isset($_GET['fingerprint']))
   $fingerprint = sanitize_field($_GET['fingerprint'], 'hex', 'fingerprint');
 else
