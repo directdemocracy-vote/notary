@@ -10,12 +10,9 @@
 # - limit (optional, default to 1): maximum number of proposals in the returned list.
 # - year (optional): year of the deadline of the proposal.
 
+require_once '../../php/header.php';
 require_once '../../php/database.php';
 require_once '../../php/sanitizer.php';
-
-header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: content-type");
 
 $search = $mysqli->escape_string($_GET["search"]);
 $secret = sanitize_field($_GET["secret"], "(0|1|2)", "secret");
