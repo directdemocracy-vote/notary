@@ -1,10 +1,7 @@
 <?php
+require_once '../../php/header.php';
 require_once '../../php/database.php';
 require_once '../../php/sanitizer.php';
-
-header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: content-type");
 
 $input = json_decode(file_get_contents("php://input"));
 if ($input) {
