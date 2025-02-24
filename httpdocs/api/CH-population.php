@@ -1,7 +1,5 @@
 <?php
-header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: content-type");
+require_once '../../php/header.php';
 $municipality = intval($_GET['municipality']);
 $data = file_get_contents('CH-cc-f-01.02.03.01.csv');
 $rows = explode("\n", $data);
