@@ -2,14 +2,11 @@
 # used by the judge to retrive the new endorse and report certificates
 # currently only support this use case
 
+require_once '../../php/header.php';
 require_once '../../php/database.php';
 require_once '../../php/sanitizer.php';
 
 $version = 2;
-
-header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: content-type");
 
 $type = isset($_GET['type']) ? $mysqli->escape_string($_GET["type"]) : null;
 $since = isset($_GET['since']) ? sanitize_field($_GET['since'], 'positive_int', 'since') : null;
