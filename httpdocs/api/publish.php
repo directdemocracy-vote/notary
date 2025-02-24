@@ -1,5 +1,5 @@
 <?php
-
+require_once '../../php/header.php';
 require_once '../../vendor/autoload.php';
 require_once '../../php/database.php';
 require_once '../../php/endorsements.php';
@@ -55,10 +55,6 @@ function check_app($publication, $vote=false) {
   $publication->appSignature = $app_signature;
   return array($app, $app_signature);
 }
-
-header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: content-type");
 
 $publication = json_decode(file_get_contents("php://input"));
 if (!$publication)
