@@ -27,3 +27,5 @@ You will need a simple web server running a recent version of PHP and MySQL.
 
 PHP dependencies should be installed by running `composer install` at the root of this repository.
 They include [json-schema](https://github.com/opis/json-schema) to check the syntax of publications.
+
+This is a test...
